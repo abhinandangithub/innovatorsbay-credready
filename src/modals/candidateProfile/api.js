@@ -15,3 +15,4 @@ export const addOtherEducationExperienceUrl = `${baseUrl}/candidate/additional_e
 export const addStrengthUrl = `${baseUrl}/candidate/strengths/add`;
 
 export const addEducationCertificateUrl = `${baseUrl}/candidate/certificate/add`;
+

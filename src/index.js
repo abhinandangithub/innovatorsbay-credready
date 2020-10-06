@@ -9,11 +9,14 @@ import App from "./App";
 import authReducer from "./store/reducers/auth";
 import popupOverlayReducer from "./store/reducers/popup_overlay";
 import candidateSetDataReducer from "./modals/candidateProfile/index";
+import employerSetDataReducer from "./modals/employerProfile/index";
+
 
 const rootReducer = combineReducers({
   authReducer,
   popupOverlayReducer,
-  candidateSetDataReducer
+  candidateSetDataReducer,
+  employerSetDataReducer
 });
 
 /* Middleware */

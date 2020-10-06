@@ -1,4 +1,4 @@
-import * as actionTypes from "../actions/actionType";
+import * as actionTypes from "../actions/actionTypes/auth";
 import { updateObject } from "../utility";
 
 const initialState = {
@@ -10,6 +10,7 @@ const initialState = {
 	loggedIn: {
 		value: true,
 		as: "employer",
+		//	as: "candidate",
 	},
 };
 
