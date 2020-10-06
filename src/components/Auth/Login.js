@@ -25,7 +25,7 @@ function Login(props) {
 	const onSubmit = (data) => {
 		dispatch(
 			tryLogin({
-				email: data.email,
+				username: data.email,
 				password: data.password,
 				remember_me: loginRemeber,
 			})

@@ -32,7 +32,7 @@ function PostedJobs() {
 					<li>John Doe</li>
 					<li>Candidates applied 12</li>
 				</ul>
-				<Link to="/candidates-list" className="primary-btn blue">
+				<Link to="/jobs/candidates-list" className="primary-btn blue">
 					View Candidates
 				</Link>
 			</div>

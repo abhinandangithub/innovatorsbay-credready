@@ -1,6 +1,11 @@
 import React from "react";
+import InputRange from "react-input-range";
 
 function CreateJob(props) {
+	const [value, setValue] = React.useState({
+		min: 3,
+		max: 7,
+	});
 	const parent = React.useRef();
 
 	React.useEffect(() => {
@@ -31,6 +36,14 @@ function CreateJob(props) {
 					Years of experience <span>*</span>
 				</h2>
 				<p>Experience in similar roles </p>
+				<InputRange
+					draggableTrack
+					minValue={0}
+					maxValue={10}
+					value={value}
+					// formatLabel={(value) => `${value} years`}
+					onChange={(value) => setValue(value)}
+				/>
 			</div>
 		</div>
 	);

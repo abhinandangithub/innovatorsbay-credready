@@ -9,9 +9,9 @@ export const getIndustries = () => async (dispatch, getState) => {
     let token = getState().authReducer.JWT;
     try {
         const response = await axios.get(getInustries, {
-            headers: {
-                Authorization: token
-            }
+            // headers: {
+            //     Authorization: token
+            // }
         });
         dispatch(employerSetData(response))
 

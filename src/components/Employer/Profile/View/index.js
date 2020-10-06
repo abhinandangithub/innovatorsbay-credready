@@ -1,19 +1,11 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPencilAlt } from "@fortawesome/free-solid-svg-icons";
-import { getIndustries } from '../../../../modals/employerProfile/thunk';
-import "./index.scss";
-import { connect } from "react-redux";
 
-function View(props) {
-	useEffect(() => {
-		props.getIndustries().then((response) => {
-			console.log('response', response);
-		}).catch((err) => {
-			console.log('err', err);
-		})
-	})
+import "./index.scss";
+
+function View() {
 	return (
 		<div className="profile-view">
 			<div className="content">
@@ -74,10 +66,4 @@ function View(props) {
 	);
 }
 
-
-
-const mapDispatchToProps = {
-	getIndustries: getIndustries,
-};
-
-export default connect(null, mapDispatchToProps)(View);
+export default View;

@@ -19,7 +19,7 @@ import EmployerProfile from "../Employer/Profile";
 import EmployerPostedJobs from "../Employer/PostedJobs";
 import EmployerCreateJob from "../Employer/CreateJob";
 import EmployerCandidateList from "../Employer/CandidateList";
-import EmployerPostJob from "../Employer/PostJob";
+import EmployerCandidateView from "../Employer/CandidateView";
 
 import JobView from "../Candidate/Jobs/JobView";
 import GeneralQuestions from "../Candidate/Jobs/GeneralQuestions";
@@ -80,8 +80,6 @@ function Home(props) {
 						<Switch>
 							<Redirect exact from="/" to="/dashboard" />
 
-							{/* candidate routes */}
-
 							{auth.loggedIn.as === "candidate" ? (
 								<>
 									<Route
@@ -125,10 +123,14 @@ function Home(props) {
 									/>
 									<Route
 										exact
-										path="/candidates-list"
+										path="/jobs/candidates-list"
 										component={EmployerCandidateList}
 									/>
-									<Route exact path="/post-a-job" component={EmployerPostJob} />
+									<Route
+										exact
+										path="/jobs/candidate-view"
+										component={EmployerCandidateView}
+									/>
 									<Route path="/profile" component={EmployerProfile} />
 								</>
 							)}

@@ -11,6 +11,7 @@ import {
 	faUser,
 	faSignOutAlt,
 } from "@fortawesome/free-solid-svg-icons";
+import Cookies from "js-cookie";
 
 import ImgLogo from "../../assets/logo-blue.png";
 import ImgUserPlaceholder from "../../assets/user-placeholder.jpg";
@@ -22,6 +23,7 @@ function Header(props) {
 	const dispatch = useDispatch();
 
 	const onLogout = () => {
+		Cookies.remove("JWT");
 		dispatch(updateLoggedIn([false, ""]));
 	};
 

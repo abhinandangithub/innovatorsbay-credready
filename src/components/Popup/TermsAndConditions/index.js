@@ -7,6 +7,7 @@ import { updateTermsAndConditions } from "../../../store/actions/auth";
 import { togglePopup } from "../../../store/actions/popup_overlay";
 
 import "./index.scss";
+import { signUpUser } from "../../../store/thunks/auth";
 
 let scrollBarStyle = {
 	width: "700px",
@@ -16,6 +17,7 @@ let scrollBarStyle = {
 function TermsAndConditions(props) {
 	const dispatch = useDispatch();
 	const auth = useSelector((state) => state.authReducer);
+	const signupDetails = auth.signUp;
 	const { register, handleSubmit, errors } = useForm();
 
 	const onSubmit = (data) => {
@@ -23,7 +25,8 @@ function TermsAndConditions(props) {
 			data.termsandconditions && data.allowContact ? true : false;
 
 		dispatch(updateTermsAndConditions(boolValue));
-		console.log(auth.loggedIn.as);
+		if (!boolValue) return;
+		dispatch(signUpUser(signupDetails));
 		if (auth.loggedIn.as === "candidate") {
 			dispatch(togglePopup([true, "emailOtp"]));
 		} else {

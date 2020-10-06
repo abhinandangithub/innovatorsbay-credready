@@ -31,7 +31,6 @@ function CreateJob(props) {
 				<h2>
 					Job Details <span>*</span>
 				</h2>
-				<p>Step 1 of 6</p>
 			</div>
 			<div className="content">
 				<ul>
@@ -49,7 +48,7 @@ function CreateJob(props) {
 					</li>
 					<li>
 						<label>
-							Hiring Needs <span>*</span>
+							Employment Type <span>*</span>
 						</label>
 						<Dropdown
 							placeholder={employmentType.heading}

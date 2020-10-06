@@ -6,7 +6,6 @@ import Dropdown from "../../_Elements/Dropdown";
 import SortIcon from "../../_Elements/SortIcon";
 import Pagination from "../../_Elements/Pagination";
 import ImgUser from "../../../assets/user-placeholder.jpg";
-import ImgMeter from "../../../assets/meter.jpg";
 import ImgMail from "../../../assets/mail.jpg";
 import ImgDownload from "../../../assets/download.jpg";
 import Input from "../../_Elements/Input";
@@ -45,91 +44,144 @@ function CandidateList() {
 			name: "Mary Jane",
 			currentPosition: "CNA",
 			experience: 5,
-			status: "Viewed",
-			currentOrganisation: "One Springfield",
 			credReadiness: 82,
+			currentOrganisation: "One Springfield",
+			lastUpdate: "9/15/2020",
+			status: "Viewed",
 		},
 		{
 			name: "William",
 			currentPosition: "Home Health Aid",
 			experience: 4,
-			status: "Phone",
-			currentOrganisation: "XYZ Company",
 			credReadiness: 73,
+			currentOrganisation: "XYZ Company",
+			lastUpdate: "9/15/2020",
+			status: "Phone",
 		},
 		{
 			name: "Charlotte",
 			currentPosition: "CNA",
 			experience: 2,
-			status: "Viewed",
-			currentOrganisation: "ABC Company",
 			credReadiness: 73,
+			currentOrganisation: "ABC Company",
+			lastUpdate: "9/15/2020",
+			status: "Viewed",
 		},
 		{
 			name: "Marry jane",
 			currentPosition: "Certified Nursing Assistant",
 			experience: 5,
-			status: "Offer",
-			currentOrganisation: "ABC Company",
 			credReadiness: 50,
+			currentOrganisation: "ABC Company",
+			lastUpdate: "9/15/2020",
+			status: "Offer",
 		},
 		{
 			name: "Kris Connor",
 			currentPosition: "CNA",
 			experience: 1,
-			status: "Hired",
-			currentOrganisation: "ABC Company",
 			credReadiness: 40,
+			currentOrganisation: "ABC Company",
+			lastUpdate: "9/15/2020",
+			status: "Hired",
 		},
 		{
 			name: "Mary jane",
 			currentPosition: "Home Health Aid",
 			experience: 2,
-			status: "Hired",
-			currentOrganisation: "ABC Company",
 			credReadiness: 35,
+			currentOrganisation: "ABC Company",
+			lastUpdate: "9/15/2020",
+			status: "Hired",
 		},
 		{
 			name: "Mary jane",
 			currentPosition: "CNA",
 			experience: 4,
-			status: "Viewed",
-			currentOrganisation: "ABC Company",
 			credReadiness: 35,
+			currentOrganisation: "ABC Company",
+			lastUpdate: "9/15/2020",
+			status: "Viewed",
 		},
 		{
 			name: "Charlotte",
 			currentPosition: "Certified Nursing Assistant",
 			experience: 5,
-			status: "Emailed",
-			currentOrganisation: "ABC Company",
 			credReadiness: 35,
+			currentOrganisation: "ABC Company",
+			lastUpdate: "9/15/2020",
+			status: "Emailed",
 		},
 		{
 			name: "Kris Connor",
 			currentPosition: "Home Health Aid",
 			experience: 5,
-			status: "Viewed",
-			currentOrganisation: "ABC Company",
 			credReadiness: 35,
+			currentOrganisation: "ABC Company",
+			lastUpdate: "9/15/2020",
+			status: "Viewed",
+		},
+	];
+
+	const filtersList = [
+		{
+			title: "Status",
+			options: [
+				"New",
+				"Applied",
+				"Viewed",
+				"Emailed",
+				"Phone",
+				"Interviewed",
+				"Job",
+				"Hired",
+				"Rejected",
+			],
+		},
+		{
+			title: "Experience",
+			options: ["10+ years", "6 to 9 years", "3 to 5 years", "0 to 2 years"],
+		},
+		{
+			title: "Last Update",
+			options: ["1 Week", "2 Weeks", "3 Weeks", "4 Weeks +"],
+		},
+		{
+			title: "CredReadiness Range",
+			options: [
+				"70 to 100 (Ready)",
+				"41 to 70 (Almost Ready)",
+				"0 to 40 (Getting Started)",
+			],
 		},
 	];
 
 	const renderCandidateList = candidateList.map((candidate, i) => {
+		let index = candidate.credReadiness;
+		let crColor = index < 40 ? "red" : index > 70 ? "green" : "yellow";
 		return (
 			<ul key={i}>
 				<li>
-					<input className="fancy-toggle" id="10" type="checkbox" />
-					<label htmlFor="10">
+					<input className="fancy-toggle" id={`row_${i}`} type="checkbox" />
+					<label htmlFor={`row_${i}`}>
 						<span className="input"></span>
 					</label>
 				</li>
 				<li>
-					<img src={faker.image.avatar()} alt="User" />
-					{candidate.name}
+					<Link to="/jobs/candidate-view">
+						<img src={faker.image.avatar()} alt="User" />
+						{candidate.name}
+					</Link>
 				</li>
 				<li>{candidate.currentPosition}</li>
-				<li>{candidate.experience}</li>
+				<li>{candidate.experience} years</li>
+				<li>
+					<span className={`cr_index ${crColor}`}>
+						{candidate.credReadiness}
+					</span>
+				</li>
+				<li>{candidate.currentOrganisation}</li>
+				<li>{candidate.lastUpdate}</li>
 				<li>
 					<Dropdown
 						placeholder={status.heading}
@@ -137,12 +189,7 @@ function CandidateList() {
 						selected={candidate.status}
 					/>
 				</li>
-				<li>{candidate.currentOrganisation}</li>
 				<li>
-					{candidate.credReadiness}
-					<Link to="/" className="meter">
-						<img src={ImgMeter} alt="Meter" />
-					</Link>
 					<Link to="/" className="mail">
 						<img src={ImgMail} alt="Email" />
 					</Link>
@@ -157,7 +204,9 @@ function CandidateList() {
 	return (
 		<div className="candidate-list">
 			<div className="top-heading">
-				<h1>Candidates for ‘Certified Nursing Assistant</h1>
+				<h1>
+					Candidates for “Certified Nursing Assistant - in Warren New Jersey”
+				</h1>
 				<h3>CredReadiness Index for this job is 82</h3>
 			</div>
 			<div className="search-panel">
@@ -189,142 +238,43 @@ function CandidateList() {
 						</button>
 						<div className={`options ${filterOptions ? "on" : "off"}`}>
 							<div className="listing">
-								<ul>
-									<li>Status</li>
-									<li>
-										<input type="checkbox" className="fancy-toggle blue" />
-										<label htmlFor="1">
-											<span className="input"></span>New
-										</label>
-									</li>
-									<li>
-										<input type="checkbox" className="fancy-toggle blue" />
-										<label htmlFor="1">
-											<span className="input"></span>Applied
-										</label>
-									</li>
-									<li>
-										<input type="checkbox" className="fancy-toggle blue" />
-										<label htmlFor="1">
-											<span className="input"></span>Viewed
-										</label>
-									</li>
-									<li>
-										<input type="checkbox" className="fancy-toggle blue" />
-										<label htmlFor="1">
-											<span className="input"></span>Emailed
-										</label>
-									</li>
-									<li>
-										<input type="checkbox" className="fancy-toggle blue" />
-										<label htmlFor="1">
-											<span className="input"></span>Phone
-										</label>
-									</li>
-									<li>
-										<input type="checkbox" className="fancy-toggle blue" />
-										<label htmlFor="1">
-											<span className="input"></span>Interviewed
-										</label>
-									</li>
-									<li>
-										<input type="checkbox" className="fancy-toggle blue" />
-										<label htmlFor="1">
-											<span className="input"></span>Job Offered
-										</label>
-									</li>
-									<li>
-										<input type="checkbox" className="fancy-toggle blue" />
-										<label htmlFor="1">
-											<span className="input"></span>Hired
-										</label>
-									</li>
-									<li>
-										<input type="checkbox" className="fancy-toggle blue" />
-										<label htmlFor="1">
-											<span className="input"></span>Rejected
-										</label>
-									</li>
-								</ul>
-								<ul>
-									<li>Experience</li>
-									<li>
-										<input type="checkbox" className="fancy-toggle blue" />
-										<label htmlFor="1">
-											<span className="input"></span>10+ years
-										</label>
-									</li>
-									<li>
-										<input type="checkbox" className="fancy-toggle blue" />
-										<label htmlFor="1">
-											<span className="input"></span>6 to 9 years
-										</label>
-									</li>
-									<li>
-										<input type="checkbox" className="fancy-toggle blue" />
-										<label htmlFor="1">
-											<span className="input"></span>3 to 5 years
-										</label>
-									</li>
-									<li>
-										<input type="checkbox" className="fancy-toggle blue" />
-										<label htmlFor="1">
-											<span className="input"></span>0 to 2 years
-										</label>
-									</li>
-								</ul>
-								<ul>
-									<li>Last Update</li>
-									<li>
-										<input type="checkbox" className="fancy-toggle blue" />
-										<label htmlFor="1">
-											<span className="input"></span>1 Week
-										</label>
-									</li>
-									<li>
-										<input type="checkbox" className="fancy-toggle blue" />
-										<label htmlFor="1">
-											<span className="input"></span>2 Weeks
-										</label>
-									</li>
-									<li>
-										<input type="checkbox" className="fancy-toggle blue" />
-										<label htmlFor="1">
-											<span className="input"></span>3 Weeks
-										</label>
-									</li>
-									<li>
-										<input type="checkbox" className="fancy-toggle blue" />
-										<label htmlFor="1">
-											<span className="input"></span>4 Weeks +
-										</label>
-									</li>
-								</ul>
-								<ul>
-									<li>CredReadiness Range</li>
-									<li>
-										<input type="checkbox" className="fancy-toggle blue" />
-										<label htmlFor="1">
-											<span className="input"></span>70 to 100 (Ready)
-										</label>
-									</li>
-									<li>
-										<input type="checkbox" className="fancy-toggle blue" />
-										<label htmlFor="1">
-											<span className="input"></span>41 to 70 (Almost Ready)
-										</label>
-									</li>
-									<li>
-										<input type="checkbox" className="fancy-toggle blue" />
-										<label htmlFor="1">
-											<span className="input"></span>0 to 40 (Getting Started)
-										</label>
-									</li>
-								</ul>
+								{filtersList.map((filter, i) => {
+									let trimTitle = filter.title.replace(/ /g, "");
+									return (
+										<ul key={i}>
+											<li>{filter.title}</li>
+											{filter.options.map((option, i) => {
+												return (
+													<li key={i}>
+														<input
+															id={`${trimTitle}_${i}`}
+															type="checkbox"
+															className="fancy-toggle blue"
+														/>
+														<label htmlFor={`${trimTitle}_${i}`}>
+															<span className="input"></span>
+															{option}
+														</label>
+													</li>
+												);
+											})}
+										</ul>
+									);
+								})}
 							</div>
 							<div className="cta">
-								<button className="primary-btn blue outline">Cancel</button>
-								<button className="primary-btn blue">Done</button>
+								<button
+									className="primary-btn blue outline"
+									onClick={() => setFilterOptions(false)}
+								>
+									Cancel
+								</button>
+								<button
+									className="primary-btn blue"
+									onClick={() => setFilterOptions(false)}
+								>
+									Done
+								</button>
 							</div>
 						</div>
 					</div>
@@ -360,20 +310,24 @@ function CandidateList() {
 								Name <SortIcon active="up" />
 							</li>
 							<li>
-								Title <SortIcon />
+								Current Position <SortIcon />
 							</li>
 							<li>
 								Exp (in years) <SortIcon />
 							</li>
 							<li>
+								CreadReadines <SortIcon />
+							</li>
+							<li>
+								Current Organization <SortIcon />
+							</li>
+							<li>
+								Last Update <SortIcon />
+							</li>
+							<li>
 								Status <SortIcon />
 							</li>
-							<li>
-								Current Organisation <SortIcon />
-							</li>
-							<li>
-								CredReadiness Index <SortIcon />
-							</li>
+							<li>Action</li>
 						</ul>
 						{renderCandidateList}
 					</li>

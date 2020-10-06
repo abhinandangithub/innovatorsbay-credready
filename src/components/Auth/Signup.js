@@ -6,8 +6,7 @@ import { togglePopup, toggleOverlay } from "../../store/actions/popup_overlay";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 
-import { updateLoggedIn } from "../../store/actions/auth";
-import { signUpUser } from "../../store/thunks/auth";
+import { updateLoggedIn, updateSignupDetails } from "../../store/actions/auth";
 
 function Signup(props) {
 	const dispatch = useDispatch();
@@ -18,10 +17,10 @@ function Signup(props) {
 
 	const onSubmit = (data) => {
 		console.log(data);
-		signUpUser();
 		dispatch(toggleOverlay(true));
 		dispatch(togglePopup([true, "termsAndConditions"]));
 		dispatch(updateLoggedIn([false, signupType]));
+		dispatch(updateSignupDetails(data));
 	};
 
 	const togglePasswordVisiblity = () => {

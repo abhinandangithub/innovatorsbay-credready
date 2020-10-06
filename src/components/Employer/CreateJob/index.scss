@@ -168,7 +168,7 @@
 								& > li {
 									display: block;
 									margin-bottom: 20px;
-									width: calc(50% - 15px);
+									width: calc(33.33% - 15px);
 									label {
 										display: block;
 										margin-bottom: 10px;
@@ -182,12 +182,14 @@
 					}
 					&.job-description {
 						background: white;
-						textarea {
-							height: 370px;
-							margin-bottom: 20px;
+						.sub-heading {
+							margin-top: 30px;
 						}
 					}
 					&.experience-certificates {
+						.input-range {
+							margin: 50px 0 20px;
+						}
 					}
 					&.email-templates {
 						.common-dropdown {
@@ -196,9 +198,25 @@
 						}
 					}
 					&.specific-questions {
-						.common-questions-outer {
-							.inner {
-								padding: 0;
+						& > .heading {
+							padding: 0;
+							ul {
+								display: flex;
+								list-style: none;
+								font-size: 24px;
+								color: black;
+								li {
+									padding: 15px 20px;
+									border-right: 1px solid #bcd1e4;
+									cursor: pointer;
+									&:hover {
+										opacity: 0.8;
+										background-color: rgb(240, 240, 240);
+									}
+									&.active {
+										background-color: white;
+									}
+								}
 							}
 						}
 					}

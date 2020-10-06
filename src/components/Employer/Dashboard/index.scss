@@ -1,3 +1,5 @@
+@import "../../../variables.scss";
+
 .dashboard-employer {
 	// box-shadow: 0 2px 30px 1px rgba(176, 192, 237, 0.45);
 	.numbers {
@@ -14,6 +16,7 @@
 				background-repeat: no-repeat;
 				background-position: calc(100% - 20px) 20px;
 				background-size: auto 40px;
+				color: $secondary-color;
 				h2 {
 					margin: 0;
 					font-size: 60px;
@@ -29,25 +32,25 @@
 					margin-right: 0;
 				}
 				&:nth-child(1) {
-					color: #f08096;
+					// color: #f08096;
 					background-image: url("../../../assets/numbers-1.jpg");
 				}
 				&:nth-child(2) {
-					color: #2f6b99;
+					// color: #2f6b99;
 					background-size: auto 42px;
 					background-image: url("../../../assets/numbers-2.jpg");
 				}
 				&:nth-child(3) {
-					color: #45a1ae;
+					// color: #45a1ae;
 					background-size: auto 32px;
 					background-image: url("../../../assets/numbers-3.jpg");
 				}
 				&:nth-child(4) {
-					color: #544f63;
+					// color: #544f63;
 					background-image: url("../../../assets/numbers-4.jpg");
 				}
 				&:nth-child(5) {
-					color: #f8be82;
+					// color: #f8be82;
 					background-image: url("../../../assets/numbers-5.jpg");
 				}
 			}

@@ -1,17 +1,13 @@
 import React, { useState } from "react";
 import DatePicker from "react-datepicker";
-// import { BreadcrumbsItem } from "react-breadcrumbs-dynamic";
 
 import "./index.scss";
-import CandidateView from "../CandidateView";
-import PostJob from "../PostJob";
 import Dropdown from "../../_Elements/Dropdown";
 import ImgWD1 from "../../../assets/wd-1.jpg";
 import ImgWD2 from "../../../assets/wd-2.jpg";
 import ImgWD3 from "../../../assets/wd-3.jpg";
 import ImgWD4 from "../../../assets/wd-4.jpg";
 import ImgWD5 from "../../../assets/wd-5.jpg";
-// import ImgWD6 from "../../../assets/wd-6.jpg";
 import ImgWD7 from "../../../assets/wd-7.jpg";
 import ImgWD8 from "../../../assets/wd-8.jpg";
 
@@ -26,9 +22,6 @@ function Dashboard() {
 
 	return (
 		<div className="dashboard-employer">
-			{/* <BreadcrumbsItem to="/">Dashboard</BreadcrumbsItem> */}
-			{/* <PostJob /> */}
-			{/* <CandidateView /> */}
 			<div className="numbers">
 				<div className="common-main-heading">
 					<h2>Dashboard</h2>

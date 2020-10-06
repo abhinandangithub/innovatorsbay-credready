@@ -8,10 +8,15 @@ const initialState = {
 		phoneOtp: false,
 	},
 	loggedIn: {
-		value: true,
-		as: "employer",
-		//	as: "candidate",
+		value: false,
+		as: "candidate",
 	},
+	singUp: {
+		email: null,
+		password: null,
+		phone: null,
+	},
+	JWT: null,
 };
 
 const reducer = (state = initialState, action) => {
@@ -51,6 +56,19 @@ const reducer = (state = initialState, action) => {
 				},
 			});
 
+		case actionTypes.UPDATE_SINGUP_DETAILS:
+			return updateObject(state, {
+				signUp: {
+					email: action.details.email,
+					password: action.details.password,
+					phone: action.details.phone,
+				},
+			});
+
+		case actionTypes.UPDATE_JWT_TOKEN:
+			return updateObject(state, {
+				JWT: action.JWT,
+			});
 		default:
 			return state;
 	}
