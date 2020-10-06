@@ -6,6 +6,10 @@ function CreateJob(props) {
 		min: 3,
 		max: 7,
 	});
+
+	// value.min
+	// value.max
+
 	const parent = React.useRef();
 
 	React.useEffect(() => {

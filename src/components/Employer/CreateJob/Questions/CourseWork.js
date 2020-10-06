@@ -4,7 +4,7 @@ function CourseWork(props) {
 	const parent = React.useRef();
 
 	React.useEffect(() => {
-		props.calHeight(parent.current.clientHeight);
+		// props.calHeight(parent.current.clientHeight);
 	}, [props]);
 
 	return (

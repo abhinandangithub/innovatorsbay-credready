@@ -2,6 +2,11 @@ import React from "react";
 
 import "./Questions/index.scss";
 import PersonalityAssessment from "./Questions/PersonalityAssessment";
+import CourseWork from "./Questions/CourseWork";
+import WorkHistory from "./Questions/WorkHistory";
+import CommuteQuestions from "./Questions/CommuteQuestions";
+import GeneralQuestions from "./Questions/GeneralQuestions";
+import JobSpecificQuestions from "./Questions/JobSpecificQuestions";
 
 function SpecificQuestions(props) {
 	const parent = React.useRef();
@@ -39,8 +44,19 @@ function SpecificQuestions(props) {
 					</li>
 				</ul>
 			</div>
-			<div className="content questions">
-				<PersonalityAssessment />
+			<div className="content questions_employer">
+				{activeTab === 0 ? (
+					<div>
+						<PersonalityAssessment />
+						<CourseWork />
+						<WorkHistory />
+						<CommuteQuestions />
+					</div>
+				) : activeTab === 1 ? (
+					<GeneralQuestions />
+				) : (
+					<JobSpecificQuestions />
+				)}
 			</div>
 		</div>
 	);

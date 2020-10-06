@@ -8,8 +8,8 @@ const initialState = {
 		phoneOtp: false,
 	},
 	loggedIn: {
-		value: false,
-		as: "candidate",
+		value: true,
+		as: "employer",
 	},
 	singUp: {
 		email: null,

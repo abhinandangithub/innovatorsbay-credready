@@ -6,14 +6,11 @@ function GeneralQuestions(props) {
 	const parent = React.useRef();
 
 	React.useEffect(() => {
-		props.calHeight(parent.current.clientHeight);
+		// props.calHeight(parent.current.clientHeight);
 	}, [props]);
 
 	return (
 		<div className="general-questions-page" ref={parent}>
-			<div className="heading">
-				<h2>General Questions</h2>
-			</div>
 			<div className="content">
 				<ul className="general-questions">
 					<li className="general-question applied">

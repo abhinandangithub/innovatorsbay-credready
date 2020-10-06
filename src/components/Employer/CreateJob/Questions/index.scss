@@ -1,11 +1,14 @@
 @import "../../../../variables.scss";
 
-.questions {
+.questions_employer {
 	margin-bottom: -40px;
 	width: 100%;
+	& > div {
+		margin-bottom: 30px;
+	}
 	.heading {
 		padding: 15px 20px;
-		background-color: #ededed;
+		background-color: #ededed0f;
 		h2 {
 			margin: 0;
 			font-weight: 400;
@@ -203,6 +206,7 @@
 		.level_2,
 		.level_3 {
 			flex-direction: column;
+			list-style: none;
 			li {
 				margin: 20px 20px 0 40px;
 				width: calc(100% - 60px);
@@ -252,11 +256,13 @@
 }
 .personality-assessment {
 	.heading {
+		border-top: 1px solid #bcd1e4;
 		display: flex;
 		padding: 0 !important;
 		h2 {
 			flex: 1;
 			padding: 15px 20px;
+			border-left: 1px solid #bcd1e4;
 		}
 		ul {
 			list-style: none;
@@ -268,6 +274,7 @@
 				justify-content: center;
 				border-right: 1px solid #bcd1e4;
 				color: black;
+				background: #ededed;
 				font-size: 15px;
 				&:first-child {
 					border-left: 1px solid #bcd1e4;
@@ -277,6 +284,7 @@
 		}
 	}
 	.content {
+		border-bottom: 1px solid #bcd1e4;
 		padding: 0;
 		& > ul {
 			background-color: white;
@@ -301,6 +309,7 @@
 						border-right: 1px solid #bcd1e4;
 						color: black;
 						&:first-child {
+							border-left: 1px solid #bcd1e4;
 							flex: 1;
 							padding: 0 20px;
 							justify-content: left;

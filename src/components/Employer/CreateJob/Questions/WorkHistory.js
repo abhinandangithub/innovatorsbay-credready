@@ -9,7 +9,7 @@ function WorkHistory(props) {
 	const [value2, setValue2] = React.useState(6);
 
 	React.useEffect(() => {
-		props.calHeight(parent.current.clientHeight);
+		// props.calHeight(parent.current.clientHeight);
 	}, [props]);
 
 	return (

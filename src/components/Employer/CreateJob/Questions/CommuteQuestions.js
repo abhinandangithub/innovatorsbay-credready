@@ -6,7 +6,7 @@ function CommuteQuestions(props) {
 	const parent = React.useRef();
 
 	React.useEffect(() => {
-		props.calHeight(parent.current.clientHeight);
+		// props.calHeight(parent.current.clientHeight);
 	}, [props]);
 
 	return (
@@ -16,12 +16,12 @@ function CommuteQuestions(props) {
 			</div>
 			<div className="content">
 				<ul className="general-questions">
-					<li className="general-question">
+					{/* <li className="general-question">
 						<h2 className="question">What is your home address?</h2>
 						<div className="options">
 							<Input type="text" placeholder="247 King St. Warren, NJ" />
 						</div>
-					</li>
+					</li> */}
 					<li className="general-question">
 						<h2 className="question">
 							Do you have any other jobs that you plan continue with?
