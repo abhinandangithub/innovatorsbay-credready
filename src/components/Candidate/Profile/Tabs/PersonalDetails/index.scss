@@ -1,0 +1,53 @@
+@import "../../../../../variables.scss";
+
+.personal-details {
+	form {
+		& > .content {
+			background: white;
+			box-shadow: 0 2px 30px 1px rgba(176, 192, 237, 0.45);
+			padding: 30px;
+			.listing {
+				& > li {
+					display: flex;
+					align-items: center;
+					margin-bottom: 20px;
+					label {
+						width: 350px;
+						color: #6b6c6f;
+						span {
+							color: $red-color;
+						}
+					}
+					input[name="interestedIn"] {
+						display: none;
+					}
+					.common-input,
+					.common-dropdown {
+						width: calc(100% - 350px);
+						max-width: 500px;
+					}
+					&.industry {
+						& > label {
+							min-width: 450px;
+						}
+						div {
+							display: flex;
+							margin-left: 60px;
+							label {
+								width: auto;
+								margin-right: 30px;
+							}
+						}
+					}
+				}
+			}
+		}
+		.cta {
+			text-align: right;
+			margin-top: 40px;
+			.primary-btn {
+				margin-left: 20px;
+			}
+		}
+	}
+}

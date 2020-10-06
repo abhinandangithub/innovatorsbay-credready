@@ -1,0 +1,105 @@
+.posted-jobs-page {
+	.common-heading-button {
+		.btn {
+			background-image: none;
+			display: flex;
+			padding: 10px 20px;
+			span {
+				position: relative;
+				width: 20px;
+				height: 20px;
+				border-radius: 40px;
+				border: 2px solid white;
+				display: block;
+				margin-right: 10px;
+				&:before,
+				&:after {
+					content: "";
+					position: absolute;
+					background: white;
+					left: 50%;
+					top: 50%;
+					transform: translate(-50%, -50%);
+				}
+				&:before {
+					width: 2px;
+					height: 8px;
+				}
+				&:after {
+					width: 8px;
+					height: 2px;
+				}
+			}
+		}
+	}
+	.listings {
+		& > ul {
+			& > li {
+				box-shadow: 0 2px 30px 1px rgba(176, 192, 237, 0.45);
+				background: white;
+				padding: 20px;
+				display: block;
+				margin-bottom: 30px;
+				&:last-child {
+					margin-bottom: 0;
+				}
+
+				.heading {
+					margin: 0 0 10px 0;
+					font-weight: 500;
+					font-size: 24px;
+				}
+				p {
+					color: #6b6c6f;
+					span {
+						font-weight: 500;
+						color: black;
+					}
+					&.job-openings {
+						margin-top: 0;
+						margin-bottom: 5px;
+					}
+				}
+				.common-skills-list {
+					margin: 20px 0 5px;
+				}
+				.list-btn {
+					display: flex;
+					align-items: center;
+					justify-content: space-between;
+					margin-bottom: 30px;
+					ul {
+						flex: 1;
+						display: flex;
+						align-items: center;
+						justify-content: space-between;
+						margin-right: 30px;
+						list-style: none;
+					}
+				}
+				.checkboxes {
+					text-align: right;
+					display: flex;
+					justify-content: flex-end;
+					label {
+						margin-left: 60px;
+					}
+				}
+			}
+		}
+	}
+	.no-jobs {
+		.content {
+			text-align: center;
+			height: 400px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			flex-direction: column;
+			.common-heading-button {
+				margin: 30px 0;
+				justify-content: center;
+			}
+		}
+	}
+}

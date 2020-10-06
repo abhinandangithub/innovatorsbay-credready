@@ -1,0 +1,41 @@
+@import "../../../variables.scss";
+
+.terms-and-conditions {
+	.wrapper {
+		// padding-bottom: 40px;
+	}
+	.content {
+		padding: 40px 30px 0px 30px;
+		p {
+			margin-top: 0;
+		}
+		.info {
+			text-align: left;
+			color: $grey-color;
+		}
+		.check-boxes {
+			text-align: left;
+			margin: 30px 0 30px;
+			.check-box {
+				margin-bottom: 10px;
+				font-size: 16px;
+				height: 26px;
+				display: flex;
+				align-items: center;
+				font-weight: 500;
+				input {
+					display: none;
+				}
+				span {
+					color: $red-color;
+				}
+			}
+		}
+		.error-message {
+			color: red;
+			font-size: 15px;
+			margin-top: -5px;
+			margin-left: 30px;
+		}
+	}
+}

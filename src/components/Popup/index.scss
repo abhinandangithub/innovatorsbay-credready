@@ -1,0 +1,139 @@
+@import "../../variables.scss";
+
+.popup-scroll-area {
+	position: fixed;
+	left: 0;
+	right: 0;
+	top: 0;
+	bottom: 0;
+	opacity: 0;
+	pointer-events: none;
+	z-index: 99999;
+	.popup {
+		position: absolute;
+		background-color: white;
+		left: 50%;
+		top: 140px;
+		width: 700px;
+		transform: translateX(-50%);
+		text-align: center;
+		margin-bottom: 140px;
+		.content {
+			padding: 40px;
+		}
+		.close {
+			display: block;
+			background-image: url("../../assets/close.jpg");
+			background-repeat: no-repeat;
+			background-position: center;
+			background-size: 20px;
+			position: absolute;
+			left: 100%;
+			bottom: 100%;
+			transform: translate(-50%, 50%);
+			border: none;
+			background-color: $secondary-color;
+			height: 34px;
+			width: 34px;
+			border-radius: 50%;
+			border: 1px solid #fff;
+		}
+		h1 {
+			margin: 0;
+			background: grey;
+			padding: 20px 0;
+			line-height: 1;
+			font-size: 28px;
+			font-weight: 500;
+			background: #f8fafb;
+		}
+		.verify-email-phone-code {
+			p {
+				margin: 0;
+			}
+			.content {
+				padding: 40px 60px;
+				.code-box {
+					margin: 40px 0;
+					color: $grey-color;
+					span {
+						color: $red-color;
+					}
+					.code {
+						margin-left: 15px;
+					}
+				}
+				.status {
+					font-size: 16px;
+					margin: 20px 0 0;
+					font-weight: 500;
+					.time {
+						color: $red-color;
+					}
+					&.resend {
+						color: $secondary-color;
+						cursor: pointer;
+						&:hover {
+							opacity: 0.8;
+						}
+					}
+				}
+				.error-code {
+					color: red;
+					font-size: 16px;
+					margin-top: 10px;
+					margin-bottom: -10px;
+				}
+			}
+			&.email {
+				.phone {
+					display: none;
+				}
+			}
+			&.phone {
+				.email {
+					display: none;
+				}
+			}
+		}
+		.cta {
+			text-align: center;
+		}
+	}
+	.popup-certificate {
+		width: 800px;
+		border: 1px solid rgba(128, 128, 128, 0.3);
+	}
+	.popup-addWorkExperience,
+	.popup-addOtherExperience,
+	.popup-addEducation,
+	.popup-addCertificate,
+	.popup-addEduOtherExperience {
+		padding: 40px;
+		text-align: left;
+		width: 800px;
+		h1 {
+			padding: 0;
+			margin-bottom: 40px;
+			background-color: white;
+		}
+	}
+	.popup-createEmailTemplate,
+	.popup-choosePrivateQuestions,
+	.popup-createNewQuestion {
+		width: 730px;
+	}
+	.popup-addNewQuestion {
+		width: 730px;
+	}
+	&.active {
+		pointer-events: all;
+		opacity: 1;
+		.popup {
+			height: fit-content;
+		}
+		.close {
+			display: block;
+		}
+	}
+}

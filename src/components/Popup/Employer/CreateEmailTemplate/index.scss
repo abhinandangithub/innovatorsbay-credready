@@ -1,0 +1,48 @@
+.create-email-template {
+	.content {
+		padding: 30px 30px 30px;
+		ul {
+			li {
+				list-style: none;
+				margin-bottom: 20px;
+				label {
+					display: block;
+					text-align: left;
+					margin-bottom: 10px;
+				}
+				input {
+					width: 100%;
+					border: 1px solid #bcd1e4;
+					padding: 10px;
+					font-size: 16px;
+				}
+				ul {
+					border: 1px solid #bcd1e4;
+					font-size: 16px;
+					padding: 15px 15px 0 15px;
+					display: flex;
+					flex-wrap: wrap;
+					li {
+						margin-bottom: 0;
+						label {
+							font-size: 14px;
+							margin-bottom: 15px;
+						}
+					}
+				}
+				textarea {
+					border: 1px solid #bcd1e4;
+					width: 100%;
+					font-size: 16px;
+					height: 160px;
+					color: #526677;
+					padding: 15px;
+				}
+			}
+		}
+		.cta {
+			display: flex;
+			justify-content: flex-end;
+		}
+	}
+}

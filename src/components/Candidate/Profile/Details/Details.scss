@@ -1,0 +1,7 @@
+.profile-details {
+	& > .details {
+		align-self: stretch;
+		width: calc(100% - 380px);
+		// min-height: (100vh - 170px);
+	}
+}

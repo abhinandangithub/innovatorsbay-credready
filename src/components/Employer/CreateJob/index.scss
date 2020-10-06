@@ -1,0 +1,250 @@
+@import "../../../variables.scss";
+
+.create-job-page {
+	margin-bottom: -40px;
+	.outer {
+		display: flex;
+		color: #526677;
+		.left {
+			box-shadow: 0 2px 30px 1px rgba(176, 192, 237, 0.45);
+			width: 270px;
+			margin-right: 20px;
+			background-color: white;
+			ul {
+				li {
+					position: relative;
+					padding: 15px;
+					display: block;
+					cursor: pointer;
+					&:hover,
+					&.active {
+						background-color: #f8fafb;
+					}
+					&.done {
+						.common-check-icon {
+							display: block;
+						}
+					}
+					.common-check-icon {
+						display: none;
+						right: 10px;
+						left: auto;
+						top: 50%;
+						transform: translateY(-50%);
+						transform: translateY(-50%);
+						background: #8bca6f;
+						border-color: transparent;
+					}
+				}
+			}
+		}
+		.right {
+			// height: calc(100vh - 280px);
+			// overflow: auto;
+			flex: 1;
+			.custom-scrollbar > div {
+				& > div {
+					box-shadow: 0 2px 30px 1px rgba(176, 192, 237, 0.45);
+					background-color: white;
+					margin-bottom: 30px;
+					& > .heading {
+						padding: 15px 20px;
+						background-color: #ededed;
+						h2 {
+							margin: 0;
+							font-weight: 400;
+							font-size: 24px;
+							color: black;
+							line-height: 1;
+							span {
+								color: red;
+							}
+						}
+						p {
+							margin: 10px 0 0;
+							color: #6b6c6f;
+						}
+					}
+					& > .content {
+						padding: 20px;
+						.sub-heading {
+							font-size: 20px;
+							margin-top: 0;
+							font-weight: 400;
+							color: black;
+							span {
+								color: red;
+							}
+						}
+						textarea {
+							box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.05);
+							border: solid 1px #bcd1e4;
+							padding: 20px;
+							width: 100%;
+							height: 120px;
+							font-size: 16px;
+						}
+						.added-items {
+							margin-bottom: 30px;
+							box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.05);
+							border: solid 1px #bcd1e4;
+							padding: 20px;
+							display: flex;
+							li {
+								border-radius: 34.5px;
+								border: solid 2px #e1eaf1;
+								display: flex;
+								padding: 7px 20px;
+								margin-right: 15px;
+								align-items: center;
+								span {
+									display: block;
+									width: 24px;
+									height: 24px;
+									border: solid 2px #eef2f5;
+									background-color: #e1eaf1;
+									border-radius: 50%;
+									margin-left: 15px;
+									position: relative;
+									cursor: pointer;
+									&:hover {
+										opacity: 0.8;
+									}
+									&:before,
+									&:after {
+										position: absolute;
+										content: "";
+										background: #526677;
+										left: 50%;
+										top: 50%;
+										width: 8px;
+										height: 1px;
+									}
+									&:before {
+										transform: translate(-50%, -50%) rotate(45deg);
+									}
+									&:after {
+										transform: translate(-50%, -50%) rotate(-45deg);
+									}
+								}
+								&:last-child {
+									width: 41px;
+									height: 41px;
+									padding: 0;
+									border: solid 2px #e1eaf1;
+									background-color: rgba(225, 234, 241, 0.3);
+									position: relative;
+									cursor: pointer;
+									&:hover {
+										opacity: 0.8;
+									}
+									&:before,
+									&:after {
+										position: absolute;
+										content: "";
+										background: #526677;
+										left: 50%;
+										top: 50%;
+										width: 14px;
+										height: 1px;
+									}
+									&:before {
+										transform: translate(-50%, -50%);
+									}
+									&:after {
+										transform: translate(-50%, -50%) rotate(90deg);
+									}
+								}
+							}
+						}
+					}
+					&.job-details {
+						.content {
+							& > ul {
+								display: flex;
+								align-items: center;
+								justify-content: space-between;
+								flex-wrap: wrap;
+								& > li {
+									display: block;
+									margin-bottom: 20px;
+									width: calc(50% - 15px);
+									label {
+										display: block;
+										margin-bottom: 10px;
+										span {
+											color: red;
+										}
+									}
+								}
+							}
+						}
+					}
+					&.job-description {
+						background: white;
+						textarea {
+							height: 370px;
+							margin-bottom: 20px;
+						}
+					}
+					&.experience-certificates {
+					}
+					&.email-templates {
+						.common-dropdown {
+							width: 300px;
+							margin-bottom: 20px;
+						}
+					}
+					&.specific-questions {
+						.common-questions-outer {
+							.inner {
+								padding: 0;
+							}
+						}
+					}
+					&.copy-link {
+						margin-bottom: 0;
+						.content {
+							h2 {
+								font-size: 20px;
+								font-weight: 400;
+								color: $primary-color;
+							}
+							.common-input {
+								color: $secondary-color;
+							}
+							textarea {
+								font-family: Montserrat;
+								font-size: 16px;
+								color: #6b6c6f;
+								height: 80px;
+							}
+							.status {
+								font-size: 16px;
+								color: #6b6c6f;
+							}
+							.link {
+								font-size: 18px;
+								color: #000;
+							}
+						}
+						& + .cta {
+							background-color: transparent;
+							box-shadow: none;
+						}
+					}
+					&.blank {
+						height: 600px;
+						background: transparent;
+						box-shadow: none;
+					}
+				}
+			}
+			.cta {
+				text-align: right;
+				margin-top: 30px;
+				padding-right: 20px;
+			}
+		}
+	}
+}

@@ -1,0 +1,31 @@
+.home {
+	background-color: #f1f1f18a;
+	.scroll-wrapper {
+		background-color: #f8fafb;
+		min-height: calc(100vh - 70px);
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
+		& > .content {
+			background-color: #f8fafb;
+			padding: 40px;
+		}
+	}
+	&.open {
+		.navigation {
+			width: 230px;
+			ul {
+				li {
+					a {
+						img {
+							margin-bottom: 0;
+							& + span {
+								display: none;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}

@@ -1,0 +1,149 @@
+@import "../../../variables.scss";
+
+.add-ex-ed-cert {
+	.popup-tabs {
+		background: #f1f5fa;
+		border-radius: 40px;
+		height: 50px;
+		margin-bottom: 40px;
+		border: 1px solid #bcd1e4;
+		.tab {
+			flex: 0.5;
+			height: 100%;
+			border-radius: 40px;
+			cursor: pointer;
+			&:hover {
+				opacity: 0.9;
+			}
+			&.active {
+				background-color: $secondary-color;
+				color: white;
+			}
+		}
+	}
+	.listing {
+		margin-bottom: 80px;
+		& > li {
+			display: flex;
+			align-items: center;
+			margin-bottom: 40px;
+			label {
+				width: 250px;
+				color: #6b6c6f;
+				span {
+					color: $red-color;
+				}
+				&.fancy-toggle {
+					margin-left: 10px;
+					width: 100%;
+				}
+			}
+			input[name="interestedIn"] {
+				display: none;
+			}
+			.common-input,
+			.common-dropdown,
+			.common-textarea,
+			& > div {
+				flex: 1;
+				max-width: 500px;
+			}
+			.common-textarea {
+				height: 70px;
+				min-height: 46px;
+			}
+			.date-outer {
+				display: flex;
+				align-items: center;
+				.date {
+					width: 160px;
+					margin-right: 10;
+				}
+				span {
+					margin: 0 20px;
+				}
+			}
+			&.industry {
+				& > label {
+					min-width: 250px;
+				}
+				div {
+					display: flex;
+					margin-left: 60px;
+					label {
+						width: auto;
+						margin-right: 40px;
+					}
+				}
+			}
+			.upload {
+				.content {
+					position: relative;
+					padding: 0;
+
+					.upload-btn {
+						position: absolute;
+						right: 0;
+						height: 100%;
+						border-radius: 40px;
+						padding: 0 50px;
+						border: none;
+						font-size: 17px;
+						background: #bcd1e4;
+					}
+				}
+				p {
+					margin-bottom: 0;
+					font-size: 14px;
+					color: red;
+				}
+			}
+			.circle-btn {
+				width: 46px;
+				height: 46px;
+				margin-left: 15px;
+				border-radius: 50%;
+				background: $secondary-color;
+				color: white;
+				font-size: 22px;
+				border: none;
+			}
+			&:last-child {
+				margin-bottom: 0;
+				.fancy-toggle + label {
+					width: 100%;
+				}
+			}
+			&.major-minor {
+				align-items: stretch;
+				.label {
+					width: 250px;
+					flex: none;
+					margin-top: 20px;
+				}
+				.inputs {
+					input {
+						margin-top: 15px;
+						&:first-child {
+							margin-top: 0;
+						}
+					}
+				}
+				.button {
+					display: flex;
+					align-items: flex-end;
+					flex: none;
+				}
+			}
+		}
+	}
+	.certificate {
+		img {
+			width: 100%;
+			display: block;
+		}
+	}
+	.error-text {
+		margin-bottom: 15px;
+	}
+}

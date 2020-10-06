@@ -1,0 +1,29 @@
+import React from "react";
+import "react-datepicker/dist/react-datepicker.css";
+import { BrowserRouter, Route, Switch } from "react-router-dom";
+import { useSelector } from "react-redux";
+
+import PrivateRoute from "./routes/PrivateRoute";
+import Auth from "./components/Auth";
+import Home from "./components/Home";
+import Overlay from "./components/Overlay";
+import Popup from "./components/Popup";
+
+const App = () => {
+	const { popup, overlay } = useSelector((state) => state.popupOverlayReducer);
+
+	return (
+		<BrowserRouter basename={"/"}>
+			<Switch>
+				<Route path="/login" component={Auth} />
+				<Route path="/signup" component={Auth} />
+				<Route path="/thank-you" component={Auth} />
+				<PrivateRoute path="/" component={Home} />
+			</Switch>
+			<Overlay active={overlay.show} />
+			<Popup active={popup.show}></Popup>
+		</BrowserRouter>
+	);
+};
+
+export default App;

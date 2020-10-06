@@ -1,0 +1,150 @@
+@import "../../variables.scss";
+
+.header {
+  height: 70px;
+  background-color: #fff;
+  justify-content: space-between;
+  width: 100%;
+  z-index: 8;
+  top: 0;
+  left: 0;
+  position: fixed;
+  box-shadow: 0 2px 40px 1px rgba(221, 229, 252, 0.5);
+  .left,
+  .right {
+    height: 100%;
+    font-size: 16px;
+  }
+  .menu {
+    width: 85px;
+    align-self: stretch;
+    border: none;
+    background-color: $secondary-color;
+    cursor: pointer;
+    text-align: right;
+    padding-right: 30px;
+    transition: all 0.2s ease;
+    svg {
+      color: white;
+      pointer-events: none;
+    }
+    .arrow,
+    .close {
+      display: none;
+    }
+    .arrow {
+      font-size: 32px;
+    }
+    .close {
+      font-size: 32px;
+    }
+    .lines {
+      font-size: 32px;
+    }
+    &:hover {
+      opacity: 0.9;
+    }
+  }
+  .logo {
+    margin-left: 30px;
+    img {
+      height: 56px;
+      display: block;
+    }
+  }
+  .right {
+    .notification {
+      padding: 0 20px;
+      height: 100%;
+      // width: 80px;
+      border-left: 1px solid #afb5c44a;
+      border-right: 1px solid #afb5c44a;
+      color: #afb5c4;
+      cursor: pointer;
+      .icon {
+        position: relative;
+        margin-top: 6px;
+        svg {
+          fill: white;
+          width: 26px;
+          stroke: #afb5c4;
+          stroke-width: 1;
+          stroke-linecap: butt;
+          stroke-dasharray: 0;
+        }
+        .count {
+          position: absolute;
+          background: $primary-color;
+          border-radius: 50%;
+          color: white;
+          width: 20px;
+          height: 20px;
+          right: -8px;
+          top: -9px;
+          font-size: 11px;
+        }
+      }
+      &:hover {
+        background-color: rgb(247, 246, 246);
+      }
+    }
+
+    .user {
+      height: 100%;
+      padding: 0 35px;
+      cursor: pointer;
+      color: white;
+      text-decoration: none;
+      position: relative;
+      min-width: 180px;
+      .user-info {
+        .pic {
+          width: 36px;
+          border-radius: 50%;
+        }
+        .arrow {
+          // width: 17px;
+          color: #bcd1e4;
+          font-size: 28px;
+        }
+        .user-name {
+          font-size: 14px;
+          margin: 0 13px 0 10px;
+          color: $secondary-color;
+        }
+      }
+      .user-nav {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        z-index: 9;
+        background-color: white;
+        border: 1px solid #bcd1ef;
+        border-radius: 5px;
+        overflow: hidden;
+        display: none;
+        li {
+          a {
+            color: #afb5c4;
+            padding: 15px 30px;
+            display: block;
+            border-bottom: 1px solid #bcd1ef;
+            svg {
+              margin-right: 15px;
+            }
+            &:hover {
+              background-color: rgb(247, 246, 246);
+            }
+          }
+        }
+      }
+      &:hover {
+        background-color: rgb(247, 246, 246);
+        .user-nav {
+          display: block;
+        }
+      }
+    }
+  }
+}

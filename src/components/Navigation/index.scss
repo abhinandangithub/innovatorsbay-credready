@@ -1,0 +1,61 @@
+@import "../../variables.scss";
+
+.navigation {
+	width: 85px;
+	background-color: $secondary-color;
+	min-height: calc(100vh - 70px);
+	overflow: hidden;
+	transition: all 0.2s ease;
+	height: calc(100% - 70px);
+	top: 70px;
+	position: fixed;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	ul {
+		margin: 0;
+		padding: 0;
+		li {
+			position: relative;
+			a {
+				background-color: $secondary-color;
+				padding: 20px 0;
+				color: white;
+				text-decoration: none;
+				width: 230px;
+				border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+				img {
+					width: 26px;
+					display: block;
+					margin-bottom: 10px;
+					& + span {
+						position: absolute;
+						font-size: 12px;
+						bottom: 6px;
+					}
+				}
+				.icon {
+					width: 85px;
+				}
+				.text {
+					width: calc(100% - 85px);
+					font-size: 16px;
+				}
+				&.active {
+					background-color: $primary-color;
+				}
+			}
+			&:hover {
+				opacity: 0.9;
+			}
+		}
+		&.bottom {
+			li {
+				a {
+					height: 70px;
+					border-top: 1px solid rgba(255, 255, 255, 0.2);
+				}
+			}
+		}
+	}
+}

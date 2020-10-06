@@ -1,0 +1,68 @@
+import React from "react";
+import { Link } from "react-router-dom";
+
+import "../index.scss";
+import ImgWidgetLogo from "../../../../assets/widget-logo.jpg";
+import ImgWidgetMenu from "../../../../assets/widget-menu.jpg";
+
+function AppliedRelatedJobs(props) {
+	const type = props.applied ? props.applied : props.related;
+	const link = `/jobs/view/${type.id}`;
+
+	const content = (
+		<>
+			<div className="top">
+				<div className="logo">
+					<img src={ImgWidgetLogo} alt={type.logo} />
+				</div>
+				<div className="info">
+					<h3>{type.heading}</h3>
+					<p>{type.subHeading}</p>
+				</div>
+				<button className="menu">
+					<img src={ImgWidgetMenu} alt="Widget Menu" />
+				</button>
+			</div>
+			<div className="bottom">
+				<div className="content">
+					<div className="info flex">
+						<span className="experience">1-3 Yrs</span>
+						<span className="locatoin">Warren, NJ</span>
+					</div>
+					<p className="skills">
+						<b>Skills: </b>
+						{type.skills}
+					</p>
+					<p>
+						<b>Description: </b>
+						{type.description}
+					</p>
+				</div>
+			</div>
+		</>
+	);
+
+	return (
+		<>
+			{props.applied ? (
+				<Link className="widget widget-applied-related-jobs" to={link}>
+					{content}
+					<div className="cta applied">
+						<span className="common-check-icon active"></span>Applied
+					</div>
+				</Link>
+			) : (
+				<div className="widget widget-applied-related-jobs">
+					{content}
+					<div className="cta related">
+						<Link to={link} className="primary-btn blue">
+							View
+						</Link>
+					</div>
+				</div>
+			)}
+		</>
+	);
+}
+
+export default AppliedRelatedJobs;
