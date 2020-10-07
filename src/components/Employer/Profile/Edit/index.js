@@ -1,8 +1,12 @@
 import React, { useEffect } from "react";
-import { connect, useDispatch } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import { getHiringNeeds } from '../../../../store/actions/employer';
-import { getHiringNeedsThunk, getCompanySizeThunk, updateProfileThunk } from '../../../../store/thunks/employer';
+import { connect, useDispatch } from "react-redux";
+import { bindActionCreators } from "redux";
+import { getHiringNeeds } from "../../../../store/actions/employer";
+import {
+	getHiringNeedsThunk,
+	getCompanySizeThunk,
+	updateProfileThunk,
+} from "../../../../store/thunks/employer";
 
 import "./index.scss";
 import Input from "../../../_Elements/Input";
@@ -18,11 +22,18 @@ const companySize = {
 };
 const socialMedia = {
 	heading: "Social Media",
-	content: ["TV", "Social (Facebook, LinkedIn, Instagram, etc.)", "Radio (AM/FM/XM)",
-		"Billboard", "Search Engine", "Streaming Audio (Pandore, Spotify, etc.)",
-		"In the mall", "Podcast", "Other"],
+	content: [
+		"TV",
+		"Social (Facebook, LinkedIn, Instagram, etc.)",
+		"Radio (AM/FM/XM)",
+		"Billboard",
+		"Search Engine",
+		"Streaming Audio (Pandore, Spotify, etc.)",
+		"In the mall",
+		"Podcast",
+		"Other",
+	],
 };
-
 
 function Details(props) {
 	const dispatch = useDispatch();
@@ -35,11 +46,14 @@ function Details(props) {
 		 */
 		name: [],
 		title: [],
-		company: [],
-		street_1: [],
-		city_1: [],
-		state_1: [],
-		description_1: [],
+		website: [],
+		hiringNeeds: [""],
+		companySize: [""],
+		reference: [""],
+		street_0: [],
+		city_0: [],
+		state_0: [],
+		zipCode_0: [],
 
 		formValid: false,
 	});
@@ -54,9 +68,17 @@ function Details(props) {
 		_formData.formValid = true;
 
 		for (var field in _formData) {
+			let skip =
+				field === "hiringNeeds" ||
+				field === "companySize" ||
+				field === "reference"
+					? false
+					: true;
+
 			if (
 				_formData.hasOwnProperty(field) &&
 				field !== "formValid" &&
+				skip &&
 				(_formData[field][0] === "" ||
 					_formData[field][0] === undefined ||
 					_formData[field][0] === null)
@@ -69,34 +91,54 @@ function Details(props) {
 			}
 		}
 
-		if (_formData.formValid) {
-			console.log("submitting form...", _formData);
-			/* SEND DATA TO API */
+		let profileData = {
+			name: _formData["name"][0],
+			title: _formData["title"][0],
+			website: _formData["website"][0],
+			hiresRequired: _formData["hiringNeeds"][0],
+			companySize: _formData["companySize"][0],
+			reference: _formData["reference"][0],
+			addresses: [],
+		};
+
+		for (let i = 0; i < addressCount.length; i++) {
+			let address = {};
+			address.id = i;
+			address.streetAddress = _formData["street_" + i][0];
+			address.city = _formData["city_" + i][0];
+			address.state = _formData["state_" + i][0];
+			address.zip = _formData["zipCode_" + i][0];
+			profileData.addresses.push(address);
 		}
-		console.log("addOtherExperieces", _formData);
-		// setFormData(oldFormData);
+
+		/* IF FORM IS VALID */
+		if (_formData.formValid) {
+			/* SEND DATA TO API */
+			console.log(profileData);
+		}
+
+		// let profileData = {
+		// 	"addresses": [
+		// 		{
+		// 			"city": "247 King St.",
+		// 			"id": 0,
+		// 			"state": "New Jersey",
+		// 			"streetAddress": "08817",
+		// 			"zip": 123456
+		// 		}
+		// 	],
+		// 	"companySize": 1,
+		// 	"errors": {},
+		// 	"hiresRequired": 1,
+		// 	"name": "John Doe",
+		// 	"reference": "Co-Worker",
+		// 	"title": "Human Resource Management",
+		// 	"website": "chelseaseniorliving.com"
+		// };
+
 		setFormData(_formData);
 
-		let profileData = {
-			"addresses": [
-				{
-					"city": "247 King St.",
-					"id": 0,
-					"state": "New Jersey",
-					"streetAddress": "08817",
-					"zip": 123456
-				}
-			],
-			"companySize": 1,
-			"errors": {},
-			"hiresRequired": 1,
-			"name": "John Doe",
-			"reference": "Co-Worker",
-			"title": "Human Resource Management",
-			"website": "chelseaseniorliving.com"
-		};
 		dispatch(updateProfileThunk(null, profileData));
-
 	};
 
 	const handleFieldChange = (field, value) => {
@@ -114,11 +156,11 @@ function Details(props) {
 
 	const renderAddresses = () => {
 		return addressCount.map((address, index) => {
-			let i = ++index;
+			let i = index;
 			return (
 				<ul className="listing" key={index}>
 					<li className="divider">
-						<span>Address {i}</span>
+						<span>Address {i + 1}</span>
 					</li>
 					<li>
 						<label htmlFor={`street_${i}`}>
@@ -126,7 +168,7 @@ function Details(props) {
 							<span
 								className={`error-text ${
 									!formData[`street_${i}`][1] && "hidden"
-									}`}
+								}`}
 							>
 								Required
 							</span>
@@ -144,7 +186,7 @@ function Details(props) {
 							<span
 								className={`error-text ${
 									!formData[`city_${i}`][1] && "hidden"
-									}`}
+								}`}
 							>
 								Required
 							</span>
@@ -162,7 +204,7 @@ function Details(props) {
 							<span
 								className={`error-text ${
 									!formData[`state_${i}`][1] && "hidden"
-									}`}
+								}`}
 							>
 								Required
 							</span>
@@ -175,20 +217,20 @@ function Details(props) {
 						/>
 					</li>
 					<li style={{ marginBottom: "30px" }}>
-						<label htmlFor={`description_${i}`}>
+						<label htmlFor={`zipCode_${i}`}>
 							Zip Code <span>*</span>
 							<span
 								className={`error-text ${
-									!formData[`description_${i}`][1] && "hidden"
-									}`}
+									!formData[`zipCode_${i}`][1] && "hidden"
+								}`}
 							>
 								Required
 							</span>
 						</label>
 						<Input
-							id={`description_${i}`}
+							id={`zipCode_${i}`}
 							type="text"
-							defaultValue={formData[`description_${i}`][0]}
+							defaultValue={formData[`zipCode_${i}`][0]}
 							onChange={(e) => handleFieldChange(e.target.id, e.target.value)}
 						/>
 					</li>
@@ -203,13 +245,13 @@ function Details(props) {
 		setAddressCount(_addressCount);
 
 		/* update form values as well */
-		let i = _addressCount.length;
+		let i = _addressCount.length - 1;
 		setFormData({
 			...formData,
 			[`street_${i}`]: [],
 			[`city_${i}`]: [],
 			[`state_${i}`]: [],
-			[`description_${i}`]: [],
+			[`zipCode_${i}`]: [],
 		});
 	};
 
@@ -259,15 +301,15 @@ function Details(props) {
 						<label htmlFor="company">
 							Company Website <span>*</span>
 							<span
-								className={`error-text ${!formData.company[1] && "hidden"}`}
+								className={`error-text ${!formData.website[1] && "hidden"}`}
 							>
 								Required
 							</span>
 						</label>
 						<Input
-							id="company"
+							id="website"
 							type="text"
-							defaultValue={formData.company[0]}
+							defaultValue={formData.website[0]}
 							onChange={(e) => handleFieldChange(e.target.id, e.target.value)}
 						/>
 					</li>
@@ -276,6 +318,7 @@ function Details(props) {
 						<Dropdown
 							placeholder={hiringNeed.heading}
 							content={props.hiringNeeds}
+							onchange={(value) => handleFieldChange("hiringNeeds", value)}
 						/>
 					</li>
 					<li>
@@ -283,6 +326,7 @@ function Details(props) {
 						<Dropdown
 							placeholder={companySize.heading}
 							content={props.companySize}
+							onchange={(value) => handleFieldChange("companySize", value)}
 						/>
 					</li>
 					<li>
@@ -290,6 +334,7 @@ function Details(props) {
 						<Dropdown
 							placeholder={socialMedia.heading}
 							content={socialMedia.content}
+							onchange={(value) => handleFieldChange("reference", value)}
 						/>
 					</li>
 					<li className="addresses">{renderAddresses()}</li>
@@ -310,14 +355,14 @@ function Details(props) {
 function mapStateToProps(state) {
 	return {
 		hiringNeeds: state.employerReducer.hiringNeeds.data,
-		companySize: state.employerReducer.companySize.data
-	}
+		companySize: state.employerReducer.companySize.data,
+	};
 }
 
 function mapDispatchToProps(dispatch) {
 	return {
-		getHiringNeeds: bindActionCreators(dispatch, getHiringNeeds)
-	}
+		getHiringNeeds: bindActionCreators(dispatch, getHiringNeeds),
+	};
 }
 
 // export default Details;

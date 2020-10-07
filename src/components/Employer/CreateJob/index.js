@@ -114,10 +114,10 @@ function CreateJob() {
 							/>
 						)}
 					>
-						{/* <JobDetails calHeight={calHeight} />
+						<JobDetails calHeight={calHeight} />
 						<JobDescription calHeight={calHeight} />
 						<ExperienceCertificates calHeight={calHeight} />
-						<EmailTemplate calHeight={calHeight} /> */}
+						<EmailTemplate calHeight={calHeight} />
 						<SpecificQuestions calHeight={calHeight} />
 						<CopyLink calHeight={calHeight} />
 						<div className="blank"></div>
