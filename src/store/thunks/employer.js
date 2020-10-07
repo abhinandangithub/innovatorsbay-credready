@@ -4,11 +4,9 @@ import { employeFetchHireRequiredRangesUrl,
 		 employerUpdateUserPhoneUrl, 
 		 employerUpdateEmailUrl,
 		 employerDeleteAccountUrl,
-		 employerUpdateProfileUrl,
-		 employerFetchAllPostedJobsUrl,
-		 employerSendCandidateEmailUrl} from "../api/employer";
+		 employerUpdateProfileUrl} from "../api/employer";
 
-import { setHiringNeeds, setCompanySize, setPhoneNumber, setEmail, setEmployerProfile, setEmployerJobs } from "../actions/employer";
+import { setHiringNeeds, setCompanySize, setPhoneNumber, setEmail, setEmployerProfile } from "../actions/employer";
 // import Cookies from "js-cookie";
 import { setDefaultAuthorizationHeader } from "../utility";
 import { requestConfig } from "./utils";
@@ -71,28 +69,5 @@ export const deleteAccount = (token) => async (dispatch, getState) => {
 		if (!data) return false;
 	} catch (err) {
 		if (err.response) console.error(`failed to delete employer account ${err}`);
-	}
-};
-
-export const getPostedJobs = (token) => async (dispatch, getState) => {
-	try {
-		const state = getState();
-		setDefaultAuthorizationHeader(state.authReducer.JWT);
-        const data = await Axios.get(employerFetchAllPostedJobsUrl, requestConfig);
-		if (!data) return false;
-		dispatch(setEmployerJobs(data.data));
-	} catch (err) {
-		if (err.response) console.error(`failed to fetch the posted jobs ${err}`);
-	}
-};
-
-export const sendEmailNotif = (notif) => async (dispatch, getState) => {
-	try {
-		const state = getState();
-		setDefaultAuthorizationHeader(state.authReducer.JWT);
-        const data = await Axios.post(employerSendCandidateEmailUrl, notif, requestConfig);
-		if (!data) return false;
-	} catch (err) {
-		if (err.response) console.error(`failed to send email notification to candidate ${err}`);
 	}
 };

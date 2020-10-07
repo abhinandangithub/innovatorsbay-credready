@@ -123,6 +123,16 @@
 	.popup-createNewQuestion {
 		width: 730px;
 	}
+	.popup-choosePrivateQuestions,
+	.popup-choosePublicQuestions {
+		width: 900px;
+		h1 {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			padding: 20px 30px;
+		}
+	}
 	.popup-addNewQuestion {
 		width: 730px;
 	}

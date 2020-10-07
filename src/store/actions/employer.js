@@ -45,10 +45,3 @@ export const setEmployerProfile = (val) => {
 		value: val,
 	};
 };
-
-export const setEmployerJobs = (val) => {
-	return {
-		type: actionTypes.SET_EMPLOYER_POSTED_JOBS,
-		value: val,
-	};
-};

@@ -32,14 +32,14 @@
     "react-redux": "^7.2.1",
     "react-router-dom": "^5.2.0",
     "react-rte": "^0.16.3",
-    "react-scripts": "^3.4.3",
+    "react-scripts": "3.4.1",
     "react-scroll": "^1.8.1",
     "react-through": "^1.1.4",
     "redux": "^4.0.5",
     "redux-thunk": "^2.3.0"
   },
   "scripts": {
-    "start": "set PORT=3006 && react-scripts start",
+    "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"

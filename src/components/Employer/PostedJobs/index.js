@@ -1,54 +1,36 @@
-import React, { useEffect } from "react";
-import { connect, useDispatch } from 'react-redux';
-import { getPostedJobs, sendEmailNotif } from '../../../store/thunks/employer';
-
+import React from "react";
 import { Link } from "react-router-dom";
 
 import "./index.scss";
 
-function PostedJobs(props) {
-	const dispatch = useDispatch();
-
-	useEffect(() => {
-		dispatch(getPostedJobs());
-	}, [dispatch]);
-
-	const handleSendEmail = (e) => {
-		if(e.target.checked) {
-			dispatch(sendEmailNotif({
-				"candidateId": 0,
-				"emailTemplateId": 0,
-				"errors": {}
-			}));
-		}
-	}
-
+function PostedJobs() {
 	const jobsList = [1, 2];
 
 	const list = (
 		<>
-			{/* <h2 className="heading">Certified Nursing Assistant</h2> */}
-			<h2 className="heading">{props.postedJobs.job_title}</h2>
+			<h2 className="heading">Certified Nursing Assistant</h2>
 			<p>
-				<span>Description: </span>{props.postedJobs.job_description}
+				<span>Description: </span>We are a growing company and have multiple
+				roles open for a skilled CNA. You will provide outstanding patient care
+				and physical support for patients and residents on a daily basis. To do
+				well in this role you should have your state certified nursing assistant
+				certification…
 			</p>
 			<ul className="common-skills-list">
 				<li>Skills: </li>
-				{props.postedJobs.strengths.map((val,i) => {
-					return <li key={i}>{val.name}</li>
-				})}
+				<li>Anatomy</li>
+				<li>Patient care</li>
+				<li>Diagnostic testing</li>
 			</ul>
 			<p className="job-openings">
-				<span>Job Openings: </span>{props.postedJobs.open_positions}
+				<span>Job Openings: </span>2
 			</p>
 			<div className="list-btn">
 				<ul className="info">
-					{/* <li>Warren, NY</li> */}
-					<li>{props.postedJobs.address.city}, {props.postedJobs.address.state}</li>
-					{/* <li>January 21, 2020</li> */}
-					<li>{props.postedJobs.modified_on}</li>
-					<li>{props.postedJobs.modified_by}</li>
-					<li>Candidates applied {props.postedJobs.count_of_applied_candidates}</li>
+					<li>Warren, NY</li>
+					<li>January 21, 2020</li>
+					<li>John Doe</li>
+					<li>Candidates applied 12</li>
 				</ul>
 				<Link to="/jobs/candidates-list" className="primary-btn blue">
 					View Candidates
@@ -59,7 +41,6 @@ function PostedJobs(props) {
 					id="emailNotification"
 					type="checkbox"
 					className="fancy-toggle blue"
-					onChange={handleSendEmail}
 				/>
 				<label htmlFor="emailNotification">
 					<span className="input"></span>Receive Email Notification
@@ -128,11 +109,4 @@ function PostedJobs(props) {
 	);
 }
 
-function mapStateToProps(state) {
-	return {
-		postedJobs: state.employerReducer.postedJobs.data[0]
-	}
-}
-
-// export default PostedJobs;
-export default connect(mapStateToProps)(PostedJobs);
+export default PostedJobs;

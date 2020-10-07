@@ -10,7 +10,7 @@ import JobSpecificQuestions from "./Questions/JobSpecificQuestions";
 
 function SpecificQuestions(props) {
 	const parent = React.useRef();
-	const [activeTab, setActiveTab] = React.useState(2);
+	const [activeTab, setActiveTab] = React.useState(0);
 
 	React.useEffect(() => {
 		// props.calHeight(parent.current.clientHeight);
