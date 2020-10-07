@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { connect, useDispatch } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { getHiringNeeds } from '../../../../store/actions/employer';
-import { getHiringNeedsThunk, getCompanySizeThunk } from '../../../../store/thunks/employer';
+import { getHiringNeedsThunk, getCompanySizeThunk, updateProfileThunk } from '../../../../store/thunks/employer';
 
 import "./index.scss";
 import Input from "../../../_Elements/Input";
@@ -70,6 +70,25 @@ function Details(props) {
 		}
 		console.log("addOtherExperieces", formData);
 		setFormData(oldFormData);
+		let profileData = {
+			"addresses": [
+				{
+				  "city": "247 King St.",
+				  "id": 0,
+				  "state": "New Jersey",
+				  "streetAddress": "08817",
+				  "zip": 123456
+				}
+			  ],
+			  "companySize": 1,
+			  "errors": {},
+			  "hiresRequired": 1,
+			  "name": "John Doe",
+			  "reference": "Co-Worker",
+			  "title": "Human Resource Management",
+			  "website": "chelseaseniorliving.com"
+		};
+		dispatch(updateProfileThunk(null, profileData));
 	};
 
 	const handleFieldChange = (field, value) => {

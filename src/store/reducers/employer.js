@@ -16,6 +16,7 @@ const initialState = {
 	},
 	phoneNumber: "",
 	email: "",
+	profile: {},
 	JWT: null,
 };
 
@@ -58,6 +59,11 @@ const reducer = (state = initialState, action) => {
 		case actionTypes.SET_EMAIL:
 			return updateObject(state, {
 				email: action.value
+			});
+
+		case actionTypes.SET_EMPLOYER_PROFILE:
+			return updateObject(state, {
+				profile: action.value
 			});
 
 		default:

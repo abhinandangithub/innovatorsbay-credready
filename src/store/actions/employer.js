@@ -38,3 +38,10 @@ export const setEmail = (val) => {
 		value: val,
 	};
 };
+
+export const setEmployerProfile = (val) => {
+	return {
+		type: actionTypes.SET_EMPLOYER_PROFILE,
+		value: val,
+	};
+};

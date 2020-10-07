@@ -3,9 +3,10 @@ import { employeFetchHireRequiredRangesUrl,
 		 employerFetchComapnySizeUrl,
 		 employerUpdateUserPhoneUrl, 
 		 employerUpdateEmailUrl,
-		 employerDeleteAccountUrl} from "../api/employer";
+		 employerDeleteAccountUrl,
+		 employerUpdateProfileUrl} from "../api/employer";
 
-import { setHiringNeeds, setCompanySize, setPhoneNumber, setEmail } from "../actions/employer";
+import { setHiringNeeds, setCompanySize, setPhoneNumber, setEmail, setEmployerProfile } from "../actions/employer";
 // import Cookies from "js-cookie";
 // import { setDefaultAuthorizationHeader } from "../utility";
 import { requestConfig } from "./utils";
@@ -27,6 +28,16 @@ export const getCompanySizeThunk = (token) => async (dispatch, getState) => {
 		dispatch(setCompanySize(data.data));
 	} catch (err) {
 		if (err.response) console.error(`failed to fetch company size ${err}`);
+	}
+};
+
+export const updateProfileThunk = (token, profile) => async (dispatch, getState) => {
+	try {
+        const data = await Axios.patch(employerUpdateProfileUrl, profile, requestConfig);
+		if (!data) return false;
+		dispatch(setEmployerProfile(profile));
+	} catch (err) {
+		if (err.response) console.error(`failed to update employer profile ${err}`);
 	}
 };
 
