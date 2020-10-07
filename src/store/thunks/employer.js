@@ -8,7 +8,7 @@ import { employeFetchHireRequiredRangesUrl,
 
 import { setHiringNeeds, setCompanySize, setPhoneNumber, setEmail, setEmployerProfile } from "../actions/employer";
 // import Cookies from "js-cookie";
-// import { setDefaultAuthorizationHeader } from "../utility";
+import { setDefaultAuthorizationHeader } from "../utility";
 import { requestConfig } from "./utils";
 
 export const getHiringNeedsThunk = (token) => async (dispatch, getState) => {
@@ -33,6 +33,8 @@ export const getCompanySizeThunk = (token) => async (dispatch, getState) => {
 
 export const updateProfileThunk = (token, profile) => async (dispatch, getState) => {
 	try {
+		const state = getState();
+		setDefaultAuthorizationHeader(state.authReducer.JWT);
         const data = await Axios.patch(employerUpdateProfileUrl, profile, requestConfig);
 		if (!data) return false;
 		dispatch(setEmployerProfile(profile));
