@@ -184,10 +184,23 @@
 }
 .general-questions {
 	.general-question {
+		text-align: left;
 		width: 100%;
 		.question {
 			&:before {
 				content: "";
+			}
+			& + .question_info {
+				color: grey;
+				list-style: none;
+				flex-direction: column;
+				align-items: flex-start;
+				li {
+					margin-top: 15px;
+					&:last-child {
+						margin-bottom: 10px;
+					}
+				}
 			}
 		}
 		.options {

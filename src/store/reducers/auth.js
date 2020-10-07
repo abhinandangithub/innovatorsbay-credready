@@ -8,7 +8,7 @@ const initialState = {
 		phoneOtp: false,
 	},
 	loggedIn: {
-		value: true,
+		value: false,
 		as: "employer",
 	},
 	singUp: {

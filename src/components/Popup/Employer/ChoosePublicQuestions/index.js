@@ -7,7 +7,7 @@ import { togglePopup } from "../../../../store/actions/popup_overlay";
 
 import "./index.scss";
 
-function ChoosePrivateQuestions() {
+function ChoosePublicQuestions() {
 	const dispatch = useDispatch();
 
 	const createNewQuestion = () => {
@@ -15,9 +15,9 @@ function ChoosePrivateQuestions() {
 	};
 
 	return (
-		<div className="choose-private-question">
+		<div className="choose-public-question">
 			<h1>
-				Choose from Private Questions
+				Choose from Public Questions
 				<button class="common-heading-btn" onClick={createNewQuestion}>
 					<span></span>Create New Question
 				</button>
@@ -159,4 +159,4 @@ function ChoosePrivateQuestions() {
 	);
 }
 
-export default ChoosePrivateQuestions;
+export default ChoosePublicQuestions;

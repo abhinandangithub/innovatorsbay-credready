@@ -1,5 +1,6 @@
 import React from "react";
 import Input from "../../_Elements/Input";
+import { Link } from "react-router-dom";
 
 function CopyLink(props) {
 	const parent = React.useRef();
@@ -47,7 +48,9 @@ Certified Nursing Assistant</a>`}
 				</div>
 			</div>
 			<div className="cta">
-				<button className="primary-btn">Post a Job</button>
+				<Link to="/jobs" className="primary-btn">
+					Post a Job
+				</Link>
 			</div>
 		</>
 	);

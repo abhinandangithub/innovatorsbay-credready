@@ -21,6 +21,7 @@ import AddStrength from "./AddStrength";
 import CreateEmailTemplate from "./Employer/CreateEmailTemplate";
 import CreateNewQuestion from "./Employer/CreateNewQuestion";
 import ChoosePrivateQuestions from "./Employer/ChoosePrivateQuestions";
+import ChoosePublicQuestions from "./Employer/ChoosePublicQuestions";
 import AddNewQuestion from "./Employer/AddNewQuestion";
 
 let scrollBarStyle = {
@@ -68,6 +69,8 @@ function Popup(props) {
 				return <CreateNewQuestion />;
 			case "choosePrivateQuestions":
 				return <ChoosePrivateQuestions />;
+			case "choosePublicQuestions":
+				return <ChoosePublicQuestions />;
 			case "addNewQuestion":
 				return <AddNewQuestion />;
 			case "populateInformation":

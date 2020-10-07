@@ -143,6 +143,42 @@ input[type="number"] {
 		background-position: 10px center;
 	}
 }
+.common-heading-btn {
+	box-shadow: 0 2px 30px 1px rgba(176, 192, 237, 0.45);
+	background-color: #0092d0;
+	border: none;
+	color: white;
+	font-size: 18px;
+	font-weight: 100;
+	display: flex;
+	padding: 10px 20px;
+	span {
+		position: relative;
+		width: 20px;
+		height: 20px;
+		border-radius: 40px;
+		border: 2px solid white;
+		display: block;
+		margin-right: 10px;
+		&:before,
+		&:after {
+			content: "";
+			position: absolute;
+			background: white;
+			left: 50%;
+			top: 50%;
+			transform: translate(-50%, -50%);
+		}
+		&:before {
+			width: 2px;
+			height: 8px;
+		}
+		&:after {
+			width: 8px;
+			height: 2px;
+		}
+	}
+}
 .common-skills-list {
 	display: flex;
 	align-items: center;
