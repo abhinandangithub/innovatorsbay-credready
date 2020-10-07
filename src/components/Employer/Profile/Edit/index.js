@@ -84,7 +84,7 @@ function Details(props) {
 					"id": 0,
 					"state": "New Jersey",
 					"streetAddress": "08817",
-					"zip": 123456
+					"zip": 12345
 				}
 			],
 			"companySize": 1,
