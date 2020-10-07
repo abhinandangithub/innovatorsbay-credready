@@ -189,3 +189,11 @@ export const employerAddQuestionInQuestionBank = constructUrl(
   employerRouteWithBase,
   "question/update"
 );
+
+/**
+ * Name: delete employer account
+ */
+export const employerDeleteAccountUrl = constructUrl(
+  employerRouteWithBase,
+  "account/delete"
+);

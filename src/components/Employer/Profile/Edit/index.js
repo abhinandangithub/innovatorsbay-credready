@@ -1,4 +1,8 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { connect, useDispatch } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { getHiringNeeds } from '../../../../store/actions/employer';
+import { getHiringNeedsThunk, getCompanySizeThunk } from '../../../../store/thunks/employer';
 
 import "./index.scss";
 import Input from "../../../_Elements/Input";
@@ -14,10 +18,14 @@ const companySize = {
 };
 const socialMedia = {
 	heading: "Social Media",
-	content: ["Option 1", "Option 2", "Option 3", "Option 4"],
+	content: ["TV", "Social (Facebook, LinkedIn, Instagram, etc.)", "Radio (AM/FM/XM)", 
+			  "Billboard", "Search Engine", "Streaming Audio (Pandore, Spotify, etc.)",
+			  "In the mall", "Podcast", "Other"],
 };
 
-function Details() {
+function Details(props) {
+	const dispatch = useDispatch();
+	
 	const [formData, setFormData] = React.useState({
 		/**
 		 * * field: ['value', 'error']
@@ -32,6 +40,11 @@ function Details() {
 
 		formValid: false,
 	});
+
+	useEffect(() => {
+		dispatch(getHiringNeedsThunk());
+		dispatch(getCompanySizeThunk());
+	}, [dispatch]);
 
 	const handleSubmit = () => {
 		let oldFormData = { ...formData };
@@ -119,16 +132,16 @@ function Details() {
 					</li>
 					<li>
 						<label>Hiring Needs</label>
-						<Dropdown
+						<Dropdown 
 							placeholder={hiringNeed.heading}
-							content={hiringNeed.content}
+							content={props.hiringNeeds}
 						/>
 					</li>
 					<li>
 						<label>Company Size</label>
 						<Dropdown
 							placeholder={companySize.heading}
-							content={companySize.content}
+							content={props.companySize}
 						/>
 					</li>
 					<li>
@@ -218,4 +231,18 @@ function Details() {
 	);
 }
 
-export default Details;
+function mapStateToProps (state ) {
+	return {
+		hiringNeeds: state.employerReducer.hiringNeeds.data,	
+		companySize: state.employerReducer.companySize.data	
+	}
+}
+
+function mapDispatchToProps (dispatch) {
+	return {
+		getHiringNeeds: bindActionCreators(dispatch, getHiringNeeds)
+	}
+}
+
+// export default Details;
+export default connect(mapStateToProps, mapDispatchToProps)(Details);

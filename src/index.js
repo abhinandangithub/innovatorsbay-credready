@@ -8,12 +8,14 @@ import "./index.scss";
 import App from "./App";
 import authReducer from "./store/reducers/auth";
 import popupOverlayReducer from "./store/reducers/popup_overlay";
+import employerReducer from "./store/reducers/employer";
 import candidateSetDataReducer from "./modals/candidateProfile/index";
 
 const rootReducer = combineReducers({
 	authReducer,
 	popupOverlayReducer,
 	candidateSetDataReducer,
+	employerReducer
 });
 
 /* Middleware */

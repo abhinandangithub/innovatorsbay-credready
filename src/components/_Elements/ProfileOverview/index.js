@@ -17,6 +17,7 @@ import {
 	togglePopup,
 	toggleOverlay,
 } from "../../../store/actions/popup_overlay";
+import { deleteAccount } from '../../../store/thunks/employer';
 
 function ProfileOverview(props) {
 	const dispatch = useDispatch();
@@ -25,6 +26,7 @@ function ProfileOverview(props) {
 		// console.log("deleting");
 		dispatch(toggleOverlay(true));
 		dispatch(togglePopup([true, "delete", { what: "profile" }]));
+		dispatch(deleteAccount());
 	};
 
 	return (
