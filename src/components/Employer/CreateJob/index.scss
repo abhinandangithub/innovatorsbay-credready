@@ -198,6 +198,9 @@
 						}
 					}
 					&.specific-questions {
+						.add-btn {
+							margin-bottom: 20px;
+						}
 						& > .heading {
 							padding: 0;
 							ul {

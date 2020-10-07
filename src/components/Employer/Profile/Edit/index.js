@@ -18,25 +18,28 @@ const companySize = {
 };
 const socialMedia = {
 	heading: "Social Media",
-	content: ["TV", "Social (Facebook, LinkedIn, Instagram, etc.)", "Radio (AM/FM/XM)", 
-			  "Billboard", "Search Engine", "Streaming Audio (Pandore, Spotify, etc.)",
-			  "In the mall", "Podcast", "Other"],
+	content: ["TV", "Social (Facebook, LinkedIn, Instagram, etc.)", "Radio (AM/FM/XM)",
+		"Billboard", "Search Engine", "Streaming Audio (Pandore, Spotify, etc.)",
+		"In the mall", "Podcast", "Other"],
 };
+
 
 function Details(props) {
 	const dispatch = useDispatch();
-	
+
+	const [addressCount, setAddressCount] = React.useState([""]);
+
 	const [formData, setFormData] = React.useState({
 		/**
 		 * * field: ['value', 'error']
 		 */
-		experienceType: [],
-		organizationName: [],
+		name: [],
 		title: [],
-		startDate: [],
-		endDate: [],
-		location: [],
-		description: [],
+		company: [],
+		street_1: [],
+		city_1: [],
+		state_1: [],
+		description_1: [],
 
 		formValid: false,
 	});
@@ -47,48 +50,53 @@ function Details(props) {
 	}, [dispatch]);
 
 	const handleSubmit = () => {
-		let oldFormData = { ...formData };
-		oldFormData.formValid = true;
+		let _formData = { ...formData };
+		_formData.formValid = true;
 
-		for (var field in oldFormData) {
+		for (var field in _formData) {
 			if (
-				oldFormData.hasOwnProperty(field) &&
+				_formData.hasOwnProperty(field) &&
 				field !== "formValid" &&
-				(oldFormData[field][0] === "" ||
-					oldFormData[field][0] === undefined ||
-					oldFormData[field][0] === null)
+				(_formData[field][0] === "" ||
+					_formData[field][0] === undefined ||
+					_formData[field][0] === null)
 			) {
-				oldFormData[field][0] = "";
-				oldFormData[field].push("Required");
-				oldFormData.formValid = false;
+				_formData[field][0] = "";
+				_formData.formValid = false;
+				if (_formData[field][1] !== "Required") {
+					_formData[field].push("Required");
+				}
 			}
 		}
 
-		if (oldFormData.formValid) {
-			console.log("submitting form...");
-			/* send data to api */
+		if (_formData.formValid) {
+			console.log("submitting form...", _formData);
+			/* SEND DATA TO API */
 		}
-		console.log("addOtherExperieces", formData);
-		setFormData(oldFormData);
+		console.log("addOtherExperieces", _formData);
+		// setFormData(oldFormData);
+		setFormData(_formData);
+
 		let profileData = {
 			"addresses": [
 				{
-				  "city": "247 King St.",
-				  "id": 0,
-				  "state": "New Jersey",
-				  "streetAddress": "08817",
-				  "zip": 123456
+					"city": "247 King St.",
+					"id": 0,
+					"state": "New Jersey",
+					"streetAddress": "08817",
+					"zip": 123456
 				}
-			  ],
-			  "companySize": 1,
-			  "errors": {},
-			  "hiresRequired": 1,
-			  "name": "John Doe",
-			  "reference": "Co-Worker",
-			  "title": "Human Resource Management",
-			  "website": "chelseaseniorliving.com"
+			],
+			"companySize": 1,
+			"errors": {},
+			"hiresRequired": 1,
+			"name": "John Doe",
+			"reference": "Co-Worker",
+			"title": "Human Resource Management",
+			"website": "chelseaseniorliving.com"
 		};
 		dispatch(updateProfileThunk(null, profileData));
+
 	};
 
 	const handleFieldChange = (field, value) => {
@@ -104,6 +112,115 @@ function Details(props) {
 		});
 	};
 
+	const renderAddresses = () => {
+		return addressCount.map((address, index) => {
+			let i = ++index;
+			return (
+				<ul className="listing" key={index}>
+					<li className="divider">
+						<span>Address {i}</span>
+					</li>
+					<li>
+						<label htmlFor={`street_${i}`}>
+							Street Address <span>*</span>
+							<span
+								className={`error-text ${
+									!formData[`street_${i}`][1] && "hidden"
+									}`}
+							>
+								Required
+							</span>
+						</label>
+						<Input
+							id={`street_${i}`}
+							type="text"
+							defaultValue={formData[`street_${i}`][0]}
+							onChange={(e) => handleFieldChange(e.target.id, e.target.value)}
+						/>
+					</li>
+					<li>
+						<label htmlFor={`city_${i}`}>
+							City <span>*</span>
+							<span
+								className={`error-text ${
+									!formData[`city_${i}`][1] && "hidden"
+									}`}
+							>
+								Required
+							</span>
+						</label>
+						<Input
+							id={`city_${i}`}
+							type="text"
+							defaultValue={formData[`city_${i}`][0]}
+							onChange={(e) => handleFieldChange(e.target.id, e.target.value)}
+						/>
+					</li>
+					<li>
+						<label htmlFor={`state_${i}`}>
+							State <span>*</span>
+							<span
+								className={`error-text ${
+									!formData[`state_${i}`][1] && "hidden"
+									}`}
+							>
+								Required
+							</span>
+						</label>
+						<Input
+							id={`state_${i}`}
+							type="text"
+							defaultValue={formData[`state_${i}`][0]}
+							onChange={(e) => handleFieldChange(e.target.id, e.target.value)}
+						/>
+					</li>
+					<li style={{ marginBottom: "30px" }}>
+						<label htmlFor={`description_${i}`}>
+							Zip Code <span>*</span>
+							<span
+								className={`error-text ${
+									!formData[`description_${i}`][1] && "hidden"
+									}`}
+							>
+								Required
+							</span>
+						</label>
+						<Input
+							id={`description_${i}`}
+							type="text"
+							defaultValue={formData[`description_${i}`][0]}
+							onChange={(e) => handleFieldChange(e.target.id, e.target.value)}
+						/>
+					</li>
+				</ul>
+			);
+		});
+	};
+
+	const addAdress = () => {
+		let _addressCount = [...addressCount];
+		_addressCount.push("");
+		setAddressCount(_addressCount);
+
+		/* update form values as well */
+		let i = _addressCount.length;
+		setFormData({
+			...formData,
+			[`street_${i}`]: [],
+			[`city_${i}`]: [],
+			[`state_${i}`]: [],
+			[`description_${i}`]: [],
+		});
+	};
+
+	React.useEffect(() => {
+		// effect
+		// console.log(formData);
+		return () => {
+			// cleanup
+		};
+	}, [formData]);
+
 	return (
 		<div className="profile-details">
 			Welcome Aboard! Please fill in the details below about your company to get
@@ -111,47 +228,52 @@ function Details(props) {
 			<div className="content">
 				<ul className="listing">
 					<li>
-						<label>
+						<label htmlFor="name">
 							Full Name <span>*</span>
-							<span
-								className={`error-text ${
-									!formData.organizationName[1] && "hidden"
-								}`}
-							>
+							<span className={`error-text ${!formData.name[1] && "hidden"}`}>
 								Required
 							</span>
 						</label>
-						<Input type="text" />
+						<Input
+							id="name"
+							type="text"
+							defaultValue={formData.name[0]}
+							onChange={(e) => handleFieldChange(e.target.id, e.target.value)}
+						/>
 					</li>
 					<li>
-						<label>
+						<label htmlFor="title">
 							Title <span>*</span>
-							<span
-								className={`error-text ${
-									!formData.organizationName[1] && "hidden"
-								}`}
-							>
+							<span className={`error-text ${!formData.title[1] && "hidden"}`}>
 								Required
 							</span>
 						</label>
-						<Input type="text" />
+						<Input
+							id="title"
+							type="text"
+							defaultValue={formData.title[0]}
+							onChange={(e) => handleFieldChange(e.target.id, e.target.value)}
+						/>
 					</li>
 					<li>
-						<label>
+						<label htmlFor="company">
 							Company Website <span>*</span>
 							<span
-								className={`error-text ${
-									!formData.organizationName[1] && "hidden"
-								}`}
+								className={`error-text ${!formData.company[1] && "hidden"}`}
 							>
 								Required
 							</span>
 						</label>
-						<Input type="text" />
+						<Input
+							id="company"
+							type="text"
+							defaultValue={formData.company[0]}
+							onChange={(e) => handleFieldChange(e.target.id, e.target.value)}
+						/>
 					</li>
 					<li>
 						<label>Hiring Needs</label>
-						<Dropdown 
+						<Dropdown
 							placeholder={hiringNeed.heading}
 							content={props.hiringNeeds}
 						/>
@@ -170,75 +292,10 @@ function Details(props) {
 							content={socialMedia.content}
 						/>
 					</li>
-					<li>
-						<ul className="listing">
-							<li className="divider">
-								<span>Address 1</span>
-							</li>
-							<li>
-								<label>
-									Street Address <span>*</span>
-									<span
-										className={`error-text ${
-											!formData.organizationName[1] && "hidden"
-										}`}
-									>
-										Required
-									</span>
-								</label>
-								<Input type="text" />
-							</li>
-							<li>
-								<label>
-									City <span>*</span>
-									<span
-										className={`error-text ${
-											!formData.organizationName[1] && "hidden"
-										}`}
-									>
-										Required
-									</span>
-								</label>
-								<Input type="text" />
-							</li>
-							<li>
-								<label>
-									State <span>*</span>
-									<span
-										className={`error-text ${
-											!formData.organizationName[1] && "hidden"
-										}`}
-									>
-										Required
-									</span>
-								</label>
-								<Input type="text" />
-							</li>
-							<li>
-								<label>
-									Zip Code <span>*</span>
-									<span
-										className={`error-text ${
-											!formData.organizationName[1] && "hidden"
-										}`}
-									>
-										Required
-									</span>
-								</label>
-								<Input type="text" />
-							</li>
-						</ul>
-					</li>
+					<li className="addresses">{renderAddresses()}</li>
 				</ul>
-				<button className="add-address">
-					<span className="text">Add Address</span> <span>*</span>
-					<span
-						className={`error-text ${
-							!formData.organizationName[1] && "hidden"
-						}`}
-					>
-						Required
-					</span>
+				<button className="add-address" id="addAdressBtn" onClick={addAdress}>
+					<span className="text">Add Address</span>
 				</button>
 			</div>
 			<div className="cta">
@@ -250,14 +307,14 @@ function Details(props) {
 	);
 }
 
-function mapStateToProps (state ) {
+function mapStateToProps(state) {
 	return {
-		hiringNeeds: state.employerReducer.hiringNeeds.data,	
-		companySize: state.employerReducer.companySize.data	
+		hiringNeeds: state.employerReducer.hiringNeeds.data,
+		companySize: state.employerReducer.companySize.data
 	}
 }
 
-function mapDispatchToProps (dispatch) {
+function mapDispatchToProps(dispatch) {
 	return {
 		getHiringNeeds: bindActionCreators(dispatch, getHiringNeeds)
 	}

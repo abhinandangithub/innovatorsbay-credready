@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import DatePicker from "react-datepicker";
+import Highcharts from "highcharts";
+import HighchartsReact from "highcharts-react-official";
 
 import "./index.scss";
 import Dropdown from "../../_Elements/Dropdown";
@@ -17,6 +19,19 @@ const metrics = {
 };
 
 function Dashboard() {
+	const options = {
+		chart: {
+			type: "spline",
+		},
+		title: {
+			text: "My chart",
+		},
+		series: [
+			{
+				data: [1, 2, 1, 4, 3, 6],
+			},
+		],
+	};
 	const [fromDate, setFromDate] = useState();
 	const [toDate, setToDate] = useState();
 
@@ -78,7 +93,9 @@ function Dashboard() {
 				<div className="widget">
 					<div className="heading">Recruitment funnel</div>
 					<div className="content">
-						<img src={ImgWD1} alt="Recruitment funnel" />
+						{/* <ChartDemo /> */}
+						<HighchartsReact highcharts={Highcharts} options={options} />
+						{/* <img src={ImgWD1} alt="Recruitment funnel" /> */}
 					</div>
 				</div>
 				<div className="widget">
