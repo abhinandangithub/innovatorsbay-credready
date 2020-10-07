@@ -59,16 +59,16 @@ function Login(props) {
 	};
 	useEffect(() => {
 		// console.log("Loging as a " + loginType);
-		setTimeout(() => {
-			// console.log("REDIRECTING...", auth.loggedIn.as);
-			if (auth.loggedIn.value) {
-				if (auth.loggedIn.as === "candidate") {
-					props.history.push("/profile/resume");
-				} else {
-					props.history.push("/");
-				}
-			}
-		}, 1000);
+		// setTimeout(() => {
+		// 	 console.log("REDIRECTING...", auth.loggedIn.as);
+		// 	if (auth.loggedIn.value) {
+		// 		if (auth.loggedIn.as === "candidate") {
+		// 			props.history.push("/profile/resume");
+		// 		} else {
+		// 			props.history.push("/");
+		// 		}
+		// 	}
+		// }, 1000);
 		return () => {
 			// cleanup
 		};
