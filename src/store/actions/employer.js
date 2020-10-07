@@ -52,3 +52,10 @@ export const setEmployerJobs = (val) => {
 		value: val,
 	};
 };
+
+export const setCandidatesList = (val) => {
+	return {
+		type: actionTypes.SET_CANDIDATES_LIST,
+		value: val,
+	};
+};

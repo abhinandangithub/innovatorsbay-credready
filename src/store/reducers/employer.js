@@ -16,7 +16,57 @@ const initialState = {
 	},
 	phoneNumber: "",
 	email: "",
-	profile: {},
+	profile: {
+			"message": "Success",
+			"data": {
+				"employerId": 2,
+				"username": "jane@chelseaseniorliving.com",
+				"name": "Jane Feldner",
+				"title": "Senior Nurse",
+				"role_id": 2,
+				"org_id": 1,
+				"org": {
+					"orgId": 1,
+					"org_name": "Chelsea Senior Living",
+					"naics_code": "623110",
+					"hires_required": 1,
+					"company_size": 2,
+					"reference_source": "LinkedIn",
+					"website": "https://www.chelseaseniorliving.com/",
+					"address": []
+				},
+				"contacts": [
+					{
+						"id": 9,
+						"contact_type": "email",
+						"contact": "jane@chelseaseniorliving.com",
+						"is_verified": true
+					},
+					{
+						"id": 10,
+						"contact_type": "phone",
+						"contact": "+16173837817",
+						"is_verified": true
+					}
+				],
+				"role": {
+					"role_id": 2,
+					"role_name": "employer",
+					"is_active": true,
+					"privileges": [
+						{
+							"privilege_id": 2,
+							"role_id": 2
+						}
+					]
+				},
+				"created_by": "Jane Doe",
+				"created_on": "Oct 1, 2020, 1:27:37 AM",
+				"modified_by": "Jane Doe",
+				"modified_on": "Oct 1, 2020, 1:27:37 AM"
+			},
+			"status": "OK"
+	},
 	postedJobs: {
 		"message":"Question added successfully",
 		"data":[
@@ -100,6 +150,40 @@ const initialState = {
 		],
 		"status":"OK"
 	 },
+	 candidatesList: {
+		"message": "Candidate fetched successfully",
+		"data": [
+			{
+				"job_app_id": 1,
+				"candidate_id": 1,
+				"job_id": 1,
+				"email_template_id": 3,
+				"candidate_name": "Mike Rogers",
+				"title": "Certified Nursing Assistant",
+				"candidate_experience": "2.0 year(s)",
+				"current_organization": "ABC Staffing",
+				"status": "Emailed",
+				"readiness_index": 82,
+				"modified_by": "Jane Feldner",
+				"modified_on": "Oct 7, 2020, 4:54:54 PM"
+			},
+			{
+				"job_app_id": 2,
+				"candidate_id": 3,
+				"job_id": 1,
+				"email_template_id": 3,
+				"candidate_name": "Peter Gray",
+				"title": "Developer",
+				"candidate_experience": "3.0 year(s)",
+				"current_organization": "ABC Staffing",
+				"status": "Applied",
+				"readiness_index": 20,
+				"modified_by": "admin",
+				"modified_on": "Oct 6, 2020, 6:02:26 PM"
+			}
+		],
+		"status": "OK"
+	},
 	JWT: null,
 };
 
@@ -147,6 +231,11 @@ const reducer = (state = initialState, action) => {
 		case actionTypes.SET_EMPLOYER_PROFILE:
 			return updateObject(state, {
 				profile: action.value
+			});
+
+		case actionTypes.SET_CANDIDATES_LIST:
+			return updateObject(state, {
+				candidatesList: action.value
 			});
 
 		case actionTypes.SET_EMPLOYER_POSTED_JOBS:

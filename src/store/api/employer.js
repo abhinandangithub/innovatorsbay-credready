@@ -122,7 +122,7 @@ export const employerFetchAllPostedJobsUrl = constructUrl(
  */
 export const employerJobFollowUpUrl = constructUrl(
   employerRouteWithBase,
-  "job/foolow"
+  "job/follow"
 );
 
 /**

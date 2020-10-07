@@ -1,38 +1,46 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { connect, useDispatch } from 'react-redux';
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPencilAlt } from "@fortawesome/free-solid-svg-icons";
+import { getProfileThunk } from '../../../../store/thunks/employer';
 
 import "./index.scss";
 
-function View() {
+function View(props) {
+	const dispatch = useDispatch();
+
+	useEffect(() => {
+		dispatch(getProfileThunk());
+	}, [dispatch]);
+
 	return (
 		<div className="profile-view">
 			<div className="content">
 				<ul className="listing">
 					<li>
 						<p>Full Name</p>
-						<p>John Doe</p>
+						<p>{props.profile.name}</p>
 					</li>
 					<li>
 						<p>Title</p>
-						<p>Human Resource Management</p>
+						<p>{props.profile.title}</p>
 					</li>
 					<li>
 						<p>Company Website</p>
-						<p>chelseaseniorliving.com</p>
+						<p>{props.profile.org.website}</p>
 					</li>
 					<li>
 						<p>Hiring Needs</p>
-						<p>1 - 5 employees</p>
+						<p>{props.profile.org.hires_required}</p>
 					</li>
 					<li>
 						<p>Company Size</p>
-						<p>50 - 99 employees</p>
+						<p>{props.profile.org.company_size}</p>
 					</li>
 					<li>
 						<p>How did you hear about us?</p>
-						<p>Co-Worker</p>
+						<p>{props.profile.org.reference_source}</p>
 					</li>
 					<li>
 						<ul className="listing">
@@ -66,4 +74,11 @@ function View() {
 	);
 }
 
-export default View;
+function mapStateToProps(state) {
+	return {
+		profile: state.employerReducer.profile.data
+	}
+}
+
+// export default View;
+export default connect(mapStateToProps)(View);

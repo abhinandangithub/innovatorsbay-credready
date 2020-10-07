@@ -6,11 +6,14 @@ import { employeFetchHireRequiredRangesUrl,
 		 employerDeleteAccountUrl,
 		 employerUpdateProfileUrl,
 		 employerFetchAllPostedJobsUrl,
-		 employerSendCandidateEmailUrl} from "../api/employer";
+		 employerSendCandidateEmailUrl,
+		 employerJobFollowUpUrl,
+		 employerUpdateApplicationStatusOfCandidateUrl,
+		 employerFetchJobById} from "../api/employer";
 
-import { setHiringNeeds, setCompanySize, setPhoneNumber, setEmail, setEmployerProfile, setEmployerJobs } from "../actions/employer";
+import { setHiringNeeds, setCompanySize, setPhoneNumber, setEmail, setEmployerProfile, setEmployerJobs, setCandidatesList } from "../actions/employer";
 // import Cookies from "js-cookie";
-import { setDefaultAuthorizationHeader, setContentTypeDefaultHeader, setAllowAccessHeader } from "../utility";
+import { setDefaultAuthorizationHeader, setAllowAccessHeader } from "../utility";
 import { requestConfig } from "./utils";
 
 export const getHiringNeedsThunk = (token) => async (dispatch, getState) => {
@@ -40,6 +43,23 @@ export const updateProfileThunk = (token, profile) => async (dispatch, getState)
         const data = await Axios.patch(employerUpdateProfileUrl, profile, requestConfig);
 		if (!data) return false;
 		dispatch(setEmployerProfile(profile));
+	} catch (err) {
+		if (err.response) console.error(`failed to update employer profile ${err}`);
+	}
+};
+
+export const getProfileThunk = (token) => async (dispatch, getState) => {
+	try {
+		const state = getState();
+		// setDefaultAuthorizationHeader(state.authReducer.JWT);
+        const data = await Axios.get(employerUpdateProfileUrl, {
+			headers: {
+				'Authorization': `${JSON.parse(state.authReducer.JWT).map.jwt}`,
+				'Content-Type': 'application/vnd.credready.com+json'
+			}
+		});
+		if (!data) return false;
+		dispatch(setEmployerProfile(data.data));
 	} catch (err) {
 		if (err.response) console.error(`failed to update employer profile ${err}`);
 	}
@@ -77,10 +97,15 @@ export const deleteAccount = (token) => async (dispatch, getState) => {
 export const getPostedJobs = (token) => async (dispatch, getState) => {
 	try {
 		const state = getState();
-		setDefaultAuthorizationHeader(state.authReducer.JWT);
+		// setDefaultAuthorizationHeader(state.authReducer.JWT);
 		// setContentTypeDefaultHeader();
-		setAllowAccessHeader();
-        const data = await Axios.get(employerFetchAllPostedJobsUrl, requestConfig);
+		// setAllowAccessHeader();
+        const data = await Axios.get(employerFetchAllPostedJobsUrl, {
+			headers: {
+				'Authorization': `${JSON.parse(state.authReducer.JWT).map.jwt}`,
+				'Content-Type': 'application/vnd.credready.com+json'
+			}
+		});
 		if (!data) return false;
 		dispatch(setEmployerJobs(data.data));
 	} catch (err) {
@@ -88,7 +113,7 @@ export const getPostedJobs = (token) => async (dispatch, getState) => {
 	}
 };
 
-export const sendEmailNotif = (notif) => async (dispatch, getState) => {
+export const sendEmail = (notif) => async (dispatch, getState) => {
 	try {
 		const state = getState();
 		setDefaultAuthorizationHeader(state.authReducer.JWT);
@@ -96,5 +121,54 @@ export const sendEmailNotif = (notif) => async (dispatch, getState) => {
 		if (!data) return false;
 	} catch (err) {
 		if (err.response) console.error(`failed to send email notification to candidate ${err}`);
+	}
+};
+
+export const sendNotification = (notif) => async (dispatch, getState) => {
+	try {
+		const state = getState();
+		// setDefaultAuthorizationHeader(state.authReducer.JWT);
+        const data = await Axios.put(employerJobFollowUpUrl, notif, {
+			headers: {
+				'Authorization': `${JSON.parse(state.authReducer.JWT).map.jwt}`,
+				'Content-Type': 'application/vnd.credready.com+json'
+			}
+		});
+		if (!data) return false;
+	} catch (err) {
+		if (err.response) console.error(`failed to send email notification to candidate ${err}`);
+	}
+};
+
+export const updateStatus = (status) => async (dispatch, getState) => {
+	try {
+		const state = getState();
+		// setDefaultAuthorizationHeader(state.authReducer.JWT);
+        const data = await Axios.put(employerUpdateApplicationStatusOfCandidateUrl, status, {
+			headers: {
+				'Authorization': `${state.authReducer.JWT}`,
+				'Content-Type': 'application/vnd.credready.com+json'
+			}
+		});
+		if (!data) return false;
+	} catch (err) {
+		if (err.response) console.error(`failed to set the status candidate ${err}`);
+	}
+};
+
+export const getCandidatesList = (jobID) => async (dispatch, getState) => {
+	try {
+		const state = getState();
+		// setDefaultAuthorizationHeader(state.authReducer.JWT);
+        const data = await Axios.get(employerFetchJobById, {
+			headers: {
+				'Authorization': `${state.authReducer.JWT}`,
+				'Content-Type': 'application/vnd.credready.com+json'
+			}
+		});
+		setCandidatesList(data.data);
+		if (!data) return false;
+	} catch (err) {
+		if (err.response) console.error(`failed to set the status candidate ${err}`);
 	}
 };

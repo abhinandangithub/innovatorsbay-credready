@@ -1,5 +1,7 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
+import { connect, useDispatch } from 'react-redux';
+import { sendEmail, updateStatus, getCandidatesList } from '../../../store/thunks/employer';
 
 import "./index.scss";
 import Dropdown from "../../_Elements/Dropdown";
@@ -12,7 +14,30 @@ import Input from "../../_Elements/Input";
 
 const faker = require("faker");
 
-function CandidateList() {
+function CandidateList(props) {
+
+	const dispatch = useDispatch();
+
+	const handleUpdateStatus = (e) => {
+			dispatch(updateStatus({
+				"errors": {},
+  				"jobAppId": 0,
+  				"status": e
+			}));
+	}
+
+	const handleSendEmail = (e) => {
+			dispatch(sendEmail({
+				"candidateId": 0,
+  				"emailTemplateId": 0,
+  				"errors": {}
+			}));
+	}
+
+	useEffect(() => {
+		dispatch(getCandidatesList());
+	}, [dispatch]);
+
 	const [filterOptions, setFilterOptions] = React.useState(false);
 
 	const crRange = {
@@ -156,8 +181,8 @@ function CandidateList() {
 		},
 	];
 
-	const renderCandidateList = candidateList.map((candidate, i) => {
-		let index = candidate.credReadiness;
+	const renderCandidateList = props.candidatesList.map((candidate, i) => {
+		let index = candidate.readiness_index;
 		let crColor = index < 40 ? "red" : index > 70 ? "green" : "yellow";
 		return (
 			<ul key={i}>
@@ -170,18 +195,18 @@ function CandidateList() {
 				<li>
 					<Link to="/jobs/candidate-view">
 						<img src={faker.image.avatar()} alt="User" />
-						{candidate.name}
+						{candidate.candidate_name}
 					</Link>
 				</li>
-				<li>{candidate.currentPosition}</li>
-				<li>{candidate.experience} years</li>
+				<li>{candidate.title}</li>
+				<li>{candidate.candidate_experience} years</li>
 				<li>
 					<span className={`cr_index ${crColor}`}>
-						{candidate.credReadiness}
+						{candidate.readiness_index}
 					</span>
 				</li>
-				<li>{candidate.currentOrganisation}</li>
-				<li>{candidate.lastUpdate}</li>
+				<li>{candidate.current_organization}</li>
+				<li>{candidate.modified_on}</li>
 				<li>
 					<Dropdown
 						placeholder={status.heading}
@@ -190,7 +215,7 @@ function CandidateList() {
 					/>
 				</li>
 				<li>
-					<Link to="/" className="mail">
+					<Link to="/" className="mail" onClick={handleSendEmail}>
 						<img src={ImgMail} alt="Email" />
 					</Link>
 					<Link to="/" className="download">
@@ -213,7 +238,7 @@ function CandidateList() {
 				<div className="searches">
 					<input type="text" placeholder="Candidate Name" />
 					<Dropdown placeholder={crRange.heading} content="slider" />
-					<Dropdown placeholder={status.heading} content={status.content} />
+					<Dropdown placeholder={status.heading} content={status.content} onchange={handleUpdateStatus} />
 					<Dropdown
 						placeholder={experience.heading}
 						content={experience.content}
@@ -281,9 +306,9 @@ function CandidateList() {
 				</div>
 				<div className="actions">
 					<div className="left">
-						<Link to="/">Send Email</Link>
+						<Link to="/" onClick={handleSendEmail}>Send Email</Link>
 						&nbsp;&nbsp;{" |  "}&nbsp;&nbsp;
-						<Link to="/">Change Status</Link>
+						<Link to="/" onClick={handleUpdateStatus}>Change Status</Link>
 					</div>
 					<div className="right">
 						<input
@@ -338,4 +363,11 @@ function CandidateList() {
 	);
 }
 
-export default CandidateList;
+function mapStateToProps(state) {
+	return {
+		candidatesList: state.employerReducer.candidatesList.data
+	}
+}
+
+// export default CandidateList;
+export default connect(mapStateToProps)(CandidateList);

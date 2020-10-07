@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { connect, useDispatch } from 'react-redux';
-import { getPostedJobs, sendEmailNotif } from '../../../store/thunks/employer';
+import { getPostedJobs, sendNotification } from '../../../store/thunks/employer';
 
 import { Link } from "react-router-dom";
 
@@ -15,10 +15,22 @@ function PostedJobs(props) {
 
 	const handleSendEmail = (e) => {
 		if(e.target.checked) {
-			dispatch(sendEmailNotif({
-				"candidateId": 0,
-				"emailTemplateId": 0,
-				"errors": {}
+			dispatch(sendNotification({
+				"errors": {},
+  				"jobId": 0,
+  				"optStatus": true,
+  				"source": "Email"
+			}));
+		}
+	}
+
+	const handleSendSMS = (e) => {
+		if(e.target.checked) {
+			dispatch(sendNotification({
+				"errors": {},
+  				"jobId": 0,
+  				"optStatus": true,
+  				"source": "SMS"
 			}));
 		}
 	}
@@ -68,6 +80,7 @@ function PostedJobs(props) {
 					id="smsNotification"
 					type="checkbox"
 					className="fancy-toggle blue"
+					onChange={handleSendSMS}
 				/>
 				<label htmlFor="smsNotification">
 					<span className="input"></span>Receive SMS Notification
