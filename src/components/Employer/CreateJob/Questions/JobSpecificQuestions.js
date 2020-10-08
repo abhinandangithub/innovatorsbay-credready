@@ -1,5 +1,5 @@
-import React from "react";
-import { useDispatch } from "react-redux";
+import React, { useEffect } from "react";
+import { connect, useDispatch } from "react-redux";
 
 import Input from "../../../_Elements/Input";
 import AddButton from "../../../_Elements/AddButton";
@@ -7,9 +7,15 @@ import {
 	togglePopup,
 	toggleOverlay,
 } from "../../../../store/actions/popup_overlay";
+import { getQuestionBank } from '../../../../store/thunks/employer';
 
-function JobSpecificQuestions() {
+function JobSpecificQuestions(props) {
 	const dispatch = useDispatch();
+
+	useEffect(() => {
+		dispatch(getQuestionBank());
+	},[dispatch]);
+
 	const questions = [
 		{
 			question_id: 1,
@@ -92,7 +98,7 @@ function JobSpecificQuestions() {
 				content="Add New Question"
 			/>
 			<ul className="general-questions">
-				{questions.map((question, i) => {
+				{props.questionBank.map((question, i) => {
 					return (
 						<li className="general-question" key={i}>
 							<h2 className="question">{question.question_name}</h2>
@@ -154,4 +160,11 @@ function JobSpecificQuestions() {
 	);
 }
 
-export default JobSpecificQuestions;
+function mapStateToProps(state) {
+	return {
+		questionBank: state.employerReducer.questionBank.questions
+	}
+}
+
+// export default JobSpecificQuestions;
+export default connect(mapStateToProps)(JobSpecificQuestions);

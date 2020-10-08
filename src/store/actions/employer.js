@@ -87,3 +87,10 @@ export const setSkills = (val) => {
 		value: val,
 	};
 };
+
+export const setQuestionBank = (val) => {
+	return {
+		type: actionTypes.SET_QUESTION_BANK,
+		value: val,
+	};
+};

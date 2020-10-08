@@ -37,7 +37,7 @@ function CreateJob(props) {
 				<ul className="added-items">
 					{props.skills.map((val, i) => {
 						return(
-							<li>
+							<li key={val.id}>
 								{val.skill} <span></span>{" "}
 							</li>
 						);
