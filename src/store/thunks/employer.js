@@ -10,7 +10,8 @@ import { employeFetchHireRequiredRangesUrl,
 		 employerJobFollowUpUrl,
 		 employerUpdateApplicationStatusOfCandidateUrl,
 		 employerFetchJobById,
-		 employeFetchQuestionbankUrl} from "../api/employer";
+		 employeFetchQuestionbankUrl,
+		 employerFetchCandidatesByJobId} from "../api/employer";
 
 import { setHiringNeeds, setCompanySize, setPhoneNumber, 
 		 setEmail, setEmployerProfile, setEmployerJobs, 
@@ -19,7 +20,7 @@ import { setHiringNeeds, setCompanySize, setPhoneNumber,
 // import Cookies from "js-cookie";
 import { setDefaultAuthorizationHeader, setAllowAccessHeader } from "../utility";
 import { requestConfig } from "./utils";
-import { enitityFetchExperienceTypeUrl, entityFetchEntityIndustryUrl, entityFetchEntitityFunctionUrl, entityFetchSkillsUrl } from "../api/entity";
+import { enitityFetchExperienceTypeUrl, entityFetchEntityIndustryUrl, entityFetchEntitityFunctionUrl, entityFetchSkillsUrl, entityFetchEmployementSatusUrl } from "../api/entity";
 
 export const getHiringNeedsThunk = (token) => async (dispatch, getState) => {
 	try {
@@ -44,6 +45,8 @@ export const getCompanySizeThunk = (token) => async (dispatch, getState) => {
 export const updateProfileThunk = (token, profile) => async (dispatch, getState) => {
 	try {
 		const state = getState();
+		profile.companySize = 0;
+		profile.hiresRequired = 0;
 		// setDefaultAuthorizationHeader(state.authReducer.JWT);
         const data = await Axios.patch(employerUpdateProfileUrl, profile, {
 			headers: {
@@ -174,9 +177,10 @@ export const getCandidatesList = (jobID) => async (dispatch, getState) => {
 	try {
 		const state = getState();
 		// setDefaultAuthorizationHeader(state.authReducer.JWT);
-        const data = await Axios.get(employerFetchJobById, {
+		const URL = employerFetchJobById + "/" + jobID;
+        const data = await Axios.get(URL, {
 			headers: {
-				'Authorization': `${state.authReducer.JWT}`,
+				'Authorization': `${JSON.parse(state.authReducer.JWT).map.jwt}`,
 				'Content-Type': 'application/vnd.credready.com+json'
 			}
 		});
@@ -189,14 +193,9 @@ export const getCandidatesList = (jobID) => async (dispatch, getState) => {
 
 export const getEmploymentType = () => async (dispatch, getState) => {
 	try {
-		const state = getState();
+		// const state = getState();
 		// setDefaultAuthorizationHeader(state.authReducer.JWT);
-        const data = await Axios.get(enitityFetchExperienceTypeUrl, {
-			headers: {
-				'Authorization': `${state.authReducer.JWT}`,
-				'Content-Type': 'application/vnd.credready.com+json'
-			}
-		});
+        const data = await Axios.get(entityFetchEmployementSatusUrl);
 		if (!data) return false;
 		dispatch(setEmploymentType(data.data));
 	} catch (err) {

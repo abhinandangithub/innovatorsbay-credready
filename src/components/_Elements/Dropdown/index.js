@@ -5,7 +5,7 @@ import InputRange from "react-input-range";
 
 import "./index.scss";
 
-function Dropdown({ id, placeholder, content, selected, onchange }) {
+function Dropdown({ id, placeholder, content, selected, onchange, callback = undefined }) {
 	const [active, setactive] = useState(false);
 	const [value, setvalue] = useState(selected);
 	const [isChanged, setIsChanged] = useState(false);
@@ -17,6 +17,9 @@ function Dropdown({ id, placeholder, content, selected, onchange }) {
 		setvalue(item);
 		setactive(false);
 		setIsChanged(true);
+		if(callback) {
+			callback();
+		}
 	};
 
 	const renderContent = () => {

@@ -18,25 +18,23 @@ function CandidateList(props) {
 
 	const dispatch = useDispatch();
 
-	const handleUpdateStatus = (e) => {
+	const handleUpdateStatus = (e, job_app_id) => {
 			dispatch(updateStatus({
-				"errors": {},
-  				"jobAppId": 0,
+  				"jobAppId": job_app_id,
   				"status": e
 			}));
 	}
 
-	const handleSendEmail = (e) => {
+	const handleSendEmail = (candidate_id, template_id) => {
 			dispatch(sendEmail({
-				"candidateId": 0,
-  				"emailTemplateId": 0,
-  				"errors": {}
+				"candidateId": candidate_id,
+  				"emailTemplateId": template_id
 			}));
 	}
 
-	useEffect(() => {
-		dispatch(getCandidatesList());
-	}, [dispatch]);
+	// useEffect(() => {
+	// 	dispatch(getCandidatesList());
+	// }, [dispatch]);
 
 	const [filterOptions, setFilterOptions] = React.useState(false);
 
@@ -212,10 +210,11 @@ function CandidateList(props) {
 						placeholder={status.heading}
 						content={status.content}
 						selected={candidate.status}
+						callback={() => handleUpdateStatus(candidate.status, candidate.job_app_id)}
 					/>
 				</li>
 				<li>
-					<Link to="/" className="mail" onClick={handleSendEmail}>
+					<Link to="/" className="mail" onClick={() => handleSendEmail(candidate.candidate_id, candidate.email_template_id)}>
 						<img src={ImgMail} alt="Email" />
 					</Link>
 					<Link to="/" className="download">

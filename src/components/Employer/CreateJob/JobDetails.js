@@ -94,7 +94,7 @@ function CreateJob(props) {
 
 function mapStateToProps(state) {
 	return {
-		employmentType: state.employerReducer.employmentType,
+		employmentType: state.employerReducer.employmentType.data,
 		functionType: state.employerReducer.functionType.data,
 		industry: state.employerReducer.industry.data
 	}

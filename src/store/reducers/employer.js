@@ -184,7 +184,12 @@ const initialState = {
 		],
 		"status": "OK"
 	},
-	employmentType: ["Option 1", "Option 2", "Option 3", "Option 4"],
+	employmentType: {
+		message: "",
+        data: ["Option 1", "Option 2", "Option 3", "Option 4"],
+        error: "",
+        status: ""
+	},
 	industry: {
 		message: "",
         data: ["Option 1", "Option 2", "Option 3", "Option 4"],
@@ -446,7 +451,7 @@ const reducer = (state = initialState, action) => {
             hiringNeedsTemp.message = action.value.message;
             hiringNeedsTemp.error = action.value.error;
             hiringNeedsTemp.status = action.value.status;
-            hiringNeedsTemp.data = action.value.data.map((value) => value.rangeName);
+            hiringNeedsTemp.data = action.value.data.map((value) => value.range_display_value);
 			return updateObject(state, {
 				hiringNeedsTemp
 			});
@@ -456,7 +461,7 @@ const reducer = (state = initialState, action) => {
             companySizeTemp.message = action.value.message;
             companySizeTemp.error = action.value.error;
             companySizeTemp.status = action.value.status;
-            companySizeTemp.data = action.value.data.map((value) => value.rangeName);
+            companySizeTemp.data = action.value.data.map((value) => value.range_display_value);
 			return updateObject(state, {
 				companySizeTemp
 			});
@@ -487,8 +492,13 @@ const reducer = (state = initialState, action) => {
 			});
 
 		case actionTypes.SET_EMPLOYMENT_TYPE:
+			const employemntTemp = state.employmentType;
+            employemntTemp.message = action.value.message;
+            employemntTemp.error = action.value.error;
+            employemntTemp.status = action.value.status;
+            employemntTemp.data = action.value.data.map((value) => value.employmentStatus);
 			return updateObject(state, {
-				employmentType: action.value
+				employmentType: employemntTemp
 			});
 
 		case actionTypes.SET_INDUSTRY:

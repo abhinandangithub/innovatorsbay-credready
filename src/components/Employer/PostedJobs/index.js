@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { connect, useDispatch } from 'react-redux';
-import { getPostedJobs, sendNotification } from '../../../store/thunks/employer';
+import { getPostedJobs, sendNotification, getCandidatesList } from '../../../store/thunks/employer';
 
 import { Link } from "react-router-dom";
 
@@ -13,81 +13,87 @@ function PostedJobs(props) {
 		dispatch(getPostedJobs());
 	}, [dispatch]);
 
-	const handleSendEmail = (e) => {
-		if(e.target.checked) {
+	const handleSendEmail = (e, job_id) => {
+		// if(e.target.checked) {
 			dispatch(sendNotification({
-				"errors": {},
-  				"jobId": 0,
-  				"optStatus": true,
+  				"jobId": job_id,
+  				"optStatus": e.target.checked,
   				"source": "Email"
 			}));
-		}
+		// }
 	}
 
-	const handleSendSMS = (e) => {
-		if(e.target.checked) {
+	const handleSendSMS = (e, job_id) => {
+		// if(e.target.checked) {
 			dispatch(sendNotification({
-				"errors": {},
-  				"jobId": 0,
-  				"optStatus": true,
+  				"jobId": job_id,
+  				"optStatus": e.target.checked,
   				"source": "SMS"
 			}));
-		}
+		// }
+	}
+
+	const handleViewCandidates = (job_id) => {
+		dispatch(getCandidatesList(job_id));
 	}
 
 	const jobsList = [1, 2];
+	// const jobsList = props.postedJobs;
 
-	const list = (
+	const List = ({job}) => {
+		console.log(job);
+		return (
 		<>
 			{/* <h2 className="heading">Certified Nursing Assistant</h2> */}
-			<h2 className="heading">{props.postedJobs.job_title}</h2>
+			<h2 className="heading">{job.job_title}</h2>
 			<p>
-				<span>Description: </span>{props.postedJobs.job_description}
+				<span>Description: </span>{job.job_description}
 			</p>
 			<ul className="common-skills-list">
 				<li>Skills: </li>
-				{props.postedJobs.strengths.map((val,i) => {
+				{!!job.strengths && job.strengths.length && job.strengths.map((val,i) => {
 					return <li key={i}>{val.name}</li>
 				})}
 			</ul>
 			<p className="job-openings">
-				<span>Job Openings: </span>{props.postedJobs.open_positions}
+				<span>Job Openings: </span>{job.open_positions}
 			</p>
 			<div className="list-btn">
 				<ul className="info">
 					{/* <li>Warren, NY</li> */}
-					<li>{props.postedJobs.address.city}, {props.postedJobs.address.state}</li>
+					<li>{!!job.address && job.address.city}, {!!job.address && job.address.state}</li>
 					{/* <li>January 21, 2020</li> */}
-					<li>{props.postedJobs.modified_on}</li>
-					<li>{props.postedJobs.modified_by}</li>
-					<li>Candidates applied {props.postedJobs.count_of_applied_candidates}</li>
+					<li>{job.modified_on}</li>
+					<li>{job.modified_by}</li>
+					<li>Candidates applied {job.count_of_applied_candidates}</li>
 				</ul>
-				<Link to="/jobs/candidates-list" className="primary-btn blue">
+				<Link to="/jobs/candidates-list" className="primary-btn blue" onClick={() => handleViewCandidates(job.job_id)}>
 					View Candidates
 				</Link>
 			</div>
 			<div className="checkboxes">
 				<input
-					id="emailNotification"
+					id={'SMS'+job.job_id}
 					type="checkbox"
 					className="fancy-toggle blue"
-					onChange={handleSendEmail}
+					onChange={(e) => handleSendEmail(e, job.job_id)}
 				/>
-				<label htmlFor="emailNotification">
+				<label htmlFor={'SMS'+job.job_id}>
 					<span className="input"></span>Receive Email Notification
 				</label>
 				<input
-					id="smsNotification"
+					id={'EMAIL'+job.job_id}
 					type="checkbox"
 					className="fancy-toggle blue"
-					onChange={handleSendSMS}
+					onChange={(e) => handleSendSMS(e, job.job_id)}
 				/>
-				<label htmlFor="smsNotification">
+				<label htmlFor={'EMAIL'+job.job_id}>
 					<span className="input"></span>Receive SMS Notification
 				</label>
 			</div>
 		</>
 	);
+}
 
 	const renderJobsList = (
 		<>
@@ -106,8 +112,12 @@ function PostedJobs(props) {
 
 			<div className="listings">
 				<ul>
-					{jobsList.map((_, i) => {
+					{/* {jobsList.map((_, i) => {
 						return <li key={i}>{list}</li>;
+					})} */}
+					{props.postedJobs.map((_, i) => {
+						// console.log(_);
+						return <li key={i}><List job={_}></List></li>;
 					})}
 				</ul>
 			</div>
@@ -143,7 +153,7 @@ function PostedJobs(props) {
 
 function mapStateToProps(state) {
 	return {
-		postedJobs: state.employerReducer.postedJobs.data[0]
+		postedJobs: state.employerReducer.postedJobs.data
 	}
 }
 

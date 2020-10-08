@@ -197,3 +197,10 @@ export const employerDeleteAccountUrl = constructUrl(
   employerRouteWithBase,
   "account/delete"
 );
+/**
+ * Name: delete employer account
+ */
+export const employerFetchCandidatesByJobId = constructUrl(
+  employerRouteWithBase,
+  "job/candidate/fetch"
+);

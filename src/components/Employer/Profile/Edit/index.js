@@ -103,7 +103,7 @@ function Details(props) {
 
 		for (let i = 0; i < addressCount.length; i++) {
 			let address = {};
-			address.id = i;
+			// address.id = i;
 			address.streetAddress = _formData["street_" + i][0];
 			address.city = _formData["city_" + i][0];
 			address.state = _formData["state_" + i][0];
