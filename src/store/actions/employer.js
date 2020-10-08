@@ -59,3 +59,24 @@ export const setCandidatesList = (val) => {
 		value: val,
 	};
 };
+
+export const setEmploymentType = (val) => {
+	return {
+		type: actionTypes.SET_EMPLOYMENT_TYPE,
+		value: val,
+	};
+};
+
+export const setIndustry = (val) => {
+	return {
+		type: actionTypes.SET_INDUSTRY,
+		value: val,
+	};
+};
+
+export const setFunction = (val) => {
+	return {
+		type: actionTypes.SET_FUNCTION,
+		value: val,
+	};
+};

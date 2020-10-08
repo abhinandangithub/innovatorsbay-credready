@@ -1,4 +1,6 @@
 import React from "react";
+import { connect, useDispatch } from 'react-redux';
+import { getEmploymentType, getIndustry, getFunction } from '../../../store/thunks/employer';
 
 import Input from "../../_Elements/Input";
 import Dropdown from "../../_Elements/Dropdown";
@@ -20,10 +22,17 @@ const _function = {
 
 function CreateJob(props) {
 	const parent = React.useRef();
+	const dispatch = useDispatch();
 
 	React.useEffect(() => {
 		props.calHeight(parent.current.clientHeight);
 	}, [props]);
+
+	React.useEffect(() => {
+		dispatch(getEmploymentType());
+		dispatch(getIndustry());
+		dispatch(getFunction());
+	}, [dispatch]);
 
 	return (
 		<div className="job-details" ref={parent}>
@@ -52,7 +61,7 @@ function CreateJob(props) {
 						</label>
 						<Dropdown
 							placeholder={employmentType.heading}
-							content={employmentType.content}
+							content={props.employmentType}
 						/>
 					</li>
 					<li>
@@ -61,7 +70,7 @@ function CreateJob(props) {
 						</label>
 						<Dropdown
 							placeholder={industry.heading}
-							content={industry.content}
+							content={props.industry}
 						/>
 					</li>
 					<li>
@@ -70,7 +79,7 @@ function CreateJob(props) {
 						</label>
 						<Dropdown
 							placeholder={_function.heading}
-							content={_function.content}
+							content={props.functionType}
 						/>
 					</li>
 					<li>
@@ -83,4 +92,13 @@ function CreateJob(props) {
 	);
 }
 
-export default CreateJob;
+function mapStateToProps(state) {
+	return {
+		employmentType: state.employerReducer.employmentType,
+		functionType: state.employerReducer.functionType.data,
+		industry: state.employerReducer.industry.data
+	}
+}
+
+// export default CreateJob;
+export default connect(mapStateToProps)(CreateJob);

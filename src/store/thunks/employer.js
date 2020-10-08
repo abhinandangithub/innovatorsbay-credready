@@ -11,10 +11,14 @@ import { employeFetchHireRequiredRangesUrl,
 		 employerUpdateApplicationStatusOfCandidateUrl,
 		 employerFetchJobById} from "../api/employer";
 
-import { setHiringNeeds, setCompanySize, setPhoneNumber, setEmail, setEmployerProfile, setEmployerJobs, setCandidatesList } from "../actions/employer";
+import { setHiringNeeds, setCompanySize, setPhoneNumber, 
+		 setEmail, setEmployerProfile, setEmployerJobs, 
+		 setCandidatesList, setEmploymentType, setIndustry,
+		 setFunction } from "../actions/employer";
 // import Cookies from "js-cookie";
 import { setDefaultAuthorizationHeader, setAllowAccessHeader } from "../utility";
 import { requestConfig } from "./utils";
+import { enitityFetchExperienceTypeUrl, entityFetchEntityIndustryUrl, entityFetchEntitityFunctionUrl } from "../api/entity";
 
 export const getHiringNeedsThunk = (token) => async (dispatch, getState) => {
 	try {
@@ -166,9 +170,50 @@ export const getCandidatesList = (jobID) => async (dispatch, getState) => {
 				'Content-Type': 'application/vnd.credready.com+json'
 			}
 		});
-		setCandidatesList(data.data);
 		if (!data) return false;
+		dispatch(setCandidatesList(data.data));
 	} catch (err) {
 		if (err.response) console.error(`failed to set the status candidate ${err}`);
+	}
+};
+
+export const getEmploymentType = () => async (dispatch, getState) => {
+	try {
+		const state = getState();
+		// setDefaultAuthorizationHeader(state.authReducer.JWT);
+        const data = await Axios.get(enitityFetchExperienceTypeUrl, {
+			headers: {
+				'Authorization': `${state.authReducer.JWT}`,
+				'Content-Type': 'application/vnd.credready.com+json'
+			}
+		});
+		if (!data) return false;
+		dispatch(setEmploymentType(data.data));
+	} catch (err) {
+		if (err.response) console.error(`failed to set the employment type ${err}`);
+	}
+};
+
+export const getIndustry = () => async (dispatch, getState) => {
+	try {
+		// const state = getState();
+		// setDefaultAuthorizationHeader(state.authReducer.JWT);
+        const data = await Axios.get(entityFetchEntityIndustryUrl);
+		if (!data) return false;
+		dispatch(setIndustry(data.data));
+	} catch (err) {
+		if (err.response) console.error(`failed to set the employment type ${err}`);
+	}
+};
+
+export const getFunction = () => async (dispatch, getState) => {
+	try {
+		// const state = getState();
+		// setDefaultAuthorizationHeader(state.authReducer.JWT);
+		const data = await Axios.get(entityFetchEntitityFunctionUrl);
+		if (!data) return false;
+		dispatch(setFunction(data.data));
+	} catch (err) {
+		if (err.response) console.error(`failed to set the employment type ${err}`);
 	}
 };

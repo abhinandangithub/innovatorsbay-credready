@@ -184,6 +184,19 @@ const initialState = {
 		],
 		"status": "OK"
 	},
+	employmentType: ["Option 1", "Option 2", "Option 3", "Option 4"],
+	industry: {
+		message: "",
+        data: ["Option 1", "Option 2", "Option 3", "Option 4"],
+        error: "",
+        status: ""
+	},
+	functionType: {
+		message: "",
+        data: ["Option 1", "Option 2", "Option 3", "Option 4"],
+        error: "",
+        status: ""
+	},
 	JWT: null,
 };
 
@@ -241,6 +254,31 @@ const reducer = (state = initialState, action) => {
 		case actionTypes.SET_EMPLOYER_POSTED_JOBS:
 			return updateObject(state, {
 				postedJobs: action.value
+			});
+
+		case actionTypes.SET_EMPLOYMENT_TYPE:
+			return updateObject(state, {
+				employmentType: action.value
+			});
+
+		case actionTypes.SET_INDUSTRY:
+			const indistryTemp = state.industry;
+            indistryTemp.message = action.value.message;
+            indistryTemp.error = action.value.error;
+            indistryTemp.status = action.value.status;
+            indistryTemp.data = action.value.data.map((value) => value.industryName);
+			return updateObject(state, {
+				indistryTemp
+			});
+
+		case actionTypes.SET_FUNCTION:
+			const functionTemp = state.functionType;
+            functionTemp.message = action.value.message;
+            functionTemp.error = action.value.error;
+            functionTemp.status = action.value.status;
+            functionTemp.data = action.value.data.map((value) => value.functionName);
+			return updateObject(state, {
+				functionTemp
 			});
 
 		default:
