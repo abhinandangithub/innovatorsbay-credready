@@ -14,11 +14,11 @@ import { employeFetchHireRequiredRangesUrl,
 import { setHiringNeeds, setCompanySize, setPhoneNumber, 
 		 setEmail, setEmployerProfile, setEmployerJobs, 
 		 setCandidatesList, setEmploymentType, setIndustry,
-		 setFunction } from "../actions/employer";
+		 setFunction, setSkills } from "../actions/employer";
 // import Cookies from "js-cookie";
 import { setDefaultAuthorizationHeader, setAllowAccessHeader } from "../utility";
 import { requestConfig } from "./utils";
-import { enitityFetchExperienceTypeUrl, entityFetchEntityIndustryUrl, entityFetchEntitityFunctionUrl } from "../api/entity";
+import { enitityFetchExperienceTypeUrl, entityFetchEntityIndustryUrl, entityFetchEntitityFunctionUrl, entityFetchSkillsUrl } from "../api/entity";
 
 export const getHiringNeedsThunk = (token) => async (dispatch, getState) => {
 	try {
@@ -202,7 +202,7 @@ export const getIndustry = () => async (dispatch, getState) => {
 		if (!data) return false;
 		dispatch(setIndustry(data.data));
 	} catch (err) {
-		if (err.response) console.error(`failed to set the employment type ${err}`);
+		if (err.response) console.error(`failed to get the industry ${err}`);
 	}
 };
 
@@ -214,6 +214,18 @@ export const getFunction = () => async (dispatch, getState) => {
 		if (!data) return false;
 		dispatch(setFunction(data.data));
 	} catch (err) {
-		if (err.response) console.error(`failed to set the employment type ${err}`);
+		if (err.response) console.error(`failed to get the function ${err}`);
+	}
+};
+
+export const getSkills = () => async (dispatch, getState) => {
+	try {
+		// const state = getState();
+		// setDefaultAuthorizationHeader(state.authReducer.JWT);
+		const data = await Axios.get(entityFetchSkillsUrl);
+		if (!data) return false;
+		dispatch(setSkills(data.data));
+	} catch (err) {
+		if (err.response) console.error(`failed to get the skills ${err}`);
 	}
 };

@@ -197,6 +197,18 @@ const initialState = {
         error: "",
         status: ""
 	},
+	skills: {
+		"message": null,
+		"data": [
+		  {
+			"id": 1,
+			"skill": "Java",
+			"active": true
+		  },
+		],
+		"error": null,
+  		"status": "OK"
+	},
 	JWT: null,
 };
 
@@ -279,6 +291,11 @@ const reducer = (state = initialState, action) => {
             functionTemp.data = action.value.data.map((value) => value.functionName);
 			return updateObject(state, {
 				functionTemp
+			});
+
+		case actionTypes.SET_SKILLS:
+			return updateObject(state, {
+				skills: action.value
 			});
 
 		default:

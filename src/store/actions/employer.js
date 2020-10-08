@@ -80,3 +80,10 @@ export const setFunction = (val) => {
 		value: val,
 	};
 };
+
+export const setSkills = (val) => {
+	return {
+		type: actionTypes.SET_SKILLS,
+		value: val,
+	};
+};
