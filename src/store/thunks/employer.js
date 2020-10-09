@@ -280,7 +280,7 @@ export const postJob = (job) => async (dispatch, getState) => {
 	try {
 		const state = getState();
 		// setDefaultAuthorizationHeader(state.authReducer.JWT);
-		const data = await Axios.post(employerPostJob, job, {
+		const data = await Axios.post(employerPostJob, state.employerReducer.newJob, {
 			headers: {
 				'Authorization': `${JSON.parse(state.authReducer.JWT).map.jwt}`,
 				'Content-Type': 'application/vnd.credready.com+json'

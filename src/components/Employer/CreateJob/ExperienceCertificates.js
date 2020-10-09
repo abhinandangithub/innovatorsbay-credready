@@ -2,6 +2,7 @@ import React from "react";
 import { connect, useDispatch } from 'react-redux';
 import InputRange from "react-input-range";
 import { getSkills } from '../../../store/thunks/employer';
+import { setNewJob } from '../../../store/actions/employer';
 
 function CreateJob(props) {
 	const dispatch = useDispatch();
@@ -18,6 +19,10 @@ function CreateJob(props) {
 	React.useEffect(() => {
 		props.calHeight(parent.current.clientHeight);
 	}, [props]);
+
+	React.useEffect(() => {
+		dispatch(setNewJob({"minExp": value.min, "maxExp": value.max}));
+	}, [value]);
 	
 	React.useEffect(() => {
 		dispatch(getSkills());

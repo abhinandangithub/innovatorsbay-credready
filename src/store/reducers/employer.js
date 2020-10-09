@@ -474,6 +474,9 @@ const initialState = {
 				}
 			]
 		},
+		employmentKeys: [],
+		functionKeys: [],
+		industryKeys: [],
 		"status": "OK"
 	},
 	emailTemplate: {
@@ -563,7 +566,8 @@ const reducer = (state = initialState, action) => {
 			employemntTemp.status = action.value.status;
 			employemntTemp.data = action.value.data.map((value) => value.employment_status);
 			return updateObject(state, {
-				employmentType: employemntTemp
+				employmentType: employemntTemp,
+				employmentKeys: action.value.data
 			});
 
 		case actionTypes.SET_INDUSTRY:
@@ -573,7 +577,8 @@ const reducer = (state = initialState, action) => {
 			indistryTemp.status = action.value.status;
 			indistryTemp.data = action.value.data.map((value) => value.industry_name);
 			return updateObject(state, {
-				indistryTemp
+				industry: indistryTemp,
+				industryKeys: action.value.data
 			});
 
 		case actionTypes.SET_FUNCTION:
@@ -583,7 +588,8 @@ const reducer = (state = initialState, action) => {
 			functionTemp.status = action.value.status;
 			functionTemp.data = action.value.data.map((value) => value.function_name);
 			return updateObject(state, {
-				functionTemp
+				functionType: functionTemp,
+				functionKeys: action.value.data
 			});
 
 		case actionTypes.SET_SKILLS:
@@ -615,14 +621,37 @@ const reducer = (state = initialState, action) => {
 
 		case actionTypes.SET_NEW_JOB:
 			const newJobTemp = state.newJob;
-			switch(action.value) {
-				case (action.value.emailTemplateId !== undefined):
+				if (action.value.emailTemplateId !== undefined) {
 					newJobTemp.emailTemplateId = action.value.emailTemplateId;
-					break;
-					default:
-						// newJobTemp.emailTemplate = state.newJob;
-						break;
-			}
+				}
+				if (action.value.employmentType !== undefined) {
+					newJobTemp.employmentType = state.employmentKeys.find(x => x.employment_status === action.value.employmentType).id;
+				}
+				if (action.value.function !== undefined) {
+					newJobTemp.function = state.functionKeys.find(x => x.function_name === action.value.function).id;
+				}
+				if (action.value.industry !== undefined) {
+					newJobTemp.industry = state.industryKeys.find(x => x.industry_name === action.value.industry).id;
+				}
+				if (action.value.jobDescription !== undefined) {
+					newJobTemp.jobDescription = action.value.jobDescription;
+				}
+				if (action.value.jobTitle !== undefined) {
+					newJobTemp.jobTitle = action.value.jobTitle;
+				}
+				if (action.value.location !== undefined) {
+					newJobTemp.location = action.value.location;
+				}
+				if (action.value.openPositions !== undefined) {
+					newJobTemp.openPositions = action.value.openPositions;
+				}
+				if (action.value.minExp !== undefined) {
+					newJobTemp.minExp = action.value.minExp;
+				}
+				if (action.value.maxExp !== undefined) {
+					newJobTemp.maxExp = action.value.maxExp;
+				}
+
 			return updateObject(state, {
 				newJob: newJobTemp
 			});

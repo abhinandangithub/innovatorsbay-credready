@@ -1,6 +1,7 @@
 import React from "react";
 import { connect, useDispatch } from 'react-redux';
 import { getEmploymentType, getIndustry, getFunction } from '../../../store/thunks/employer';
+import { setNewJob } from '../../../store/actions/employer';
 
 import Input from "../../_Elements/Input";
 import Dropdown from "../../_Elements/Dropdown";
@@ -34,6 +35,25 @@ function CreateJob(props) {
 		dispatch(getFunction());
 	}, [dispatch]);
 
+	const handleChangeEmpType = (item) => {
+		dispatch(setNewJob({"employmentType": item}));
+	}
+	const handleChangeIndustry = (item) => {
+		dispatch(setNewJob({"industry": item}));
+	}
+	const handleChangeFunction = (item) => {
+		dispatch(setNewJob({"function": item}));
+	}
+	const handleChangeJobTile = (e) => {
+		dispatch(setNewJob({"jobTitle": e.target.value}));
+	}
+	const handleChangeLocation = (e) => {
+		dispatch(setNewJob({"location": e.target.value}));
+	}
+	const handleChangeOpenPosition = (e) => {
+		dispatch(setNewJob({"openPositions": e.target.value}));
+	}
+
 	return (
 		<div className="job-details" ref={parent}>
 			<div className="heading">
@@ -47,13 +67,13 @@ function CreateJob(props) {
 						<label>
 							Job Title <span>*</span>
 						</label>
-						<Input type="text" />
+						<Input type="text" onChange={handleChangeJobTile}/>
 					</li>
 					<li>
 						<label>
 							Job Location <span>*</span>
 						</label>
-						<Input type="text" placeholder="Zip or city, state" />
+						<Input type="text" placeholder="Zip or city, state" onChange={handleChangeLocation}/>
 					</li>
 					<li>
 						<label>
@@ -62,6 +82,7 @@ function CreateJob(props) {
 						<Dropdown
 							placeholder={employmentType.heading}
 							content={props.employmentType}
+							onchange={(item) => handleChangeEmpType(item)}
 						/>
 					</li>
 					<li>
@@ -71,6 +92,7 @@ function CreateJob(props) {
 						<Dropdown
 							placeholder={industry.heading}
 							content={props.industry}
+							onchange={(item) => handleChangeIndustry(item)}
 						/>
 					</li>
 					<li>
@@ -80,11 +102,12 @@ function CreateJob(props) {
 						<Dropdown
 							placeholder={_function.heading}
 							content={props.functionType}
+							onchange={(item) => handleChangeFunction(item)}
 						/>
 					</li>
 					<li>
 						<label>How many Open Positions Are There?</label>
-						<Input type="text" />
+						<Input type="text" onChange={handleChangeOpenPosition}/>
 					</li>
 				</ul>
 			</div>
