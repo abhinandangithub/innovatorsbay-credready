@@ -10,6 +10,7 @@ function CreateJob(props) {
 		max: 7,
 	});
 
+	console.log('props ', props.skills)
 	// value.min
 	// value.max
 
@@ -38,7 +39,7 @@ function CreateJob(props) {
 					{props.skills.map((val, i) => {
 						return(
 							<li key={val.id}>
-								{val.skill} <span></span>{" "}
+								{val.title_name} <span></span>{" "}
 							</li>
 						);
 					})}

@@ -251,9 +251,14 @@ const initialState = {
 		"data": [
 			{
 				"id": 1,
-				"skill": "Java",
-				"active": true
+				"title_name": "AWS SAA",
+				"is_approved": true
 			},
+			{
+				"id": 2,
+				"title_name": "Microsoft Azure",
+				"is_approved": true
+			}
 		],
 		"error": null,
 		"status": "OK"

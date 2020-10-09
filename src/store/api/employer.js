@@ -219,3 +219,11 @@ export const employeCreateQuestion = constructUrl(
   employerRouteWithBase,
   "question/create"
 );
+
+/**
+ * Name: Get Skills
+ */
+export const candidateGetCertificateUrl = constructUrl(
+  "candidate",
+  "certificate_title"
+);
