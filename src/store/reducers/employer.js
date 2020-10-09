@@ -124,39 +124,41 @@ const initialState = {
 				// 	"modified_by": "admin",
 				// 	"modified_on": "Oct 6, 2020 5:15:50 PM"
 				// },
-				"private_email_template": [
-					{
-						"template_id": 2,
-						"org_id": 1,
-						"template_name": "Thank you for applying",
-						"email_body": "Hi {candidate_name},\nThank you for applying.\n\nRegards,\n{employer_name}",
-						"created_by": "admin",
-						"created_on": "Oct 6, 2020, 5:15:50 PM",
-						"modified_by": "admin",
-						"modified_on": "Oct 6, 2020, 5:15:50 PM"
-					},
-					{
-						"template_id": 3,
-						"org_id": 1,
-						"template_name": "Welcome to Chealsea",
-						"email_body": "Hi {candidate_name},\n\nWelcome to Chealsea. We will reach out to you shortly.\n\nRegards,\nTeam Chealsea",
-						"created_by": "admin",
-						"created_on": "Oct 6, 2020, 5:15:50 PM",
-						"modified_by": "admin",
-						"modified_on": "Oct 6, 2020, 5:15:50 PM"
-					},
-					{
-						"template_id": 4,
-						"public_template_id": 1,
-						"org_id": 1,
-						"template_name": "Welcome to CredReady - InnovatorsBay",
-						"email_body": "Hi {candidate_name},\n\nWelcome to InnovatorsBay. We are happy to host our jobs on CredReady. \n\nThanks,\nTeam IB",
-						"created_by": "admin",
-						"created_on": "Oct 6, 2020, 5:20:48 PM",
-						"modified_by": "admin",
-						"modified_on": "Oct 6, 2020, 5:20:48 PM"
-					}
-				],
+				"email_template": {
+					"private_email_template": [
+						{
+							"template_id": 2,
+							"org_id": 1,
+							"template_name": "Thank you for applying",
+							"email_body": "Hi {candidate_name},\nThank you for applying.\n\nRegards,\n{employer_name}",
+							"created_by": "admin",
+							"created_on": "Oct 6, 2020, 5:15:50 PM",
+							"modified_by": "admin",
+							"modified_on": "Oct 6, 2020, 5:15:50 PM"
+						},
+						{
+							"template_id": 3,
+							"org_id": 1,
+							"template_name": "Welcome to Chealsea",
+							"email_body": "Hi {candidate_name},\n\nWelcome to Chealsea. We will reach out to you shortly.\n\nRegards,\nTeam Chealsea",
+							"created_by": "admin",
+							"created_on": "Oct 6, 2020, 5:15:50 PM",
+							"modified_by": "admin",
+							"modified_on": "Oct 6, 2020, 5:15:50 PM"
+						},
+						{
+							"template_id": 4,
+							"public_template_id": 1,
+							"org_id": 1,
+							"template_name": "Welcome to CredReady - InnovatorsBay",
+							"email_body": "Hi {candidate_name},\n\nWelcome to InnovatorsBay. We are happy to host our jobs on CredReady. \n\nThanks,\nTeam IB",
+							"created_by": "admin",
+							"created_on": "Oct 6, 2020, 5:20:48 PM",
+							"modified_by": "admin",
+							"modified_on": "Oct 6, 2020, 5:20:48 PM"
+						}
+					]
+				},
 				"public_email_template": [
 					{
 						"public_template_id": 1,
