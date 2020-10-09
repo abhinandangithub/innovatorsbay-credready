@@ -53,7 +53,7 @@ export const updateProfileThunk = (token, profile) => async (dispatch, getState)
 		// setDefaultAuthorizationHeader(state.authReducer.JWT);
         const data = await Axios.patch(employerUpdateProfileUrl, profile, {
 			headers: {
-				'Authorization': `${JSON.parse(state.authReducer.JWT).map.jwt}`,
+				'Authorization': state.authReducer.JWT,
 				'Content-Type': 'application/vnd.credready.com+json'
 			}});
 		if (!data) return false;
@@ -69,7 +69,7 @@ export const getProfileThunk = (token) => async (dispatch, getState) => {
 		// setDefaultAuthorizationHeader(state.authReducer.JWT);
         const data = await Axios.get(employerUpdateProfileUrl, {
 			headers: {
-				'Authorization': `${JSON.parse(state.authReducer.JWT).map.jwt}`,
+				'Authorization': state.authReducer.JWT,
 				'Content-Type': 'application/vnd.credready.com+json'
 			}
 		});
@@ -90,9 +90,15 @@ export const updatePhoneNumberThunk = (token, phone) => async (dispatch, getStat
 	}
 };
 
-export const updateEmailThunk = (token, email) => async (dispatch, getState) => {
+export const updateEmailThunk = (email) => async (dispatch, getState) => {
 	try {
-        const data = await Axios.put(employerUpdateEmailUrl, email, requestConfig);
+		const state = getState();
+        const data = await Axios.put(employerUpdateEmailUrl, {"email":email}, {
+			headers: {
+				'Authorization': state.authReducer.JWT,
+				'Content-Type': 'application/vnd.credready.com+json'
+			}
+		});
 		if (!data) return false;
 		dispatch(setEmail(data.data.email));
 	} catch (err) {
@@ -117,7 +123,7 @@ export const getPostedJobs = (token) => async (dispatch, getState) => {
 		// setAllowAccessHeader();
         const data = await Axios.get(employerFetchAllPostedJobsUrl, {
 			headers: {
-				'Authorization': `${JSON.parse(state.authReducer.JWT).map.jwt}`,
+				'Authorization': state.authReducer.JWT,
 				'Content-Type': 'application/vnd.credready.com+json'
 			}
 		});
@@ -134,7 +140,7 @@ export const sendEmail = (notif) => async (dispatch, getState) => {
 		// setDefaultAuthorizationHeader(state.authReducer.JWT);
         const data = await Axios.post(employerSendCandidateEmailUrl, notif, {
 			headers: {
-				'Authorization': `${JSON.parse(state.authReducer.JWT).map.jwt}`,
+				'Authorization': state.authReducer.JWT,
 				'Content-Type': 'application/vnd.credready.com+json'
 			}
 		});
@@ -150,7 +156,7 @@ export const sendNotification = (notif) => async (dispatch, getState) => {
 		// setDefaultAuthorizationHeader(state.authReducer.JWT);
         const data = await Axios.put(employerJobFollowUpUrl, notif, {
 			headers: {
-				'Authorization': `${JSON.parse(state.authReducer.JWT).map.jwt}`,
+				'Authorization': state.authReducer.JWT,
 				'Content-Type': 'application/vnd.credready.com+json'
 			}
 		});
@@ -166,7 +172,7 @@ export const updateStatus = (status) => async (dispatch, getState) => {
 		// setDefaultAuthorizationHeader(state.authReducer.JWT);
         const data = await Axios.put(employerUpdateApplicationStatusOfCandidateUrl, status, {
 			headers: {
-				'Authorization': `${JSON.parse(state.authReducer.JWT).map.jwt}`,
+				'Authorization': state.authReducer.JWT,
 				'Content-Type': 'application/vnd.credready.com+json'
 			}
 		});
@@ -183,7 +189,7 @@ export const getCandidatesList = (jobID) => async (dispatch, getState) => {
 		const URL = employerFetchJobById + "/" + jobID;
         const data = await Axios.get(URL, {
 			headers: {
-				'Authorization': `${JSON.parse(state.authReducer.JWT).map.jwt}`,
+				'Authorization': state.authReducer.JWT,
 				'Content-Type': 'application/vnd.credready.com+json'
 			}
 		});
@@ -248,7 +254,7 @@ export const getQuestionBank = () => async (dispatch, getState) => {
 		// setDefaultAuthorizationHeader(state.authReducer.JWT);
 		const data = await Axios.get(employeFetchQuestionbankUrl, {
 			headers: {
-				'Authorization': `${JSON.parse(state.authReducer.JWT).map.jwt}`,
+				'Authorization': state.authReducer.JWT,
 				'Content-Type': 'application/vnd.credready.com+json'
 			}
 		});
@@ -262,16 +268,18 @@ export const getQuestionBank = () => async (dispatch, getState) => {
 export const getEmailTemplate = () => async (dispatch, getState) => {
 	try {
 		const state = getState();
+		console.log(state);
 		// setDefaultAuthorizationHeader(state.authReducer.JWT);
 		const data = await Axios.get(employeGetEmailTemplate, {
 			headers: {
-				'Authorization': `${JSON.parse(state.authReducer.JWT).map.jwt}`,
+				'Authorization': state.authReducer.JWT,
 				'Content-Type': 'application/vnd.credready.com+json'
 			}
 		});
 		if (!data) return false;
 		dispatch(setEmailTemplate(data.data));
 	} catch (err) {
+		console.log(err);
 		if (err.response) console.error(`failed to get the email template ${err}`);
 	}
 };
@@ -282,7 +290,7 @@ export const postJob = (job) => async (dispatch, getState) => {
 		// setDefaultAuthorizationHeader(state.authReducer.JWT);
 		const data = await Axios.post(employerPostJob, state.employerReducer.newJob, {
 			headers: {
-				'Authorization': `${JSON.parse(state.authReducer.JWT).map.jwt}`,
+				'Authorization': state.authReducer.JWT,
 				'Content-Type': 'application/vnd.credready.com+json'
 			}
 		});
@@ -299,7 +307,7 @@ export const createQuestion = (question) => async (dispatch, getState) => {
 		// setDefaultAuthorizationHeader(state.authReducer.JWT);
 		const data = await Axios.post(employeCreateQuestion, question, {
 			headers: {
-				'Authorization': `${JSON.parse(state.authReducer.JWT).map.jwt}`,
+				'Authorization': state.authReducer.JWT,
 				'Content-Type': 'application/vnd.credready.com+json'
 			}
 		});

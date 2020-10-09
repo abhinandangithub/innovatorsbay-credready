@@ -20,10 +20,12 @@ import {
 	toggleOverlay,
 } from "../../../store/actions/popup_overlay";
 import { deleteAccount } from "../../../store/thunks/employer";
+import { updateEmailThunk } from '../../../store/thunks/employer';
 
 function ProfileOverview(props) {
 	const dispatch = useDispatch();
 	const [editingEmail, setEditingEmail] = useState(false);
+	const [email, setEmail] = useState("marryjane@gmail.com");
 
 	const handleDelete = () => {
 		// console.log("deleting");
@@ -35,6 +37,9 @@ function ProfileOverview(props) {
 	const handleClick = (id) => {
 		console.log(id);
 		setEditingEmail(true);
+		if(id === "checkEmailBtn") {
+			dispatch(updateEmailThunk(email));
+		}
 	};
 
 	return (
@@ -77,7 +82,7 @@ function ProfileOverview(props) {
 					</li>
 					<li>
 						<FontAwesomeIcon className="icon" icon={faMailBulk} />
-						<input type="text" defaultValue="marryjane@gmail.com" />
+						<input type="text" defaultValue="marryjane@gmail.com" onChange={(e) => setEmail(e.target.value)}/>
 						<FontAwesomeIcon
 							className="edit"
 							id="editEmailBtn"
