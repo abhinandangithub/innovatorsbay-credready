@@ -251,7 +251,7 @@ const initialState = {
 		"data": [
 			{
 				"id": 1,
-				"skill": "Java",
+				"name": "Java",
 				"active": true
 			},
 		],
@@ -484,6 +484,19 @@ const initialState = {
 		}
 	},
 	jobURL: "",
+	newJob: {
+		"emailTemplateId": 3,   
+		"employmentType": 3,   
+		"function": 1,   
+		"industry": 1,   
+		"jobDescription": "Some nice job description",   
+		"jobQuestionnaireMap": [1,2,3],   
+		"jobTitle": "Senior Nursing Assistant",   
+		"location": 3,   
+		"maxExp": 1,   
+		"minExp": 4,   
+		"openPositions": 15
+	},
 	JWT: null,
 };
 
@@ -598,6 +611,20 @@ const reducer = (state = initialState, action) => {
 		case actionTypes.SET_JOB_URL:
 			return updateObject(state, {
 				jobURL: action.value
+			});
+
+		case actionTypes.SET_NEW_JOB:
+			const newJobTemp = state.newJob;
+			switch(action.value) {
+				case (action.value.emailTemplateId !== undefined):
+					newJobTemp.emailTemplateId = action.value.emailTemplateId;
+					break;
+					default:
+						// newJobTemp.emailTemplate = state.newJob;
+						break;
+			}
+			return updateObject(state, {
+				newJob: newJobTemp
 			});
 
 		default:

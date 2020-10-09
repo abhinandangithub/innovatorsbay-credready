@@ -108,3 +108,10 @@ export const setPostedJobURL = (val) => {
 		value: val,
 	};
 };
+
+export const setNewJob = (val) => {
+	return {
+		type: actionTypes.SET_NEW_JOB,
+		value: val,
+	};
+};

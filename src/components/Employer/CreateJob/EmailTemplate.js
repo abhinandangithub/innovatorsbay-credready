@@ -3,6 +3,7 @@ import React from "react";
 import Dropdown from "../../_Elements/Dropdown";
 import { getEmailTemplate } from '../../../store/thunks/employer';
 import { connect, useDispatch } from 'react-redux';
+import { setNewJob } from '../../../store/actions/employer';
 
 const employmentStatus = {
 	heading: "Select Employment Type",
@@ -22,11 +23,16 @@ function EmailTemplate(props) {
 		dispatch(getEmailTemplate());
 	}, [dispatch]);
 
+	
+	React.useEffect(() => {
+		dispatch(setNewJob({"emailTemplateId": props.emailTemplate.template_id}))
+	}, [props]);
+
 	return (
 		<div className="email-templates" ref={parent}>
 			<div className="heading">
 				<h2>
-					Email Template m<span>*</span>
+					Email Template<span>*</span>
 				</h2>
 			</div>
 			<div className="content">

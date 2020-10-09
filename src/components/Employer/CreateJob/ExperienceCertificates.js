@@ -38,7 +38,7 @@ function CreateJob(props) {
 					{props.skills.map((val, i) => {
 						return(
 							<li key={val.id}>
-								{val.skill} <span></span>{" "}
+								{val.name} <span></span>{" "}
 							</li>
 						);
 					})}
