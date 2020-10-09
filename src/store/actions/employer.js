@@ -101,3 +101,10 @@ export const setEmailTemplate = (val) => {
 		value: val,
 	};
 };
+
+export const setPostedJobURL = (val) => {
+	return {
+		type: actionTypes.SET_JOB_URL,
+		value: val,
+	};
+};

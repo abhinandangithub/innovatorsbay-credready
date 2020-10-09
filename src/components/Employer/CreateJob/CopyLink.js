@@ -1,13 +1,33 @@
 import React from "react";
 import Input from "../../_Elements/Input";
 import { Link } from "react-router-dom";
+import { useDispatch } from 'react-redux';
+import { postJob } from '../../../store/thunks/employer';
 
 function CopyLink(props) {
 	const parent = React.useRef();
+	const dispatch = useDispatch();
 
 	React.useEffect(() => {
 		props.calHeight(parent.current.clientHeight);
 	}, [props]);
+
+	const handlePostJob = () => {
+		dispatch(postJob({
+			"emailTemplateId": 3,   
+			"employmentType": 3,   
+			"function": 1,   
+			"industry": 1,   
+			"jobDescription": 
+			"Some nice job description",   
+			"jobQuestionnaireMap": [1,2,3],   
+			"jobTitle": "Senior Nursing Assistant",   
+			"location": 3,   
+			"maxExp": 1,   
+			"minExp": 4,   
+			"openPositions": 15 
+		}));
+	}
 
 	return (
 		<>
@@ -48,7 +68,7 @@ Certified Nursing Assistant</a>`}
 				</div>
 			</div>
 			<div className="cta">
-				<Link to="/jobs" className="primary-btn">
+				<Link to="/jobs" className="primary-btn" onClick={handlePostJob}>
 					Post a Job
 				</Link>
 			</div>

@@ -12,6 +12,7 @@ export const SET_FUNCTION = "SET_FUNCTION";
 export const SET_SKILLS = "SET_SKILLS";
 export const SET_QUESTION_BANK = "SET_QUESTION_BANK";
 export const SET_EMAIL_TEMPLATE = "SET_EMAIL_TEMPLATE";
+export const SET_JOB_URL = "SET_JOB_URL";
 
 // export const UPDATE_PHONEOTP = "UPDATE_PHONEOTP";
 // export const UPDATE_LOGGEDIN = "UPDATE_LOGGEDIN";

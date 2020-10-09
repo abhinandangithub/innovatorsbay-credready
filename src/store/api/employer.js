@@ -212,3 +212,10 @@ export const employeGetEmailTemplate = constructUrl(
   employerRouteWithBase,
   "fetch/templates/email"
 );
+/**
+ * Name: get email template
+ */
+export const employeCreateQuestion = constructUrl(
+  employerRouteWithBase,
+  "question/create"
+);

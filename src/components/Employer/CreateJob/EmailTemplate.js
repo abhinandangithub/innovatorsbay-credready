@@ -18,9 +18,9 @@ function EmailTemplate(props) {
 	}, [props]);
 
 	
-	// React.useEffect(() => {
-	// 	dispatch(getEmailTemplate());
-	// }, [dispatch]);
+	React.useEffect(() => {
+		dispatch(getEmailTemplate());
+	}, [dispatch]);
 
 	return (
 		<div className="email-templates" ref={parent}>
@@ -40,20 +40,22 @@ function EmailTemplate(props) {
 				<textarea
 					name="email"
 					id="email"
-					defaultValue="Hi {candidate_name},
-Thanks for applying for the position of {job_title}, we will review your profile and share an update on the next steps soon."
+// 					defaultValue="Hi {candidate_name},
+// Thanks for applying for the position of {job_title}, we will review your profile and share an update on the next steps soon."
+					defaultValue={props.emailTemplate.email_body}
 				></textarea>
 			</div>
 		</div>
 	);
 }
 
-export default EmailTemplate;
+// export default EmailTemplate;
 
-// function mapStateToProps(state) {
-// 	return {
-// 		employmentType: state.employerReducer.employmentType.data,
-// 	}
-// }
+function mapStateToProps(state) {
+	return {
+		employmentType: state.employerReducer.employmentType.data,
+		emailTemplate: state.employerReducer.emailTemplate.data.private_email_template[0]
+	}
+}
 
-// export default connect(mapStateToProps)(EmailTemplate);
+export default connect(mapStateToProps)(EmailTemplate);

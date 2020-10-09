@@ -4,6 +4,7 @@ import { useDispatch } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPen, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { togglePopup } from "../../../../store/actions/popup_overlay";
+import { createQuestion } from '../../../../store/thunks/employer';
 
 import "./index.scss";
 
@@ -14,11 +15,22 @@ function ChoosePublicQuestions() {
 		dispatch(togglePopup([true, "createNewQuestion"]));
 	};
 
+	const handleQuestionAdd = () => {
+		console.log("create");
+		dispatch(createQuestion({
+			"category": "Employer Questions",   
+			"forPublicReview": true,   
+			"jobTitle": "CNA",   
+			"questionName": "How would you define yourself?",   
+			"questionType": "text-input"
+		}));
+	}
+
 	return (
 		<div className="choose-public-question">
 			<h1>
 				Choose from Public Questions
-				<button class="common-heading-btn" onClick={createNewQuestion}>
+				<button className="common-heading-btn" onClick={createNewQuestion}>
 					<span></span>Create New Question
 				</button>
 			</h1>
@@ -178,7 +190,7 @@ function ChoosePublicQuestions() {
 					</li>
 				</ul>
 				<div className="cta">
-					<button className="primary-btn">Add</button>
+					<button className="primary-btn" onClick={handleQuestionAdd}>Add</button>
 				</div>
 			</div>
 		</div>

@@ -12,12 +12,14 @@ import { employeFetchHireRequiredRangesUrl,
 		 employerFetchJobById,
 		 employeFetchQuestionbankUrl,
 		 employeGetEmailTemplate,
-		 employerFetchCandidatesByJobId} from "../api/employer";
+		 employerFetchCandidatesByJobId,
+		 employerPostJob,
+		 employeCreateQuestion} from "../api/employer";
 
 import { setHiringNeeds, setCompanySize, setPhoneNumber, 
 		 setEmail, setEmployerProfile, setEmployerJobs, 
 		 setCandidatesList, setEmploymentType, setIndustry,
-		 setFunction, setSkills, setQuestionBank, setEmailTemplate } from "../actions/employer";
+		 setFunction, setSkills, setQuestionBank, setEmailTemplate, setPostedJobURL } from "../actions/employer";
 // import Cookies from "js-cookie";
 import { setDefaultAuthorizationHeader, setAllowAccessHeader } from "../utility";
 import { requestConfig } from "./utils";
@@ -271,5 +273,39 @@ export const getEmailTemplate = () => async (dispatch, getState) => {
 		dispatch(setEmailTemplate(data.data));
 	} catch (err) {
 		if (err.response) console.error(`failed to get the email template ${err}`);
+	}
+};
+
+export const postJob = (job) => async (dispatch, getState) => {
+	try {
+		const state = getState();
+		// setDefaultAuthorizationHeader(state.authReducer.JWT);
+		const data = await Axios.post(employerPostJob, job, {
+			headers: {
+				'Authorization': `${JSON.parse(state.authReducer.JWT).map.jwt}`,
+				'Content-Type': 'application/vnd.credready.com+json'
+			}
+		});
+		if (!data) return false;
+		dispatch(setPostedJobURL(data.data.data));
+	} catch (err) {
+		if (err.response) console.error(`failed to post the job ${err}`);
+	}
+};
+
+export const createQuestion = (question) => async (dispatch, getState) => {
+	try {
+		const state = getState();
+		// setDefaultAuthorizationHeader(state.authReducer.JWT);
+		const data = await Axios.post(employeCreateQuestion, question, {
+			headers: {
+				'Authorization': `${JSON.parse(state.authReducer.JWT).map.jwt}`,
+				'Content-Type': 'application/vnd.credready.com+json'
+			}
+		});
+		if (!data) return false;
+		// dispatch(setPostedJobURL(data.data.data));
+	} catch (err) {
+		if (err.response) console.error(`failed to post the question ${err}`);
 	}
 };

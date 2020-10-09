@@ -476,6 +476,14 @@ const initialState = {
 		},
 		"status": "OK"
 	},
+	emailTemplate: {
+		data: {
+			private_email_template: [{
+				email_body: ""
+			}]
+		}
+	},
+	jobURL: "",
 	JWT: null,
 };
 
@@ -540,7 +548,7 @@ const reducer = (state = initialState, action) => {
 			employemntTemp.message = action.value.message;
 			employemntTemp.error = action.value.error;
 			employemntTemp.status = action.value.status;
-			employemntTemp.data = action.value.data.map((value) => value.employmentStatus);
+			employemntTemp.data = action.value.data.map((value) => value.employment_status);
 			return updateObject(state, {
 				employmentType: employemntTemp
 			});
@@ -550,7 +558,7 @@ const reducer = (state = initialState, action) => {
 			indistryTemp.message = action.value.message;
 			indistryTemp.error = action.value.error;
 			indistryTemp.status = action.value.status;
-			indistryTemp.data = action.value.data.map((value) => value.industryName);
+			indistryTemp.data = action.value.data.map((value) => value.industry_name);
 			return updateObject(state, {
 				indistryTemp
 			});
@@ -560,7 +568,7 @@ const reducer = (state = initialState, action) => {
 			functionTemp.message = action.value.message;
 			functionTemp.error = action.value.error;
 			functionTemp.status = action.value.status;
-			functionTemp.data = action.value.data.map((value) => value.functionName);
+			functionTemp.data = action.value.data.map((value) => value.function_name);
 			return updateObject(state, {
 				functionTemp
 			});
@@ -582,17 +590,15 @@ const reducer = (state = initialState, action) => {
 				questionBank: questionsTemp
 			});
 
-		// case actionTypes.SET_EMAIL_TEMPLATE:
-		// 	const questionsTemp = state.questionBank;
-		// 	questionsTemp.message = action.value.message;
-		// 	questionsTemp.status = action.value.status;
-		// 	questionsTemp.data = action.value.data;
-		// 	questionsTemp.questions = [];
-		// 	questionsTemp.questions.push(...action.value.data.private_question_bank);
-		// 	questionsTemp.questions.push(...action.value.data.public_question_bank);
-		// 	return updateObject(state, {
-		// 		questionBank: questionsTemp
-		// 	});
+		case actionTypes.SET_EMAIL_TEMPLATE:
+			return updateObject(state, {
+				emailTemplate: action.value
+			});
+
+		case actionTypes.SET_JOB_URL:
+			return updateObject(state, {
+				jobURL: action.value
+			});
 
 		default:
 			return state;
