@@ -9,6 +9,7 @@ const initialState = {
 	},
 	loggedIn: {
 		value: false,
+//		as: "candidate",
 		as: "employer",
 	},
 	singUp: {

@@ -11,12 +11,13 @@ import { employeFetchHireRequiredRangesUrl,
 		 employerUpdateApplicationStatusOfCandidateUrl,
 		 employerFetchJobById,
 		 employeFetchQuestionbankUrl,
+		 employeGetEmailTemplate,
 		 employerFetchCandidatesByJobId} from "../api/employer";
 
 import { setHiringNeeds, setCompanySize, setPhoneNumber, 
 		 setEmail, setEmployerProfile, setEmployerJobs, 
 		 setCandidatesList, setEmploymentType, setIndustry,
-		 setFunction, setSkills, setQuestionBank } from "../actions/employer";
+		 setFunction, setSkills, setQuestionBank, setEmailTemplate } from "../actions/employer";
 // import Cookies from "js-cookie";
 import { setDefaultAuthorizationHeader, setAllowAccessHeader } from "../utility";
 import { requestConfig } from "./utils";
@@ -253,5 +254,22 @@ export const getQuestionBank = () => async (dispatch, getState) => {
 		dispatch(setQuestionBank(data.data));
 	} catch (err) {
 		if (err.response) console.error(`failed to get the question bank ${err}`);
+	}
+};
+
+export const getEmailTemplate = () => async (dispatch, getState) => {
+	try {
+		const state = getState();
+		// setDefaultAuthorizationHeader(state.authReducer.JWT);
+		const data = await Axios.get(employeGetEmailTemplate, {
+			headers: {
+				'Authorization': `${JSON.parse(state.authReducer.JWT).map.jwt}`,
+				'Content-Type': 'application/vnd.credready.com+json'
+			}
+		});
+		if (!data) return false;
+		dispatch(setEmailTemplate(data.data));
+	} catch (err) {
+		if (err.response) console.error(`failed to get the email template ${err}`);
 	}
 };

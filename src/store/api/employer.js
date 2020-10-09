@@ -73,7 +73,7 @@ export const employerPostJob = constructUrl(employerRouteWithBase, "job");
  */
 export const employerFetchJobById = constructUrl(
   employerRouteWithBase,
-  "job/appliedcandiates/fetch"
+  "job/appliedcandidates/fetch"
 );
 
 /**
@@ -203,4 +203,12 @@ export const employerDeleteAccountUrl = constructUrl(
 export const employerFetchCandidatesByJobId = constructUrl(
   employerRouteWithBase,
   "job/candidate/fetch"
+);
+
+/**
+ * Name: get email template
+ */
+export const employeGetEmailTemplate = constructUrl(
+  employerRouteWithBase,
+  "fetch/templates/email"
 );

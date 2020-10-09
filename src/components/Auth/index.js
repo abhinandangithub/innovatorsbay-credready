@@ -6,11 +6,15 @@ import "./index.scss";
 import Login from "./Login";
 import Signup from "./Signup";
 import ThankYou from "./ThankYou";
+import TermsAndConditions from "./TermsAndConditions";
+import PrivacyAndPolicy from "./PrivacyAndPolicy";
 
 import ImgLogo from "../../assets/logo.png";
 
 function LoginSignupPage(props) {
 	const auth = useSelector((state) => state.authReducer);
+	const [show_tnc, setShow_tnc] = React.useState(false);
+	const [show_pnp, setShow_pnp] = React.useState(false);
 
 	/* redirect user to User Profile page if phone otp is verified */
 	useEffect(() => {
@@ -38,8 +42,20 @@ function LoginSignupPage(props) {
 				</div>
 			</div>
 			<div className="right flex">
+				{show_tnc && <TermsAndConditions show_tnc={setShow_tnc} />}
+				{show_pnp && <PrivacyAndPolicy show_pnp={setShow_pnp} />}
 				<Route path="/login" exact component={Login} />
-				<Route path="/signup" exact render={(props) => <Signup {...props} />} />
+				<Route
+					path="/signup"
+					exact
+					render={(props) => (
+						<Signup
+							show_tnc={(val) => setShow_tnc(val)}
+							show_pnp={(val) => setShow_pnp(val)}
+							{...props}
+						/>
+					)}
+				/>
 				<Route path="/thank-you" exact component={ThankYou} />
 			</div>
 		</div>

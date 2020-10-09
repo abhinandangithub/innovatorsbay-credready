@@ -94,3 +94,10 @@ export const setQuestionBank = (val) => {
 		value: val,
 	};
 };
+
+export const setEmailTemplate = (val) => {
+	return {
+		type: actionTypes.SET_EMAIL_TEMPLATE,
+		value: val,
+	};
+};

@@ -21,8 +21,11 @@ function TermsAndConditions(props) {
 	const { register, handleSubmit, errors } = useForm();
 
 	const onSubmit = (data) => {
-		const boolValue =
-			data.termsandconditions && data.allowContact ? true : false;
+		let boolValue = data.termsandconditions && data.allowContact;
+
+		if (auth.loggedIn.as === "employer") {
+			boolValue = data.termsandconditions;
+		}
 
 		dispatch(updateTermsAndConditions(boolValue));
 		if (!boolValue) return;

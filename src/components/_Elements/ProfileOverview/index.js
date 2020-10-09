@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -8,6 +8,8 @@ import {
 	faInfoCircle,
 	faDownload,
 	faTrash,
+	faTimes,
+	faCheck,
 } from "@fortawesome/free-solid-svg-icons";
 
 import "./index.scss";
@@ -17,16 +19,22 @@ import {
 	togglePopup,
 	toggleOverlay,
 } from "../../../store/actions/popup_overlay";
-import { deleteAccount } from '../../../store/thunks/employer';
+import { deleteAccount } from "../../../store/thunks/employer";
 
 function ProfileOverview(props) {
 	const dispatch = useDispatch();
+	const [editingEmail, setEditingEmail] = useState(false);
 
 	const handleDelete = () => {
 		// console.log("deleting");
 		dispatch(toggleOverlay(true));
 		dispatch(togglePopup([true, "delete", { what: "profile" }]));
 		dispatch(deleteAccount());
+	};
+
+	const handleClick = (id) => {
+		console.log(id);
+		setEditingEmail(true);
 	};
 
 	return (
@@ -60,12 +68,34 @@ function ProfileOverview(props) {
 							style={{ transform: "rotateY(180deg)" }}
 						/>
 						212-639-9675
-						<FontAwesomeIcon className="edit" id="editPhoneBtn" icon={faPen} />
+						<FontAwesomeIcon
+							className={`edit ${editingEmail ? "hidden" : ""}`}
+							id="editPhoneBtn"
+							icon={faPen}
+							onClick={(e) => handleClick(e.target.id)}
+						/>
 					</li>
 					<li>
 						<FontAwesomeIcon className="icon" icon={faMailBulk} />
-						marryjane@gmail.com
-						<FontAwesomeIcon className="edit" id="editEmailBtn" icon={faPen} />
+						<input type="text" defaultValue="marryjane@gmail.com" />
+						<FontAwesomeIcon
+							className="edit"
+							id="editEmailBtn"
+							icon={faPen}
+							onClick={(e) => handleClick(e.target.id)}
+						/>
+						<FontAwesomeIcon
+							className={`close ${editingEmail ? "" : "hidden"}`}
+							id="closeEmailBtn"
+							icon={faTimes}
+							onClick={(e) => handleClick(e.target.id)}
+						/>
+						<FontAwesomeIcon
+							className={`check ${editingEmail ? "" : "hidden"}`}
+							id="checkEmailBtn"
+							icon={faCheck}
+							onClick={(e) => handleClick(e.target.id)}
+						/>
 					</li>
 					{props.type === "candidate" && (
 						<li>
@@ -75,6 +105,7 @@ function ProfileOverview(props) {
 								className="edit"
 								id="editAboutMeBtn"
 								icon={faPen}
+								onClick={(e) => handleClick(e.target.id)}
 							/>
 						</li>
 					)}

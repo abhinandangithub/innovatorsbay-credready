@@ -180,8 +180,13 @@ function Signup(props) {
 						/>
 						<label htmlFor="agree">
 							<span className="input"></span>I agree to the &nbsp;
-							<Link to="#"> Terms and Conditions</Link>&nbsp; and &nbsp;
-							<Link to="#"> Privacy Policy</Link>
+							<Link to="#" onClick={() => props.show_tnc(true)}>
+								Terms and Conditions
+							</Link>
+							&nbsp; and &nbsp;
+							<Link to="#" onClick={() => props.show_pnp(true)}>
+								Privacy Policy
+							</Link>
 						</label>
 					</div>
 				</li>

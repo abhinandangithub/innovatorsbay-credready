@@ -1,6 +1,8 @@
 import React from "react";
 
 import Dropdown from "../../_Elements/Dropdown";
+import { getEmailTemplate } from '../../../store/thunks/employer';
+import { connect, useDispatch } from 'react-redux';
 
 const employmentStatus = {
 	heading: "Select Employment Type",
@@ -9,16 +11,22 @@ const employmentStatus = {
 
 function EmailTemplate(props) {
 	const parent = React.useRef();
+	const dispatch = useDispatch();
 
 	React.useEffect(() => {
 		props.calHeight(parent.current.clientHeight);
 	}, [props]);
 
+	
+	// React.useEffect(() => {
+	// 	dispatch(getEmailTemplate());
+	// }, [dispatch]);
+
 	return (
 		<div className="email-templates" ref={parent}>
 			<div className="heading">
 				<h2>
-					Email Template <span>*</span>
+					Email Template m<span>*</span>
 				</h2>
 			</div>
 			<div className="content">
@@ -41,3 +49,11 @@ Thanks for applying for the position of {job_title}, we will review your profile
 }
 
 export default EmailTemplate;
+
+// function mapStateToProps(state) {
+// 	return {
+// 		employmentType: state.employerReducer.employmentType.data,
+// 	}
+// }
+
+// export default connect(mapStateToProps)(EmailTemplate);

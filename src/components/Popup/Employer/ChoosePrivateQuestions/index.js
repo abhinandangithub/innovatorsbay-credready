@@ -56,6 +56,15 @@ function ChoosePrivateQuestions() {
 								<span className="input"></span>College Degree
 							</label>
 						</div>
+						<input
+							className="fancy-toggle"
+							name="question"
+							type="checkbox"
+							id="question3"
+						/>
+						<label htmlFor="question3">
+							<span className="input"></span>
+						</label>
 
 						<FontAwesomeIcon
 							className="action-btn edit"
@@ -100,6 +109,15 @@ function ChoosePrivateQuestions() {
 								<span className="input"></span>No
 							</label>
 						</div>
+						<input
+							className="fancy-toggle"
+							name="question"
+							type="checkbox"
+							id="question1"
+						/>
+						<label htmlFor="question1">
+							<span className="input"></span>
+						</label>
 						<FontAwesomeIcon
 							className="action-btn edit"
 							icon={faPen}
@@ -137,6 +155,15 @@ function ChoosePrivateQuestions() {
 								<span className="input"></span>No
 							</label>
 						</div>
+						<input
+							className="fancy-toggle"
+							name="question"
+							type="checkbox"
+							id="question2"
+						/>
+						<label htmlFor="question2">
+							<span className="input"></span>
+						</label>
 						<FontAwesomeIcon
 							className="action-btn edit"
 							icon={faPen}
