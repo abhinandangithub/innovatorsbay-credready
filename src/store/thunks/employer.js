@@ -110,7 +110,13 @@ export const updateEmailThunk = (email) => async (dispatch, getState) => {
 
 export const deleteAccount = (token) => async (dispatch, getState) => {
 	try {
-        const data = await Axios.delete(employerDeleteAccountUrl, requestConfig);
+		const state = getState();
+        const data = await Axios.delete(employerDeleteAccountUrl, {
+			headers: {
+				'Authorization': JSON.parse(state.authReducer.JWT).map.jwt,
+				'Content-Type': 'application/vnd.credready.com+json'
+			}
+		});
 		if (!data) return false;
 	} catch (err) {
 		if (err.response) console.error(`failed to delete employer account ${err}`);

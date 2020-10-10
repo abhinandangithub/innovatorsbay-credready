@@ -34,7 +34,7 @@ function CandidateList(props) {
 
 	const handleDownloadClick = (candidate) => {
 	// console.log('url ', url);
-    fetch(candidate)
+    fetch('https://outcampus-abhi-test-bucket.s3.ap-south-1.amazonaws.com/resume.pdf')
       .then(response => {
         response.blob().then(blob => {
           let url = window.URL.createObjectURL(blob);
@@ -43,7 +43,7 @@ function CandidateList(props) {
           a.download = 'homework';
           a.click();
         });
-        //window.location.href = response.url;
+        // window.location.href = response.url;
       });
 	}
 

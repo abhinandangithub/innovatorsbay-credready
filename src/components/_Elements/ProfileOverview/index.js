@@ -19,7 +19,6 @@ import {
 	togglePopup,
 	toggleOverlay,
 } from "../../../store/actions/popup_overlay";
-import { deleteAccount } from "../../../store/thunks/employer";
 import { updateEmailThunk } from '../../../store/thunks/employer';
 
 function ProfileOverview(props) {
@@ -31,7 +30,6 @@ function ProfileOverview(props) {
 		// console.log("deleting");
 		dispatch(toggleOverlay(true));
 		dispatch(togglePopup([true, "delete", { what: "profile" }]));
-		dispatch(deleteAccount());
 	};
 
 	const handleClick = (id) => {
