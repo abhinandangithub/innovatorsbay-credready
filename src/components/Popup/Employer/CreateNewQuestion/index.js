@@ -1,8 +1,23 @@
 import React from "react";
+import { createQuestion } from '../../../../store/thunks/employer';
+import { useDispatch } from "react-redux";
 
 import "./index.scss";
 
 function CreateNewQuestion() {
+	const dispatch = useDispatch();
+
+	const handleQuestionAdd = () => {
+		console.log("create");
+		dispatch(createQuestion({
+			"category": "Employer Questions",
+			"forPublicReview": true,
+			"jobTitle": "CNA",
+			"questionName": "How would you define yourself?",
+			"questionType": "text-input"
+		}));
+	}
+
 	return (
 		<div className="create-new-question">
 			<h1>Create New Question</h1>
@@ -62,7 +77,7 @@ function CreateNewQuestion() {
 					</li>
 				</ul>
 				<div className="cta">
-					<button className="primary-btn">Add</button>
+					<button className="primary-btn" onClick={() => handleQuestionAdd()}>Add</button>
 				</div>
 			</div>
 		</div>
