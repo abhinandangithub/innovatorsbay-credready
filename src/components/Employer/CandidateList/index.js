@@ -210,7 +210,7 @@ function CandidateList(props) {
 						placeholder={status.heading}
 						content={status.content}
 						selected={candidate.status}
-						callback={() => handleUpdateStatus(candidate.status, candidate.job_app_id)}
+						onchange={(item) => handleUpdateStatus(item, candidate.job_app_id)}
 					/>
 				</li>
 				<li>

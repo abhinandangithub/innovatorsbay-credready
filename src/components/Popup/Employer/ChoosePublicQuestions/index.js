@@ -190,7 +190,7 @@ function ChoosePublicQuestions() {
 					</li>
 				</ul>
 				<div className="cta">
-					<button className="primary-btn" onClick={handleQuestionAdd}>Add</button>
+					<button className="primary-btn" onClick={() => handleQuestionAdd()}>Add</button>
 				</div>
 			</div>
 		</div>

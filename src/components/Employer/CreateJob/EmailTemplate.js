@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 import Dropdown from "../../_Elements/Dropdown";
 import { getEmailTemplate } from '../../../store/thunks/employer';
@@ -13,6 +13,8 @@ const employmentStatus = {
 function EmailTemplate(props) {
 	const parent = React.useRef();
 	const dispatch = useDispatch();
+	const [emailBody, setEmailBody] = useState("Hi");
+	const [templateID, setTemplateID] = useState(0);
 
 	React.useEffect(() => {
 		props.calHeight(parent.current.clientHeight);
@@ -25,8 +27,18 @@ function EmailTemplate(props) {
 
 	
 	React.useEffect(() => {
-		dispatch(setNewJob({"emailTemplateId": props.emailTemplate.template_id}))
+		dispatch(setNewJob({"emailTemplateId": templateID}));
+		// setEmailBody(props.emailTemplate[0].email_body);
 	}, [props]);
+
+	const handleTemplateChange = (item) => {
+		setEmailBody(props.emailTemplate.find(x => x.template_name === item).email_body);
+		if(props.emailTemplate.find(x => x.template_name === item).template_id === undefined) {
+			setTemplateID(props.emailTemplate.find(x => x.template_name === item).public_template_id);
+		} else {
+			setTemplateID(props.emailTemplate.find(x => x.template_name === item).template_id);
+		}
+	}
 
 	return (
 		<div className="email-templates" ref={parent}>
@@ -40,7 +52,9 @@ function EmailTemplate(props) {
 				<p>Select / Modify Introduction Email Template</p>
 				<Dropdown
 					placeholder={employmentStatus.heading}
-					content={employmentStatus.content}
+					// content={employmentStatus.content}
+					content={props.emailTemplateNames}
+					onchange={(item) => handleTemplateChange(item)}
 				/>
 				<h2 className="sub-heading">Email</h2>
 				<textarea
@@ -48,7 +62,10 @@ function EmailTemplate(props) {
 					id="email"
 // 					defaultValue="Hi {candidate_name},
 // Thanks for applying for the position of {job_title}, we will review your profile and share an update on the next steps soon."
-					defaultValue={props.emailTemplate.email_body}
+					// defaultValue={props.emailTemplate.email_body}
+					// defaultValue={emailBody}
+					onChange={(e) => setEmailBody(e.target.value)}
+					value={emailBody}
 				></textarea>
 			</div>
 		</div>
@@ -60,7 +77,8 @@ function EmailTemplate(props) {
 function mapStateToProps(state) {
 	return {
 		employmentType: state.employerReducer.employmentType.data,
-		emailTemplate: state.employerReducer.emailTemplate.data.private_email_template[0]
+		emailTemplate: state.employerReducer.emailTemplate,
+		emailTemplateNames: state.employerReducer.emailTemplateNames
 	}
 }
 

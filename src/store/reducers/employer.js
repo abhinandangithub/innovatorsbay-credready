@@ -474,18 +474,13 @@ const initialState = {
 				}
 			]
 		},
+		emailTemplateNames: [],
 		employmentKeys: [],
 		functionKeys: [],
 		industryKeys: [],
 		"status": "OK"
 	},
-	emailTemplate: {
-		data: {
-			private_email_template: [{
-				email_body: ""
-			}]
-		}
-	},
+	emailTemplate: [],
 	jobURL: "",
 	newJob: {
 		"emailTemplateId": 3,   
@@ -610,8 +605,14 @@ const reducer = (state = initialState, action) => {
 			});
 
 		case actionTypes.SET_EMAIL_TEMPLATE:
+			let emailTemplateNamesTemp = state.emailTemplateNames;
+			emailTemplateNamesTemp = action.value.data.private_email_template.map((value) => value.template_name);
+			action.value.data.public_email_template.map((value) => emailTemplateNamesTemp.push(value.template_name));
+			let emailTemplates = [...action.value.data.private_email_template, ...action.value.data.public_email_template];
+			console.log(emailTemplates);
 			return updateObject(state, {
-				emailTemplate: action.value
+				emailTemplate: emailTemplates,
+				emailTemplateNames: emailTemplateNamesTemp
 			});
 
 		case actionTypes.SET_JOB_URL:
