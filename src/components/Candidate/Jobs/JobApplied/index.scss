@@ -1,0 +1,11 @@
+@import "../../../../variables.scss";
+
+.job-view-cmp {
+	margin-bottom: 30px;
+}
+.preview_info {
+	.edit,
+	.delete {
+		display: none;
+	}
+}

@@ -30,6 +30,9 @@ function Login(props) {
 				remember_me: loginRemeber,
 			})
 		);
+		console.log(auth);
+		props.history.push("/dashboard");
+
 		// console.log(data);
 		// if (data.password !== pw) {
 		//   setPwError(true);
