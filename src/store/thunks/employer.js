@@ -15,13 +15,14 @@ import { employeFetchHireRequiredRangesUrl,
 		 employerFetchCandidatesByJobId,
 		 employerPostJob,
 		 employeCreateQuestion,
-		 employeCandidateSendEmail} from "../api/employer";
+		 employeCandidateSendEmail,
+		 employeFecthOrgLocations } from "../api/employer";
 
 import { setHiringNeeds, setCompanySize, setPhoneNumber, 
 		 setEmail, setEmployerProfile, setEmployerJobs, 
 		 setCandidatesList, setEmploymentType, setIndustry,
 		 setFunction, setSkills, setQuestionBank, setEmailTemplate, setPostedJobURL,
-		 setAppliedCandidateDetails } from "../actions/employer";
+		 setAppliedCandidateDetails, setLocations } from "../actions/employer";
 // import Cookies from "js-cookie";
 import { setDefaultAuthorizationHeader, setAllowAccessHeader } from "../utility";
 import { requestConfig } from "./utils";
@@ -324,11 +325,11 @@ export const createQuestion = (question) => async (dispatch, getState) => {
 	}
 };
 
-export const getAppliedCandidateDetails = (candidateID) => async (dispatch, getState) => {
+export const getAppliedCandidateDetails = (candidateID, jobID) => async (dispatch, getState) => {
 	try {
 		const state = getState();
 		// setDefaultAuthorizationHeader(JSON.parse(state.authReducer.JWT).map.jwt);
-		const data = await Axios.get(employerFetchJobById + "/" + candidateID, {
+		const data = await Axios.get(employerFetchCandidatesByJobId + "/" + jobID + '/' + candidateID, {
 			headers: {
 				'Authorization': JSON.parse(state.authReducer.JWT).map.jwt,
 				'Content-Type': 'application/vnd.credready.com+json'
@@ -336,6 +337,23 @@ export const getAppliedCandidateDetails = (candidateID) => async (dispatch, getS
 		});
 		if (!data) return false;
 		dispatch(setAppliedCandidateDetails(data.data));
+	} catch (err) {
+		if (err.response) console.error(`failed to post the question ${err}`);
+	}
+};
+
+export const getLocations = () => async (dispatch, getState) => {
+	try {
+		const state = getState();
+		// setDefaultAuthorizationHeader(JSON.parse(state.authReducer.JWT).map.jwt);
+		const data = await Axios.get(employeFecthOrgLocations, {
+			headers: {
+				'Authorization': JSON.parse(state.authReducer.JWT).map.jwt,
+				'Content-Type': 'application/vnd.credready.com+json'
+			}
+		});
+		if (!data) return false;
+		dispatch(setLocations(data.data));
 	} catch (err) {
 		if (err.response) console.error(`failed to post the question ${err}`);
 	}

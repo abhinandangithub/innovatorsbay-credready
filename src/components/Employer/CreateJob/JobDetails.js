@@ -1,6 +1,6 @@
 import React from "react";
 import { connect, useDispatch } from 'react-redux';
-import { getEmploymentType, getIndustry, getFunction } from '../../../store/thunks/employer';
+import { getEmploymentType, getIndustry, getFunction, getLocations } from '../../../store/thunks/employer';
 import { setNewJob } from '../../../store/actions/employer';
 
 import Input from "../../_Elements/Input";
@@ -33,6 +33,7 @@ function CreateJob(props) {
 		dispatch(getEmploymentType());
 		dispatch(getIndustry());
 		dispatch(getFunction());
+		dispatch(getLocations());
 	}, [dispatch]);
 
 	const handleChangeEmpType = (item) => {
@@ -48,7 +49,7 @@ function CreateJob(props) {
 		dispatch(setNewJob({"jobTitle": e.target.value}));
 	}
 	const handleChangeLocation = (e) => {
-		dispatch(setNewJob({"location": e.target.value}));
+		dispatch(setNewJob({"location": e}));
 	}
 	const handleChangeOpenPosition = (e) => {
 		dispatch(setNewJob({"openPositions": e.target.value}));
@@ -73,7 +74,12 @@ function CreateJob(props) {
 						<label>
 							Job Location <span>*</span>
 						</label>
-						<Input type="text" placeholder="Zip or city, state" onChange={handleChangeLocation}/>
+						{/* <Input type="text" placeholder="Zip or city, state" onChange={handleChangeLocation}/> */}
+						<Dropdown
+							placeholder="Zip or city, state"
+							content={props.locations}
+							onchange={(item) => handleChangeLocation(item)}
+						/>
 					</li>
 					<li>
 						<label>
@@ -119,7 +125,8 @@ function mapStateToProps(state) {
 	return {
 		employmentType: state.employerReducer.employmentType.data,
 		functionType: state.employerReducer.functionType.data,
-		industry: state.employerReducer.industry.data
+		industry: state.employerReducer.industry.data,
+		locations: state.employerReducer.locationNames
 	}
 }
 

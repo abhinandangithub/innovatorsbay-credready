@@ -48,7 +48,7 @@ function CandidateList(props) {
 	}
 
 	const handleRowClick = (e) => {
-		console.log(e);
+		dispatch(getAppliedCandidateDetails(e.candidate_id, e.job_id));
 	}
 
 	// useEffect(() => {
@@ -202,7 +202,7 @@ function CandidateList(props) {
 		let index = candidate.readiness_index;
 		let crColor = index < 40 ? "red" : index > 70 ? "green" : "yellow";
 		return (
-			<ul key={i} onClick={(e) => handleRowClick(e)}>
+			<ul key={i} onClick={() => handleRowClick(candidate)}>
 				<li>
 					<input className="fancy-toggle" id={`row_${i}`} type="checkbox" />
 					<label htmlFor={`row_${i}`}>

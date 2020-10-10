@@ -122,3 +122,10 @@ export const setAppliedCandidateDetails = (val) => {
 		value: val,
 	};
 };
+
+export const setLocations = (val) => {
+	return {
+		type: actionTypes.SET_LOCATIONS,
+		value: val,
+	};
+};

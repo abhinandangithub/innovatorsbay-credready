@@ -491,13 +491,23 @@ const initialState = {
 		"jobQuestionnaireMap": [1,2,3],   
 		"jobTitle": "Senior Nursing Assistant",   
 		"location": 3,   
-		"maxExp": 1,   
-		"minExp": 4,   
+		"maxExp": 7,   
+		"minExp": 3,   
 		"openPositions": 15
 	},
-	appliedCandidateDetails: {
-
+	appliedCandidateDetails: {},
+	locations: {
+		data: [
+			{
+			"id": 0,
+            "street_address": "",
+            "city": "",
+            "state": "",
+            "zip_code": 0
+			}
+		]
 	},
+	locationNames: [],
 	JWT: null,
 };
 
@@ -619,12 +629,20 @@ const reducer = (state = initialState, action) => {
 
 		case actionTypes.SET_JOB_URL:
 			return updateObject(state, {
-				appliedCandidateDetails: action.value
+				jobURL: action.value
 			});
 
 		case actionTypes.SET_APPLIED_CANDIDATE:
 			return updateObject(state, {
-				jobURL: action.value
+				appliedCandidateDetails: action.value
+			});
+
+		case actionTypes.SET_LOCATIONS:
+			let locationTemp = state.locationNames;
+			locationTemp = action.value.data.map((value) => value.city);
+			return updateObject(state, {
+				locations: action.value,
+				locationNames: locationTemp
 			});
 
 		case actionTypes.SET_NEW_JOB:
@@ -648,7 +666,8 @@ const reducer = (state = initialState, action) => {
 					newJobTemp.jobTitle = action.value.jobTitle;
 				}
 				if (action.value.location !== undefined) {
-					newJobTemp.location = action.value.location;
+					// newJobTemp.location = action.value.location;
+					newJobTemp.location = state.locations.data.find(x => x.city === action.value.location).id;
 				}
 				if (action.value.openPositions !== undefined) {
 					newJobTemp.openPositions = action.value.openPositions;
