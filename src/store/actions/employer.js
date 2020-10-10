@@ -115,3 +115,10 @@ export const setNewJob = (val) => {
 		value: val,
 	};
 };
+
+export const setAppliedCandidateDetails = (val) => {
+	return {
+		type: actionTypes.SET_APPLIED_CANDIDATE,
+		value: val,
+	};
+};

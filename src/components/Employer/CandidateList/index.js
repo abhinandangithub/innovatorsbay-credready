@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { connect, useDispatch } from 'react-redux';
-import { sendEmail, updateStatus, getCandidatesList } from '../../../store/thunks/employer';
+import { sendEmail, updateStatus, getAppliedCandidateDetails } from '../../../store/thunks/employer';
 
 import "./index.scss";
 import Dropdown from "../../_Elements/Dropdown";
@@ -30,6 +30,25 @@ function CandidateList(props) {
 				"candidateId": candidate_id,
   				"emailTemplateId": template_id
 			}));
+	}
+
+	const handleDownloadClick = (candidate) => {
+	// console.log('url ', url);
+    fetch(candidate)
+      .then(response => {
+        response.blob().then(blob => {
+          let url = window.URL.createObjectURL(blob);
+          let a = document.createElement('a');
+          a.href = url;
+          a.download = 'homework';
+          a.click();
+        });
+        //window.location.href = response.url;
+      });
+	}
+
+	const handleRowClick = (e) => {
+		console.log(e);
 	}
 
 	// useEffect(() => {
@@ -183,7 +202,7 @@ function CandidateList(props) {
 		let index = candidate.readiness_index;
 		let crColor = index < 40 ? "red" : index > 70 ? "green" : "yellow";
 		return (
-			<ul key={i}>
+			<ul key={i} onClick={(e) => handleRowClick(e)}>
 				<li>
 					<input className="fancy-toggle" id={`row_${i}`} type="checkbox" />
 					<label htmlFor={`row_${i}`}>
@@ -217,7 +236,7 @@ function CandidateList(props) {
 					<Link to="/" className="mail" onClick={() => handleSendEmail(candidate.candidate_id, candidate.email_template_id)}>
 						<img src={ImgMail} alt="Email" />
 					</Link>
-					<Link to="/" className="download">
+					<Link to="/" className="download" onClick={() => handleDownloadClick(candidate)}>
 						<img src={ImgDownload} alt="Download" />
 					</Link>
 				</li>

@@ -495,6 +495,9 @@ const initialState = {
 		"minExp": 4,   
 		"openPositions": 15
 	},
+	appliedCandidateDetails: {
+
+	},
 	JWT: null,
 };
 
@@ -609,13 +612,17 @@ const reducer = (state = initialState, action) => {
 			emailTemplateNamesTemp = action.value.data.private_email_template.map((value) => value.template_name);
 			action.value.data.public_email_template.map((value) => emailTemplateNamesTemp.push(value.template_name));
 			let emailTemplates = [...action.value.data.private_email_template, ...action.value.data.public_email_template];
-			console.log(emailTemplates);
 			return updateObject(state, {
 				emailTemplate: emailTemplates,
 				emailTemplateNames: emailTemplateNamesTemp
 			});
 
 		case actionTypes.SET_JOB_URL:
+			return updateObject(state, {
+				appliedCandidateDetails: action.value
+			});
+
+		case actionTypes.SET_APPLIED_CANDIDATE:
 			return updateObject(state, {
 				jobURL: action.value
 			});

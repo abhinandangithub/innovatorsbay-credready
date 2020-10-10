@@ -41,7 +41,6 @@ function PostedJobs(props) {
 	// const jobsList = props.postedJobs;
 
 	const List = ({job}) => {
-		console.log(job);
 		return (
 		<>
 			{/* <h2 className="heading">Certified Nursing Assistant</h2> */}

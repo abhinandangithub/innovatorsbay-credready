@@ -20,7 +20,8 @@ import { employeFetchHireRequiredRangesUrl,
 import { setHiringNeeds, setCompanySize, setPhoneNumber, 
 		 setEmail, setEmployerProfile, setEmployerJobs, 
 		 setCandidatesList, setEmploymentType, setIndustry,
-		 setFunction, setSkills, setQuestionBank, setEmailTemplate, setPostedJobURL } from "../actions/employer";
+		 setFunction, setSkills, setQuestionBank, setEmailTemplate, setPostedJobURL,
+		 setAppliedCandidateDetails } from "../actions/employer";
 // import Cookies from "js-cookie";
 import { setDefaultAuthorizationHeader, setAllowAccessHeader } from "../utility";
 import { requestConfig } from "./utils";
@@ -269,7 +270,6 @@ export const getQuestionBank = () => async (dispatch, getState) => {
 export const getEmailTemplate = () => async (dispatch, getState) => {
 	try {
 		const state = getState();
-		console.log(state);
 		// setDefaultAuthorizationHeader(JSON.parse(state.authReducer.JWT).map.jwt);
 		const data = await Axios.get(employeGetEmailTemplate, {
 			headers: {
@@ -280,7 +280,6 @@ export const getEmailTemplate = () => async (dispatch, getState) => {
 		if (!data) return false;
 		dispatch(setEmailTemplate(data.data));
 	} catch (err) {
-		console.log(err);
 		if (err.response) console.error(`failed to get the email template ${err}`);
 	}
 };
@@ -314,6 +313,23 @@ export const createQuestion = (question) => async (dispatch, getState) => {
 		});
 		if (!data) return false;
 		// dispatch(setPostedJobURL(data.data.data));
+	} catch (err) {
+		if (err.response) console.error(`failed to post the question ${err}`);
+	}
+};
+
+export const getAppliedCandidateDetails = (candidateID) => async (dispatch, getState) => {
+	try {
+		const state = getState();
+		// setDefaultAuthorizationHeader(JSON.parse(state.authReducer.JWT).map.jwt);
+		const data = await Axios.get(employerFetchJobById + "/" + candidateID, {
+			headers: {
+				'Authorization': JSON.parse(state.authReducer.JWT).map.jwt,
+				'Content-Type': 'application/vnd.credready.com+json'
+			}
+		});
+		if (!data) return false;
+		dispatch(setAppliedCandidateDetails(data.data));
 	} catch (err) {
 		if (err.response) console.error(`failed to post the question ${err}`);
 	}

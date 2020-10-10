@@ -29,7 +29,7 @@ function EmailTemplate(props) {
 	React.useEffect(() => {
 		dispatch(setNewJob({"emailTemplateId": templateID}));
 		// setEmailBody(props.emailTemplate[0].email_body);
-	}, [props]);
+	}, [dispatch,templateID]);
 
 	const handleTemplateChange = (item) => {
 		setEmailBody(props.emailTemplate.find(x => x.template_name === item).email_body);
