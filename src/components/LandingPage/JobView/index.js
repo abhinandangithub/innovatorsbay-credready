@@ -7,6 +7,7 @@ import ImgWidgetLogo from "../../../assets/widget-logo.jpg";
 import CredReadyIndex from "../../_Elements/CredReadyIndex";
 import ImgMarginalAssociation from "../../../assets/widget-2.jpg";
 import { getJobDetails } from '../../../store/thunks/employer';
+import { setRedirectURL } from '../../../store/actions/employer';
 
 function JobView(props) {
 	let { id } = useParams();
@@ -16,7 +17,8 @@ function JobView(props) {
 
 	useEffect(() => {
 			dispatch(getJobDetails(id));
-	}, [props, id]);
+			dispatch(setRedirectURL("/landing_page/1"));
+	}, [dispatch,id, props.isLoggedIn]);
 
 	return (
 		<div className={`job-view-cmp flex ${props.isLoggedIn ? "" : "login_required"}`}>

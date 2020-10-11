@@ -143,3 +143,10 @@ export const setLogin = (val) => {
 		value: val,
 	};
 };
+
+export const setRedirectURL = (val) => {
+	return {
+		type: actionTypes.SET_REDIRECT_URL,
+		value: val,
+	};
+};

@@ -372,7 +372,7 @@ export const getJobDetails = (jobID) => async (dispatch, getState) => {
 		}
 		let URL = employeFecthJobPreviewDetails + '/' + jobID;
 		let headers = {};
-		if(jwt && user === 'jobseeker') {
+		if((jwt && user === 'jobseeker')||(state.employerReducer.isLoggedIn)) {
 			dispatch(setLogin(true));
 			URL = candidateFetchJobsAppliedUrl + '/' + jobID;
 			 headers = {

@@ -3,14 +3,16 @@ import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
-import { useDispatch } from "react-redux";
+import { connect, useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 
 // import { updateLoggedIn } from "../../store/actions/auth";
 import { tryLogin } from "../../store/thunks/auth";
+import { setLogin } from "../../store/actions/employer";
 
 function Login(props) {
 	const auth = useSelector((state) => state.authReducer);
+	const redirectURL = useSelector((state) => state.employerReducer.redirectURL);
 	const { register, handleSubmit, errors } = useForm();
 	const dispatch = useDispatch();
 
@@ -31,7 +33,12 @@ function Login(props) {
 			})
 		);
 		console.log(auth);
-		props.history.push("/dashboard");
+		if(redirectURL !== "") {
+			dispatch(setLogin(true));
+			props.history.push(redirectURL);
+		} else {
+			props.history.push("/dashboard");
+		}
 
 		// console.log(data);
 		// if (data.password !== pw) {
