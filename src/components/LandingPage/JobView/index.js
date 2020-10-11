@@ -17,7 +17,7 @@ function JobView(props) {
 
 	useEffect(() => {
 			dispatch(getJobDetails(id));
-			dispatch(setRedirectURL("/landing_page/1"));
+			dispatch(setRedirectURL("/landing_page/"+id));
 	}, [dispatch,id, props.isLoggedIn]);
 
 	return (

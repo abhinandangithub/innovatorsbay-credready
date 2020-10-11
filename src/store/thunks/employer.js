@@ -118,6 +118,22 @@ export const updateEmailThunk = (email) => async (dispatch, getState) => {
 	}
 };
 
+export const updatePhoneThunk = (phone) => async (dispatch, getState) => {
+	try {
+		const state = getState();
+		const data = await Axios.put(employerUpdateUserPhoneUrl, { "phone": phone }, {
+			headers: {
+				'Authorization': JSON.parse(state.authReducer.JWT).map.jwt,
+				'Content-Type': 'application/vnd.credready.com+json'
+			}
+		});
+		if (!data) return false;
+		dispatch(setPhoneNumber(data.data.phone));
+	} catch (err) {
+		if (err.response) console.error(`failed to update  email ${err}`);
+	}
+};
+
 export const deleteAccount = (token) => async (dispatch, getState) => {
 	try {
 		const state = getState();
