@@ -17,7 +17,7 @@ function JobView(props) {
 
 	useEffect(() => {
 			dispatch(getJobDetails(id));
-			dispatch(setRedirectURL("/landing_page/1"));
+			dispatch(setRedirectURL("/postings/1"));
 	}, [dispatch,id, props.isLoggedIn]);
 
 	return (
@@ -40,16 +40,10 @@ function JobView(props) {
 					<p>
 						<span className="heading">Job Description: </span>
 						<span className="text">
-							{/* Lorem Ipsum is simply dummy text of the printing and typesetting
-							industry. Lorem Ipsum has been the industry's standard dummy text
-							ever since the 1500s, when an unknown printer took a galley of
-							type and scrambled it to make a type specimen book. It has
-							survived not only five centuries, but also the leap into
-							electronic typesetting, remaining essentially unchanged. */}
 							{props.jobDetails.job_description}
 						</span>
 					</p>
-					<p>
+					{/* <p>
 						<span className="heading">Skills: </span>
 						<span className="text">
 							Lorem Ipsum is simply dummy text of the printing and typesetting
@@ -58,12 +52,11 @@ function JobView(props) {
 							type and scrambled it to make a type specimen book. It has
 							survived not only five centuries, but also the leap into
 							electronic typesetting, remaining essentially unchanged.
-							{/* {props.jobDetails.strengths.map((value) => value.name + ', ')} */}
 						</span>
 					</p>
 					<h2>{'A ' + props.jobDetails.job_title + '\'s Job'}</h2>
-					<h3>Responsibilities</h3>
-					<ul>
+					<h3>Responsibilities</h3> */}
+					{/* <ul>
 						<li>
 							Lorem Ipsum is simply dummy text of the printing and typesetting
 							industry. Lorem Ipsum has been the industry's standard dummy text
@@ -88,7 +81,7 @@ function JobView(props) {
 							survived not only five centuries, but also the leap into
 							electronic typesetting, remaining essentially unchanged.
 						</li>
-					</ul>
+					</ul> */}
 					<div className="cta flex">
 						{props.isLoggedIn ? (
 							<>

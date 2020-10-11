@@ -19,32 +19,32 @@ function CandidateList(props) {
 	const dispatch = useDispatch();
 
 	const handleUpdateStatus = (e, job_app_id) => {
-			dispatch(updateStatus({
-  				"jobAppId": job_app_id,
-  				"status": e
-			}));
+		dispatch(updateStatus({
+			"jobAppId": job_app_id,
+			"status": e
+		}));
 	}
 
 	const handleSendEmail = (candidate_id, template_id) => {
-			dispatch(sendEmail({
-				"candidateId": candidate_id,
-  				"emailTemplateId": template_id
-			}));
+		dispatch(sendEmail({
+			"candidateId": candidate_id,
+			"emailTemplateId": template_id
+		}));
 	}
 
 	const handleDownloadClick = (candidate) => {
-	// console.log('url ', url);
-    fetch('https://outcampus-abhi-test-bucket.s3.ap-south-1.amazonaws.com/resume.pdf')
-      .then(response => {
-        response.blob().then(blob => {
-          let url = window.URL.createObjectURL(blob);
-          let a = document.createElement('a');
-          a.href = url;
-          a.download = 'homework';
-          a.click();
-        });
-        // window.location.href = response.url;
-      });
+		console.log('url ', candidate.resume_path);
+		fetch(candidate.resume_path)
+			.then(response => {
+				response.blob().then(blob => {
+					let url = window.URL.createObjectURL(blob);
+					let a = document.createElement('a');
+					a.href = url;
+					a.download = 'resume';
+					a.click();
+				});
+				// window.location.href = response.url;
+			});
 	}
 
 	const handleRowClick = (e) => {
@@ -216,7 +216,7 @@ function CandidateList(props) {
 					</Link>
 				</li>
 				<li>{candidate.title}</li>
-				<li>{candidate.candidate_experience} years</li>
+				<li>{candidate.candidate_experience}</li>
 				<li>
 					<span className={`cr_index ${crColor}`}>
 						{candidate.readiness_index}
@@ -233,10 +233,10 @@ function CandidateList(props) {
 					/>
 				</li>
 				<li>
-					<Link to="/" className="mail" onClick={() => handleSendEmail(candidate.candidate_id, candidate.email_template_id)}>
+					<Link className="mail" onClick={() => handleSendEmail(candidate.candidate_id, candidate.email_template_id)}>
 						<img src={ImgMail} alt="Email" />
 					</Link>
-					<Link to="/" className="download" onClick={() => handleDownloadClick(candidate)}>
+					<Link className="download" onClick={() => handleDownloadClick(candidate)}>
 						<img src={ImgDownload} alt="Download" />
 					</Link>
 				</li>
@@ -359,7 +359,7 @@ function CandidateList(props) {
 								Exp (in years) <SortIcon />
 							</li>
 							<li>
-								CreadReadines <SortIcon />
+								CredReadiness <SortIcon />
 							</li>
 							<li>
 								Current Organization <SortIcon />
