@@ -7,7 +7,7 @@ import { updateTermsAndConditions } from "../../../store/actions/auth";
 import { togglePopup } from "../../../store/actions/popup_overlay";
 
 import "./index.scss";
-import { signUpUser } from "../../../store/thunks/auth";
+import { signUpUser, verifyUserCode } from "../../../store/thunks/auth";
 
 let scrollBarStyle = {
 	width: "700px",
@@ -29,7 +29,7 @@ function TermsAndConditions(props) {
 
 		dispatch(updateTermsAndConditions(boolValue));
 		if (!boolValue) return;
-		dispatch(signUpUser(signupDetails));
+		//	dispatch(signUpUser(signupDetails));
 		if (auth.loggedIn.as === "candidate") {
 			dispatch(togglePopup([true, "emailOtp"]));
 		} else {

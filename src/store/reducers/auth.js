@@ -4,12 +4,12 @@ import { updateObject } from "../utility";
 const initialState = {
 	isVerified: {
 		termsAndConditions: false,
-		emailOtp: false,
-		phoneOtp: false,
+		emailOtp: null,
+		phoneOtp: null,
 	},
 	loggedIn: {
 		value: false,
-//		as: "candidate",
+		//		as: "candidate",
 		as: "employer",
 	},
 	singUp: {
@@ -63,6 +63,8 @@ const reducer = (state = initialState, action) => {
 					email: action.details.email,
 					password: action.details.password,
 					phone: action.details.phone,
+					organisation: action.details.organisation,
+					user_type: action.details.user_type
 				},
 			});
 

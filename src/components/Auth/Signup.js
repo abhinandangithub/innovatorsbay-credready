@@ -5,6 +5,7 @@ import { useDispatch } from "react-redux";
 import { togglePopup, toggleOverlay } from "../../store/actions/popup_overlay";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
+import { getVerificationCode } from "../../store/thunks/auth";
 
 import { updateLoggedIn, updateSignupDetails } from "../../store/actions/auth";
 
@@ -16,7 +17,10 @@ function Signup(props) {
 	const [passwordShown, setPasswordShown] = useState(false);
 
 	const onSubmit = (data) => {
+		data.user_type = signupType === "candidate" ? "jobseeker" : signupType;
+		data.phone = "+"+ data.phone;
 		console.log(data);
+		dispatch(getVerificationCode(data));
 		dispatch(toggleOverlay(true));
 		dispatch(togglePopup([true, "termsAndConditions"]));
 		dispatch(updateLoggedIn([false, signupType]));
@@ -88,12 +92,12 @@ function Signup(props) {
 
 				{signupType === "employer" ? (
 					<li>
-						<label htmlFor="name">
+						<label htmlFor="organisation">
 							Employer Name <span>*</span>
 						</label>
 						<input
-							id="name"
-							name="name"
+							id="organisation"
+							name="organisation"
 							type="text"
 							autoComplete="nothing"
 							placeholder="Enter employer name"
