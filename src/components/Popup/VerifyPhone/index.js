@@ -8,6 +8,7 @@ import {
 } from "../../../store/actions/popup_overlay";
 import VerifyCode from "../../_Elements/VerifyCode";
 import { calculateTimeLeft } from "../../../assets/js/Utility";
+import { verifyOtp } from "../../../store/thunks/auth";
 
 let timerDuration = 10 * 60; // in seconds
 
@@ -20,11 +21,17 @@ function VerifyPhone(props) {
 	let timerDisplay = "";
 
 	const handleClick = () => {
+		let data = {
+			"type": "phone",
+			"contact": "+16173837817",
+			"verification_code": otp.join("")
+		}
 		if (
 			otp.filter((i) => i.length > 0).length === 4 &&
 			otp.join("") === "1111"
 		) {
 			dispatch(updatePhoneOtp(true));
+			dispatch(verifyOtp(data));
 			dispatch(toggleOverlay(false));
 			dispatch(togglePopup(false));
 			setIsCodeError(false);

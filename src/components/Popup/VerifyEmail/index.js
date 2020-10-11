@@ -2,9 +2,10 @@ import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 
 import { updateEmailOtp } from "../../../store/actions/auth";
-import { togglePopup } from "../../../store/actions/popup_overlay";
+import { togglePopup, toggleOverlay } from "../../../store/actions/popup_overlay";
 import VerifyCode from "../../_Elements/VerifyCode";
 import { calculateTimeLeft } from "../../../assets/js/Utility";
+import { verifyOtp } from "../../../store/thunks/auth";
 
 let timerDuration = 10 * 60; // in seconds
 
@@ -16,12 +17,20 @@ function VerifyEmail(props) {
 	let timerDisplay = "";
 
 	const handleClick = () => {
+		let data = {
+			"type": "email",
+			"contact": "+16173837817",
+			"verification_code": otp.join("")
+		}
 		if (
 			otp.filter((i) => i.length > 0).length === 4 &&
 			otp.join("") === "0000"
 		) {
 			dispatch(updateEmailOtp(true));
-			dispatch(togglePopup([true, "phoneOtp"]));
+			dispatch(verifyOtp(data));
+			// dispatch(togglePopup([true, "phoneOtp"]));
+			dispatch(toggleOverlay(false));
+			dispatch(togglePopup(false));
 			setIsCodeError(false);
 		} else {
 			setIsCodeError(true);

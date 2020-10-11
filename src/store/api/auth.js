@@ -14,6 +14,9 @@ export const logoutUrl = constructUrl(authBaseRoute, "logout");
 
 export const signUpUrl = constructUrl(authBaseRoute, "signup");
 
+export const verifyOtpUrl = constructUrl(authBaseRoute, "verify");
+
+
 export const authVcodeRequestPostUrl = constructUrl(
   authVcodeBaseRoute,
   "request"

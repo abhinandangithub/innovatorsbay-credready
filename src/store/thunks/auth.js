@@ -1,5 +1,5 @@
 import Axios from "axios";
-import { loginUrl, signUpUrl } from "../api/auth";
+import { loginUrl, signUpUrl, verifyOtpUrl } from "../api/auth";
 
 import { updateLoggedIn, updateJwtToken } from "../actions/auth";
 import Cookies from "js-cookie";
@@ -31,8 +31,11 @@ export const signUpUser = (userData) => async (dispatch, getState) => {
 	}
 };
 
-export const verifyCode = (details) => async (dispatch, getState) => {
+export const verifyOtp = (data) => async (dispatch, getState) => {
 	try {
-		const {} = await Axios.get;
-	} catch (err) {}
+		data.phone = getState().authReducer.signUp.phone;
+		console.log('details ', data, getState());
+		const response = await Axios.post(verifyOtpUrl, data, requestConfig);
+		dispatch();
+	} catch (err) { }
 };

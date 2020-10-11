@@ -18,10 +18,10 @@ function LoginSignupPage(props) {
 
 	/* redirect user to User Profile page if phone otp is verified */
 	useEffect(() => {
-		if (auth.isVerified.phoneOtp) {
+		if (auth.isVerified.phoneOtp || auth.isVerified.emailOtp) {
 			props.history.push("/thank-you");
 		}
-	}, [auth.isVerified.phoneOtp, props.history]);
+	}, [auth.isVerified.phoneOtp, auth.isVerified.emailOtp, props.history]);
 
 	return (
 		<div className="auth-page flex">

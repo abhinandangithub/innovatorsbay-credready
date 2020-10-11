@@ -17,10 +17,16 @@ function Signup(props) {
 
 	const onSubmit = (data) => {
 		console.log(data);
+		let userData = {
+			...data,
+			"organisation": "ALM Hospitals",
+			"user_type": signupType
+		};
+		console.log(userData);
 		dispatch(toggleOverlay(true));
 		dispatch(togglePopup([true, "termsAndConditions"]));
 		dispatch(updateLoggedIn([false, signupType]));
-		dispatch(updateSignupDetails(data));
+		dispatch(updateSignupDetails(userData));
 	};
 
 	const togglePasswordVisiblity = () => {

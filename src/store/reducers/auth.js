@@ -9,13 +9,15 @@ const initialState = {
 	},
 	loggedIn: {
 		value: false,
-//		as: "candidate",
+		//		as: "candidate",
 		as: "employer",
 	},
 	singUp: {
 		email: null,
 		password: null,
 		phone: null,
+		organisation: null,
+		user_type: null
 	},
 	JWT: null,
 };
@@ -63,6 +65,8 @@ const reducer = (state = initialState, action) => {
 					email: action.details.email,
 					password: action.details.password,
 					phone: action.details.phone,
+					organisation: "ALM Hospitals",
+					user_type: action.details.user_type
 				},
 			});
 
