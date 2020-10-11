@@ -49,7 +49,7 @@ function CreateJob(props) {
 		dispatch(setNewJob({"jobTitle": e.target.value}));
 	}
 	const handleChangeLocation = (e) => {
-		dispatch(setNewJob({"location": e}));
+		// dispatch(setNewJob({"location": e}));
 	}
 	const handleChangeOpenPosition = (e) => {
 		dispatch(setNewJob({"openPositions": e.target.value}));

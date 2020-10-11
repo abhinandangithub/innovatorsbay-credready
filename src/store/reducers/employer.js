@@ -490,7 +490,7 @@ const initialState = {
 		"jobDescription": "Some nice job description",   
 		"jobQuestionnaireMap": [1,2,3],   
 		"jobTitle": "Senior Nursing Assistant",   
-		"location": 3,   
+		"location": 1,   
 		"maxExp": 7,   
 		"minExp": 3,   
 		"openPositions": 15
@@ -639,7 +639,7 @@ const reducer = (state = initialState, action) => {
 
 		case actionTypes.SET_LOCATIONS:
 			let locationTemp = state.locationNames;
-			locationTemp = action.value.data.map((value) => value.city);
+			locationTemp = action.value.data.map((value) => value.street_address+", "+value.city+", "+value.state+", "+value.zip_code);
 			return updateObject(state, {
 				locations: action.value,
 				locationNames: locationTemp
