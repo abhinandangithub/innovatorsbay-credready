@@ -79,7 +79,7 @@ Certified Nursing Assistant</a>`}
 
 function mapStateToProps(state) {
 	return {
-		jobURL: state.employerReducer.jobURL.replace("https://dev.innovatorsbay.in/credready/jobs/", "http://localhost:3006/landing_page/")
+		jobURL: state.employerReducer.jobURL.replace("https://dev.innovatorsbay.in/credready/jobs/", "http://localhost:3000/postings/")
 	}
 }
 
