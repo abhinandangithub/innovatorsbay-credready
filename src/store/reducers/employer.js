@@ -474,13 +474,13 @@ const initialState = {
 				}
 			]
 		},
-		emailTemplateNames: [],
-		employmentKeys: [],
-		functionKeys: [],
-		industryKeys: [],
-		isLoggedIn: false,
 		"status": "OK"
 	},
+	emailTemplateNames: [],
+	employmentKeys: [],
+	functionKeys: [],
+	industryKeys: [],
+	isLoggedIn: false,
 	emailTemplate: [],
 	jobURL: "",
 	newJob: {
@@ -520,7 +520,8 @@ const initialState = {
 			"org_name": "Chelsea Senior Living"
 		},
 		"status": "OK"
-	},		
+	},
+	redirectURL: "",		
 	JWT: null,
 };
 
@@ -759,6 +760,11 @@ const reducer = (state = initialState, action) => {
 		case actionTypes.SET_LOGIN:
 			return updateObject(state, {
 				isLoggedIn: action.value
+			});
+
+		case actionTypes.SET_REDIRECT_URL:
+			return updateObject(state, {
+				redirectURL: action.value
 			});
 
 		default:
