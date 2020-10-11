@@ -22,12 +22,17 @@ import {
 import {
 	deleteAccount,
 	updateEmailThunk,
+	updatePhoneThunk
 } from "../../../store/thunks/employer";
 
 function ProfileOverview(props) {
 	const dispatch = useDispatch();
-	const [email, setEmail] = useState("marryjane@gmail.com");
 	const allData = useSelector((state) => state.candidateSetDataReducer.data);
+	const employerProfile = useSelector((state) => state.employerReducer.profile);
+	const [email, setEmail] = useState(props.type === "candidate" ? (allData.username ? allData.username : "") : 
+	(employerProfile.data.contacts.length > 0 ? employerProfile.data.contacts.find(el => el.contact_type === 'email').contact : ""));
+	const [phone, setPhone] = useState(props.type === "candidate" ? (allData.phone_no ? allData.phone_no : "") : 
+	(employerProfile.data.contacts.length > 0 ? employerProfile.data.contacts.find(el => el.contact_type === 'phone').contact : ""));
 	const [editingPhone, setEditingPhone] = useState(false);
 	const [editingEmail, setEditingEmail] = useState(false);
 	const [editingAboutMe, setEditingAboutMe] = useState(false);
@@ -43,6 +48,9 @@ function ProfileOverview(props) {
 		console.log(id);
 		if (id === "checkPhoneBtn" || id === "closePhoneBtn") {
 			setEditingPhone(false);
+			if (id === "checkPhoneBtn") {
+				dispatch(updatePhoneThunk(phone));
+			}
 		} else if (id === "editPhoneBtn") {
 			setEditingPhone(true);
 		} else if (id === "checkEmailBtn" || id === "closeEmailBtn") {
@@ -76,8 +84,8 @@ function ProfileOverview(props) {
 				<h1>{allData.first_name ? allData.first_name : ""}</h1>
 				{props.type === "employer" && (
 					<>
-						<h2>Chelsea Senior</h2>
-						<h3>Living</h3>
+						<h2>{employerProfile.data.name}</h2>
+						<h3>{employerProfile.data.title}</h3>
 					</>
 				)}
 			</div>
@@ -91,9 +99,11 @@ function ProfileOverview(props) {
 						/>
 						<input
 							type="text"
-							defaultValue={allData.phone_no ? allData.phone_no : ""}
+							// defaultValue={allData.phone_no ? allData.phone_no : ""}
+							value={phone}
 							className={`${editingPhone ? "edit" : ""}`}
 							readOnly={editingPhone ? false : true}
+							onChange={(e) => setPhone(e.target.value)}
 						/>
 						<FontAwesomeIcon
 							id="editPhoneBtn"
@@ -118,7 +128,8 @@ function ProfileOverview(props) {
 						<FontAwesomeIcon className="icon" icon={faMailBulk} />
 						<input
 							type="text"
-							defaultValue={allData.username ? allData.username : ""}
+							// defaultValue={allData.username ? allData.username : ""}
+							value={email}
 							className={`${editingEmail ? "edit" : ""}`}
 							readOnly={editingEmail ? false : true}
 							onChange={(e) => setEmail(e.target.value)}
