@@ -20,7 +20,7 @@ const App = () => {
 				<Route path="/login" component={Auth} />
 				<Route path="/signup" component={Auth} />
 				<Route path="/thank-you" component={Auth} />
-				<Route path="/landing_page/:id" component={JobView} />
+				<Route path="/postings/:id" component={JobView} />
 				<PrivateRoute path="/" component={Home} />
 			</Switch>
 			<Overlay active={overlay.show} />
