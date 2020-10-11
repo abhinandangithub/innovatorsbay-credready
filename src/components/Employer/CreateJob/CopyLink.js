@@ -1,12 +1,13 @@
-import React from "react";
+import React, { useState } from "react";
 import Input from "../../_Elements/Input";
 import { Link } from "react-router-dom";
-import { useDispatch } from 'react-redux';
+import { connect, useDispatch } from 'react-redux';
 import { postJob } from '../../../store/thunks/employer';
 
 function CopyLink(props) {
 	const parent = React.useRef();
 	const dispatch = useDispatch();
+	const [URL, setURL] = useState("www.credready.com/jobs/chelsea/2367");
 
 	React.useEffect(() => {
 		props.calHeight(parent.current.clientHeight);
@@ -43,7 +44,7 @@ function CopyLink(props) {
 					</h2>
 					<p className="status">We have sent you a confirmation email.</p>
 					<p className="link">Here is the link to the post on CredReady.com</p>
-					<Input defaultValue="www.credready.com/jobs/chelsea/2367" />
+					<Input value={props.jobURL} onChange={(e) => setURL(e.target.value)}/>
 					<p className="status">
 						Please paste this link in your job post. So that they may apply
 						through CredReady.
@@ -68,7 +69,7 @@ Certified Nursing Assistant</a>`}
 				</div>
 			</div>
 			<div className="cta">
-				<Link to="/jobs" className="primary-btn" onClick={handlePostJob}>
+				<Link to="/jobs/create-job" className="primary-btn" onClick={handlePostJob}>
 					Post a Job
 				</Link>
 			</div>
@@ -76,4 +77,12 @@ Certified Nursing Assistant</a>`}
 	);
 }
 
-export default CopyLink;
+function mapStateToProps(state) {
+	return {
+		jobURL: state.employerReducer.jobURL.replace("https://dev.innovatorsbay.in/credready/jobs/", "http://localhost:3006/landing_page/")
+	}
+}
+
+// export default CopyLink;
+
+export default connect(mapStateToProps)(CopyLink);

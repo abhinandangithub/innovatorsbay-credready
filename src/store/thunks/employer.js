@@ -16,17 +16,20 @@ import { employeFetchHireRequiredRangesUrl,
 		 employerPostJob,
 		 employeCreateQuestion,
 		 employeCandidateSendEmail,
-		 employeFecthOrgLocations } from "../api/employer";
+		 employeFecthOrgLocations,
+		 employeFecthJobPreviewDetails } from "../api/employer";
 
 import { setHiringNeeds, setCompanySize, setPhoneNumber, 
 		 setEmail, setEmployerProfile, setEmployerJobs, 
 		 setCandidatesList, setEmploymentType, setIndustry,
 		 setFunction, setSkills, setQuestionBank, setEmailTemplate, setPostedJobURL,
-		 setAppliedCandidateDetails, setLocations } from "../actions/employer";
+		 setAppliedCandidateDetails, setLocations, setJobDetails, setLogin } from "../actions/employer";
 // import Cookies from "js-cookie";
 import { setDefaultAuthorizationHeader, setAllowAccessHeader } from "../utility";
 import { requestConfig } from "./utils";
 import { enitityFetchExperienceTypeUrl, entityFetchEntityIndustryUrl, entityFetchEntitityFunctionUrl, entityFetchSkillsUrl, entityFetchEmployementSatusUrl } from "../api/entity";
+import { candidateFetchJobsAppliedUrl } from "../api/candidate";
+import Cookies from "js-cookie";
 
 export const getHiringNeedsThunk = (token) => async (dispatch, getState) => {
 	try {
@@ -356,5 +359,39 @@ export const getLocations = () => async (dispatch, getState) => {
 		dispatch(setLocations(data.data));
 	} catch (err) {
 		if (err.response) console.error(`failed to post the question ${err}`);
+	}
+};
+
+export const getJobDetails = (jobID) => async (dispatch, getState) => {
+	try {
+		const state = getState();
+		const jwt = Cookies.get("JWT");
+		let user = "employer";
+		if(jwt) {
+			user = JSON.parse(jwt).map.user_type;
+		}
+		let URL = employeFecthJobPreviewDetails + '/' + jobID;
+		let headers = {};
+		if(jwt && user === 'jobseeker') {
+			dispatch(setLogin(true));
+			URL = candidateFetchJobsAppliedUrl + '/' + jobID;
+			 headers = {
+				'Authorization': JSON.parse(jwt).map.jwt,
+				'Content-Type': 'application/vnd.credready.com+json'
+			}
+		}
+		// setDefaultAuthorizationHeader(JSON.parse(state.authReducer.JWT).map.jwt);
+		const data = await Axios.get(URL, {
+			headers: headers
+		});
+		if (!data) return false;
+		if(user === 'jobseeker') {
+			dispatch(setJobDetails(data.data.data.getJobDetails));
+		} else {
+			dispatch(setJobDetails(data.data));
+		}
+	} catch (err) {
+		console.log(err);
+		if (err.response) console.error(`failed to fetch job details ${err}`);
 	}
 };

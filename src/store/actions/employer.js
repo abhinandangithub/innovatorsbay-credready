@@ -129,3 +129,17 @@ export const setLocations = (val) => {
 		value: val,
 	};
 };
+
+export const setJobDetails = (val) => {
+	return {
+		type: actionTypes.SET_JOB_DETAILS,
+		value: val,
+	};
+};
+
+export const setLogin = (val) => {
+	return {
+		type: actionTypes.SET_LOGIN,
+		value: val,
+	};
+};

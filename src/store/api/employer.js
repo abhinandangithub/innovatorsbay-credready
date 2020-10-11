@@ -233,3 +233,10 @@ export const employeFecthOrgLocations = constructUrl(
   employerRouteWithBase,
   "organization/locations"
 );
+/**
+ * Name: Fetch job preview details
+ */
+export const employeFecthJobPreviewDetails = constructUrl(
+  employerRouteWithBase,
+  "job/preview"
+);

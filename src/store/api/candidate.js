@@ -20,7 +20,7 @@ export const candidateUpdateAboutMeUrl = constructUrl(
  *PUT Url to update email, Name update
  */
 export const candiateUpdateEmail = constructUrl(
-  candidateBaseRoute,
+  candidateRouteWithBase,
   "candidate/email"
 );
 
@@ -28,7 +28,7 @@ export const candiateUpdateEmail = constructUrl(
  * Name: update user phone
  */
 export const candidateUpdatePhoneUrl = constructUrl(
-  candidateBaseRoute,
+  candidateRouteWithBase,
   "candidate/phone"
 );
 
