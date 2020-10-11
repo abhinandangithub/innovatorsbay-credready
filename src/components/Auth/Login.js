@@ -6,7 +6,7 @@ import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import { connect, useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 
-// import { updateLoggedIn } from "../../store/actions/auth";
+import { updateLoggedIn } from "../../store/actions/auth";
 import { tryLogin } from "../../store/thunks/auth";
 import { setLogin } from "../../store/actions/employer";
 
@@ -51,8 +51,8 @@ function Login(props) {
 		//     console.log("e");
 		//     dispatch(updateLoggedIn([true, "employer"]));
 		//   }
-		//   // dispatch(updateLoggedIn([true, loginType]));
 		// }
+		// dispatch(updateLoggedIn([true, loginType]));
 	};
 
 	const togglePasswordVisiblity = () => {
@@ -67,18 +67,17 @@ function Login(props) {
 		if (!event.target) return;
 		setLoginRemeber(event.target.checked);
 	};
+
 	useEffect(() => {
 		// console.log("Loging as a " + loginType);
-		setTimeout(() => {
-			// console.log("REDIRECTING...", auth.loggedIn.as);
-			if (auth.loggedIn.value) {
-				if (auth.loggedIn.as === "candidate") {
-					props.history.push("/profile/resume");
-				} else {
-					props.history.push("/");
-				}
+		// console.log("auth " + auth);
+		if (auth.loggedIn.value) {
+			if (auth.loggedIn.as === "candidate") {
+				props.history.push("/profile/resume");
+			} else {
+				props.history.push("/");
 			}
-		}, 1000);
+		}
 		return () => {
 			// cleanup
 		};

@@ -9,13 +9,25 @@ import App from "./App";
 import authReducer from "./store/reducers/auth";
 import popupOverlayReducer from "./store/reducers/popup_overlay";
 import employerReducer from "./store/reducers/employer";
-import candidateSetDataReducer from "./modals/candidateProfile/index";
+import {
+	candidateSetDataReducer,
+	candidateCurrentStatusReducer,
+	setCandidateAppliedJobsDataReducer,
+	setCandidateExperienceTypeReducer,
+	setCandidateDegreeTitlesReducer,
+	setCandidateInstitutionTypeReducer,
+} from "./modals/candidateProfile/index";
 
 const rootReducer = combineReducers({
 	authReducer,
 	popupOverlayReducer,
 	candidateSetDataReducer,
-	employerReducer
+	employerReducer,
+	candidateCurrentStatusReducer,
+	setCandidateAppliedJobsDataReducer,
+	setCandidateExperienceTypeReducer,
+	setCandidateDegreeTitlesReducer,
+	setCandidateInstitutionTypeReducer,
 });
 
 /* Middleware */

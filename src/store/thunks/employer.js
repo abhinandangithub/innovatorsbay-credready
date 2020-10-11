@@ -1,29 +1,33 @@
 import Axios from "axios";
-import { employeFetchHireRequiredRangesUrl, 
-		 employerFetchComapnySizeUrl,
-		 employerUpdateUserPhoneUrl, 
-		 employerUpdateEmailUrl,
-		 employerDeleteAccountUrl,
-		 employerUpdateProfileUrl,
-		 employerFetchAllPostedJobsUrl,
-		 employerSendCandidateEmailUrl,
-		 employerJobFollowUpUrl,
-		 employerUpdateApplicationStatusOfCandidateUrl,
-		 employerFetchJobById,
-		 employeFetchQuestionbankUrl,
-		 employeGetEmailTemplate,
-		 employerFetchCandidatesByJobId,
-		 employerPostJob,
-		 employeCreateQuestion,
-		 employeCandidateSendEmail,
-		 employeFecthOrgLocations,
-		 employeFecthJobPreviewDetails } from "../api/employer";
+import {
+	employeFetchHireRequiredRangesUrl,
+	employerFetchComapnySizeUrl,
+	employerUpdateUserPhoneUrl,
+	employerUpdateEmailUrl,
+	employerDeleteAccountUrl,
+	employerUpdateProfileUrl,
+	employerFetchAllPostedJobsUrl,
+	employerSendCandidateEmailUrl,
+	employerJobFollowUpUrl,
+	employerUpdateApplicationStatusOfCandidateUrl,
+	employerFetchJobById,
+	employeFetchQuestionbankUrl,
+	employeGetEmailTemplate,
+	employerFetchCandidatesByJobId,
+	employerPostJob,
+	employeCreateQuestion,
+	employeCandidateSendEmail,
+	employeFecthOrgLocations,
+	employeFecthJobPreviewDetails
+} from "../api/employer";
 
-import { setHiringNeeds, setCompanySize, setPhoneNumber, 
-		 setEmail, setEmployerProfile, setEmployerJobs, 
-		 setCandidatesList, setEmploymentType, setIndustry,
-		 setFunction, setSkills, setQuestionBank, setEmailTemplate, setPostedJobURL,
-		 setAppliedCandidateDetails, setLocations, setJobDetails, setLogin } from "../actions/employer";
+import {
+	setHiringNeeds, setCompanySize, setPhoneNumber,
+	setEmail, setEmployerProfile, setEmployerJobs,
+	setCandidatesList, setEmploymentType, setIndustry,
+	setFunction, setSkills, setQuestionBank, setEmailTemplate, setPostedJobURL,
+	setAppliedCandidateDetails, setLocations, setJobDetails, setLogin
+} from "../actions/employer";
 // import Cookies from "js-cookie";
 import { setDefaultAuthorizationHeader, setAllowAccessHeader } from "../utility";
 import { requestConfig } from "./utils";
@@ -33,7 +37,7 @@ import Cookies from "js-cookie";
 
 export const getHiringNeedsThunk = (token) => async (dispatch, getState) => {
 	try {
-        const data = await Axios.get(employeFetchHireRequiredRangesUrl, requestConfig);
+		const data = await Axios.get(employeFetchHireRequiredRangesUrl, requestConfig);
 		if (!data) return false;
 		dispatch(setHiringNeeds(data.data));
 	} catch (err) {
@@ -43,7 +47,7 @@ export const getHiringNeedsThunk = (token) => async (dispatch, getState) => {
 
 export const getCompanySizeThunk = (token) => async (dispatch, getState) => {
 	try {
-        const data = await Axios.get(employerFetchComapnySizeUrl, requestConfig);
+		const data = await Axios.get(employerFetchComapnySizeUrl, requestConfig);
 		if (!data) return false;
 		dispatch(setCompanySize(data.data));
 	} catch (err) {
@@ -57,11 +61,12 @@ export const updateProfileThunk = (token, profile) => async (dispatch, getState)
 		profile.companySize = 0;
 		profile.hiresRequired = 0;
 		// setDefaultAuthorizationHeader(JSON.parse(state.authReducer.JWT).map.jwt);
-        const data = await Axios.patch(employerUpdateProfileUrl, profile, {
+		const data = await Axios.patch(employerUpdateProfileUrl, profile, {
 			headers: {
 				'Authorization': JSON.parse(state.authReducer.JWT).map.jwt,
 				'Content-Type': 'application/vnd.credready.com+json'
-			}});
+			}
+		});
 		if (!data) return false;
 		dispatch(setEmployerProfile(profile));
 	} catch (err) {
@@ -72,8 +77,9 @@ export const updateProfileThunk = (token, profile) => async (dispatch, getState)
 export const getProfileThunk = (token) => async (dispatch, getState) => {
 	try {
 		const state = getState();
+		console.log('aaa ', state.authReducer.JWT, JSON.parse(state.authReducer.JWT).map.jwt);
 		// setDefaultAuthorizationHeader(JSON.parse(state.authReducer.JWT).map.jwt);
-        const data = await Axios.get(employerUpdateProfileUrl, {
+		const data = await Axios.get(employerUpdateProfileUrl, {
 			headers: {
 				'Authorization': JSON.parse(state.authReducer.JWT).map.jwt,
 				'Content-Type': 'application/vnd.credready.com+json'
@@ -88,7 +94,7 @@ export const getProfileThunk = (token) => async (dispatch, getState) => {
 
 export const updatePhoneNumberThunk = (token, phone) => async (dispatch, getState) => {
 	try {
-        const data = await Axios.put(employerUpdateUserPhoneUrl, phone, requestConfig);
+		const data = await Axios.put(employerUpdateUserPhoneUrl, phone, requestConfig);
 		if (!data) return false;
 		dispatch(setPhoneNumber(data.data.phone));
 	} catch (err) {
@@ -99,7 +105,7 @@ export const updatePhoneNumberThunk = (token, phone) => async (dispatch, getStat
 export const updateEmailThunk = (email) => async (dispatch, getState) => {
 	try {
 		const state = getState();
-        const data = await Axios.put(employerUpdateEmailUrl, {"email":email}, {
+		const data = await Axios.put(employerUpdateEmailUrl, { "email": email }, {
 			headers: {
 				'Authorization': JSON.parse(state.authReducer.JWT).map.jwt,
 				'Content-Type': 'application/vnd.credready.com+json'
@@ -115,7 +121,7 @@ export const updateEmailThunk = (email) => async (dispatch, getState) => {
 export const deleteAccount = (token) => async (dispatch, getState) => {
 	try {
 		const state = getState();
-        const data = await Axios.delete(employerDeleteAccountUrl, {
+		const data = await Axios.delete(employerDeleteAccountUrl, {
 			headers: {
 				'Authorization': JSON.parse(state.authReducer.JWT).map.jwt,
 				'Content-Type': 'application/vnd.credready.com+json'
@@ -133,7 +139,7 @@ export const getPostedJobs = (token) => async (dispatch, getState) => {
 		// setDefaultAuthorizationHeader(JSON.parse(state.authReducer.JWT).map.jwt);
 		// setContentTypeDefaultHeader();
 		// setAllowAccessHeader();
-        const data = await Axios.get(employerFetchAllPostedJobsUrl, {
+		const data = await Axios.get(employerFetchAllPostedJobsUrl, {
 			headers: {
 				'Authorization': JSON.parse(state.authReducer.JWT).map.jwt,
 				'Content-Type': 'application/vnd.credready.com+json'
@@ -150,7 +156,7 @@ export const sendEmail = (notif) => async (dispatch, getState) => {
 	try {
 		const state = getState();
 		// setDefaultAuthorizationHeader(JSON.parse(state.authReducer.JWT).map.jwt);
-        const data = await Axios.post(employeCandidateSendEmail, notif, {
+		const data = await Axios.post(employeCandidateSendEmail, notif, {
 			headers: {
 				'Authorization': JSON.parse(state.authReducer.JWT).map.jwt,
 				'Content-Type': 'application/vnd.credready.com+json'
@@ -166,7 +172,7 @@ export const sendNotification = (notif) => async (dispatch, getState) => {
 	try {
 		const state = getState();
 		// setDefaultAuthorizationHeader(JSON.parse(state.authReducer.JWT).map.jwt);
-        const data = await Axios.put(employerJobFollowUpUrl, notif, {
+		const data = await Axios.put(employerJobFollowUpUrl, notif, {
 			headers: {
 				'Authorization': JSON.parse(state.authReducer.JWT).map.jwt,
 				'Content-Type': 'application/vnd.credready.com+json'
@@ -182,7 +188,7 @@ export const updateStatus = (status) => async (dispatch, getState) => {
 	try {
 		const state = getState();
 		// setDefaultAuthorizationHeader(JSON.parse(state.authReducer.JWT).map.jwt);
-        const data = await Axios.put(employerUpdateApplicationStatusOfCandidateUrl, status, {
+		const data = await Axios.put(employerUpdateApplicationStatusOfCandidateUrl, status, {
 			headers: {
 				'Authorization': JSON.parse(state.authReducer.JWT).map.jwt,
 				'Content-Type': 'application/vnd.credready.com+json'
@@ -199,7 +205,7 @@ export const getCandidatesList = (jobID) => async (dispatch, getState) => {
 		const state = getState();
 		// setDefaultAuthorizationHeader(JSON.parse(state.authReducer.JWT).map.jwt);
 		const URL = employerFetchJobById + "/" + jobID;
-        const data = await Axios.get(URL, {
+		const data = await Axios.get(URL, {
 			headers: {
 				'Authorization': JSON.parse(state.authReducer.JWT).map.jwt,
 				'Content-Type': 'application/vnd.credready.com+json'
@@ -216,7 +222,7 @@ export const getEmploymentType = () => async (dispatch, getState) => {
 	try {
 		// const state = getState();
 		// setDefaultAuthorizationHeader(JSON.parse(state.authReducer.JWT).map.jwt);
-        const data = await Axios.get(entityFetchEmployementSatusUrl);
+		const data = await Axios.get(entityFetchEmployementSatusUrl);
 		if (!data) return false;
 		dispatch(setEmploymentType(data.data));
 	} catch (err) {
@@ -228,7 +234,7 @@ export const getIndustry = () => async (dispatch, getState) => {
 	try {
 		// const state = getState();
 		// setDefaultAuthorizationHeader(JSON.parse(state.authReducer.JWT).map.jwt);
-        const data = await Axios.get(entityFetchEntityIndustryUrl);
+		const data = await Axios.get(entityFetchEntityIndustryUrl);
 		if (!data) return false;
 		dispatch(setIndustry(data.data));
 	} catch (err) {
@@ -367,15 +373,15 @@ export const getJobDetails = (jobID) => async (dispatch, getState) => {
 		const state = getState();
 		const jwt = Cookies.get("JWT");
 		let user = "employer";
-		if(jwt) {
+		if (jwt) {
 			user = JSON.parse(jwt).map.user_type;
 		}
 		let URL = employeFecthJobPreviewDetails + '/' + jobID;
 		let headers = {};
-		if((jwt && user === 'jobseeker')||(state.employerReducer.isLoggedIn)) {
+		if ((jwt && user === 'jobseeker') || (state.employerReducer.isLoggedIn)) {
 			dispatch(setLogin(true));
 			URL = candidateFetchJobsAppliedUrl + '/' + jobID;
-			 headers = {
+			headers = {
 				'Authorization': JSON.parse(jwt).map.jwt,
 				'Content-Type': 'application/vnd.credready.com+json'
 			}
@@ -385,7 +391,7 @@ export const getJobDetails = (jobID) => async (dispatch, getState) => {
 			headers: headers
 		});
 		if (!data) return false;
-		if(user === 'jobseeker') {
+		if (user === 'jobseeker') {
 			console.log(data.data.data.jobDetails);
 			dispatch(setJobDetails(data.data.data.jobDetails));
 		} else {

@@ -93,7 +93,7 @@ function Signup(props) {
 				{signupType === "employer" ? (
 					<li>
 						<label htmlFor="organisation">
-							Employer Name <span>*</span>
+							Organisation Name <span>*</span>
 						</label>
 						<input
 							id="organisation"
@@ -138,10 +138,10 @@ function Signup(props) {
 						placeholder="123-456-7890"
 						// defaultValue="1234567890"
 						ref={register({
-							required: "required",
-							pattern: {
-								value: /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/,
-							},
+							required: "required"
+							// pattern: {
+							// 	value: /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/,
+							// },
 						})}
 					/>
 				</li>
@@ -160,7 +160,7 @@ function Signup(props) {
 							ref={register({
 								required: "required",
 								pattern: {
-									value: /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{8,15}$/,
+									value: /^(?=.*\d)(?=.*[a-z])(?=.*[a-z])(?=.*[^a-zA-Z0-9])(?!.*\s).{8,15}$/,
 								},
 							})}
 						/>

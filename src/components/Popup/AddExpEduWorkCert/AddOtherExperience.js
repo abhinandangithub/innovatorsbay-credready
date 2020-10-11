@@ -69,19 +69,17 @@ function AddOtherExperience({ addOtherWorkExperience }) {
 		if (oldFormData.formValid) {
 			console.log("submitting form...");
 			/* send data to api */
-			var obj = [
-				{
-					"career_path": "work",
-					"experience_type": formData ? formData.experienceType[0] : "",
-					"organization_name": formData ? formData.organizationName[0] : "",
-					"title": formData ? formData.title[0] : "",
-					"location": formData ? formData.location[0] : "",
-					"employed_from": formData && formData.startDate[0] ? formatDate(formData.startDate[0]) : "",
-					"employed_till": formData && formData.endDate[0] ? formatDate(formData.endDate[0]) : "",
-					"description": formData ? formData.description[0] : "",
-					"strengths": []
-				}
-			]
+			var obj =
+			{
+				"careerPath": "work",
+				"experienceType": formData ? 1 : "",
+				"organizationName": formData ? formData.organizationName[0] : "",
+				"title": formData ? formData.title[0] : "",
+				"location": formData ? formData.location[0] : "",
+				"from": formData && formData.startDate[0] ? formatDate(formData.startDate[0]) : "",
+				"to": formData && formData.endDate[0] ? formatDate(formData.endDate[0]) : "",
+				"description": formData ? formData.description[0] : "",
+			}
 			addOtherWorkExperience(obj)
 			dispatch(toggleOverlay(false));
 			dispatch(togglePopup([false, ""]));

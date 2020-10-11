@@ -6,19 +6,34 @@ import { connect } from "react-redux";
 import "./index.scss";
 import Input from "../../../../_Elements/Input";
 import Dropdown from "../../../../_Elements/Dropdown";
-import { updateCandidateDetails } from "../../../../../modals/candidateProfile/thunk";
+import { updateCandidateDetails, fetchCandidateCurrentStatus, fetchCandidateDetails } from "../../../../../modals/candidateProfile/thunk";
+import InputDropdown from "../../../../_Elements/InputDropdown";
 
 const employmentStatus = {
 	heading: "Current employment status",
-	content: ["Employed", "Self Employed", "Available", "On Break"],
+	content: [
+		"Employed",
+		"Self Employed",
+		"Available",
+		"On Break",
+		"Employed",
+		"Self Employed",
+		"Available",
+		"On Break",
+		"Employed",
+		"Self Employed",
+		"Available",
+		"On Break",
+	],
 };
 
 const joiningDuration = {
 	heading: "Select Durations",
-	content: ["Immediately", "Within 15 days", "Within 1 Month", "Not Planned"],
+	content: ["Immediately", "Less than 2 weeks", "2-3 weeks", "3 weeks to 1 month", "1-3 months", "3-6 months", "6-9 months", "1 year", "more than 1 year"],
 };
 
 function PersonalDetails(props) {
+	const [prevData, setPrevData] = React.useState(props.candidatePreviousData)
 	const [formData, setFormData] = React.useState({
 		/**
 		 * * field: ['value', 'error']
@@ -36,9 +51,11 @@ function PersonalDetails(props) {
 		formValid: false,
 	});
 
+	// setFormData(state.formValues);
+	
+
 	const handleSubmit = (e) => {
 		e.preventDefault();
-
 		let oldFormData = { ...formData };
 		oldFormData.formValid = true;
 
@@ -60,16 +77,15 @@ function PersonalDetails(props) {
 		if (oldFormData.formValid) {
 			let obj = [
 				{
-					first_name: formData ? formData.firstName[0] : "",
-					last_name: formData ? formData.lastName[0] : "",
-					current_employment_status: formData ? formData.interestedIn[0] : "",
-					is_open_to_other_roles: formData ? formData.employmentStatus[0] : "",
-					available_within: formData ? formData.joiningDuration[0] : "",
-					address_id: formData ? formData.streetAddress[0] : "",
-					about_me: formData ? formData.state[0] : "",
-					current_title: formData ? formData.firstName[0] : "",
-					allow_connect: formData ? formData.firstName[0] : "",
-					user_consent: formData ? formData.firstName[0] : "",
+					"firstName": formData ? formData.firstName[0] : "",
+					"lastName": formData ? formData.lastName[0] : "",
+					"openToOtherRoles": formData && (formData.interestedIn[0] === "on") ? true : false,
+					"currentEmploymentStatusId": formData ? formData.employmentStatus[0] : "",
+					"availableWithin": formData ? formData.joiningDuration[0] : "",
+					"streetAddress": formData ? formData.streetAddress[0] : "",
+					"state": formData ? formData.state[0] : "",
+					"city": formData ? formData.city[0] : "",
+					"zipCode": formData ? parseInt(formData.zipCode[0]) : "",
 				},
 			];
 			/* send data to api */
@@ -93,12 +109,11 @@ function PersonalDetails(props) {
 		});
 	};
 
-	// useEffect(() => {
-	// 	// console.log(formData.formValid);
-	// 	return () => {
-	// 		// cleanup
-	// 	};
-	// }, [formData]);
+	React.useEffect(() => {
+		if (props.currentStatus.length > 1) return;
+		props.fetchCandidateCurrentStatus();
+		props.fetchCandidateDetails();
+	}, []);
 
 	return (
 		<div className="personal-details">
@@ -143,16 +158,15 @@ function PersonalDetails(props) {
 							<label htmlFor="employmentStatus">
 								Current employment status <span>*</span>
 								<span
-									className={`error-text ${
-										!formData.employmentStatus[1] && "hidden"
-									}`}
+									className={`error-text ${!formData.employmentStatus[1] && "hidden"
+										}`}
 								>
 									Required
 								</span>
 							</label>
 							<Dropdown
 								placeholder={employmentStatus.heading}
-								content={employmentStatus.content}
+								content={props.currentStatus.map((val) => ({ val: val.employment_status, id: val.id }))}
 								id="employmentStatus"
 								onchange={(value) =>
 									handleFieldChange("employmentStatus", value)
@@ -164,9 +178,8 @@ function PersonalDetails(props) {
 								Are you interested in a different function and industry?{" "}
 								<span>*</span>
 								<span
-									className={`error-text ${
-										!formData.interestedIn[1] && "hidden"
-									}`}
+									className={`error-text ${!formData.interestedIn[1] && "hidden"
+										}`}
 								>
 									Required
 								</span>
@@ -202,9 +215,8 @@ function PersonalDetails(props) {
 							<label htmlFor="joiningDuration">
 								How long until you can begin a new role? <span>*</span>
 								<span
-									className={`error-text ${
-										!formData.joiningDuration[1] && "hidden"
-									}`}
+									className={`error-text ${!formData.joiningDuration[1] && "hidden"
+										}`}
 								>
 									Required
 								</span>
@@ -222,9 +234,8 @@ function PersonalDetails(props) {
 							<label htmlFor="streetAddress">
 								Street address <span>*</span>
 								<span
-									className={`error-text ${
-										!formData.streetAddress[1] && "hidden"
-									}`}
+									className={`error-text ${!formData.streetAddress[1] && "hidden"
+										}`}
 								>
 									Required
 								</span>
@@ -311,12 +322,21 @@ function PersonalDetails(props) {
 					</Link> */}
 				</div>
 			</form>
-		</div>
+		</div >
 	);
+}
+
+function mapStateToProps(state) {
+	return {
+		currentStatus: state.candidateCurrentStatusReducer.data,
+		candidatePreviousData: state.candidateSetDataReducer.data
+	};
 }
 
 const mapDispatchToProps = {
 	updateCandidateDetails: updateCandidateDetails,
+	fetchCandidateCurrentStatus: fetchCandidateCurrentStatus,
+	fetchCandidateDetails: fetchCandidateDetails
 };
 
-export default connect(null, mapDispatchToProps)(PersonalDetails);
+export default connect(mapStateToProps, mapDispatchToProps)(PersonalDetails);

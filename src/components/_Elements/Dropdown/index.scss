@@ -34,6 +34,8 @@
 		list-style: none;
 		margin: 0;
 		left: -1px;
+		max-height: 319px;
+		overflow-y: auto;
 		pointer-events: none;
 		li {
 			text-align: left;

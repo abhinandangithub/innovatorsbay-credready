@@ -1,16 +1,16 @@
 @import "../../../../variables.scss";
 
-.general-questions {
+.general_questions_page {
 	.heading {
 		font-size: 30px;
 		font-weight: 500;
 		color: #000000;
 		margin: 0 0 30px 0;
 	}
-	.outer {
+	.general-questions {
 		box-shadow: 0 2px 30px 1px rgba(176, 192, 237, 0.45);
 		counter-reset: question;
-		.inner {
+		.general-question {
 			font-size: 15px;
 			padding: 20px;
 			list-style: none;

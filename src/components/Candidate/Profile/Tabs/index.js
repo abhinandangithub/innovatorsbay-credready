@@ -5,7 +5,7 @@ import ImgResume from "../../../../assets/upload.jpg";
 import ImgPersonalDetails from "../../../../assets/personal-details.png";
 import ImgWorkExperience from "../../../../assets/work-experience.png";
 import ImgEducation from "../../../../assets/education.png";
-import ImgStrengths from "../../../../assets/strengths.png";
+// import ImgStrengths from "../../../../assets/strengths.png";
 import ImgPreview from "../../../../assets/preview.png";
 
 import "./index.scss";
@@ -49,7 +49,7 @@ const Tabs = (props) => {
 					Education
 				</NavLink>
 			</li>
-			<li>
+			{/* <li>
 				<NavLink
 					to="/profile/strengths"
 					className="flex"
@@ -58,7 +58,7 @@ const Tabs = (props) => {
 					<img src={ImgStrengths} alt="Strengths" />
 					Strengths
 				</NavLink>
-			</li>
+			</li> */}
 			<li>
 				<NavLink to="/profile/preview" className="flex" id="profilePreviewLink">
 					<img src={ImgPreview} alt="Preview" />

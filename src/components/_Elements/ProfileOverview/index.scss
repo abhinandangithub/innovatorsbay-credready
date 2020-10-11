@@ -71,12 +71,18 @@
 				a {
 					color: $secondary-color;
 				}
-				input {
+				input,
+				textarea {
 					flex: 1;
 					width: calc(100% - 75px);
-					border: 1px solid #b9b9b9;
 					padding: 4px;
 					color: #6b6c6f;
+					border: none;
+					font-size: 16px;
+					&.edit {
+						border: 1px solid #b9b9b9;
+						color: #6b6c6f;
+					}
 				}
 				svg {
 					color: black;

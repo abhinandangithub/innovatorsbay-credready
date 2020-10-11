@@ -22,8 +22,8 @@ function VerifyPhone(props) {
 
 	const handleClick = () => {
 		if (
-			otp.filter((i) => i.length > 0).length === 4 &&
-			otp.join("") === "1111"
+			otp.filter((i) => i.length > 0).length === 4
+			
 		) {
 			dispatch(verifyUserCode(otp.join("")));
 			dispatch(updatePhoneOtp(true));

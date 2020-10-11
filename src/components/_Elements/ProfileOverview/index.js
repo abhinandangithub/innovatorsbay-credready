@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
 	faPen,
@@ -19,24 +19,43 @@ import {
 	togglePopup,
 	toggleOverlay,
 } from "../../../store/actions/popup_overlay";
-import { updateEmailThunk } from '../../../store/thunks/employer';
+import {
+	deleteAccount,
+	updateEmailThunk,
+} from "../../../store/thunks/employer";
 
 function ProfileOverview(props) {
 	const dispatch = useDispatch();
-	const [editingEmail, setEditingEmail] = useState(false);
 	const [email, setEmail] = useState("marryjane@gmail.com");
+	const allData = useSelector((state) => state.candidateSetDataReducer.data);
+	const [editingPhone, setEditingPhone] = useState(false);
+	const [editingEmail, setEditingEmail] = useState(false);
+	const [editingAboutMe, setEditingAboutMe] = useState(false);
 
 	const handleDelete = () => {
 		// console.log("deleting");
 		dispatch(toggleOverlay(true));
 		dispatch(togglePopup([true, "delete", { what: "profile" }]));
+		dispatch(deleteAccount());
 	};
 
 	const handleClick = (id) => {
 		console.log(id);
-		setEditingEmail(true);
-		if(id === "checkEmailBtn") {
-			dispatch(updateEmailThunk(email));
+		if (id === "checkPhoneBtn" || id === "closePhoneBtn") {
+			setEditingPhone(false);
+		} else if (id === "editPhoneBtn") {
+			setEditingPhone(true);
+		} else if (id === "checkEmailBtn" || id === "closeEmailBtn") {
+			setEditingEmail(false);
+			if (id === "checkEmailBtn") {
+				dispatch(updateEmailThunk(email));
+			}
+		} else if (id === "editEmailBtn") {
+			setEditingEmail(true);
+		} else if (id === "checkAboutMeBtn" || id === "closeAboutMeBtn") {
+			setEditingAboutMe(false);
+		} else if (id === "editAboutMeBtn") {
+			setEditingAboutMe(true);
 		}
 	};
 
@@ -54,7 +73,7 @@ function ProfileOverview(props) {
 					</div>
 				</div>
 
-				<h1>{}</h1>
+				<h1>{allData.first_name ? allData.first_name : ""}</h1>
 				{props.type === "employer" && (
 					<>
 						<h2>Chelsea Senior</h2>
@@ -70,21 +89,44 @@ function ProfileOverview(props) {
 							icon={faPhone}
 							style={{ transform: "rotateY(180deg)" }}
 						/>
-						212-639-9675
+						<input
+							type="text"
+							defaultValue={allData.phone_no ? allData.phone_no : ""}
+							className={`${editingPhone ? "edit" : ""}`}
+							readOnly={editingPhone ? false : true}
+						/>
 						<FontAwesomeIcon
-							className={`edit ${editingEmail ? "hidden" : ""}`}
 							id="editPhoneBtn"
 							icon={faPen}
+							className={`edit ${editingPhone ? "hidden" : ""}`}
+							onClick={(e) => handleClick(e.target.id)}
+						/>
+						<FontAwesomeIcon
+							className={`close ${editingPhone ? "" : "hidden"}`}
+							id="closePhoneBtn"
+							icon={faTimes}
+							onClick={(e) => handleClick(e.target.id)}
+						/>
+						<FontAwesomeIcon
+							className={`check ${editingPhone ? "" : "hidden"}`}
+							id="checkPhoneBtn"
+							icon={faCheck}
 							onClick={(e) => handleClick(e.target.id)}
 						/>
 					</li>
 					<li>
 						<FontAwesomeIcon className="icon" icon={faMailBulk} />
-						<input type="text" defaultValue="marryjane@gmail.com" onChange={(e) => setEmail(e.target.value)}/>
+						<input
+							type="text"
+							defaultValue={allData.username ? allData.username : ""}
+							className={`${editingEmail ? "edit" : ""}`}
+							readOnly={editingEmail ? false : true}
+							onChange={(e) => setEmail(e.target.value)}
+						/>
 						<FontAwesomeIcon
-							className="edit"
 							id="editEmailBtn"
 							icon={faPen}
+							className={`edit ${editingEmail ? "hidden" : ""}`}
 							onClick={(e) => handleClick(e.target.id)}
 						/>
 						<FontAwesomeIcon
@@ -103,11 +145,33 @@ function ProfileOverview(props) {
 					{props.type === "candidate" && (
 						<li>
 							<FontAwesomeIcon className="icon" icon={faInfoCircle} />
-							About me
+							{/* <textarea
+								defaultValue="About me"
+								className={`${editingAboutMe ? "edit" : ""}`}
+								readOnly={editingAboutMe ? false : true}
+							></textarea> */}
+							<input
+								type="text"
+								defaultValue="About me"
+								className={`${editingAboutMe ? "edit" : ""}`}
+								readOnly={editingAboutMe ? false : true}
+							/>
 							<FontAwesomeIcon
-								className="edit"
 								id="editAboutMeBtn"
 								icon={faPen}
+								className={`edit ${editingAboutMe ? "hidden" : ""}`}
+								onClick={(e) => handleClick(e.target.id)}
+							/>
+							<FontAwesomeIcon
+								className={`close ${editingAboutMe ? "" : "hidden"}`}
+								id="closeAboutMeBtn"
+								icon={faTimes}
+								onClick={(e) => handleClick(e.target.id)}
+							/>
+							<FontAwesomeIcon
+								className={`check ${editingAboutMe ? "" : "hidden"}`}
+								id="checkAboutMeBtn"
+								icon={faCheck}
 								onClick={(e) => handleClick(e.target.id)}
 							/>
 						</li>

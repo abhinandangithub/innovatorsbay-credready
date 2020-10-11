@@ -9,8 +9,8 @@ function InputDropdown({ id, placeholder, content, selected, onchange }) {
 	const dropDownEl = React.useRef();
 
 	const handleItemClick = (item) => {
-		onchange && onchange(item);
-		setvalue(item);
+		onchange && onchange(item.id ? item.id : item);
+		setvalue(item.val ? item.val : item);
 		setactive(false);
 		setIsChanged(true);
 	};
@@ -22,7 +22,7 @@ function InputDropdown({ id, placeholder, content, selected, onchange }) {
 					content.map((item, key) => {
 						return (
 							<li onClick={() => handleItemClick(item)} key={key}>
-								{item}
+								{item.val ? item.val : item}
 							</li>
 						);
 					})}
@@ -56,8 +56,8 @@ function InputDropdown({ id, placeholder, content, selected, onchange }) {
 					placeholder={placeholder}
 					value={value}
 					onChange={(e) => {
-						console.log(e.target.value);
 						setvalue(e.target.value);
+						onchange && onchange(e.target.value);
 					}}
 				/>
 			</div>

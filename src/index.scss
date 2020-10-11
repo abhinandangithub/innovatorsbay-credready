@@ -238,6 +238,7 @@ input[type="number"] {
 		position: relative;
 		display: flex;
 		align-items: center;
+		margin-right: 20px;
 		.input {
 			display: block;
 			height: 18px;
@@ -918,6 +919,16 @@ input[type="number"] {
 		.options {
 			display: flex;
 			margin-top: 10px;
+			.input_full {
+				width: 100%;
+				border: navajowhite;
+				border-bottom: 2px solid #d6e4f1;
+				padding: 10px 15px;
+				font-size: 16px;
+				&:focus {
+					border-color: $secondary-color;
+				}
+			}
 			input.yes + label {
 				margin-right: 20px;
 			}

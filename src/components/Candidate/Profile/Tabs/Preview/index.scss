@@ -1,8 +1,9 @@
 @import "../../../../../variables.scss";
 
-.preview {
+.preview_info {
 	.content {
 		box-shadow: 0 2px 30px 1px rgba(176, 192, 237, 0.45);
+		background: white;
 		.group {
 			&:last-child {
 				.bottom {

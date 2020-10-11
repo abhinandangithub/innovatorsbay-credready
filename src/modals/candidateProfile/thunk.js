@@ -1,113 +1,151 @@
 import axios from "axios";
 import {
-	fetchAllCandidateData,
+	fetchAllCandidateDataUrl,
 	addWorkExperienceUrl,
 	addOtherWorkExperienceUrl,
 	updateCandidateDetailsUrl,
 	addEducationExperienceUrl,
 	addOtherEducationExperienceUrl,
 	addEducationCertificateUrl,
-	addStrengthUrl
+	addStrengthUrl,
+	fetchCandidateCurrentStatusUrl,
+	fetchCandidateAppliedJobsUrl,
+	fetchCandidateExperienceTypeUrl,
+	fetchCandidateDegreeTitlesUrl,
+	fetchCandidateInstituteTypeUrl
 } from "./api";
+import {
+	candidateSetCurrentStatus,
+	candidateSetData,
+	setAppliedJobsData,
+	setCandidateExperienceType,
+	setCandidateDegreeTitles,
+	setCandidateInstitutionType
+} from "./actions";
+import { updateJwtToken } from "../../store/actions/auth";
+import { setDefaultAuthorizationHeader } from "../../store/utility";
+
 
 export const fetchCandidateDetails = () => async (dispatch, getState) => {
-	let token = getState().authReducer.JWT;
 	try {
-		const {
-			data: { data: candidateData },
-		} = await axios.get(fetchAllCandidateData, {
-			headers: {
-				Authorization: token
-			}
-		});
-		// dispatch(fetchAllCandidateData(candidateData ? candidateData : []));
+		const state = getState();
+		setDefaultAuthorizationHeader(state.authReducer.JWT);
+		const { data } = await axios.get(
+			fetchAllCandidateDataUrl,
+			requestConfig
+		);
+		if (!data) return;
+		dispatch(candidateSetData(data ? data.data : []));
+
 	} catch (err) {
-		console.log(err);
+		console.log(err)
 	}
 };
-
-
-export const addWorkExperience = (data) => async (dispatch, getState) => {
-	let token = getState().authReducer.JWT;
+export const addWorkExperience = (formData) => async (dispatch, getState) => {
 	try {
-		const response = await axios.post(addWorkExperienceUrl, data, {
-			headers: {
-				Authorization: token
-			}
-		});
+		const state = getState();
+		setDefaultAuthorizationHeader(state.authReducer.JWT);
+		const { data } = await axios.post(
+			addWorkExperienceUrl,
+			formData,
+			requestConfig
+		);
+		if (!data) return;
 		dispatch(fetchCandidateDetails());
+
 	} catch (err) {
-		console.log(err);
+		console.log(err)
 	}
 }
 
-export const addOtherWorkExperience = (data) => async (dispatch, getState) => {
-	let token = getState().authReducer.JWT;
+
+
+export const addOtherWorkExperience = (formData) => async (dispatch, getState) => {
 	try {
-		const response = await axios.post(addOtherWorkExperienceUrl, data, {
-			headers: {
-				Authorization: token
-			}
-		});
+		const state = getState();
+		setDefaultAuthorizationHeader(state.authReducer.JWT);
+		const { data } = await axios.post(
+			addOtherWorkExperienceUrl,
+			formData,
+			requestConfig
+		);
+		if (!data) return;
 		dispatch(fetchCandidateDetails());
+
 	} catch (err) {
-		console.log(err);
+		console.log(err)
 	}
 }
 
-export const addEducationExperience = (data) => async (dispatch, getState) => {
-	let token = getState().authReducer.JWT;
+export const addEducationExperience = (formData) => async (dispatch, getState) => {
 	try {
-		const response = await axios.post(addEducationExperienceUrl, data, {
-			headers: {
-				Authorization: token
-			}
-		});
+		const state = getState();
+		setDefaultAuthorizationHeader(state.authReducer.JWT);
+		const { data } = await axios.post(
+			addEducationExperienceUrl,
+			formData,
+			requestConfig
+		);
+		if (!data) return;
 		dispatch(fetchCandidateDetails());
+
 	} catch (err) {
-		console.log(err);
+		console.log(err)
 	}
 }
 
-export const addOtherEducationExperience = (data) => async (dispatch, getState) => {
-	let token = getState().authReducer.JWT;
+export const addOtherEducationExperience = (formData) => async (dispatch, getState) => {
 	try {
-		const response = await axios.post(addOtherEducationExperienceUrl, data, {
-			headers: {
-				Authorization: token
-			}
-		});
+		const state = getState();
+		setDefaultAuthorizationHeader(state.authReducer.JWT);
+		const { data } = await axios.post(
+			addOtherEducationExperienceUrl,
+			formData,
+			requestConfig
+		);
+		if (!data) return;
 		dispatch(fetchCandidateDetails());
+
 	} catch (err) {
-		console.log(err);
+		console.log(err)
 	}
 }
 
-export const updateCandidateDetails = (data) => async (dispatch, getState) => {
-	let token = getState().authReducer.JWT;
+
+
+export const updateCandidateDetails = (formData) => async (dispatch, getState) => {
 	try {
-		const response = await axios.patch(updateCandidateDetailsUrl, data, {
-			headers: {
-				Authorization: token
-			}
-		});
-		dispatch(fetchCandidateDetails());
+		const state = getState();
+		setDefaultAuthorizationHeader(state.authReducer.JWT);
+		const { data } = await axios.patch(
+			updateCandidateDetailsUrl,
+			formData,
+			requestConfig1
+		);
+		if (!data) return;
+
+		updateJwtToken(data ? data.data : "");
+		fetchCandidateDetails();
 	}
 	catch (err) {
 		console.log(err);
 	}
 }
 
-export const addEducationCertificate = (data) => async (dispatch, getState) => {
-	let token = getState().authReducer.JWT;
+export const addEducationCertificate = (formData) => async (dispatch, getState) => {
 	try {
-		const response = await axios.post(addEducationCertificateUrl, data, {
-			headers: {
-				Authorization: token
-			}
-		});
-		dispatch(fetchCandidateDetails());
-	} catch (err) {
+		const state = getState();
+		setDefaultAuthorizationHeader(state.authReducer.JWT);
+		const { data } = await axios.patch(
+			addEducationCertificateUrl,
+			formData,
+			requestConfig1
+		);
+		if (!data) return;
+
+		fetchCandidateDetails();
+	}
+	catch (err) {
 		console.log(err);
 	}
 }
@@ -123,5 +161,82 @@ export const addStrength = (data) => async (dispatch, getState) => {
 		dispatch(fetchCandidateDetails());
 	} catch (err) {
 		console.log(err);
+	}
+}
+
+export const candidateGetAppliedJobs = () => async (dispatch, getState) => {
+
+	try {
+		const { data } = await axios.get(
+			fetchCandidateAppliedJobsUrl,
+			requestConfig
+		);
+		if (!data) return;
+		dispatch(setAppliedJobsData(data ? data.data : ""));
+	} catch (err) {
+		console.log(err);
+	}
+};
+
+export const requestConfig = {
+	headers: {
+		"Content-type": "application/vnd.credready.com+json",
+		"Access-Control-Allow-Origin": "*",
+		"Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
+	}
+};
+export const requestConfig1 = {
+	headers: {
+		"Content-type": "application/vnd.credready.com+json"
+	}
+};
+
+
+export const fetchCandidateCurrentStatus = () => async (dispatch, getState) => {
+	try {
+
+		const { data } = await axios.get(
+			fetchCandidateCurrentStatusUrl,
+		);
+		dispatch(candidateSetCurrentStatus(data ? data.data : []))
+		if (!data) return;
+	} catch (err) {
+		console.log(err)
+	}
+}
+
+export const fetchCandidateExperienceType = () => async (dispatch, getState) => {
+	try {
+		const { data } = await axios.get(
+			fetchCandidateExperienceTypeUrl,
+		);
+		dispatch(setCandidateExperienceType(data ? data.data : []))
+		if (!data) return;
+	} catch (err) {
+		console.log(err)
+	}
+}
+
+export const fetchCandidateDegreeTitles = () => async (dispatch, getState) => {
+	try {
+		const { data } = await axios.get(
+			fetchCandidateDegreeTitlesUrl,
+		);
+		dispatch(setCandidateDegreeTitles(data ? data.data : []))
+		if (!data) return;
+	} catch (err) {
+		console.log(err)
+	}
+}
+
+export const fetchCandidateInstituteType = () => async (dispatch, getState) => {
+	try {
+		const { data } = await axios.get(
+			fetchCandidateInstituteTypeUrl,
+		);
+		dispatch(setCandidateInstitutionType(data ? data.data : []))
+		if (!data) return;
+	} catch (err) {
+		console.log(err)
 	}
 }

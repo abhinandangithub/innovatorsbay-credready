@@ -1,18 +1,19 @@
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPen, faTrash } from "@fortawesome/free-solid-svg-icons";
-import { useDispatch } from "react-redux";
+import { useDispatch, connect } from "react-redux";
 import { Link } from "react-router-dom";
 
 import "./index.scss";
 import Accordion from "../../../../_Elements/Accordion";
 import userData from "../../../../_data/userData.json";
+import { fetchCandidateDetails } from "../../../../../modals/candidateProfile/thunk";
 import {
 	toggleOverlay,
 	togglePopup,
 } from "../../../../../store/actions/popup_overlay";
 
-function Education() {
+function Education(props) {
 	const dispatch = useDispatch();
 
 	const showCertificate = (certificate) => {
@@ -31,28 +32,29 @@ function Education() {
 		dispatch(togglePopup([true, "delete", { what: type }]));
 	};
 
-	const renderEducation = userData.profile.education.map((data, i) => {
+	// const renderEducation = userData.profile.education.map((data, i) => {
+	const renderEducation = props.eduExpData.map((data, i) => {
 		return (
 			<div className="content" key={i}>
 				<h2>{data.title}</h2>
 				<p>
-					{data.profile} - {data.institute}
+					{data.education_description} - {"institute"}
 				</p>
 				<p>
-					{data.date.from} to {data.date.to}
+					{data.attended_from} to {data.attended_till}
 				</p>
 				<p>
 					<span className="heading">Major:</span>
-					{data.major}
+					{data.education_major.map(entity => (entity.name))}
 				</p>
 				<p>
 					<span className="heading">Minor: </span>
-					<span className="text">{data.minor}</span>
+					<span className="text">{data.education_minor.map(entity => (entity.name))}</span>
 				</p>
-				<p>
+				{/* <p>
 					<span className="heading">Strenghts: </span>
 					<span className="text">{data.strengths}</span>
-				</p>
+				</p> */}
 
 				<FontAwesomeIcon
 					className="action-btn edit"
@@ -69,36 +71,39 @@ function Education() {
 			</div>
 		);
 	});
-
-	const renderOtherExperiences = userData.profile.workExperiences.map(
+	// const renderOtherExperiences = userData.profile.workExperiences.map(
+	const renderOtherExperiences = props.otherExpData.map(
 		(data, i) => {
-			return (
-				<div className="content" key={i}>
-					<h2>{data.title}</h2>
-					<h3>
-						{data.company} - <span>{data.location}</span>
-					</h3>
-					<h4>
-						<span>{data.date.from}</span> - <span>{data.date.to}</span>
-					</h4>
-					<p className="description">
-						<span className="heading">Description: </span>
-						<span className="text">{data.description}</span>
-					</p>
-					<FontAwesomeIcon
-						className="action-btn edit"
-						icon={faPen}
-						id={"otherExperienceEdit_" + i}
-						onClick={handleEdit}
-					/>
-					<FontAwesomeIcon
-						className="action-btn delete"
-						icon={faTrash}
-						id={"otherExperienceDelete_" + i}
-						onClick={() => handleDelete("otherExperience")}
-					/>
-				</div>
-			);
+			if (data.career_path === "EDUCATION") {
+				return (
+					<div className="content" key={i}>
+						<h2>{data.title}</h2>
+						<h3>
+							{data.organization_name} - <span>{data.location}</span>
+						</h3>
+						<h4>
+							<span>{data.employed_from}</span> - <span>{data.employed_till}</span>
+						</h4>
+						<p className="description">
+							<span className="heading">Description: </span>
+							<span className="text">{data.description}</span>
+						</p>
+						<FontAwesomeIcon
+							className="action-btn edit"
+							icon={faPen}
+							id={"otherExperienceEdit_" + i}
+							onClick={handleEdit}
+						/>
+						<FontAwesomeIcon
+							className="action-btn delete"
+							icon={faTrash}
+							id={"otherExperienceDelete_" + i}
+							onClick={() => handleDelete("otherExperience")}
+						/>
+					</div>
+				);
+			}
+			return ""
 		}
 	);
 
@@ -188,7 +193,7 @@ function Education() {
 				>
 					Previous
 				</Link>
-				<Link to="/profile/strengths" className="primary-btn" id="nextLink">
+				<Link to="/profile/preview" className="primary-btn" id="nextLink">
 					Next
 				</Link>
 			</div>
@@ -196,4 +201,15 @@ function Education() {
 	);
 }
 
-export default Education;
+function mapStateToProps(state) {
+	return {
+		eduExpData: state.candidateSetDataReducer && state.candidateSetDataReducer.data && state.candidateSetDataReducer.data.education_experience ? state.candidateSetDataReducer.data.education_experience : [],
+		otherExpData: state.candidateSetDataReducer && state.candidateSetDataReducer.data && state.candidateSetDataReducer.data.additional_experiences ? state.candidateSetDataReducer.data.additional_experiences : []
+	};
+}
+
+const mapDispatchToProps = {
+	fetchCandidateDetails: fetchCandidateDetails
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Education);

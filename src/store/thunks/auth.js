@@ -1,7 +1,8 @@
 import Axios from "axios";
 import { loginUrl, signUpUrl, verifyUserUrl, authVcodeRequestPostUrl } from "../api/auth";
 
-import { updateLoggedIn, updateJwtToken, updatePhoneOtp } from "../actions/auth";
+import { updateLoggedIn, updateJwtToken } from "../actions/auth";
+import { fetchCandidateDetails } from "../../modals/candidateProfile/thunk";
 import Cookies from "js-cookie";
 import { setDefaultAuthorizationHeader } from "../utility";
 import { requestConfig } from "./utils";
@@ -9,13 +10,23 @@ import { requestConfig } from "./utils";
 export const tryLogin = (credentials) => async (dispatch, getState) => {
 	try {
 		const {
-			data: { data: token, type },
+			data: { data: token },
 		} = await Axios.post(loginUrl, credentials, requestConfig);
 		if (!token) return false;
 		Cookies.set("JWT", token);
+		/**
+		 * TODO: after uncomment below line, `dispatch(updateLoggedIn([true, type]));` is not working
+		 */
 		setDefaultAuthorizationHeader(token);
 		dispatch(updateJwtToken(token));
-		dispatch(updateLoggedIn([true, "candidate"]));
+		let type =
+			token && token.map
+				? token.map.user_type === "jobseeker"
+					? "candidate"
+					: token.map.user_type
+				: "";
+		dispatch(updateLoggedIn([true, type]));
+		fetchCandidateDetails();
 	} catch (err) {
 		if (err.response) console.error(`failed to log-in with error ${err}`);
 	}
@@ -40,7 +51,7 @@ export const verifyUserCode = (otp) => async (dispatch, getState) => {
 		"contact": getState().authReducer.signUp.phone,
 		"verification_code": otp
 	}
-	dispatch(signUpUser(getState().authReducer.signUp))
+	// dispatch(signUpUser(getState().authReducer.signUp))
 	try {
 		const { message } = await Axios.post(verifyUserUrl, data, requestConfig);
 		if (!message) {

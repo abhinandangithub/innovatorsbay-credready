@@ -7,7 +7,9 @@ import ImgWidgetMenu from "../../../../assets/widget-menu.jpg";
 
 function AppliedRelatedJobs(props) {
 	const type = props.applied ? props.applied : props.related;
-	const link = `/jobs/view/${type.id}`;
+	const link = props.applied
+		? `/jobs/preview/${type.id}`
+		: `/jobs/view/${type.id}`;
 
 	const content = (
 		<>

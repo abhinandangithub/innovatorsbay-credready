@@ -5,7 +5,14 @@ import InputRange from "react-input-range";
 
 import "./index.scss";
 
-function Dropdown({ id, placeholder, content, selected, onchange, callback = undefined }) {
+function Dropdown({
+	id,
+	placeholder,
+	content,
+	selected,
+	onchange,
+	callback = undefined,
+}) {
 	const [active, setactive] = useState(false);
 	const [value, setvalue] = useState(selected);
 	const [isChanged, setIsChanged] = useState(false);
@@ -13,11 +20,11 @@ function Dropdown({ id, placeholder, content, selected, onchange, callback = und
 	const dropDownEl = React.useRef();
 
 	const handleItemClick = (item) => {
-		onchange && onchange(item);
-		setvalue(item);
+		onchange && onchange(item.id ? item.id : item);
+		setvalue(item.val ? item.val : item);
 		setactive(false);
 		setIsChanged(true);
-		if(callback) {
+		if (callback) {
 			callback();
 		}
 	};
@@ -41,7 +48,7 @@ function Dropdown({ id, placeholder, content, selected, onchange, callback = und
 						content.map((item, key) => {
 							return (
 								<li onClick={() => handleItemClick(item)} key={key}>
-									{item}
+									{item.val ? item.val : item}
 								</li>
 							);
 						})}
