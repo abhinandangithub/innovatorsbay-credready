@@ -3,7 +3,7 @@ import { connect, useDispatch } from 'react-redux';
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPencilAlt } from "@fortawesome/free-solid-svg-icons";
-import { getProfileThunk } from '../../../../store/thunks/employer';
+import { getProfileThunk, getHiringNeedsThunk, getCompanySizeThunk } from '../../../../store/thunks/employer';
 
 import "./index.scss";
 
@@ -13,6 +13,11 @@ function View(props) {
 	useEffect(() => {
 		dispatch(getProfileThunk());
 	}, [dispatch]);
+
+	const handleEdit = () => {
+		dispatch(getHiringNeedsThunk());
+		dispatch(getCompanySizeThunk());
+	}
 
 	return (
 		<div className="profile-view">
@@ -45,7 +50,7 @@ function View(props) {
 					<li>
 						{props.profile.org.address.map((address) => {
 							return(
-							<ul className="listing">
+							<ul className="listing" key={address.id}>
 							<li className="divider">
 								<span>{'Address '+address.id}</span>
 							</li>
@@ -69,7 +74,7 @@ function View(props) {
 						})}
 					</li>
 				</ul>
-				<Link to="/profile/edit" className="edit" id="editBtn">
+				<Link to="/profile/edit" className="edit" id="editBtn" onClick={handleEdit}>
 					<FontAwesomeIcon icon={faPencilAlt} />
 				</Link>
 			</div>

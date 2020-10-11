@@ -44,16 +44,16 @@ function Details(props) {
 		/**
 		 * * field: ['value', 'error']
 		 */
-		name: [],
-		title: [],
+		name: [props.profile.name],
+		title: [props.profile.title],
 		website: [],
-		hiringNeeds: [""],
-		companySize: [""],
-		reference: [""],
-		street_0: [],
-		city_0: [],
-		state_0: [],
-		zipCode_0: [],
+		hiringNeeds: [props.hiringKeys.length > 0 && props.hiringKeys.find(val => val.id === props.profile.org.hires_required).range_display_value],
+		companySize: [props.companySizeKeys.length > 0 && props.companySizeKeys.find(val => val.id === props.profile.org.company_size).range_display_value],
+		reference: [props.profile.org.reference_source],
+		street_0: [props.profile.org.address.map(val => val.street_address)],
+		city_0: [props.profile.org.address.map(val => val.city)],
+		state_0: [props.profile.org.address.map(val => val.state)],
+		zipCode_0: [props.profile.org.address.map(val => val.zip_code)],
 
 		formValid: false,
 	});
@@ -61,6 +61,7 @@ function Details(props) {
 	useEffect(() => {
 		dispatch(getHiringNeedsThunk());
 		dispatch(getCompanySizeThunk());
+		setAddressCount(["1"]);
 	}, [dispatch]);
 
 	const handleSubmit = () => {
@@ -157,7 +158,8 @@ function Details(props) {
 						<Input
 							id={`street_${i}`}
 							type="text"
-							defaultValue={formData[`street_${i}`][0]}
+							value={formData[`street_${i}`][0]}
+							// value={address.street_address}
 							onChange={(e) => handleFieldChange(e.target.id, e.target.value)}
 						/>
 					</li>
@@ -175,7 +177,8 @@ function Details(props) {
 						<Input
 							id={`city_${i}`}
 							type="text"
-							defaultValue={formData[`city_${i}`][0]}
+							value={formData[`city_${i}`][0]}
+							// value={address.city}
 							onChange={(e) => handleFieldChange(e.target.id, e.target.value)}
 						/>
 					</li>
@@ -193,7 +196,8 @@ function Details(props) {
 						<Input
 							id={`state_${i}`}
 							type="text"
-							defaultValue={formData[`state_${i}`][0]}
+							value={formData[`state_${i}`][0]}
+							// value={address.state}
 							onChange={(e) => handleFieldChange(e.target.id, e.target.value)}
 						/>
 					</li>
@@ -211,7 +215,8 @@ function Details(props) {
 						<Input
 							id={`zipCode_${i}`}
 							type="text"
-							defaultValue={formData[`zipCode_${i}`][0]}
+							value={formData[`zipCode_${i}`][0]}
+							// value={address.zip_code}
 							onChange={(e) => handleFieldChange(e.target.id, e.target.value)}
 						/>
 					</li>
@@ -260,7 +265,7 @@ function Details(props) {
 						<Input
 							id="name"
 							type="text"
-							value={props.profile.name}
+							value={formData.name[0]}
 							// defaultValue={formData.name[0]}
 							onChange={(e) => handleFieldChange(e.target.id, e.target.value)}
 						/>
@@ -275,7 +280,8 @@ function Details(props) {
 						<Input
 							id="title"
 							type="text"
-							defaultValue={formData.title[0]}
+							value={formData.title[0]}
+							// defaultValue={formData.title[0]}
 							onChange={(e) => handleFieldChange(e.target.id, e.target.value)}
 						/>
 					</li>
@@ -300,6 +306,7 @@ function Details(props) {
 						<Dropdown
 							placeholder={hiringNeed.heading}
 							content={props.hiringNeeds}
+							selected={formData.hiringNeeds[0]}
 							onchange={(value) => handleFieldChange("hiringNeeds", value)}
 						/>
 					</li>
@@ -308,6 +315,7 @@ function Details(props) {
 						<Dropdown
 							placeholder={companySize.heading}
 							content={props.companySize}
+							selected={formData.companySize[0]}
 							onchange={(value) => handleFieldChange("companySize", value)}
 						/>
 					</li>
@@ -316,6 +324,7 @@ function Details(props) {
 						<Dropdown
 							placeholder={socialMedia.heading}
 							content={socialMedia.content}
+							selected={formData.reference[0]}
 							onchange={(value) => handleFieldChange("reference", value)}
 						/>
 					</li>
@@ -338,7 +347,9 @@ function mapStateToProps(state) {
 	return {
 		hiringNeeds: state.employerReducer.hiringNeeds.data,
 		companySize: state.employerReducer.companySize.data,
-		profile: state.employerReducer.profile.data
+		profile: state.employerReducer.profile.data,
+		companySizeKeys: state.employerReducer.companySizeKeys,
+		hiringKeys: state.employerReducer.hiringKeys
 	};
 }
 

@@ -477,6 +477,8 @@ const initialState = {
 		"status": "OK"
 	},
 	emailTemplateNames: [],
+	hiringKeys: [],
+	companySizeKeys: [],
 	employmentKeys: [],
 	functionKeys: [],
 	industryKeys: [],
@@ -543,7 +545,8 @@ const reducer = (state = initialState, action) => {
 			hiringNeedsTemp.status = action.value.status;
 			hiringNeedsTemp.data = action.value.data.map((value) => value.range_display_value);
 			return updateObject(state, {
-				hiringNeedsTemp
+				hiringNeeds: hiringNeedsTemp,
+				hiringKeys: action.value.data
 			});
 
 		case actionTypes.SET_COMPANY_SIZE:
@@ -553,7 +556,8 @@ const reducer = (state = initialState, action) => {
 			companySizeTemp.status = action.value.status;
 			companySizeTemp.data = action.value.data.map((value) => value.range_display_value);
 			return updateObject(state, {
-				companySizeTemp
+				companySize: companySizeTemp,
+				companySizeKeys: action.value.data
 			});
 
 		case actionTypes.SET_PHONE_NUMBER:
