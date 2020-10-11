@@ -46,22 +46,26 @@ function Details(props) {
 		 */
 		name: [props.profile.name],
 		title: [props.profile.title],
-		website: [],
+		website: [props.profile.org.website],
 		hiringNeeds: [props.hiringKeys.length > 0 && props.hiringKeys.find(val => val.id === props.profile.org.hires_required).range_display_value],
 		companySize: [props.companySizeKeys.length > 0 && props.companySizeKeys.find(val => val.id === props.profile.org.company_size).range_display_value],
 		reference: [props.profile.org.reference_source],
-		street_0: [props.profile.org.address.map(val => val.street_address)],
-		city_0: [props.profile.org.address.map(val => val.city)],
-		state_0: [props.profile.org.address.map(val => val.state)],
-		zipCode_0: [props.profile.org.address.map(val => val.zip_code)],
+		street_0: props.profile.org.address.map(val => val.street_address),
+		city_0: props.profile.org.address.map(val => val.city),
+		state_0: props.profile.org.address.map(val => val.state),
+		zipCode_0: props.profile.org.address.map(val => val.zip_code),
 
 		formValid: false,
 	});
 
 	useEffect(() => {
+		let addCnt = [];
 		dispatch(getHiringNeedsThunk());
 		dispatch(getCompanySizeThunk());
-		setAddressCount(["1"]);
+		for(let i=0; i<props.profile.org.address.length; i++) {
+			addCnt.push(i);
+		}
+		setAddressCount(addCnt);
 	}, [dispatch]);
 
 	const handleSubmit = () => {

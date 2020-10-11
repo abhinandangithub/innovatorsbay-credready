@@ -12,12 +12,9 @@ function View(props) {
 
 	useEffect(() => {
 		dispatch(getProfileThunk());
-	}, [dispatch]);
-
-	const handleEdit = () => {
 		dispatch(getHiringNeedsThunk());
 		dispatch(getCompanySizeThunk());
-	}
+	}, [dispatch]);
 
 	return (
 		<div className="profile-view">
@@ -37,11 +34,11 @@ function View(props) {
 					</li>
 					<li>
 						<p>Hiring Needs</p>
-						<p>{props.profile.org.hires_required}</p>
+						<p>{props.hiringKeys.length > 0 && props.hiringKeys.find(val => val.id === props.profile.org.hires_required).range_display_value}</p>
 					</li>
 					<li>
 						<p>Company Size</p>
-						<p>{props.profile.org.company_size}</p>
+						<p>{props.companySizeKeys.length > 0 && props.companySizeKeys.find(val => val.id === props.profile.org.company_size).range_display_value}</p>
 					</li>
 					<li>
 						<p>How did you hear about us?</p>
@@ -74,7 +71,7 @@ function View(props) {
 						})}
 					</li>
 				</ul>
-				<Link to="/profile/edit" className="edit" id="editBtn" onClick={handleEdit}>
+				<Link to="/profile/edit" className="edit" id="editBtn">
 					<FontAwesomeIcon icon={faPencilAlt} />
 				</Link>
 			</div>
@@ -84,7 +81,9 @@ function View(props) {
 
 function mapStateToProps(state) {
 	return {
-		profile: state.employerReducer.profile.data
+		profile: state.employerReducer.profile.data,
+		companySizeKeys: state.employerReducer.companySizeKeys,
+		hiringKeys: state.employerReducer.hiringKeys
 	}
 }
 

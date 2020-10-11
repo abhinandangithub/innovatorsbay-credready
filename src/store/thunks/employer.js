@@ -34,6 +34,7 @@ import { requestConfig } from "./utils";
 import { enitityFetchExperienceTypeUrl, entityFetchEntityIndustryUrl, entityFetchEntitityFunctionUrl, entityFetchSkillsUrl, entityFetchEmployementSatusUrl } from "../api/entity";
 import { candidateFetchJobsAppliedUrl } from "../api/candidate";
 import Cookies from "js-cookie";
+import { keys } from "highcharts";
 
 export const getHiringNeedsThunk = (token) => async (dispatch, getState) => {
 	try {
@@ -58,9 +59,10 @@ export const getCompanySizeThunk = (token) => async (dispatch, getState) => {
 export const updateProfileThunk = (token, profile) => async (dispatch, getState) => {
 	try {
 		const state = getState();
-		profile.companySize = 0;
-		profile.hiresRequired = 0;
+		profile.companySize = state.employerReducer.companySizeKeys.find(val => val.range_display_value === profile.companySize).id;
+		profile.hiresRequired = state.employerReducer.hiringKeys.find(val => val.range_display_value === profile.hiresRequired).id;
 		// setDefaultAuthorizationHeader(JSON.parse(state.authReducer.JWT).map.jwt);
+		console.log(profile);
 		const data = await Axios.patch(employerUpdateProfileUrl, profile, {
 			headers: {
 				'Authorization': JSON.parse(state.authReducer.JWT).map.jwt,
@@ -68,7 +70,7 @@ export const updateProfileThunk = (token, profile) => async (dispatch, getState)
 			}
 		});
 		if (!data) return false;
-		dispatch(setEmployerProfile(profile));
+		// dispatch(setEmployerProfile(profile));
 	} catch (err) {
 		if (err.response) console.error(`failed to update employer profile ${err}`);
 	}
