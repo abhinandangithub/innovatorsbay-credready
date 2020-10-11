@@ -43,27 +43,30 @@ function View(props) {
 						<p>{props.profile.org.reference_source}</p>
 					</li>
 					<li>
-						<ul className="listing">
+						{props.profile.org.address.map((address) => {
+							return(
+							<ul className="listing">
 							<li className="divider">
-								<span>Address 1</span>
+								<span>{'Address '+address.id}</span>
 							</li>
 							<li>
 								<p>Street Address</p>
-								<p>08817</p>
+								<p>{address.street_address}</p>
 							</li>
 							<li>
 								<p>City</p>
-								<p>247 King St.</p>
+								<p>{address.city}</p>
 							</li>
 							<li>
 								<p>State</p>
-								<p>New Jersey</p>
+								<p>{address.state}</p>
 							</li>
 							<li>
 								<p>Zip Code</p>
-								<p>123456</p>
+								<p>{address.zip_code}</p>
 							</li>
-						</ul>
+						</ul>);
+						})}
 					</li>
 				</ul>
 				<Link to="/profile/edit" className="edit" id="editBtn">

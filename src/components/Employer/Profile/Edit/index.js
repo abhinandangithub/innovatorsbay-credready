@@ -260,7 +260,8 @@ function Details(props) {
 						<Input
 							id="name"
 							type="text"
-							defaultValue={formData.name[0]}
+							value={props.profile.name}
+							// defaultValue={formData.name[0]}
 							onChange={(e) => handleFieldChange(e.target.id, e.target.value)}
 						/>
 					</li>
@@ -337,6 +338,7 @@ function mapStateToProps(state) {
 	return {
 		hiringNeeds: state.employerReducer.hiringNeeds.data,
 		companySize: state.employerReducer.companySize.data,
+		profile: state.employerReducer.profile.data
 	};
 }
 
