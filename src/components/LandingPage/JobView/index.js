@@ -40,7 +40,8 @@ function JobView(props) {
 					<p>
 						<span className="heading">Job Description: </span>
 						<span className="text">
-							{props.jobDetails.job_description}
+							{/* {props.jobDetails.job_description} */}
+							<div dangerouslySetInnerHTML={{ __html: props.jobDetails.job_description }} />
 						</span>
 					</p>
 					{/* <p>

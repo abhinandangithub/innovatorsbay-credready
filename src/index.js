@@ -7,6 +7,7 @@ import thunk from "redux-thunk";
 import "./index.scss";
 import App from "./App";
 import authReducer from "./store/reducers/auth";
+import commonReducer from "./store/reducers/common";
 import popupOverlayReducer from "./store/reducers/popup_overlay";
 import employerReducer from "./store/reducers/employer";
 import {
@@ -28,6 +29,7 @@ const rootReducer = combineReducers({
 	setCandidateExperienceTypeReducer,
 	setCandidateDegreeTitlesReducer,
 	setCandidateInstitutionTypeReducer,
+	commonReducer
 });
 
 /* Middleware */

@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import Input from "../../_Elements/Input";
-import { Link } from "react-router-dom";
 import { connect, useDispatch } from 'react-redux';
 import { postJob } from '../../../store/thunks/employer';
+import { Link } from "react-router-dom";
 
 function CopyLink(props) {
 	const parent = React.useRef();
@@ -15,18 +15,18 @@ function CopyLink(props) {
 
 	const handlePostJob = () => {
 		dispatch(postJob({
-			"emailTemplateId": 3,   
-			"employmentType": 3,   
-			"function": 1,   
-			"industry": 1,   
-			"jobDescription": 
-			"Some nice job description",   
-			"jobQuestionnaireMap": [1,2,3],   
-			"jobTitle": "Senior Nursing Assistant",   
-			"location": 3,   
-			"maxExp": 1,   
-			"minExp": 4,   
-			"openPositions": 15 
+			"emailTemplateId": 3,
+			"employmentType": 3,
+			"function": 1,
+			"industry": 1,
+			"jobDescription":
+				"Some nice job description",
+			"jobQuestionnaireMap": [1, 2, 3],
+			"jobTitle": "Senior Nursing Assistant",
+			"location": 3,
+			"maxExp": 1,
+			"minExp": 4,
+			"openPositions": 15
 		}));
 	}
 
@@ -44,7 +44,7 @@ function CopyLink(props) {
 					</h2>
 					<p className="status">We have sent you a confirmation email.</p>
 					<p className="link">Here is the link to the post on CredReady.com</p>
-					<Input value={props.jobURL} onChange={(e) => setURL(e.target.value)}/>
+					<Input value={props.jobURL} onChange={(e) => setURL(e.target.value)} />
 					<p className="status">
 						Please paste this link in your job post. So that they may apply
 						through CredReady.
@@ -69,8 +69,8 @@ Certified Nursing Assistant</a>`}
 				</div>
 			</div>
 			<div className="cta">
-				<Link to="/jobs/create-job" className="primary-btn" onClick={handlePostJob}>
-					Post a Job
+				<Link to="/jobs" className="primary-btn blue">
+					view a Job
 				</Link>
 			</div>
 		</>
@@ -79,7 +79,8 @@ Certified Nursing Assistant</a>`}
 
 function mapStateToProps(state) {
 	return {
-		jobURL: state.employerReducer.jobURL.replace("https://dev.innovatorsbay.in/credready/jobs/", "http://localhost:3000/postings/")
+		//jobURL: state.employerReducer.jobURL.replace("https://dev.innovatorsbay.in/credready/jobs/", "http://localhost:3000/postings/")
+		jobURL: state.employerReducer.jobURL
 	}
 }
 

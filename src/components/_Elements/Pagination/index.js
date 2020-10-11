@@ -7,8 +7,8 @@ function Pagination() {
 		<ul className="pagination">
 			<li>Prev</li>
 			<li className="active">1</li>
-			<li>2</li>
-			<li>3</li>
+			{/* <li>2</li>
+			<li>3</li> */}
 			<li>Next</li>
 		</ul>
 	);

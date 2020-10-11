@@ -11,6 +11,7 @@ import {
 import "./index.scss";
 import Input from "../../../_Elements/Input";
 import Dropdown from "../../../_Elements/Dropdown";
+import Spinner from "../../../_Elements/Spinner";
 
 const hiringNeed = {
 	heading: "Hires needed in the next 6 monts",
@@ -62,7 +63,7 @@ function Details(props) {
 		let addCnt = [];
 		dispatch(getHiringNeedsThunk());
 		dispatch(getCompanySizeThunk());
-		for(let i=0; i<props.profile.org.address.length; i++) {
+		for (let i = 0; i < props.profile.org.address.length; i++) {
 			addCnt.push(i);
 		}
 		setAddressCount(addCnt);
@@ -75,8 +76,8 @@ function Details(props) {
 		for (var field in _formData) {
 			let skip =
 				field === "hiringNeeds" ||
-				field === "companySize" ||
-				field === "reference"
+					field === "companySize" ||
+					field === "reference"
 					? false
 					: true;
 
@@ -125,6 +126,7 @@ function Details(props) {
 		setFormData(_formData);
 
 		dispatch(updateProfileThunk(null, profileData));
+		props.history.push('/profile/view');
 	};
 
 	const handleFieldChange = (field, value) => {
@@ -154,7 +156,7 @@ function Details(props) {
 							<span
 								className={`error-text ${
 									!formData[`street_${i}`][1] && "hidden"
-								}`}
+									}`}
 							>
 								Required
 							</span>
@@ -173,7 +175,7 @@ function Details(props) {
 							<span
 								className={`error-text ${
 									!formData[`city_${i}`][1] && "hidden"
-								}`}
+									}`}
 							>
 								Required
 							</span>
@@ -192,7 +194,7 @@ function Details(props) {
 							<span
 								className={`error-text ${
 									!formData[`state_${i}`][1] && "hidden"
-								}`}
+									}`}
 							>
 								Required
 							</span>
@@ -211,7 +213,7 @@ function Details(props) {
 							<span
 								className={`error-text ${
 									!formData[`zipCode_${i}`][1] && "hidden"
-								}`}
+									}`}
 							>
 								Required
 							</span>
@@ -254,96 +256,100 @@ function Details(props) {
 	}, [formData]);
 
 	return (
-		<div className="profile-details">
-			Welcome Aboard! Please fill in the details below about your company to get
-			started.
-			<div className="content">
-				<ul className="listing">
-					<li>
-						<label htmlFor="name">
-							Full Name <span>*</span>
-							<span className={`error-text ${!formData.name[1] && "hidden"}`}>
-								Required
+		// !props.loading ?
+		// 	< Spinner /> :
+		(
+			< div className="profile-details" >
+				Welcome Aboard! Please fill in the details below about your company to get
+	started.
+			< div className="content" >
+					<ul className="listing">
+						<li>
+							<label htmlFor="name">
+								Full Name <span>*</span>
+								<span className={`error-text ${!formData.name[1] && "hidden"}`}>
+									Required
 							</span>
-						</label>
-						<Input
-							id="name"
-							type="text"
-							value={formData.name[0]}
-							// defaultValue={formData.name[0]}
-							onChange={(e) => handleFieldChange(e.target.id, e.target.value)}
-						/>
-					</li>
-					<li>
-						<label htmlFor="title">
-							Title <span>*</span>
-							<span className={`error-text ${!formData.title[1] && "hidden"}`}>
-								Required
+							</label>
+							<Input
+								id="name"
+								type="text"
+								value={formData.name[0]}
+								// defaultValue={formData.name[0]}
+								onChange={(e) => handleFieldChange(e.target.id, e.target.value)}
+							/>
+						</li>
+						<li>
+							<label htmlFor="title">
+								Title <span>*</span>
+								<span className={`error-text ${!formData.title[1] && "hidden"}`}>
+									Required
 							</span>
-						</label>
-						<Input
-							id="title"
-							type="text"
-							value={formData.title[0]}
-							// defaultValue={formData.title[0]}
-							onChange={(e) => handleFieldChange(e.target.id, e.target.value)}
-						/>
-					</li>
-					<li>
-						<label htmlFor="company">
-							Company Website <span>*</span>
-							<span
-								className={`error-text ${!formData.website[1] && "hidden"}`}
-							>
-								Required
+							</label>
+							<Input
+								id="title"
+								type="text"
+								value={formData.title[0]}
+								// defaultValue={formData.title[0]}
+								onChange={(e) => handleFieldChange(e.target.id, e.target.value)}
+							/>
+						</li>
+						<li>
+							<label htmlFor="company">
+								Company Website <span>*</span>
+								<span
+									className={`error-text ${!formData.website[1] && "hidden"}`}
+								>
+									Required
 							</span>
-						</label>
-						<Input
-							id="website"
-							type="text"
-							defaultValue={formData.website[0]}
-							onChange={(e) => handleFieldChange(e.target.id, e.target.value)}
-						/>
-					</li>
-					<li>
-						<label>Hiring Needs</label>
-						<Dropdown
-							placeholder={hiringNeed.heading}
-							content={props.hiringNeeds}
-							selected={formData.hiringNeeds[0]}
-							onchange={(value) => handleFieldChange("hiringNeeds", value)}
-						/>
-					</li>
-					<li>
-						<label>Company Size</label>
-						<Dropdown
-							placeholder={companySize.heading}
-							content={props.companySize}
-							selected={formData.companySize[0]}
-							onchange={(value) => handleFieldChange("companySize", value)}
-						/>
-					</li>
-					<li>
-						<label>How did you hear about us?</label>
-						<Dropdown
-							placeholder={socialMedia.heading}
-							content={socialMedia.content}
-							selected={formData.reference[0]}
-							onchange={(value) => handleFieldChange("reference", value)}
-						/>
-					</li>
-					<li className="addresses">{renderAddresses()}</li>
-				</ul>
-				<button className="add-address" id="addAdressBtn" onClick={addAdress}>
-					<span className="text">Add Address</span>
+							</label>
+							<Input
+								id="website"
+								type="text"
+								defaultValue={formData.website[0]}
+								onChange={(e) => handleFieldChange(e.target.id, e.target.value)}
+							/>
+						</li>
+						<li>
+							<label>Hiring Needs</label>
+							<Dropdown
+								placeholder={hiringNeed.heading}
+								content={props.hiringNeeds}
+								selected={formData.hiringNeeds[0]}
+								onchange={(value) => handleFieldChange("hiringNeeds", value)}
+							/>
+						</li>
+						<li>
+							<label>Company Size</label>
+							<Dropdown
+								placeholder={companySize.heading}
+								content={props.companySize}
+								selected={formData.companySize[0]}
+								onchange={(value) => handleFieldChange("companySize", value)}
+							/>
+						</li>
+						<li>
+							<label>How did you hear about us?</label>
+							<Dropdown
+								placeholder={socialMedia.heading}
+								content={socialMedia.content}
+								selected={formData.reference[0]}
+								onchange={(value) => handleFieldChange("reference", value)}
+							/>
+						</li>
+						<li className="addresses">{renderAddresses()}</li>
+					</ul>
+					<button className="add-address" id="addAdressBtn" onClick={addAdress}>
+						<span className="text">Add Address</span>
+					</button>
+				</div >
+				<div className="cta">
+					<button className="primary-btn" id="onSubmit" onClick={handleSubmit}>
+						Submit
 				</button>
-			</div>
-			<div className="cta">
-				<button className="primary-btn" id="onSubmit" onClick={handleSubmit}>
-					Submit
-				</button>
-			</div>
-		</div>
+				</div>
+			</div >
+		)
 	);
 }
 

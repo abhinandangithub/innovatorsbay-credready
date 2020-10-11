@@ -28,6 +28,11 @@ import {
 	setFunction, setSkills, setQuestionBank, setEmailTemplate, setPostedJobURL,
 	setAppliedCandidateDetails, setLocations, setJobDetails, setLogin
 } from "../actions/employer";
+
+import {
+	beginApiCall, apiCallError
+} from "../actions/common";
+
 // import Cookies from "js-cookie";
 import { setDefaultAuthorizationHeader, setAllowAccessHeader } from "../utility";
 import { requestConfig } from "./utils";
@@ -79,7 +84,7 @@ export const updateProfileThunk = (token, profile) => async (dispatch, getState)
 export const getProfileThunk = (token) => async (dispatch, getState) => {
 	try {
 		const state = getState();
-		console.log('aaa ', state.authReducer.JWT, JSON.parse(state.authReducer.JWT).map.jwt);
+		dispatch(beginApiCall())
 		// setDefaultAuthorizationHeader(JSON.parse(state.authReducer.JWT).map.jwt);
 		const data = await Axios.get(employerUpdateProfileUrl, {
 			headers: {
@@ -89,6 +94,7 @@ export const getProfileThunk = (token) => async (dispatch, getState) => {
 		});
 		if (!data) return false;
 		dispatch(setEmployerProfile(data.data));
+		dispatch(apiCallError())
 	} catch (err) {
 		if (err.response) console.error(`failed to update employer profile ${err}`);
 	}
