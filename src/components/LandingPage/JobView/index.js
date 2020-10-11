@@ -16,7 +16,7 @@ function JobView(props) {
 
 	useEffect(() => {
 			dispatch(getJobDetails(id));
-	}, [id]);
+	}, [props, id]);
 
 	return (
 		<div className={`job-view-cmp flex ${props.isLoggedIn ? "" : "login_required"}`}>
@@ -137,7 +137,6 @@ function JobView(props) {
 function mapStateToProps(state) {
 	return {
 		isLoggedIn: state.employerReducer.isLoggedIn,
-		loggedInAs: state.authReducer.loggedIn.as,
 		jobDetails: state.employerReducer.jobDetails.data
 	}
 }

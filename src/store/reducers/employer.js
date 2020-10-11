@@ -697,48 +697,60 @@ const reducer = (state = initialState, action) => {
 			});
 
 		case actionTypes.SET_JOB_DETAILS:
-			const jobDetailsTemp = state.jobDetails;
-			if(action.value.data.job_id !== undefined) {
-				jobDetailsTemp.data.job_id = action.value.data.job_id;
-			}
-			if(action.value.jobId !== undefined) {
-				jobDetailsTemp.data.job_id = action.value.jobId;
-			}
-			if(action.value.data.address.city !== undefined) {
-				jobDetailsTemp.data.location = action.value.data.address.city;
-			}
-			if(action.value.location !== undefined) {
-				jobDetailsTemp.data.location = action.value.location;
-			}
-			if(action.value.data.organization.org_name !== undefined) {
-				jobDetailsTemp.data.org_name = action.value.data.organization.org_name;
-			}
-			if(action.value.orgName !== undefined) {
-				jobDetailsTemp.data.org_name = action.value.orgName;
-			}
-			if(action.value.data.job_title !== undefined) {
-				jobDetailsTemp.data.job_title = action.value.data.job_title;
-			}
-			if(action.value.jobTitle !== undefined) {
-				jobDetailsTemp.data.job_title = action.value.jobTitle;
-			}
-			if(action.value.data.job_description !== undefined) {
-				jobDetailsTemp.data.job_description = action.value.data.job_description;
-			}
-			if(action.value.jobDescription !== undefined) {
-				jobDetailsTemp.data.job_description = action.value.jobDescription;
-			}
-			if(action.value.data.min_experience !== undefined) {
-				jobDetailsTemp.data.min_experience = action.value.data.min_experience;
-			}
-			if(action.value.minExp !== undefined) {
-				jobDetailsTemp.data.min_experience = action.value.minExp;
-			}
-			if(action.value.data.max_experience !== undefined) {
-				jobDetailsTemp.data.max_experience = action.value.data.max_experience;
-			}
-			if(action.value.maxExp !== undefined) {
-				jobDetailsTemp.data.max_experience = action.value.maxExp;
+			// const jobDetailsTemp = state.jobDetails;
+			const jobDetailsTemp = {"data": {
+				"job_id": 1,
+				"location": "Warren, NJ",
+				"job_title": "Certified Nursing Assistant",
+				"job_description": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quid ergo hoc loco intellegit honestum? <i>Duo Reges: constructio interrete.</i> Expressa vero in iis aetatibus, quae iam confirmatae sunt. <i>Quamquam tu hanc copiosiorem etiam soles dicere.</i> Duarum enim vitarum nobis erunt instituta capienda. Claudii libidini, qui tum erat summo ne imperio, dederetur. Cur fortior sit, si illud, quod tute concedis, asperum et vix ferendum putabit? Beatus sibi videtur esse moriens. Philosophi autem in suis lectulis plerumque moriuntur. Cuius ad naturam apta ratio vera illa et summa lex a philosophis dicitur. Tria genera cupiditatum, naturales et necessariae, naturales et non necessariae, nec naturales nec necessariae. </p>\n\n<p>Erit enim instructus ad mortem contemnendam, ad exilium, ad ipsum etiam dolorem. Non igitur potestis voluptate omnia dirigentes aut tueri aut retinere virtutem. Quid est igitur, inquit, quod requiras? <i>Non autem hoc: igitur ne illud quidem.</i> Non est igitur voluptas bonum. Similiter sensus, cum accessit ad naturam, tuetur illam quidem, sed etiam se tuetur; </p>\n\n<p>Hoc Hieronymus summum bonum esse dixit. Cum ageremus, inquit, vitae beatum et eundem supremum diem, scribebamus haec. Hoc loco tenere se Triarius non potuit. Qui autem de summo bono dissentit de tota philosophiae ratione dissentit. Tecum optime, deinde etiam cum mediocri amico. Non autem hoc: igitur ne illud quidem. <i>An hoc usque quaque, aliter in vita?</i> </p>",
+				"min_experience": 2,
+				"max_experience": 6,
+				"org_name": "Chelsea Senior Living"
+			}};
+			if(action.value.data !== undefined){
+				if(action.value.data.job_id !== undefined) {
+					jobDetailsTemp.data.job_id = action.value.data.job_id;
+				}
+				if(action.value.data.address.city !== undefined) {
+					jobDetailsTemp.data.location = action.value.data.address.city;
+				}
+				if(action.value.data.organization.org_name !== undefined) {
+					jobDetailsTemp.data.org_name = action.value.data.organization.org_name;
+				}
+				if(action.value.data.job_title !== undefined) {
+					jobDetailsTemp.data.job_title = action.value.data.job_title;
+				}
+				if(action.value.data.job_description !== undefined) {
+					jobDetailsTemp.data.job_description = action.value.data.job_description;
+				}
+				if(action.value.data.min_experience !== undefined) {
+					jobDetailsTemp.data.min_experience = action.value.data.min_experience;
+				}
+				if(action.value.data.max_experience !== undefined) {
+					jobDetailsTemp.data.max_experience = action.value.data.max_experience;
+				}
+			} else {
+				if(action.value.jobId !== undefined) {
+					jobDetailsTemp.data.job_id = action.value.jobId;
+				}
+				if(action.value.location !== undefined) {
+					jobDetailsTemp.data.location = action.value.location;
+				}
+				if(action.value.orgName !== undefined) {
+					jobDetailsTemp.data.org_name = action.value.orgName;
+				}
+				if(action.value.jobTitle !== undefined) {
+					jobDetailsTemp.data.job_title = action.value.jobTitle;
+				}
+				if(action.value.jobDescription !== undefined) {
+					jobDetailsTemp.data.job_description = action.value.jobDescription;
+				}
+				if(action.value.minExp !== undefined) {
+					jobDetailsTemp.data.min_experience = action.value.minExp;
+				}
+				if(action.value.maxExp !== undefined) {
+					jobDetailsTemp.data.max_experience = action.value.maxExp;
+				}
 			}
 			return updateObject(state, {
 				jobDetails: jobDetailsTemp

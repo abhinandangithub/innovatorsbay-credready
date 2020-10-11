@@ -386,7 +386,8 @@ export const getJobDetails = (jobID) => async (dispatch, getState) => {
 		});
 		if (!data) return false;
 		if(user === 'jobseeker') {
-			dispatch(setJobDetails(data.data.data.getJobDetails));
+			console.log(data.data.data.jobDetails);
+			dispatch(setJobDetails(data.data.data.jobDetails));
 		} else {
 			dispatch(setJobDetails(data.data));
 		}
