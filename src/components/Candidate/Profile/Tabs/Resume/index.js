@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUpload } from "@fortawesome/free-solid-svg-icons";
 import { Document, Page, pdfjs } from "react-pdf";
 import { useDispatch } from "react-redux";
+import { Link } from "react-router-dom";
 
 import "./index.scss";
 import {
@@ -177,20 +178,20 @@ function Resume(props) {
 		<div className="resume">
 			{success ? renderSuccess() : renderNormal()}
 			<div className="cta">
-				<input
+				{/* <input
 					className="primary-btn"
 					type="submit"
 					value="Next"
 					id="nextLink"
 					onClick={handleSubmit}
-				/>
-				{/* <Link
+				/> */}
+				<Link
 					className="primary-btn"
 					to="/profile/personal-details"
 					id="nextLink"
 				>
 					Next
-				</Link> */}
+				</Link>
 			</div>
 		</div>
 	);

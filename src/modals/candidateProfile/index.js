@@ -80,6 +80,10 @@ export const setCandidateInstitutionTypeInitial = {
     data: []
 }
 
+export const setCandidateAllAnswersInitial = {
+    data: []
+}
+
 export function candidateSetDataReducer(state = initialState, action) {
     switch (action.type) {
         case types.CANDIDATE_PROFILE_SET_DATA:
@@ -143,6 +147,18 @@ export function setCandidateDegreeTitlesReducer(state = setCandidateDegreeTitles
 export function setCandidateInstitutionTypeReducer(state = setCandidateInstitutionTypeInitial, action) {
     switch (action.type) {
         case types.SET_CANDIDATE_INSTITUTION_TYPE:
+            {
+                const { data } = action;
+                state = { ...state, data };
+            }
+        default:
+            return state;
+    }
+}
+
+export function setCandidateAllAnswersReducer(state = setCandidateAllAnswersInitial, action) {
+    switch (action.type) {
+        case types.SET_CANDIDATE_ALL_ANSWERS:
             {
                 const { data } = action;
                 state = { ...state, data };

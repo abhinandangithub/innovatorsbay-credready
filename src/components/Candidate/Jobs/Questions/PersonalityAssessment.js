@@ -2,7 +2,7 @@ import React from "react";
 
 import { isAnswer } from "./index";
 
-function PersonalityAssessment(props) {
+function PersonalityAssessment({ data, calHeight, onchange, noHeading }) {
 	const parent = React.useRef();
 
 	const listData = [
@@ -25,8 +25,10 @@ function PersonalityAssessment(props) {
 	];
 
 	React.useEffect(() => {
-		props.calHeight(parent.current.clientHeight);
-	}, [props]);
+		if (calHeight) {
+			calHeight(parent.current.clientHeight);
+		}
+	}, []);
 
 	const renderRadioInputs = (id) => {
 		let inputs = [];
@@ -39,7 +41,8 @@ function PersonalityAssessment(props) {
 						className="fancy-toggle blue"
 						id={`radio_${id}${i}`}
 						name={`radio_${id}`}
-						defaultChecked={isAnswer("personality_assessment", id, i + 1)}
+						defaultChecked={isAnswer(data, id + 1, i + 1)}
+						onChange={() => onchange(id + 1, i + 1)}
 					/>
 					<label htmlFor={`radio_${id}${i}`}>
 						<span className="input"></span>
@@ -68,16 +71,20 @@ function PersonalityAssessment(props) {
 
 	return (
 		<div className="personality-assessment" ref={parent}>
-			<div className="heading">
-				<h2>Personality Assessment</h2>
-				<ul>
-					<li>Never</li>
-					<li>Rarely</li>
-					<li>Sometimes</li>
-					<li>Often</li>
-					<li>Always</li>
-				</ul>
-			</div>
+			{!noHeading ? (
+				<div className="heading">
+					<h2>Personality Assessment</h2>
+					<ul>
+						<li>Never</li>
+						<li>Rarely</li>
+						<li>Sometimes</li>
+						<li>Often</li>
+						<li>Always</li>
+					</ul>
+				</div>
+			) : (
+				""
+			)}
 			<div className="content">
 				<ul>{renderList()}</ul>
 			</div>

@@ -22,6 +22,7 @@ import EmployerCandidateList from "../Employer/CandidateList";
 import EmployerCandidateView from "../Employer/CandidateView";
 
 import JobApplied from "../Candidate/Jobs/JobApplied";
+import JobApplication from "../Candidate/Jobs/Application";
 import JobApply from "../Candidate/Jobs/JobApply";
 import Questions from "../Candidate/Jobs/Questions";
 import JobSpecificQuestions from "../Candidate/Jobs/JobSpecificQuestions";
@@ -97,6 +98,11 @@ function Home(props) {
 									/>
 									<Route exact path="/jobs/view/:id" component={JobApply} />
 									<Route
+										exact
+										path="/jobs/application"
+										component={JobApplication}
+									/>
+									<Route
 										path="/jobs/questions"
 										exact
 										render={(props) => (
@@ -131,6 +137,7 @@ function Home(props) {
 									/>
 									<Route
 										exact
+										// path="/jobs/candidates-list"
 										path="/jobs/candidates-list/:jobId"
 										component={EmployerCandidateList}
 									/>

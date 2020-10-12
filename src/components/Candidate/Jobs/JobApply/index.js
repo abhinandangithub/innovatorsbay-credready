@@ -7,10 +7,11 @@ import CredReadyIndex from "../../../_Elements/CredReadyIndex";
 import ImgMarginalAssociation from "../../../../assets/widget-2.jpg";
 
 function JobView() {
-	var isLoggedIn = true;
+	/* Data comming from API will come here */
+	var index = 80;
 
 	return (
-		<div className={`job-view-cmp flex ${isLoggedIn ? "" : "login_required"}`}>
+		<div className="job-view-cmp flex">
 			<div className="left">
 				<div className="top">
 					<div className="logo">
@@ -77,8 +78,18 @@ function JobView() {
 						</li>
 					</ul>
 					<div className="cta flex">
-						<p>Are you interested to apply for this possition?</p>
-						<Link className="primary-btn" to="/jobs/questions">
+						{/* <p>Are you interested to apply for this possition?</p> */}
+						{index < 75 ? (
+							<p>
+								You have lower readiness index than expected. Having higher
+								readiness index improves the chances of being hired.
+								<br /> Are you sure you want to apply?
+							</p>
+						) : (
+							<p></p>
+						)}
+
+						<Link className="primary-btn blue" to="/jobs/application">
 							Apply
 						</Link>
 					</div>
@@ -90,19 +101,11 @@ function JobView() {
 						Lorem Ipsum is simply dummy text of the printing and typesetting
 						industry. Lorem Ipsum has.
 					</p>
-					<CredReadyIndex index={82} />
-					<div className={`${isLoggedIn ? "hidden" : "login_screen"}`}>
-						<p>Not enough information to calculate your CredReady score.</p>
-						<p>
-							<Link to="/login">Login</Link> and enter your profile details to
-							view your score
-						</p>
-					</div>
+					<CredReadyIndex index={index} />
 				</div>
 				<div className="marginal">
 					<h3>Top 5 Contributors to CredREadiness</h3>
 					<img src={ImgMarginalAssociation} alt="Marginal Association" />
-					<div className={`${isLoggedIn ? "hidden" : "login_screen"}`}></div>
 				</div>
 			</div>
 		</div>

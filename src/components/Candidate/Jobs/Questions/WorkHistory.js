@@ -9,14 +9,20 @@ function WorkHistory(props) {
 	const [value2, setValue2] = React.useState(6);
 
 	React.useEffect(() => {
-		props.calHeight(parent.current.clientHeight);
+		if (props.calHeight) {
+			props.calHeight(parent.current.clientHeight);
+		}
 	}, [props]);
 
 	return (
 		<div className="work-history" ref={parent}>
-			<div className="heading">
-				<h2>Work History</h2>
-			</div>
+			{!props.noHeading ? (
+				<div className="heading">
+					<h2>Work History</h2>
+				</div>
+			) : (
+				""
+			)}
 			<div className="content">
 				<ul className="general-questions">
 					<li className="general-question">

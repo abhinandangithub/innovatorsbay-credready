@@ -29,3 +29,8 @@ export const setCandidateInstitutionType = (data) => ({
     type: types.SET_CANDIDATE_INSTITUTION_TYPE,
     data,
 })
+
+export const candidateSetAllAnswers = (data) => ({
+    type: types.SET_CANDIDATE_ALL_ANSWERS,
+    data,
+})

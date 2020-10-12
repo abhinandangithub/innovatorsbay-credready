@@ -22,17 +22,33 @@ import {
 import {
 	deleteAccount,
 	updateEmailThunk,
-	updatePhoneThunk
+	updatePhoneThunk,
 } from "../../../store/thunks/employer";
 
 function ProfileOverview(props) {
 	const dispatch = useDispatch();
 	const allData = useSelector((state) => state.candidateSetDataReducer.data);
 	const employerProfile = useSelector((state) => state.employerReducer.profile);
-	const [email, setEmail] = useState(props.type === "candidate" ? (allData.username ? allData.username : "") : 
-	(employerProfile.data.contacts.length > 0 ? employerProfile.data.contacts.find(el => el.contact_type === 'email').contact : ""));
-	const [phone, setPhone] = useState(props.type === "candidate" ? (allData.phone_no ? allData.phone_no : "") : 
-	(employerProfile.data.contacts.length > 0 ? employerProfile.data.contacts.find(el => el.contact_type === 'phone').contact : ""));
+	const [email, setEmail] = useState(
+		props.type === "candidate"
+			? allData.username
+				? allData.username
+				: ""
+			: employerProfile.data.contacts.length > 0
+			? employerProfile.data.contacts.find((el) => el.contact_type === "email")
+					.contact
+			: ""
+	);
+	const [phone, setPhone] = useState(
+		props.type === "candidate"
+			? allData.phone_no
+				? allData.phone_no
+				: ""
+			: employerProfile.data.contacts.length > 0
+			? employerProfile.data.contacts.find((el) => el.contact_type === "phone")
+					.contact
+			: ""
+	);
 	const [editingPhone, setEditingPhone] = useState(false);
 	const [editingEmail, setEditingEmail] = useState(false);
 	const [editingAboutMe, setEditingAboutMe] = useState(false);
@@ -101,6 +117,11 @@ function ProfileOverview(props) {
 							type="text"
 							// defaultValue={allData.phone_no ? allData.phone_no : ""}
 							value={phone}
+							defaultValue={
+								allData.contacts && allData.contacts[1]
+									? allData.contacts[1].contact
+									: ""
+							}
 							className={`${editingPhone ? "edit" : ""}`}
 							readOnly={editingPhone ? false : true}
 							onChange={(e) => setPhone(e.target.value)}

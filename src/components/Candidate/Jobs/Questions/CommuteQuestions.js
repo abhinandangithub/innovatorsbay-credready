@@ -6,14 +6,20 @@ function CommuteQuestions(props) {
 	const parent = React.useRef();
 
 	React.useEffect(() => {
-		props.calHeight(parent.current.clientHeight);
+		if (props.calHeight) {
+			props.calHeight(parent.current.clientHeight);
+		}
 	}, [props]);
 
 	return (
 		<div className="commute-questions" ref={parent}>
-			<div className="heading">
-				<h2>Commute Questions</h2>
-			</div>
+			{!props.noHeading ? (
+				<div className="heading">
+					<h2>Commute Questions</h2>
+				</div>
+			) : (
+				""
+			)}
 			<div className="content">
 				<ul className="general-questions">
 					<li className="general-question">

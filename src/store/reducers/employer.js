@@ -486,27 +486,27 @@ const initialState = {
 	emailTemplate: [],
 	jobURL: "",
 	newJob: {
-		"emailTemplateId": 3,   
-		"employmentType": 3,   
-		"function": 1,   
-		"industry": 1,   
-		"jobDescription": "Some nice job description",   
-		"jobQuestionnaireMap": [1,2,3],   
-		"jobTitle": "Senior Nursing Assistant",   
-		"location": 1,   
-		"maxExp": 7,   
-		"minExp": 3,   
+		"emailTemplateId": 3,
+		"employmentType": 3,
+		"function": 1,
+		"industry": 1,
+		"jobDescription": "Some nice job description",
+		"jobQuestionnaireMap": [1, 2, 3],
+		"jobTitle": "Senior Nursing Assistant",
+		"location": 1,
+		"maxExp": 7,
+		"minExp": 3,
 		"openPositions": 15
 	},
 	appliedCandidateDetails: {},
 	locations: {
 		data: [
 			{
-			"id": 0,
-            "street_address": "",
-            "city": "",
-            "state": "",
-            "zip_code": 0
+				"id": 0,
+				"street_address": "",
+				"city": "",
+				"state": "",
+				"zip_code": 0
 			}
 		]
 	},
@@ -523,7 +523,7 @@ const initialState = {
 		},
 		"status": "OK"
 	},
-	redirectURL: "",		
+	redirectURL: "",
 	JWT: null,
 };
 
@@ -629,10 +629,17 @@ const reducer = (state = initialState, action) => {
 			questionsTemp.status = action.value.status;
 			questionsTemp.data = action.value.data;
 			questionsTemp.questions = [];
-			questionsTemp.questions.push(...action.value.data.private_question_bank);
-			questionsTemp.questions.push(...action.value.data.public_question_bank);
+			// questionsTemp.questions.push(...action.value.data.private_question_bank);
+			// questionsTemp.questions.push(...action.value.data.public_question_bank);
 			return updateObject(state, {
 				questionBank: questionsTemp
+			});
+
+		case actionTypes.SET_QUESTION_BANK_QUESTIONS:
+			const questionsTemp1 = state.questionBank;
+			questionsTemp1.questions.push(...action.value);
+			return updateObject(state, {
+				questionBank: questionsTemp1
 			});
 
 		case actionTypes.SET_EMAIL_TEMPLATE:
@@ -657,7 +664,7 @@ const reducer = (state = initialState, action) => {
 
 		case actionTypes.SET_LOCATIONS:
 			let locationTemp = state.locationNames;
-			locationTemp = action.value.data.map((value) => value.street_address+", "+value.city+", "+value.state+", "+value.zip_code);
+			locationTemp = action.value.data.map((value) => value.street_address + ", " + value.city + ", " + value.state + ", " + value.zip_code);
 			return updateObject(state, {
 				locations: action.value,
 				locationNames: locationTemp
@@ -665,37 +672,37 @@ const reducer = (state = initialState, action) => {
 
 		case actionTypes.SET_NEW_JOB:
 			const newJobTemp = state.newJob;
-				if (action.value.emailTemplateId !== undefined) {
-					newJobTemp.emailTemplateId = action.value.emailTemplateId;
-				}
-				if (action.value.employmentType !== undefined) {
-					newJobTemp.employmentType = state.employmentKeys.find(x => x.employment_status === action.value.employmentType).id;
-				}
-				if (action.value.function !== undefined) {
-					newJobTemp.function = state.functionKeys.find(x => x.function_name === action.value.function).id;
-				}
-				if (action.value.industry !== undefined) {
-					newJobTemp.industry = state.industryKeys.find(x => x.industry_name === action.value.industry).id;
-				}
-				if (action.value.jobDescription !== undefined) {
-					newJobTemp.jobDescription = action.value.jobDescription;
-				}
-				if (action.value.jobTitle !== undefined) {
-					newJobTemp.jobTitle = action.value.jobTitle;
-				}
-				if (action.value.location !== undefined) {
-					// newJobTemp.location = action.value.location;
-					newJobTemp.location = state.locations.data.find(x => x.city === action.value.location).id;
-				}
-				if (action.value.openPositions !== undefined) {
-					newJobTemp.openPositions = action.value.openPositions;
-				}
-				if (action.value.minExp !== undefined) {
-					newJobTemp.minExp = action.value.minExp;
-				}
-				if (action.value.maxExp !== undefined) {
-					newJobTemp.maxExp = action.value.maxExp;
-				}
+			if (action.value.emailTemplateId !== undefined) {
+				newJobTemp.emailTemplateId = action.value.emailTemplateId;
+			}
+			if (action.value.employmentType !== undefined) {
+				newJobTemp.employmentType = state.employmentKeys.find(x => x.employment_status === action.value.employmentType).id;
+			}
+			if (action.value.function !== undefined) {
+				newJobTemp.function = state.functionKeys.find(x => x.function_name === action.value.function).id;
+			}
+			if (action.value.industry !== undefined) {
+				newJobTemp.industry = state.industryKeys.find(x => x.industry_name === action.value.industry).id;
+			}
+			if (action.value.jobDescription !== undefined) {
+				newJobTemp.jobDescription = action.value.jobDescription;
+			}
+			if (action.value.jobTitle !== undefined) {
+				newJobTemp.jobTitle = action.value.jobTitle;
+			}
+			if (action.value.location !== undefined) {
+				// newJobTemp.location = action.value.location;
+				newJobTemp.location = state.locations.data.find(x => x.city === action.value.location).id;
+			}
+			if (action.value.openPositions !== undefined) {
+				newJobTemp.openPositions = action.value.openPositions;
+			}
+			if (action.value.minExp !== undefined) {
+				newJobTemp.minExp = action.value.minExp;
+			}
+			if (action.value.maxExp !== undefined) {
+				newJobTemp.maxExp = action.value.maxExp;
+			}
 
 			return updateObject(state, {
 				newJob: newJobTemp
@@ -703,57 +710,59 @@ const reducer = (state = initialState, action) => {
 
 		case actionTypes.SET_JOB_DETAILS:
 			// const jobDetailsTemp = state.jobDetails;
-			const jobDetailsTemp = {"data": {
-				"job_id": 1,
-				"location": "Warren, NJ",
-				"job_title": "Certified Nursing Assistant",
-				"job_description": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quid ergo hoc loco intellegit honestum? <i>Duo Reges: constructio interrete.</i> Expressa vero in iis aetatibus, quae iam confirmatae sunt. <i>Quamquam tu hanc copiosiorem etiam soles dicere.</i> Duarum enim vitarum nobis erunt instituta capienda. Claudii libidini, qui tum erat summo ne imperio, dederetur. Cur fortior sit, si illud, quod tute concedis, asperum et vix ferendum putabit? Beatus sibi videtur esse moriens. Philosophi autem in suis lectulis plerumque moriuntur. Cuius ad naturam apta ratio vera illa et summa lex a philosophis dicitur. Tria genera cupiditatum, naturales et necessariae, naturales et non necessariae, nec naturales nec necessariae. </p>\n\n<p>Erit enim instructus ad mortem contemnendam, ad exilium, ad ipsum etiam dolorem. Non igitur potestis voluptate omnia dirigentes aut tueri aut retinere virtutem. Quid est igitur, inquit, quod requiras? <i>Non autem hoc: igitur ne illud quidem.</i> Non est igitur voluptas bonum. Similiter sensus, cum accessit ad naturam, tuetur illam quidem, sed etiam se tuetur; </p>\n\n<p>Hoc Hieronymus summum bonum esse dixit. Cum ageremus, inquit, vitae beatum et eundem supremum diem, scribebamus haec. Hoc loco tenere se Triarius non potuit. Qui autem de summo bono dissentit de tota philosophiae ratione dissentit. Tecum optime, deinde etiam cum mediocri amico. Non autem hoc: igitur ne illud quidem. <i>An hoc usque quaque, aliter in vita?</i> </p>",
-				"min_experience": 2,
-				"max_experience": 6,
-				"org_name": "Chelsea Senior Living"
-			}};
-			if(action.value.data !== undefined){
-				if(action.value.data.job_id !== undefined) {
+			const jobDetailsTemp = {
+				"data": {
+					"job_id": 1,
+					"location": "Warren, NJ",
+					"job_title": "Certified Nursing Assistant",
+					"job_description": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quid ergo hoc loco intellegit honestum? <i>Duo Reges: constructio interrete.</i> Expressa vero in iis aetatibus, quae iam confirmatae sunt. <i>Quamquam tu hanc copiosiorem etiam soles dicere.</i> Duarum enim vitarum nobis erunt instituta capienda. Claudii libidini, qui tum erat summo ne imperio, dederetur. Cur fortior sit, si illud, quod tute concedis, asperum et vix ferendum putabit? Beatus sibi videtur esse moriens. Philosophi autem in suis lectulis plerumque moriuntur. Cuius ad naturam apta ratio vera illa et summa lex a philosophis dicitur. Tria genera cupiditatum, naturales et necessariae, naturales et non necessariae, nec naturales nec necessariae. </p>\n\n<p>Erit enim instructus ad mortem contemnendam, ad exilium, ad ipsum etiam dolorem. Non igitur potestis voluptate omnia dirigentes aut tueri aut retinere virtutem. Quid est igitur, inquit, quod requiras? <i>Non autem hoc: igitur ne illud quidem.</i> Non est igitur voluptas bonum. Similiter sensus, cum accessit ad naturam, tuetur illam quidem, sed etiam se tuetur; </p>\n\n<p>Hoc Hieronymus summum bonum esse dixit. Cum ageremus, inquit, vitae beatum et eundem supremum diem, scribebamus haec. Hoc loco tenere se Triarius non potuit. Qui autem de summo bono dissentit de tota philosophiae ratione dissentit. Tecum optime, deinde etiam cum mediocri amico. Non autem hoc: igitur ne illud quidem. <i>An hoc usque quaque, aliter in vita?</i> </p>",
+					"min_experience": 2,
+					"max_experience": 6,
+					"org_name": "Chelsea Senior Living"
+				}
+			};
+			if (action.value.data !== undefined) {
+				if (action.value.data.job_id !== undefined) {
 					jobDetailsTemp.data.job_id = action.value.data.job_id;
 				}
-				if(action.value.data.address.city !== undefined) {
+				if (action.value.data.address.city !== undefined) {
 					jobDetailsTemp.data.location = action.value.data.address.city;
 				}
-				if(action.value.data.organization.org_name !== undefined) {
+				if (action.value.data.organization.org_name !== undefined) {
 					jobDetailsTemp.data.org_name = action.value.data.organization.org_name;
 				}
-				if(action.value.data.job_title !== undefined) {
+				if (action.value.data.job_title !== undefined) {
 					jobDetailsTemp.data.job_title = action.value.data.job_title;
 				}
-				if(action.value.data.job_description !== undefined) {
+				if (action.value.data.job_description !== undefined) {
 					jobDetailsTemp.data.job_description = action.value.data.job_description;
 				}
-				if(action.value.data.min_experience !== undefined) {
+				if (action.value.data.min_experience !== undefined) {
 					jobDetailsTemp.data.min_experience = action.value.data.min_experience;
 				}
-				if(action.value.data.max_experience !== undefined) {
+				if (action.value.data.max_experience !== undefined) {
 					jobDetailsTemp.data.max_experience = action.value.data.max_experience;
 				}
 			} else {
-				if(action.value.jobId !== undefined) {
+				if (action.value.jobId !== undefined) {
 					jobDetailsTemp.data.job_id = action.value.jobId;
 				}
-				if(action.value.location !== undefined) {
+				if (action.value.location !== undefined) {
 					jobDetailsTemp.data.location = action.value.location;
 				}
-				if(action.value.orgName !== undefined) {
+				if (action.value.orgName !== undefined) {
 					jobDetailsTemp.data.org_name = action.value.orgName;
 				}
-				if(action.value.jobTitle !== undefined) {
+				if (action.value.jobTitle !== undefined) {
 					jobDetailsTemp.data.job_title = action.value.jobTitle;
 				}
-				if(action.value.jobDescription !== undefined) {
+				if (action.value.jobDescription !== undefined) {
 					jobDetailsTemp.data.job_description = action.value.jobDescription;
 				}
-				if(action.value.minExp !== undefined) {
+				if (action.value.minExp !== undefined) {
 					jobDetailsTemp.data.min_experience = action.value.minExp;
 				}
-				if(action.value.maxExp !== undefined) {
+				if (action.value.maxExp !== undefined) {
 					jobDetailsTemp.data.max_experience = action.value.maxExp;
 				}
 			}

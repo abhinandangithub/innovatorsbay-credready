@@ -95,6 +95,14 @@ export const setQuestionBank = (val) => {
 	};
 };
 
+export const setQuestionBankQuestion = (val) => {
+	console.log('val ', val);
+	return {
+		type: actionTypes.SET_QUESTION_BANK_QUESTIONS,
+		value: val,
+	};
+};
+
 export const setEmailTemplate = (val) => {
 	return {
 		type: actionTypes.SET_EMAIL_TEMPLATE,

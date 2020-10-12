@@ -23,6 +23,7 @@ import CreateNewQuestion from "./Employer/CreateNewQuestion";
 import ChoosePrivateQuestions from "./Employer/ChoosePrivateQuestions";
 import ChoosePublicQuestions from "./Employer/ChoosePublicQuestions";
 import AddNewQuestion from "./Employer/AddNewQuestion";
+import JobApplied from "./JobApplied";
 
 let scrollBarStyle = {
 	width: "100vw",
@@ -75,6 +76,8 @@ function Popup(props) {
 				return <AddNewQuestion />;
 			case "populateInformation":
 				return <PopulateInformation />;
+			case "jobApplied":
+				return <JobApplied />;
 			default:
 				return null;
 		}

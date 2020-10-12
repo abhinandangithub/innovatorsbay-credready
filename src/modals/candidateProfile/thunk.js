@@ -12,7 +12,8 @@ import {
 	fetchCandidateAppliedJobsUrl,
 	fetchCandidateExperienceTypeUrl,
 	fetchCandidateDegreeTitlesUrl,
-	fetchCandidateInstituteTypeUrl
+	fetchCandidateInstituteTypeUrl,
+	fetchAllAnswersUrl,
 } from "./api";
 import {
 	candidateSetCurrentStatus,
@@ -20,10 +21,29 @@ import {
 	setAppliedJobsData,
 	setCandidateExperienceType,
 	setCandidateDegreeTitles,
-	setCandidateInstitutionType
+	setCandidateInstitutionType,
+	candidateSetAllAnswers
 } from "./actions";
 import { updateJwtToken } from "../../store/actions/auth";
 import { setDefaultAuthorizationHeader } from "../../store/utility";
+
+
+
+export const fetchAllAnswers = () => async (dispatch, getState) => {
+	try {
+		const state = getState();
+		setDefaultAuthorizationHeader(state.authReducer.JWT);
+		const { data } = await axios.get(
+			fetchAllAnswersUrl,
+			requestConfig
+		);
+		if (!data) return;
+		dispatch(candidateSetAllAnswers(data ? data.data : []));
+
+	} catch (err) {
+		console.log(err)
+	}
+};
 
 
 export const fetchCandidateDetails = () => async (dispatch, getState) => {
@@ -165,7 +185,6 @@ export const addStrength = (data) => async (dispatch, getState) => {
 }
 
 export const candidateGetAppliedJobs = () => async (dispatch, getState) => {
-
 	try {
 		const { data } = await axios.get(
 			fetchCandidateAppliedJobsUrl,

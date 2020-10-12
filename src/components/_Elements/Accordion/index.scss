@@ -132,6 +132,9 @@
 		}
 	}
 	&.active {
+		.contents {
+			padding-bottom: 20px;
+		}
 		.title {
 			color: #fff;
 			background-color: $secondary-color;

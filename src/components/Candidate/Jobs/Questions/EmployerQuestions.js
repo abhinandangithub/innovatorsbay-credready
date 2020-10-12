@@ -1,18 +1,24 @@
 import React from "react";
-import Input from "../../../_Elements/Input";
 
 function EmployerQuestions(props) {
 	const parent = React.useRef();
 
 	React.useEffect(() => {
-		props.calHeight(parent.current.clientHeight);
+		if (props.calHeight) {
+			props.calHeight(parent.current.clientHeight);
+		}
 	}, [props]);
 
 	return (
 		<div className="employer-questions" ref={parent}>
-			<div className="heading">
-				<h2>Employer Questions</h2>
-			</div>
+			{!props.noHeading ? (
+				<div className="heading">
+					<h2>Employer Questions</h2>
+				</div>
+			) : (
+				""
+			)}
+
 			<div className="content">
 				<ul className="general-questions">
 					<li className="general-question">

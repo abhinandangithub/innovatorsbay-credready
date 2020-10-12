@@ -18,10 +18,16 @@ export const addEducationCertificateUrl = `${baseUrl}candidate/certificate_detai
 
 export const fetchCandidateCurrentStatusUrl = `${baseUrl}/entity/employment_status`;
 
-export const fetchCandidateAppliedJobsUrl = `${baseUrl}/candidate/jobs/applied`;
+export const fetchCandidateAppliedJobsUrl = `${baseUrl}/candidate/jobs/dashboard`;
 
 export const fetchCandidateExperienceTypeUrl = `${baseUrl}/entity/experience_type`;
 
 export const fetchCandidateDegreeTitlesUrl = `${baseUrl}/entity/degree_title`;
 
 export const fetchCandidateInstituteTypeUrl = `${baseUrl}/candidate/institute`;
+
+export const fetchAllAnswersUrl = `${baseUrl}/candidate/jobs/common_questions`;
+
+export const submitAnswersUrl = `${baseUrl}/candidate/job/application/answers`;
+
+export const jobApplyUrl = `${baseUrl}/candidate/job/application/answers`;

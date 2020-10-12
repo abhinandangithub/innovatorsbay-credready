@@ -15,21 +15,21 @@ function PostedJobs(props) {
 
 	const handleSendEmail = (e, job_id) => {
 		// if(e.target.checked) {
-			dispatch(sendNotification({
-  				"jobId": job_id,
-  				"optStatus": e.target.checked,
-  				"source": "Email"
-			}));
+		dispatch(sendNotification({
+			"jobId": job_id,
+			"optStatus": e.target.checked,
+			"source": "Email"
+		}));
 		// }
 	}
 
 	const handleSendSMS = (e, job_id) => {
 		// if(e.target.checked) {
-			dispatch(sendNotification({
-  				"jobId": job_id,
-  				"optStatus": e.target.checked,
-  				"source": "SMS"
-			}));
+		dispatch(sendNotification({
+			"jobId": job_id,
+			"optStatus": e.target.checked,
+			"source": "SMS"
+		}));
 		// }
 	}
 
@@ -40,59 +40,61 @@ function PostedJobs(props) {
 	const jobsList = [1, 2];
 	// const jobsList = props.postedJobs;
 
-	const List = ({job}) => {
+	const List = ({ job }) => {
 		return (
-		<>
-			{/* <h2 className="heading">Certified Nursing Assistant</h2> */}
-			<h2 className="heading">{job.job_title}</h2>
-			<p>
-				<span>Description: </span>{job.job_description}
-			</p>
-			<ul className="common-skills-list">
+			<>
+				{/* <h2 className="heading">Certified Nursing Assistant</h2> */}
+				<h2 className="heading">{job.job_title}</h2>
+				<p>
+					<span>Description: </span>
+					<span dangerouslySetInnerHTML={{ __html: job.job_description }}></span>
+
+				</p>
+				{/* <ul className="common-skills-list">
 				<li>Skills: </li>
 				{!!job.strengths && job.strengths.length && job.strengths.map((val,i) => {
 					return <li key={i}>{val.name}</li>
 				})}
-			</ul>
-			<p className="job-openings">
-				<span>Job Openings: </span>{job.open_positions}
-			</p>
-			<div className="list-btn">
-				<ul className="info">
-					{/* <li>Warren, NY</li> */}
-					<li>{!!job.address && job.address.city}, {!!job.address && job.address.state}</li>
-					{/* <li>January 21, 2020</li> */}
-					<li>{job.modified_on}</li>
-					<li>{job.modified_by}</li>
-					<li>Candidates applied {job.count_of_applied_candidates}</li>
-				</ul>
-				<Link to={"/jobs/candidates-list/"+job.job_id} className="primary-btn blue" onClick={() => handleViewCandidates(job.job_id)}>
-					View Candidates
+			</ul> */}
+				<p className="job-openings">
+					<span>Job Openings: </span>{job.open_positions}
+				</p>
+				<div className="list-btn">
+					<ul className="info">
+						{/* <li>Warren, NY</li> */}
+						<li>{!!job.address && job.address.city}, {!!job.address && job.address.state}</li>
+						{/* <li>January 21, 2020</li> */}
+						<li>{job.modified_on}</li>
+						<li>{job.modified_by}</li>
+						<li>Candidates applied {job.count_of_applied_candidates}</li>
+					</ul>
+					<Link to={"/jobs/candidates-list/" + job.job_id} className="primary-btn blue" onClick={() => handleViewCandidates(job.job_id)}>
+						View Candidates
 				</Link>
-			</div>
-			<div className="checkboxes">
-				<input
-					id={'SMS'+job.job_id}
-					type="checkbox"
-					className="fancy-toggle blue"
-					onChange={(e) => handleSendEmail(e, job.job_id)}
-				/>
-				<label htmlFor={'SMS'+job.job_id}>
-					<span className="input"></span>Receive Email Notification
+				</div>
+				<div className="checkboxes">
+					<input
+						id={'SMS' + job.job_id}
+						type="checkbox"
+						className="fancy-toggle blue"
+						onChange={(e) => handleSendEmail(e, job.job_id)}
+					/>
+					<label htmlFor={'SMS' + job.job_id}>
+						<span className="input"></span>Receive Email Notification
 				</label>
-				<input
-					id={'EMAIL'+job.job_id}
-					type="checkbox"
-					className="fancy-toggle blue"
-					onChange={(e) => handleSendSMS(e, job.job_id)}
-				/>
-				<label htmlFor={'EMAIL'+job.job_id}>
-					<span className="input"></span>Receive SMS Notification
+					<input
+						id={'EMAIL' + job.job_id}
+						type="checkbox"
+						className="fancy-toggle blue"
+						onChange={(e) => handleSendSMS(e, job.job_id)}
+					/>
+					<label htmlFor={'EMAIL' + job.job_id}>
+						<span className="input"></span>Receive SMS Notification
 				</label>
-			</div>
-		</>
-	);
-}
+				</div>
+			</>
+		);
+	}
 
 	const renderJobsList = (
 		<>
@@ -152,7 +154,7 @@ function PostedJobs(props) {
 
 function mapStateToProps(state) {
 	return {
-		postedJobs: state.employerReducer.postedJobs.data
+		postedJobs: state.employerReducer.postedJobs.data.reverse()
 	}
 }
 

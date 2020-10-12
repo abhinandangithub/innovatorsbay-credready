@@ -1,17 +1,34 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 import "./index.scss";
 import userData from "../../_data/userData.json";
 import WidgetAppliedRelatedJobs from "../../_Elements/Widgets/AppliedRelatedJobs";
+import { useDispatch, useSelector } from "react-redux";
+import { candidateGetAppliedJobs, fetchCandidateDetails } from "../../../modals/candidateProfile/thunk";
 
 function Jobs() {
-	const appliedJobs = userData.jobs.applied.map((job, i) => {
-		return <WidgetAppliedRelatedJobs applied={job} key={i} />;
-	});
+	const dispatch = useDispatch();
 
-	const relatedJobs = userData.jobs.related.map((job, i) => {
+
+	const allJobs = useSelector(state => state.setCandidateAppliedJobsDataReducer.data);
+	const appliedJob = allJobs.appliedJobs ? allJobs.appliedJobs : "";
+	const relatedJob = allJobs.relatedJobs ? allJobs.relatedJobs : "";
+	console.log(appliedJob, relatedJob)
+	const appliedJobs = appliedJob ? appliedJob.map((job, i) => {
+		return <WidgetAppliedRelatedJobs applied={job} key={i} />;
+	}) : ""
+
+	const relatedJobs = relatedJob ? relatedJob.map((job, i) => {
 		return <WidgetAppliedRelatedJobs related={job} key={i} />;
-	});
+	}) : ""
+
+	console.log(allJobs);
+
+	useEffect(() => {
+		dispatch(fetchCandidateDetails());
+		dispatch(candidateGetAppliedJobs());
+	}, [])
+
 
 	return (
 		<div className="jobs">

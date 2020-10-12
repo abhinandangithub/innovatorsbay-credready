@@ -16,6 +16,46 @@ function Dashboard() {
 		return <WidgetLatestOpenings job={opening} key={i} />;
 	});
 
+	const [activeApplication, setActiveApplication] = React.useState(1);
+
+	const applications = [
+		{
+			heading: "Certified Nursing Assistant",
+			content:
+				"Presbyterian Hospital - Warren, New Jersey Applied on 20 June 2020",
+			status: "Rejected",
+			index: 30,
+		},
+		{
+			heading: "Certified Nursing Assistant",
+			content:
+				"Presbyterian Hospital - Warren, New Jersey Applied on 20 June 2020",
+			status: "Interviewed",
+			index: 60,
+		},
+		{
+			heading: "Certified Nursing Assistant",
+			content:
+				"Presbyterian Hospital - Warren, New Jersey Applied on 20 June 2020",
+			status: "Hired",
+			index: 85,
+		},
+		{
+			heading: "Certified Nursing Assistant",
+			content:
+				"Presbyterian Hospital - Warren, New Jersey Applied on 20 June 2020",
+			status: "Phone",
+			index: 45,
+		},
+		{
+			heading: "Certified Nursing Assistant",
+			content:
+				"Presbyterian Hospital - Warren, New Jersey Applied on 20 June 2020",
+			status: "Emailed",
+			index: 80,
+		},
+	];
+
 	return (
 		<div className="dashboard-candidate">
 			<div className="common-main-heading">
@@ -38,62 +78,30 @@ function Dashboard() {
 				<div className="listing flex">
 					<div className="left">
 						<ul>
-							<li>
-								<div className="logo">
-									<img src={widgetLogo} alt="Logo" />
-								</div>
-								<div className="text">
-									<h2>Certified Nursing Assistant</h2>
-									<p>
-										Presbyterian Hospital - Warren, New Jersey Applied on 20
-										June 2020
-									</p>
-								</div>
-								<button className="primary-btn outline">Interviewed</button>
-							</li>
-							<li className="active">
-								<div className="logo">
-									<img src={widgetLogo} alt="Logo" />
-								</div>
-								<div className="text">
-									<h2>Certified Nursing Assistant</h2>
-									<p>
-										Presbyterian Hospital - Warren, New Jersey Applied on 20
-										June 2020
-									</p>
-								</div>
-								<button className="primary-btn outline">Interviewed</button>
-							</li>
-							<li>
-								<div className="logo">
-									<img src={widgetLogo} alt="Logo" />
-								</div>
-								<div className="text">
-									<h2>Certified Nursing Assistant</h2>
-									<p>
-										Presbyterian Hospital - Warren, New Jersey Applied on 20
-										June 2020
-									</p>
-								</div>
-								<button className="primary-btn outline">Interviewed</button>
-							</li>
-							<li>
-								<div className="logo">
-									<img src={widgetLogo} alt="Logo" />
-								</div>
-								<div className="text">
-									<h2>Certified Nursing Assistant</h2>
-									<p>
-										Presbyterian Hospital - Warren, New Jersey Applied on 20
-										June 2020
-									</p>
-								</div>
-								<button className="primary-btn outline">Interviewed</button>
-							</li>
+							{applications.map((application, i) => {
+								return (
+									<li
+										onClick={() => setActiveApplication(i)}
+										className={activeApplication === i ? "active" : ""}
+										key={i}
+									>
+										<div className="logo">
+											<img src={widgetLogo} alt="Logo" />
+										</div>
+										<div className="text">
+											<h2>{application.heading}</h2>
+											<p>{application.content}</p>
+										</div>
+										<button className="primary-btn outline">
+											{application.status}
+										</button>
+									</li>
+								);
+							})}
 						</ul>
 					</div>
 					<div className="right flex">
-						<CredReadyIndex index={90} />
+						<CredReadyIndex index={applications[activeApplication].index} />
 					</div>
 				</div>
 			</div>

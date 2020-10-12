@@ -2,99 +2,24 @@ import React from "react";
 
 import { isAnswer } from "./index";
 
-function CourseWork(props) {
+function CourseWork({ data, onchange, calHeight, noHeading }) {
 	const parent = React.useRef();
 
 	React.useEffect(() => {
-		props.calHeight(parent.current.clientHeight);
-	}, [props]);
-
-	const courseWorkQuestions = [
-		{
-			id: 1,
-			type: "radio",
-			question: "Did you take a Foreign language?",
-			options: [
-				{
-					id: 11,
-					value: "Yes",
-				},
-				{
-					id: 12,
-					value: "No",
-				},
-			],
-		},
-		{
-			id: 2,
-			type: "checkbox_block",
-			question: "Which of these High School course have you taken?",
-			options: [
-				{
-					id: 21,
-					value: "Biology I",
-				},
-				{
-					id: 22,
-					value: "Biology II",
-				},
-				{
-					id: 23,
-					value: "Geopmetry",
-				},
-				{
-					id: 24,
-					value: "Algebra",
-				},
-			],
-			sub_question: [
-				{
-					id: 3,
-					question: "In which year did you take Biology I ?",
-					type: "radio",
-					options: [
-						{
-							id: 31,
-							value: "1st year",
-						},
-						{
-							id: 32,
-							value: "2nd year",
-						},
-						{
-							id: 33,
-							value: "3rd year",
-						},
-					],
-				},
-				{
-					id: 4,
-					question: "In which year did you take Geometry ?",
-					type: "radio",
-					options: [
-						{
-							id: 41,
-							value: "1st year",
-						},
-						{
-							id: 42,
-							value: "2nd year",
-						},
-						{
-							id: 43,
-							value: "3rd year",
-						},
-					],
-				},
-			],
-		},
-	];
+		if (calHeight) {
+			calHeight(parent.current.clientHeight);
+		}
+	}, []);
 
 	return (
 		<div className="course_works" ref={parent}>
-			<div className="heading">
-				<h2>Course Work</h2>
-			</div>
+			{!noHeading ? (
+				<div className="heading">
+					<h2>Course Work</h2>
+				</div>
+			) : (
+				""
+			)}
 			<div className="content">
 				<ul className="general-questions">
 					<li className="general-question">
@@ -105,7 +30,8 @@ function CourseWork(props) {
 								name="highSchoolGraduate"
 								type="radio"
 								id="highSchoolGraduateYes"
-								defaultChecked={isAnswer("coursework", 1, 1)}
+								defaultChecked={isAnswer(data, 1, 1)}
+								onChange={() => onchange(1, 1)}
 							/>
 							<label htmlFor="highSchoolGraduateYes">
 								<span className="input"></span>Yes
@@ -115,7 +41,8 @@ function CourseWork(props) {
 								name="highSchoolGraduate"
 								type="radio"
 								id="highSchoolGraduateNo"
-								defaultChecked={isAnswer("coursework", 1, 2)}
+								defaultChecked={isAnswer(data, 1, 2)}
+								onChange={() => onchange(1, 2)}
 							/>
 							<label htmlFor="highSchoolGraduateNo">
 								<span className="input"></span>No

@@ -8,8 +8,8 @@ import ImgWidgetMenu from "../../../../assets/widget-menu.jpg";
 function AppliedRelatedJobs(props) {
 	const type = props.applied ? props.applied : props.related;
 	const link = props.applied
-		? `/jobs/preview/${type.id}`
-		: `/jobs/view/${type.id}`;
+		? `/jobs/preview/${type.jobId}`
+		: `/jobs/view/${type.jobId}`;
 
 	const content = (
 		<>
@@ -18,8 +18,8 @@ function AppliedRelatedJobs(props) {
 					<img src={ImgWidgetLogo} alt={type.logo} />
 				</div>
 				<div className="info">
-					<h3>{type.heading}</h3>
-					<p>{type.subHeading}</p>
+					<h3>{type.jobTitle}</h3>
+					<p>{type.jobDescription}</p>
 				</div>
 				<button className="menu">
 					<img src={ImgWidgetMenu} alt="Widget Menu" />
@@ -28,16 +28,16 @@ function AppliedRelatedJobs(props) {
 			<div className="bottom">
 				<div className="content">
 					<div className="info flex">
-						<span className="experience">1-3 Yrs</span>
-						<span className="locatoin">Warren, NJ</span>
+						<span className="experience">{type.minExp}-{type.maxExp} Yrs</span>
+						<span className="locatoin">{type.location}</span>
 					</div>
-					<p className="skills">
+					{/* <p className="skills">
 						<b>Skills: </b>
 						{type.skills}
-					</p>
+					</p> */}
 					<p>
 						<b>Description: </b>
-						{type.description}
+						{type.jobDescription}
 					</p>
 				</div>
 			</div>
@@ -54,15 +54,15 @@ function AppliedRelatedJobs(props) {
 					</div>
 				</Link>
 			) : (
-				<div className="widget widget-applied-related-jobs">
-					{content}
-					<div className="cta related">
-						<Link to={link} className="primary-btn blue">
-							View
+					<div className="widget widget-applied-related-jobs">
+						{content}
+						<div className="cta related">
+							<Link to={link} className="primary-btn blue">
+								View
 						</Link>
+						</div>
 					</div>
-				</div>
-			)}
+				)}
 		</>
 	);
 }

@@ -11,10 +11,15 @@ import { getQuestionBank } from '../../../../store/thunks/employer';
 
 function JobSpecificQuestions(props) {
 	const dispatch = useDispatch();
+	console.log('props questionBank ', props.questionBank.questionBank.questions);
+	useEffect(() => {
+		console.log('props questionBank dispatch', props.questionBank);
+		dispatch(getQuestionBank());
+	}, [dispatch]);
 
 	useEffect(() => {
-		dispatch(getQuestionBank());
-	},[dispatch]);
+		console.log('props questionBank useeffect', props.questionBank);
+	}, [props.questionBank]);
 
 	const questions = [
 		{
@@ -98,7 +103,7 @@ function JobSpecificQuestions(props) {
 				content="Add New Question"
 			/>
 			<ul className="general-questions">
-				{props.questionBank.map((question, i) => {
+				{props.questionBank.questionBank.questions.map((question, i) => {
 					return (
 						<li className="general-question" key={i}>
 							<h2 className="question">{question.question_name}</h2>
@@ -133,7 +138,7 @@ function JobSpecificQuestions(props) {
 															key={i}
 															className={`fancy-toggle blue ${
 																i === 0 ? "yes" : "no"
-															}`}
+																}`}
 															id={`${option.id}${option.question_id}`}
 															name={`${option.question_id}`}
 															type="radio"
@@ -162,7 +167,8 @@ function JobSpecificQuestions(props) {
 
 function mapStateToProps(state) {
 	return {
-		questionBank: state.employerReducer.questionBank.questions
+		//	questionBank: state.employerReducer.questionBank.questions
+		questionBank: state.employerReducer
 	}
 }
 

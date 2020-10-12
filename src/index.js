@@ -12,6 +12,7 @@ import popupOverlayReducer from "./store/reducers/popup_overlay";
 import employerReducer from "./store/reducers/employer";
 import {
 	candidateSetDataReducer,
+	setCandidateAllAnswersReducer,
 	candidateCurrentStatusReducer,
 	setCandidateAppliedJobsDataReducer,
 	setCandidateExperienceTypeReducer,
@@ -29,7 +30,8 @@ const rootReducer = combineReducers({
 	setCandidateExperienceTypeReducer,
 	setCandidateDegreeTitlesReducer,
 	setCandidateInstitutionTypeReducer,
-	commonReducer
+	commonReducer,
+	setCandidateAllAnswersReducer,
 });
 
 /* Middleware */

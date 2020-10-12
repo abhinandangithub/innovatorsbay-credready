@@ -10,7 +10,7 @@ const initialState = {
 	loggedIn: {
 		value: false,
 		// as: "candidate",
-		as: "employer",
+		 as: "employer",
 	},
 	singUp: {
 		email: null,
@@ -62,13 +62,13 @@ const reducer = (state = initialState, action) => {
 				email: action.details.email,
 				password: action.details.password,
 				phone: action.details.phone,
-				user_type: action.details.user_type
+				user_type: action.details.user_type,
 			};
 			if (action.details.user_type === "employer") {
 				data.organisation = action.details.organisation;
 			}
 			return updateObject(state, {
-				signUp: data
+				signUp: data,
 			});
 
 		case actionTypes.UPDATE_JWT_TOKEN:
