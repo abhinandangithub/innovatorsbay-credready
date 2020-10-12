@@ -44,13 +44,13 @@ export const getVerificationCode = (userData) => async (dispatch, getState) => {
 	}
 };
 
-export const verifyUserCode = (otp) => async (dispatch, getState) => {
-	console.log('userData ', otp);
+export const verifyUserCode = (type = "phone", otp) => async (dispatch, getState) => {
 	let data = {
-		"type": "phone",
+		"type": type,
 		"contact": getState().authReducer.signUp.phone,
 		"verification_code": otp
 	}
+	console.log('userData ', data, getState().authReducer.signUp);
 	// dispatch(signUpUser(getState().authReducer.signUp))
 	try {
 		const { message } = await Axios.post(verifyUserUrl, data, requestConfig);

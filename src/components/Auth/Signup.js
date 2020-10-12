@@ -18,7 +18,7 @@ function Signup(props) {
 
 	const onSubmit = (data) => {
 		data.user_type = signupType === "candidate" ? "jobseeker" : signupType;
-		data.phone = "+"+ data.phone;
+		// data.phone = "+"+ data.phone;
 		console.log(data);
 		dispatch(getVerificationCode(data));
 		dispatch(toggleOverlay(true));
