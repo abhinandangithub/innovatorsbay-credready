@@ -1,10 +1,14 @@
-import React from "react";
+import React, { useState } from "react";
 import { createQuestion } from '../../../../store/thunks/employer';
 import { useDispatch } from "react-redux";
+import { togglePopup, toggleOverlay } from "../../../../store/actions/popup_overlay";
 
 import "./index.scss";
 
 function CreateNewQuestion() {
+	const [jobTitle, setJobTitle] = useState("");
+	const [questionName, setQuestionName] = useState("");
+	const [questionType, setQuestionType] = useState("");
 	const dispatch = useDispatch();
 
 	const handleQuestionAdd = () => {
@@ -12,10 +16,12 @@ function CreateNewQuestion() {
 		dispatch(createQuestion({
 			"category": "Employer Questions",
 			"forPublicReview": true,
-			"jobTitle": "CNA",
-			"questionName": "How would you define yourself?",
-			"questionType": "text-input"
+			"jobTitle": jobTitle,
+			"questionName": questionName,
+			"questionType": questionType
 		}));
+		dispatch(toggleOverlay(false));
+		dispatch(togglePopup([false, "createNewQuestion"]));
 	}
 
 	return (
@@ -25,13 +31,13 @@ function CreateNewQuestion() {
 				<ul>
 					<li>
 						<label htmlFor="questionForJobTitle">Question for Job Title</label>
-						<input type="text" id="questionForJobTitle" />
+						<input type="text" id="questionForJobTitle" value={jobTitle} onChange={(e) => setJobTitle(e.target.value)}/>
 					</li>
 					<li>
 						<label htmlFor="question">
 							Question <span>*</span>
 						</label>
-						<input type="text" id="question" />
+						<input type="text" id="question" value={questionName} onChange={(e) => setQuestionName(e.target.value)}/>
 					</li>
 					<li>
 						<div className="answer-block">
@@ -44,6 +50,7 @@ function CreateNewQuestion() {
 									className="fancy-toggle"
 									type="radio"
 									id="freeText"
+									onChange={() => setQuestionType("text-input")}
 								/>
 								<label htmlFor="freeText">
 									<span className="input"></span>Free Text
@@ -53,6 +60,7 @@ function CreateNewQuestion() {
 									className="fancy-toggle"
 									type="radio"
 									id="multipleChoice"
+									onChange={() => setQuestionType("mcq")}
 								/>
 								<label htmlFor="multipleChoice">
 									<span className="input"></span>Multiple Choice
