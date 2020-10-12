@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { connect, useDispatch } from 'react-redux';
 import { sendEmail, updateStatus, getAppliedCandidateDetails, getCandidatesList } from '../../../store/thunks/employer';
 
@@ -16,6 +16,8 @@ import Spinner from "../../_Elements/Spinner";
 const faker = require("faker");
 
 function CandidateList(props) {
+
+	let { jobId } = useParams();
 
 	const dispatch = useDispatch();
 
@@ -52,11 +54,10 @@ function CandidateList(props) {
 		dispatch(getAppliedCandidateDetails(e.candidate_id, e.job_id));
 	}
 
-	// useEffect(() => {
-	// 	console.log('props.candidatesList ', props.candidatesList);
-	// 	if (props.candidatesList && props.candidatesList.length === 0)
-	// 		dispatch(getCandidatesList());
-	// }, [dispatch, props.candidatesList]);
+	useEffect(() => {
+		// if (props.candidatesList && props.candidatesList.length === 0)
+			dispatch(getCandidatesList(jobId));
+	}, [dispatch]);
 
 	const [filterOptions, setFilterOptions] = React.useState(false);
 

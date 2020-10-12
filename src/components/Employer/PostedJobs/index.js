@@ -66,7 +66,7 @@ function PostedJobs(props) {
 					<li>{job.modified_by}</li>
 					<li>Candidates applied {job.count_of_applied_candidates}</li>
 				</ul>
-				<Link to="/jobs/candidates-list" className="primary-btn blue" onClick={() => handleViewCandidates(job.job_id)}>
+				<Link to={"/jobs/candidates-list/"+job.job_id} className="primary-btn blue" onClick={() => handleViewCandidates(job.job_id)}>
 					View Candidates
 				</Link>
 			</div>

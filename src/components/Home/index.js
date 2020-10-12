@@ -131,7 +131,7 @@ function Home(props) {
 									/>
 									<Route
 										exact
-										path="/jobs/candidates-list"
+										path="/jobs/candidates-list/:jobId"
 										component={EmployerCandidateList}
 									/>
 									<Route
