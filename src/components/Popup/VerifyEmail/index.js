@@ -5,6 +5,7 @@ import { updateEmailOtp } from "../../../store/actions/auth";
 import { togglePopup } from "../../../store/actions/popup_overlay";
 import VerifyCode from "../../_Elements/VerifyCode";
 import { calculateTimeLeft } from "../../../assets/js/Utility";
+import { signUpUser, verifyUserCode } from "../../../store/thunks/auth";
 
 let timerDuration = 10 * 60; // in seconds
 
@@ -17,9 +18,9 @@ function VerifyEmail(props) {
 
 	const handleClick = () => {
 		if (
-			otp.filter((i) => i.length > 0).length === 4 &&
-			otp.join("") === "0000"
+			otp.filter((i) => i.length > 0).length === 4 
 		) {
+			dispatch(verifyUserCode("email", otp.join("")));
 			dispatch(updateEmailOtp(true));
 			dispatch(togglePopup([true, "phoneOtp"]));
 			setIsCodeError(false);

@@ -58,14 +58,17 @@ const reducer = (state = initialState, action) => {
 			});
 
 		case actionTypes.UPDATE_SINGUP_DETAILS:
+			let data = {
+				email: action.details.email,
+				password: action.details.password,
+				phone: action.details.phone,
+				user_type: action.details.user_type
+			};
+			if (action.details.user_type === "employer") {
+				data.organisation = action.details.organisation;
+			}
 			return updateObject(state, {
-				signUp: {
-					email: action.details.email,
-					password: action.details.password,
-					phone: action.details.phone,
-					organisation: action.details.organisation,
-					user_type: action.details.user_type
-				},
+				signUp: data
 			});
 
 		case actionTypes.UPDATE_JWT_TOKEN:

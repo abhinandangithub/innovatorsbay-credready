@@ -23,9 +23,8 @@ function VerifyPhone(props) {
 	const handleClick = () => {
 		if (
 			otp.filter((i) => i.length > 0).length === 4
-			
 		) {
-			dispatch(verifyUserCode(otp.join("")));
+			dispatch(verifyUserCode("phone", otp.join("")));
 			dispatch(updatePhoneOtp(true));
 			dispatch(toggleOverlay(false));
 			dispatch(togglePopup(false));
