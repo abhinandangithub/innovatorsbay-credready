@@ -703,6 +703,9 @@ const reducer = (state = initialState, action) => {
 			if (action.value.maxExp !== undefined) {
 				newJobTemp.maxExp = action.value.maxExp;
 			}
+			if (action.value.jobQuestionnaireMap !== undefined) {
+				newJobTemp.jobQuestionnaireMap = action.value.jobQuestionnaireMap.map((val) => val.question_id);
+			}
 
 			return updateObject(state, {
 				newJob: newJobTemp

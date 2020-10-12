@@ -6,7 +6,7 @@ import { faPen, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { togglePopup, toggleOverlay } from "../../../../store/actions/popup_overlay";
 import { createQuestion } from '../../../../store/thunks/employer';
 import Input from "../../../_Elements/Input";
-import { setQuestionBankQuestion } from "../../../../store/actions/employer";
+import { setQuestionBankQuestion, setNewJob } from "../../../../store/actions/employer";
 
 import "./index.scss";
 
@@ -31,6 +31,7 @@ function ChoosePublicQuestions(props) {
 		console.log('data ', questionToSave)
 		console.log('create');
 		dispatch(setQuestionBankQuestion(questionToSave));
+		dispatch(setNewJob({jobQuestionnaireMap: questionToSave}));
 		// dispatch(createQuestion({
 		// 	"category": "Employer Questions",   
 		// 	"forPublicReview": true,   
