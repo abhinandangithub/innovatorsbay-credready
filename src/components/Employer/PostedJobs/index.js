@@ -1,153 +1,162 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { connect, useDispatch } from 'react-redux';
+import { getPostedJobs, sendNotification, getCandidatesList } from '../../../store/thunks/employer';
+
+import { Link } from "react-router-dom";
 
 import "./index.scss";
-import Input from "../../_Elements/Input";
-import Dropdown from "../../_Elements/Dropdown";
 
-const employmentStatus = {
-	heading: "Select Employment Type",
-	content: ["Employed", "Self Employed", "Available", "On Break"],
-};
-const industry = {
-	heading: "Select Industry",
-	content: ["industry 1", "industry 2", "industry 3"],
-};
-const _function = {
-	heading: "Select Function",
-	content: ["function 1", "function 2", "function 3"],
-};
+function PostedJobs(props) {
+	const dispatch = useDispatch();
 
-function PostJob() {
-	return (
-		<div className="my-posted-jobs-page" data-per="40">
-			<h1 className="heading-outer">My Posted Jobs</h1>
-			<div className="status-bar">
-				<div className="highlight"></div>
-				<div className="stop stop-1 active">
-					<span className="icon"></span>
-					<span className="text">Job Details</span>
+	useEffect(() => {
+		dispatch(getPostedJobs());
+	}, [dispatch]);
+
+	const handleSendEmail = (e, job_id) => {
+		// if(e.target.checked) {
+		dispatch(sendNotification({
+			"jobId": job_id,
+			"optStatus": e.target.checked,
+			"source": "Email"
+		}));
+		// }
+	}
+
+	const handleSendSMS = (e, job_id) => {
+		// if(e.target.checked) {
+		dispatch(sendNotification({
+			"jobId": job_id,
+			"optStatus": e.target.checked,
+			"source": "SMS"
+		}));
+		// }
+	}
+
+	const handleViewCandidates = (job_id) => {
+		dispatch(getCandidatesList(job_id));
+	}
+
+	const jobsList = [1, 2];
+	// const jobsList = props.postedJobs;
+
+	const List = ({ job }) => {
+		return (
+			<>
+				{/* <h2 className="heading">Certified Nursing Assistant</h2> */}
+				<h2 className="heading">{job.job_title}</h2>
+				<p>
+					<span>Description: </span>
+					<span dangerouslySetInnerHTML={{ __html: job.job_description }}></span>
+
+				</p>
+				{/* <ul className="common-skills-list">
+				<li>Skills: </li>
+				{!!job.strengths && job.strengths.length && job.strengths.map((val,i) => {
+					return <li key={i}>{val.name}</li>
+				})}
+			</ul> */}
+				<p className="job-openings">
+					<span>Job Openings: </span>{job.open_positions}
+				</p>
+				<div className="list-btn">
+					<ul className="info">
+						{/* <li>Warren, NY</li> */}
+						<li>{!!job.address && job.address.city}, {!!job.address && job.address.state}</li>
+						{/* <li>January 21, 2020</li> */}
+						<li>{job.modified_on}</li>
+						<li>{job.modified_by}</li>
+						<li>Candidates applied {job.count_of_applied_candidates}</li>
+					</ul>
+					<Link to={"/jobs/candidates-list/" + job.job_id} className="primary-btn blue" onClick={() => handleViewCandidates(job.job_id)}>
+						View Candidates
+				</Link>
 				</div>
-				<div className="stop stop-2">
-					<span className="icon"></span>
-					<span className="text">Job Specefic Questions</span>
+				<div className="checkboxes">
+					<input
+						id={'SMS' + job.job_id}
+						type="checkbox"
+						className="fancy-toggle blue"
+						onChange={(e) => handleSendEmail(e, job.job_id)}
+					/>
+					<label htmlFor={'SMS' + job.job_id}>
+						<span className="input"></span>Receive Email Notification
+				</label>
+					<input
+						id={'EMAIL' + job.job_id}
+						type="checkbox"
+						className="fancy-toggle blue"
+						onChange={(e) => handleSendSMS(e, job.job_id)}
+					/>
+					<label htmlFor={'EMAIL' + job.job_id}>
+						<span className="input"></span>Receive SMS Notification
+				</label>
+				</div>
+			</>
+		);
+	}
+
+	const renderJobsList = (
+		<>
+			<div className="common-heading-button">
+				<h1 className="heading">My Posted Jobs</h1>
+				<Link to="/jobs/create-job" className="btn">
+					<span></span>Post a Job
+				</Link>
+			</div>
+			<div className="search-panel">
+				<div className="searches">
+					<input type="text" placeholder="Search by Job Title" />
+					<input type="text" placeholder="Search by Skills" />
 				</div>
 			</div>
-			<div className="basic-info">
+
+			<div className="listings">
 				<ul>
-					<li>
-						<label htmlFor="jobTitle">
-							Job Title <span>*</span>
-						</label>
-						<Input id="jobTitle" />
-					</li>
-					<li>
-						<label htmlFor="jobLocation">
-							Job Location <span>*</span>
-						</label>
-						<Input id="jobLocation" placeholder="Zip or city, state" />
-					</li>
-					<li>
-						<label>
-							Employment Type <span>*</span>
-						</label>
-						<Dropdown
-							placeholder={employmentStatus.heading}
-							content={employmentStatus.content}
-						/>
-					</li>
-					<li>
-						<label>
-							Industry <span>*</span>
-						</label>
-						<Dropdown
-							placeholder={industry.heading}
-							content={industry.content}
-						/>
-					</li>
-					<li>
-						<label>
-							Function <span>*</span>
-						</label>
-						<Dropdown
-							placeholder={_function.heading}
-							content={_function.content}
-						/>
-					</li>
-					<li>
-						<label htmlFor="count">
-							How Many Open Positions Are There <span>*</span>
-						</label>
-						<Input id="count" />
-					</li>
+					{/* {jobsList.map((_, i) => {
+						return <li key={i}>{list}</li>;
+					})} */}
+					{props.postedJobs.map((_, i) => {
+						// console.log(_);
+						return <li key={i}><List job={_}></List></li>;
+					})}
 				</ul>
 			</div>
-			<div className="job-description">
-				<h2 className="sub-heading">
-					Job Description <span>*</span>
-				</h2>
-				<textarea
-					name="email"
-					id="email"
-					defaultValue="Provides for activities of daily living by assisting with serving meals, feeding patients as necessary and ambulating, turning, and positioning patients; and providing fresh water and nourishment between meals.
-Provides adjunct care by administering enemas, douches, non-sterile dressings, surgical preps, ice packs, heat treatments, sitz and therapeutic baths; and applying restraints.
-Maintains patient stability by checking vital signs and weight; testing urine and recording intake and output information.
-Provides patient comfort by utilizing resources and materials; transporting patients; answering patients’ call lights and requests; and reporting observations of the patient to nursing supervisor.
-Documents actions by completing forms, reports, logs, and records.
-Maintains work operations by following policies and procedures.
-Protects organisation’s value by keeping patient information confidential.
-Serves and protects the hospital community by adhering to professional standards, hospital policies and procedures; federal, state, and local requirements; and jcaho standards.
-Updates job knowledge by participating in educational opportunities, reading professional publications, participating in professional organisations, and maintaining licensure.
-Enhances nursing department and hospital reputation by accepting ownership for accomplishing new and different requests; and exploring opportunities to add value to job accomplishments."
-				></textarea>
-				<h2 className="sub-heading">
-					Required Strengths <span>*</span>
-				</h2>
-				<ul className="strengths">
-					<li>
-						Communication <span></span>{" "}
-					</li>
-					<li>
-						Patient Care <span></span>{" "}
-					</li>
-					<li className="btn"></li>
-				</ul>
-				<h2 className="sub-heading">
-					Certificates <span>*</span>
-				</h2>
-				<ul className="certificates">
-					<li>
-						Nursing <span></span>{" "}
-					</li>
-					<li>
-						Take Care <span></span>{" "}
-					</li>
-					<li className="btn"></li>
-				</ul>
-				<h2 className="sub-heading">
-					Years of experience <span>*</span>
-				</h2>
-				<p>Experience in similar roles </p>
+		</>
+	);
+
+	const renderEmptyList = (
+		<div className="no-jobs">
+			<div className="common-heading-button">
+				<h1 className="heading">No Posted Jobs</h1>
 			</div>
-			<div className="attach-email">
-				<h2 className="sub-heading">Attach Email</h2>
-				<p>Select / Modify Introduction Email Template</p>
-				<Dropdown
-					placeholder={employmentStatus.heading}
-					content={employmentStatus.content}
-				/>
-				<h2 className="sub-heading">Email</h2>
-				<textarea
-					name="email"
-					id="email"
-					defaultValue="Hi {candidate_name},
-Thanks for applying for the position of {job_title}, we will review your profile and share an update on the next steps soon."
-				></textarea>
+			<div className="content">
+				<p>
+					No jobs have been created yet.
+					<br />
+					Why don't you post a job by clicking on the button below
+				</p>
+				<div className="common-heading-button">
+					<Link to="/jobs/create-job" className="btn">
+						<span></span>Post a Job
+					</Link>
+				</div>
 			</div>
-			<div className="cta">
-				<button className="primary-btn">Next</button>
-			</div>
+		</div>
+	);
+
+	return (
+		<div className="posted-jobs-page">
+			{jobsList.length === 0 ? renderEmptyList : renderJobsList}
 		</div>
 	);
 }
 
-export default PostJob;
+function mapStateToProps(state) {
+	return {
+		postedJobs: state.employerReducer.postedJobs.data.reverse()
+	}
+}
+
+// export default PostedJobs;
+export default connect(mapStateToProps)(PostedJobs);
