@@ -75,7 +75,7 @@ export const updateProfileThunk = (token, profile) => async (dispatch, getState)
 			}
 		});
 		if (!data) return false;
-		// dispatch(setEmployerProfile(profile));
+		dispatch(setEmployerProfile(profile));
 	} catch (err) {
 		if (err.response) console.error(`failed to update employer profile ${err}`);
 	}
