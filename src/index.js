@@ -7,13 +7,24 @@ import thunk from "redux-thunk";
 import "./index.scss";
 import App from "./App";
 import authReducer from "./store/reducers/auth";
+import commonReducer from "./store/reducers/common";
 import popupOverlayReducer from "./store/reducers/popup_overlay";
-import candidateSetDataReducer from "./modals/candidateProfile/index";
+import employerReducer from "./store/reducers/employer";
+import { candidateSetDataReducer, setCandidateAllAnswersReducer, candidateCurrentStatusReducer, setCandidateJobsReducer, setCandidateAppliedJobsDataReducer, setCandidateExperienceTypeReducer, setCandidateDegreeTitlesReducer, setCandidateInstitutionTypeReducer, setCandidateJobViewDataReducer } from "./modals/candidateProfile/index";
 
 const rootReducer = combineReducers({
 	authReducer,
 	popupOverlayReducer,
 	candidateSetDataReducer,
+	candidateCurrentStatusReducer,
+	setCandidateAppliedJobsDataReducer,
+	setCandidateExperienceTypeReducer,
+	setCandidateDegreeTitlesReducer,
+	setCandidateInstitutionTypeReducer,
+	setCandidateAllAnswersReducer,
+	setCandidateJobViewDataReducer,
+	setCandidateJobsReducer,
+	employerReducer
 });
 
 /* Middleware */

@@ -1,13 +1,21 @@
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPen, faTrash } from "@fortawesome/free-solid-svg-icons";
+import { connect } from "react-redux";
 
 import "./index.scss";
 import { Link } from "react-router-dom";
+import { fetchCandidateDetails, fetchCandidateCurrentStatus, fetchCandidateInstituteType } from "../../../../../modals/candidateProfile/thunk";
+import { setCandidateInstitutionType } from "../../../../../modals/candidateProfile/actions";
 
-function Preview() {
+function Preview(props) {
+	const [personelDetailsData, setpersonelDetailsData] = React.useState(props.candidateData)
+	React.useEffect(() => {
+		if (props.institutionsData === 0)
+			props.fetchCandidateInstituteType();
+	}, [])
 	return (
-		<div className="preview">
+		<div className="preview_info">
 			<div className="content">
 				<div className="group">
 					<div className="top">
@@ -44,10 +52,10 @@ function Preview() {
 						/>
 					</div>
 					<div className="bottom">
-						<p>First Name : Marry</p>
-						<p>Last Name : Jane</p>
+						<p>First Name : {personelDetailsData.first_name}</p>
+						<p>Last Name : {personelDetailsData.last_name}</p>
 						<p>Current employment status : Employed</p>
-						<p>How long would you begin a new role? : 6 Months</p>
+						<p>How long would you begin a new role? : {personelDetailsData.available_within}</p>
 						<p>
 							Are you interested in a different function and industry? : Yes
 						</p>
@@ -70,56 +78,31 @@ function Preview() {
 						/>
 					</div>
 					<div className="bottom">
-						<div className="details">
-							<h2>Certified Nursing Assistant</h2>
-							<p>
-								<span className="heading">ABC Staffing Company</span>
-								{" - "}
-								<span className="text">New York</span>
-							</p>
-							<p>
-								<span className="heading">March 2012</span>
-								{" to "}
-								<span className="text">Present</span>
-							</p>
-							<p>
-								<span className="heading">Current employment status: </span>
-								<span className="text">Employed</span>
-							</p>
-							<p>
-								<span className="heading">Skills: </span>
-								<span className="text">
-									Patient Care & Safety, Medical Terminology, Electronic Medical
-									Records, Diagnostic Testing, Vital Signs & Patient Monitoring,
-									Medication Administration, Patient Advocacy and Support.
-								</span>
-							</p>
-						</div>
-						<div className="details">
-							<h2>Certified Nursing Assistant</h2>
-							<p>
-								<span className="heading">ABC Staffing Company</span>
-								{" - "}
-								<span className="text">New York</span>
-							</p>
-							<p>
-								<span className="heading">March 2012</span>
-								{" to "}
-								<span className="text">Present</span>
-							</p>
-							<p>
-								<span className="heading">Current employment status: </span>
-								<span className="text">Employed</span>
-							</p>
-							<p>
-								<span className="heading">Skills: </span>
-								<span className="text">
-									Patient Care & Safety, Medical Terminology, Electronic Medical
-									Records, Diagnostic Testing, Vital Signs & Patient Monitoring,
-									Medication Administration, Patient Advocacy and Support.
-								</span>
-							</p>
-						</div>
+						{personelDetailsData && personelDetailsData.work_experience && personelDetailsData.work_experience.length > 1 ? personelDetailsData.work_experience.map((exp, index) => {
+							return (
+								<div className="details" key={index}>
+									<h2>{exp.title}</h2>
+									<p>
+										<span className="text">{exp.location}</span>
+									</p>
+									<p>
+										<span className="heading">{exp.employment_from}</span>
+										{" to "}
+										<span className="text">{exp.employment_to}</span>
+									</p>
+									<p>
+										<span className="heading">Current employment status: </span>
+										<span className="text">Employed</span>
+									</p>
+									<p>
+										<span className="heading">Skills: </span>
+										<span className="text">
+											{exp.job_description}
+										</span>
+									</p>
+								</div>
+							)
+						}) : ""}
 					</div>
 				</div>
 				<div className="group ">
@@ -223,7 +206,7 @@ function Preview() {
 						</div>
 					</div>
 				</div>
-				<div className="group ">
+				{/* <div className="group ">
 					<div className="top">
 						<h1>Strengths</h1>
 						<FontAwesomeIcon
@@ -256,7 +239,7 @@ function Preview() {
 							</p>
 						</div>
 					</div>
-				</div>
+				</div> */}
 			</div>
 
 			<div className="check-boxes">
@@ -301,4 +284,17 @@ function Preview() {
 	);
 }
 
-export default Preview;
+function mapStateToProps(state) {
+	return {
+		candidateData: state.candidateSetDataReducer.data,
+		institutionsData: state.setCandidateInstitutionTypeReducer.data
+	};
+}
+
+const mapDispatchToProps = {
+	fetchCandidateDetails: fetchCandidateDetails,
+	fetchCandidateCurrentStatus: fetchCandidateCurrentStatus,
+	fetchCandidateInstituteType: fetchCandidateInstituteType
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Preview);

@@ -17,6 +17,8 @@ let scrollBarStyle = {
 function CreateJob() {
 	let heights = [0];
 	const [activeTab, setActiveTab] = React.useState(0);
+	const [enableLink, setEnableLink] = React.useState(false);
+
 
 	const scrollBar = React.useRef();
 
@@ -31,12 +33,6 @@ function CreateJob() {
 		});
 	};
 
-	React.useEffect(() => {
-		return () => {
-			// cleanup
-		};
-	}, []);
-
 	const calHeight = (height) => {
 		let lastHeight = heights[heights.length - 1];
 		heights.push(lastHeight + height);
@@ -49,40 +45,41 @@ function CreateJob() {
 			<div className="outer">
 				<div className="left">
 					<ul>
+
 						<li
-							className={`done ${activeTab === 0 ? "active" : ""}`}
+							className={`${enableLink ? "done" : ""} ${activeTab === 0 ? "active" : ""}`}
 							onClick={() => handleScroll(0)}
 						>
 							Job Details
 							<span className="common-check-icon"></span>
 						</li>
 						<li
-							className={`${activeTab === 1 ? "active" : ""}`}
+							className={`${enableLink ? "done" : ""} ${activeTab === 1 ? "active" : ""}`}
 							onClick={() => handleScroll(1)}
 						>
 							Job Description <span className="common-check-icon"></span>
 						</li>
 						<li
-							className={`${activeTab === 2 ? "active" : ""}`}
+							className={`${enableLink ? "done" : ""} ${activeTab === 2 ? "active" : ""}`}
 							onClick={() => handleScroll(2)}
 						>
 							Experience and Certificate{" "}
 							<span className="common-check-icon"></span>
 						</li>
 						<li
-							className={`${activeTab === 3 ? "active" : ""}`}
+							className={`${enableLink ? "done" : ""} ${activeTab === 3 ? "active" : ""}`}
 							onClick={() => handleScroll(3)}
 						>
 							Email Template <span className="common-check-icon"></span>
 						</li>
 						<li
-							className={`${activeTab === 4 ? "active" : ""}`}
+							className={`${enableLink ? "done" : ""} ${activeTab === 4 ? "active" : ""}`}
 							onClick={() => handleScroll(4)}
 						>
 							Specific Questions <span className="common-check-icon"></span>
 						</li>
 						<li
-							className={`${activeTab === 5 ? "active" : ""}`}
+							className={` ${activeTab === 5 ? "active" : ""}`}
 							onClick={() => handleScroll(5)}
 						>
 							Copy Link <span className="common-check-icon"></span>
@@ -118,8 +115,8 @@ function CreateJob() {
 						<JobDescription calHeight={calHeight} />
 						<ExperienceCertificates calHeight={calHeight} />
 						<EmailTemplate calHeight={calHeight} />
-						<SpecificQuestions calHeight={calHeight} />
-						<CopyLink calHeight={calHeight} />
+						<SpecificQuestions onEnableLink={() => setEnableLink(true)} calHeight={calHeight} />
+						{enableLink ? <CopyLink calHeight={calHeight} /> : null}
 						<div className="blank"></div>
 					</Scrollbars>
 				</div>

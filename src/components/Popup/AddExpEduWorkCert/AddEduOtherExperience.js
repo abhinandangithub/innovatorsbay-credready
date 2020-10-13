@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import DatePicker from "react-datepicker";
-import { useDispatch } from "react-redux";
+import { useDispatch, connect } from "react-redux";
 
 import "./AddExpEduWorkCert.scss";
 import Input from "../../_Elements/Input";
@@ -10,8 +10,9 @@ import {
 	toggleOverlay,
 	togglePopup,
 } from "../../../store/actions/popup_overlay";
+import { addOtherEducationExperience, fetchCandidateExperienceType } from "../../../modals/candidateProfile/thunk";
 
-function AddEduOtherExperience() {
+function AddEduOtherExperience(props) {
 	const dispatch = useDispatch();
 	const [startDate, setStartDate] = useState();
 	const [endDate, setEndDate] = useState();
@@ -31,6 +32,20 @@ function AddEduOtherExperience() {
 		formValid: false,
 	});
 
+	function formatDate(date) {
+		var d = new Date(date),
+			month = '' + (d.getMonth() + 1),
+			day = '' + d.getDate(),
+			year = d.getFullYear();
+
+		if (month.length < 2)
+			month = '0' + month;
+		if (day.length < 2)
+			day = '0' + day;
+
+		return [year, month, day].join('-');
+	}
+
 	const handleSubmit = () => {
 		let oldFormData = { ...formData };
 		oldFormData.formValid = true;
@@ -48,12 +63,34 @@ function AddEduOtherExperience() {
 				oldFormData.formValid = false;
 			}
 		}
+		// {
+		// 	"careerPath": "EDUCATION",
+		// 	"description": "Some description about other experience during education",
+		// 	"experienceType": 2,
+		// 	"from": "2020-10-09T02:00:38.835Z",
+		// 	"location": "Warren, NJ",
+		// 	"organizationName": "Red cross",
+		// 	"title": "Volunteer",
+		// 	"to": "2020-10-09T02:00:38.835Z"
+		//   }
 
 		if (oldFormData.formValid) {
+			console.log(formData);
 			console.log("submitting form...");
 			/* send data to api */
+			let obj = {
+				"careerPath": "EDUCATION",
+				"description": formData ? formData.description[0] : "",
+				"experienceType": formData ? formData.experienceType[0] : "",
+				"location": formData ? formData.location[0] : "",
+				"organizationName": formData ? formData.organizationName[0] : "",
+				"title": formData ? formData.title[0] : "",
+				"from": formData ? formatDate(formData.startDate[0]) : "",
+				"to": formData ? formatDate(formData.endDate[0]) : ""
+			}
 			dispatch(toggleOverlay(false));
 			dispatch(togglePopup([false, ""]));
+			props.addOtherEducationExperience(obj);
 		}
 
 		setFormData(oldFormData);
@@ -77,6 +114,11 @@ function AddEduOtherExperience() {
 		content: ["Music", "Teaching", "Software", "Consultant"],
 	};
 
+	React.useEffect(() => {
+		if (props.experienceType.length === 0)
+			props.fetchCandidateExperienceType()
+	}, [])
+
 	return (
 		<div className="add-ex-ed-cert">
 			<h1>Add Other Experience</h1>
@@ -94,7 +136,7 @@ function AddEduOtherExperience() {
 					<Dropdown
 						id="experienceType"
 						placeholder={experienceType.heading}
-						content={experienceType.content}
+						content={props.experienceType.map((val) => ({ val: val.experience_type, id: val.id }))}
 						defaultValue={formData.experienceType[0]}
 						onchange={(value) => handleFieldChange("experienceType", value)}
 					/>
@@ -209,4 +251,15 @@ function AddEduOtherExperience() {
 	);
 }
 
-export default AddEduOtherExperience;
+function mapStateToProps(state) {
+	return {
+		experienceType: state.setCandidateExperienceTypeReducer.data,
+	};
+}
+
+const mapDispatchToProps = {
+	fetchCandidateExperienceType: fetchCandidateExperienceType,
+	addOtherEducationExperience: addOtherEducationExperience
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(AddEduOtherExperience);

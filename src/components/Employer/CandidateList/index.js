@@ -1,5 +1,7 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect } from "react";
+import { Link, useParams } from "react-router-dom";
+import { connect, useDispatch } from 'react-redux';
+import { sendEmail, updateStatus, getAppliedCandidateDetails, getCandidatesList } from '../../../store/thunks/employer';
 
 import "./index.scss";
 import Dropdown from "../../_Elements/Dropdown";
@@ -9,10 +11,51 @@ import ImgUser from "../../../assets/user-placeholder.jpg";
 import ImgMail from "../../../assets/mail.jpg";
 import ImgDownload from "../../../assets/download.jpg";
 import Input from "../../_Elements/Input";
+import Spinner from "../../_Elements/Spinner";
 
 const faker = require("faker");
 
-function CandidateList() {
+function CandidateList(props) {
+	let { jobId } = useParams();
+	const dispatch = useDispatch();
+
+	const handleUpdateStatus = (e, job_app_id) => {
+		dispatch(updateStatus({
+			"jobAppId": job_app_id,
+			"status": e
+		}));
+	}
+
+	const handleSendEmail = (candidate_id, template_id) => {
+		dispatch(sendEmail({
+			"candidateId": candidate_id,
+			"emailTemplateId": template_id
+		}));
+	}
+
+	const handleDownloadClick = (candidate) => {
+		console.log('url ', candidate.resume_path);
+		fetch(candidate.resume_path)
+			.then(response => {
+				response.blob().then(blob => {
+					let url = window.URL.createObjectURL(blob);
+					let a = document.createElement('a');
+					a.href = url;
+					a.download = 'resume';
+					a.click();
+				});
+				// window.location.href = response.url;
+			});
+	}
+
+	const handleRowClick = (e) => {
+		dispatch(getAppliedCandidateDetails(e.candidate_id, e.job_id));
+	}
+
+	// useEffect(() => {
+	// 		dispatch(getCandidatesList(jobId));
+	// }, [dispatch]);
+
 	const [filterOptions, setFilterOptions] = React.useState(false);
 
 	const crRange = {
@@ -156,11 +199,12 @@ function CandidateList() {
 		},
 	];
 
-	const renderCandidateList = candidateList.map((candidate, i) => {
-		let index = candidate.credReadiness;
+
+	const renderCandidateList = props.candidatesList.map((candidate, i) => {
+		let index = candidate.readiness_index;
 		let crColor = index < 40 ? "red" : index > 70 ? "green" : "yellow";
 		return (
-			<ul key={i}>
+			<ul key={i} onClick={() => handleRowClick(candidate)}>
 				<li>
 					<input className="fancy-toggle" id={`row_${i}`} type="checkbox" />
 					<label htmlFor={`row_${i}`}>
@@ -170,30 +214,31 @@ function CandidateList() {
 				<li>
 					<Link to="/jobs/candidate-view">
 						<img src={faker.image.avatar()} alt="User" />
-						{candidate.name}
+						{candidate.candidate_name}
 					</Link>
 				</li>
-				<li>{candidate.currentPosition}</li>
-				<li>{candidate.experience} years</li>
+				<li>{candidate.title}</li>
+				<li>{candidate.candidate_experience}</li>
 				<li>
 					<span className={`cr_index ${crColor}`}>
-						{candidate.credReadiness}
+						{candidate.readiness_index}
 					</span>
 				</li>
-				<li>{candidate.currentOrganisation}</li>
-				<li>{candidate.lastUpdate}</li>
+				<li>{candidate.current_organization}</li>
+				<li>{candidate.modified_on}</li>
 				<li>
 					<Dropdown
 						placeholder={status.heading}
 						content={status.content}
 						selected={candidate.status}
+						onchange={(item) => handleUpdateStatus(item, candidate.job_app_id)}
 					/>
 				</li>
 				<li>
-					<Link to="/" className="mail">
+					<Link className="mail" onClick={() => handleSendEmail(candidate.candidate_id, candidate.email_template_id)}>
 						<img src={ImgMail} alt="Email" />
 					</Link>
-					<Link to="/" className="download">
+					<Link className="download" onClick={() => handleDownloadClick(candidate)}>
 						<img src={ImgDownload} alt="Download" />
 					</Link>
 				</li>
@@ -201,141 +246,157 @@ function CandidateList() {
 		);
 	});
 
+	console.log(props.candidatesList.length);
 	return (
-		<div className="candidate-list">
-			<div className="top-heading">
-				<h1>
-					Candidates for “Certified Nursing Assistant - in Warren New Jersey”
+
+		// props.loading ? (
+		// 	<Spinner />
+		// ) : 
+		(
+			<div className="candidate-list">
+				<div className="top-heading">
+					<h1>
+						Candidates for “Certified Nursing Assistant - in Warren New Jersey”
 				</h1>
-				<h3>CredReadiness Index for this job is 82</h3>
-			</div>
-			<div className="search-panel">
-				<div className="searches">
-					<input type="text" placeholder="Candidate Name" />
-					<Dropdown placeholder={crRange.heading} content="slider" />
-					<Dropdown placeholder={status.heading} content={status.content} />
-					<Dropdown
-						placeholder={experience.heading}
-						content={experience.content}
-					/>
-					<Dropdown
-						placeholder={currentOrganisation.heading}
-						content={currentOrganisation.content}
-					/>
+					<h3>CredReadiness Index for this job is 75</h3>
 				</div>
-			</div>
-			<div className="lists-outer">
-				<div className="heading flex">
-					<h2>List of Candidate</h2>
-					{/* <p>Showing Result 1-10 of 200</p> */}
-					<div className="search_filter flex">
-						<Input type="text" placeholder="Search by name/position..." />
-						<button
-							className="primary-btn blue"
-							onClick={() => setFilterOptions(!filterOptions)}
-						>
-							Filter
+				<div className="search-panel">
+					<div className="searches">
+						<input type="text" placeholder="Candidate Name" />
+						<Dropdown placeholder={crRange.heading} content="slider" />
+						<Dropdown placeholder={status.heading} content={status.content} onchange={handleUpdateStatus} />
+						<Dropdown
+							placeholder={experience.heading}
+							content={experience.content}
+						/>
+						<Dropdown
+							placeholder={currentOrganisation.heading}
+							content={currentOrganisation.content}
+						/>
+					</div>
+				</div>
+				<div className="lists-outer">
+					<div className="heading flex">
+						<h2>List of Candidate</h2>
+						{/* <p>Showing Result 1-10 of 200</p> */}
+						<div className="search_filter flex">
+							<Input type="text" placeholder="Search by name/position..." />
+							<button
+								className="primary-btn blue"
+								onClick={() => setFilterOptions(!filterOptions)}
+							>
+								Filter
 						</button>
-						<div className={`options ${filterOptions ? "on" : "off"}`}>
-							<div className="listing">
-								{filtersList.map((filter, i) => {
-									let trimTitle = filter.title.replace(/ /g, "");
-									return (
-										<ul key={i}>
-											<li>{filter.title}</li>
-											{filter.options.map((option, i) => {
-												return (
-													<li key={i}>
-														<input
-															id={`${trimTitle}_${i}`}
-															type="checkbox"
-															className="fancy-toggle blue"
-														/>
-														<label htmlFor={`${trimTitle}_${i}`}>
-															<span className="input"></span>
-															{option}
-														</label>
-													</li>
-												);
-											})}
-										</ul>
-									);
-								})}
-							</div>
-							<div className="cta">
-								<button
-									className="primary-btn blue outline"
-									onClick={() => setFilterOptions(false)}
-								>
-									Cancel
+							<div className={`options ${filterOptions ? "on" : "off"}`}>
+								<div className="listing">
+									{filtersList.map((filter, i) => {
+										let trimTitle = filter.title.replace(/ /g, "");
+										return (
+											<ul key={i}>
+												<li>{filter.title}</li>
+												{filter.options.map((option, i) => {
+													return (
+														<li key={i}>
+															<input
+																id={`${trimTitle}_${i}`}
+																type="checkbox"
+																className="fancy-toggle blue"
+															/>
+															<label htmlFor={`${trimTitle}_${i}`}>
+																<span className="input"></span>
+																{option}
+															</label>
+														</li>
+													);
+												})}
+											</ul>
+										);
+									})}
+								</div>
+								<div className="cta">
+									<button
+										className="primary-btn blue outline"
+										onClick={() => setFilterOptions(false)}
+									>
+										Cancel
 								</button>
-								<button
-									className="primary-btn blue"
-									onClick={() => setFilterOptions(false)}
-								>
-									Done
+									<button
+										className="primary-btn blue"
+										onClick={() => setFilterOptions(false)}
+									>
+										Done
 								</button>
+								</div>
 							</div>
 						</div>
 					</div>
-				</div>
-				<div className="actions">
-					<div className="left">
-						<Link to="/">Send Email</Link>
-						&nbsp;&nbsp;{" |  "}&nbsp;&nbsp;
-						<Link to="/">Change Status</Link>
-					</div>
-					<div className="right">
-						<input
-							className="fancy-toggle"
-							id="viewRejectedCandidate"
-							type="checkbox"
-						/>
-						<label htmlFor="viewRejectedCandidate">
-							<span className="input"></span>View Rejected Candidates
+					<div className="actions">
+						<div className="left">
+							<Link onClick={handleSendEmail} >Send Email</Link>
+								&nbsp;&nbsp;{" |  "}&nbsp;&nbsp;
+						<Link onClick={handleUpdateStatus}>Change Status</Link>
+						</div>
+						<div className="right">
+							<input
+								className="fancy-toggle"
+								id="viewRejectedCandidate"
+								type="checkbox"
+							/>
+							<label htmlFor="viewRejectedCandidate">
+								<span className="input"></span>View Rejected Candidates
 						</label>
+						</div>
 					</div>
+					<ul className="lists">
+						<li className="list">
+							<ul className="head">
+								<li>
+									<input className="fancy-toggle" id="1" type="checkbox" />
+									<label htmlFor="1">
+										<span className="input"></span>
+									</label>
+								</li>
+								<li>
+									<img src={ImgUser} alt="User" />
+										Name <SortIcon active="up" />
+								</li>
+								<li>
+									Current Position <SortIcon />
+								</li>
+								<li>
+									Exp (in years) <SortIcon />
+								</li>
+								<li>
+									CredReadiness <SortIcon />
+								</li>
+								<li>
+									Current Organization <SortIcon />
+								</li>
+								<li>
+									Last Update <SortIcon />
+								</li>
+								<li>
+									Status <SortIcon />
+								</li>
+								<li>Action</li>
+							</ul>
+							{renderCandidateList}
+						</li>
+					</ul>
 				</div>
-				<ul className="lists">
-					<li className="list">
-						<ul className="head">
-							<li>
-								<input className="fancy-toggle" id="1" type="checkbox" />
-								<label htmlFor="1">
-									<span className="input"></span>
-								</label>
-							</li>
-							<li>
-								<img src={ImgUser} alt="User" />
-								Name <SortIcon active="up" />
-							</li>
-							<li>
-								Current Position <SortIcon />
-							</li>
-							<li>
-								Exp (in years) <SortIcon />
-							</li>
-							<li>
-								CreadReadines <SortIcon />
-							</li>
-							<li>
-								Current Organization <SortIcon />
-							</li>
-							<li>
-								Last Update <SortIcon />
-							</li>
-							<li>
-								Status <SortIcon />
-							</li>
-							<li>Action</li>
-						</ul>
-						{renderCandidateList}
-					</li>
-				</ul>
+				<Pagination />
 			</div>
-			<Pagination />
-		</div>
+		)
+
 	);
 }
 
-export default CandidateList;
+function mapStateToProps(state) {
+	return {
+		candidatesList: state.employerReducer.candidatesList.data,
+		// loading: state.commonReducer.apiCallsInProgress
+	}
+}
+
+// export default CandidateList;
+export default connect(mapStateToProps)(CandidateList);

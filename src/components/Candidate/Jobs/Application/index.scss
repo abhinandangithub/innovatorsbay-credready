@@ -1,0 +1,17 @@
+@import "../../../../variables.scss";
+
+.application_page {
+	.heading {
+		h2 {
+			margin-top: 0;
+		}
+	}
+	.preview_info {
+		margin-bottom: 40px;
+	}
+	.cta {
+		margin-top: 30px;
+		text-align: right;
+		margin-bottom: -20px;
+	}
+}

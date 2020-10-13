@@ -5,6 +5,7 @@ import { useDispatch } from "react-redux";
 import { togglePopup, toggleOverlay } from "../../store/actions/popup_overlay";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
+import { getVerificationCode } from "../../store/thunks/auth";
 
 import { updateLoggedIn, updateSignupDetails } from "../../store/actions/auth";
 
@@ -16,7 +17,10 @@ function Signup(props) {
 	const [passwordShown, setPasswordShown] = useState(false);
 
 	const onSubmit = (data) => {
+		data.user_type = signupType === "candidate" ? "jobseeker" : signupType;
+		// data.phone = "+"+ data.phone;
 		console.log(data);
+		dispatch(getVerificationCode(data));
 		dispatch(toggleOverlay(true));
 		dispatch(togglePopup([true, "termsAndConditions"]));
 		dispatch(updateLoggedIn([false, signupType]));
@@ -88,12 +92,12 @@ function Signup(props) {
 
 				{signupType === "employer" ? (
 					<li>
-						<label htmlFor="name">
-							Employer Name <span>*</span>
+						<label htmlFor="organisation">
+							Organisation Name <span>*</span>
 						</label>
 						<input
-							id="name"
-							name="name"
+							id="organisation"
+							name="organisation"
 							type="text"
 							autoComplete="nothing"
 							placeholder="Enter employer name"
@@ -134,10 +138,10 @@ function Signup(props) {
 						placeholder="123-456-7890"
 						// defaultValue="1234567890"
 						ref={register({
-							required: "required",
-							pattern: {
-								value: /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/,
-							},
+							required: "required"
+							// pattern: {
+							// 	value: /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/,
+							// },
 						})}
 					/>
 				</li>
@@ -156,7 +160,7 @@ function Signup(props) {
 							ref={register({
 								required: "required",
 								pattern: {
-									value: /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{8,15}$/,
+									value: /^(?=.*\d)(?=.*[a-z])(?=.*[a-z])(?=.*[^a-zA-Z0-9])(?!.*\s).{8,15}$/,
 								},
 							})}
 						/>
@@ -180,8 +184,13 @@ function Signup(props) {
 						/>
 						<label htmlFor="agree">
 							<span className="input"></span>I agree to the &nbsp;
-							<Link to="#"> Terms and Conditions</Link>&nbsp; and &nbsp;
-							<Link to="#"> Privacy Policy</Link>
+							<Link to="#" onClick={() => props.show_tnc(true)}>
+								Terms and Conditions
+							</Link>
+							&nbsp; and &nbsp;
+							<Link to="#" onClick={() => props.show_pnp(true)}>
+								Privacy Policy
+							</Link>
 						</label>
 					</div>
 				</li>

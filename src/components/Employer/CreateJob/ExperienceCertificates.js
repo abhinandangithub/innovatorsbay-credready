@@ -1,7 +1,10 @@
 import React from "react";
+import { connect, useDispatch } from 'react-redux';
 import InputRange from "react-input-range";
+import { getSkills } from '../../../store/thunks/employer';
 
 function CreateJob(props) {
+	const dispatch = useDispatch();
 	const [value, setValue] = React.useState({
 		min: 3,
 		max: 7,
@@ -16,6 +19,10 @@ function CreateJob(props) {
 		props.calHeight(parent.current.clientHeight);
 	}, [props]);
 
+	React.useEffect(() => {
+		dispatch(getSkills());
+	}, [dispatch]);
+
 	return (
 		<div className="experience-certificates" ref={parent}>
 			<div className="heading">
@@ -28,12 +35,19 @@ function CreateJob(props) {
 					Certificates <span>*</span>
 				</h2>
 				<ul className="added-items">
-					<li>
+					{props.skills.map((val, i) => {
+						return (
+							<li>
+								{val.name} <span></span>{" "}
+							</li>
+						);
+					})}
+					{/* <li>
 						Nursing <span></span>{" "}
 					</li>
 					<li>
 						Take Care <span></span>{" "}
-					</li>
+					</li> */}
 					<li className="btn"></li>
 				</ul>
 				<h2 className="sub-heading">
@@ -53,4 +67,12 @@ function CreateJob(props) {
 	);
 }
 
-export default CreateJob;
+function mapStateToProps(state) {
+	return {
+		skills: state.employerReducer.skills.data,
+	}
+}
+
+// export default CreateJob;
+export default connect(mapStateToProps)(CreateJob);
+// export default CreateJob;

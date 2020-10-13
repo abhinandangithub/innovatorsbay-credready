@@ -2,7 +2,7 @@ import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPen, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, connect } from "react-redux";
 
 import "./index.scss";
 import Accordion from "../../../../_Elements/Accordion";
@@ -11,14 +11,17 @@ import {
 	togglePopup,
 	toggleOverlay,
 } from "../../../../../store/actions/popup_overlay";
+import { fetchCandidateDetails } from "../../../../../modals/candidateProfile/thunk";
 
-function WorkExperience() {
+function WorkExperience(props) {
 	const dispatch = useDispatch();
+	const [workExperieneData, setworkExperieneData] = React.useState(props.workExpData);
+	const [otherExperienceData, setotherExperienceData] = React.useState(props.otherExpData)
 
-	const handleEdit = () => {
-		// console.log("editing");
+	const handleEdit = (id) => {
+		console.log(id);
 		dispatch(toggleOverlay(true));
-		dispatch(togglePopup([true, "addWorkExperience"]));
+		dispatch(togglePopup([true, "addWorkExperience", id]));
 	};
 	const handleDelete = (type) => {
 		// console.log("deleting");
@@ -26,7 +29,10 @@ function WorkExperience() {
 		dispatch(togglePopup([true, "delete", { what: type }]));
 	};
 
-	const renderWorkExperiences = userData.profile.workExperiences.map(
+
+	// const renderWorkExperiences = userData.profile.workExperiences.map(
+	const renderWorkExperiences = workExperieneData.length > 0 ? workExperieneData.map(
+
 		(data, i) => {
 			return (
 				<div className="content" key={i}>
@@ -35,17 +41,17 @@ function WorkExperience() {
 						{data.company} - <span>{data.location}</span>
 					</h3>
 					<h4>
-						<span>{data.date.from}</span> - <span>{data.date.to}</span>
+						<span>{data.employment_from}</span> - <span>{data.employment_to}</span>
 					</h4>
 					<p className="description">
 						<span className="heading">Description: </span>
-						<span className="text">{data.description}</span>
+						<span className="text">{data.job_description}</span>
 					</p>
 					<FontAwesomeIcon
 						className="action-btn edit"
 						icon={faPen}
 						id={"workExperienceEdit_" + i}
-						onClick={handleEdit}
+						onClick={() => handleEdit(data.work_ex_id)}
 					/>
 					<FontAwesomeIcon
 						className="action-btn delete"
@@ -56,18 +62,19 @@ function WorkExperience() {
 				</div>
 			);
 		}
-	);
+	) : ""
 
-	const renderOtherExperiences = userData.profile.otherExperiences.map(
+	// const renderOtherExperiences = userData.profile.otherExperiences.map(
+	const renderOtherExperiences = otherExperienceData.length > 0 ? otherExperienceData.map(
 		(data, i) => {
 			return (
 				<div className="content" key={i}>
 					<h2>{data.title}</h2>
 					<h3>
-						{data.company} - <span>{data.location}</span>
+						{data.organization_name} - <span>{data.description}</span>
 					</h3>
 					<h4>
-						<span>{data.date.from}</span> - <span>{data.date.to}</span>
+						<span>{data.employment_from}</span> - <span>{data.employed_till}</span>
 					</h4>
 					<p className="description">
 						<span className="heading">Description: </span>
@@ -88,7 +95,7 @@ function WorkExperience() {
 				</div>
 			);
 		}
-	);
+	) : "";
 
 	return (
 		<div className="work-experience">
@@ -126,5 +133,15 @@ function WorkExperience() {
 		</div>
 	);
 }
+function mapStateToProps(state) {
+	return {
+		workExpData: state.candidateSetDataReducer && state.candidateSetDataReducer.data && state.candidateSetDataReducer.data.work_experience ? state.candidateSetDataReducer.data.work_experience : [],
+		otherExpData: state.candidateSetDataReducer && state.candidateSetDataReducer.data && state.candidateSetDataReducer.data.additional_experiences ? state.candidateSetDataReducer.data.additional_experiences : []
+	};
+}
 
-export default WorkExperience;
+const mapDispatchToProps = {
+	fetchCandidateDetails: fetchCandidateDetails
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(WorkExperience);

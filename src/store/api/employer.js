@@ -122,7 +122,7 @@ export const employerFetchAllPostedJobsUrl = constructUrl(
  */
 export const employerJobFollowUpUrl = constructUrl(
   employerRouteWithBase,
-  "job/foolow"
+  "job/follow"
 );
 
 /**
@@ -188,4 +188,55 @@ export const employerUpdateJobQuestionUrl = constructUrl(
 export const employerAddQuestionInQuestionBank = constructUrl(
   employerRouteWithBase,
   "question/update"
+);
+
+/**
+ * Name: delete employer account
+ */
+export const employerDeleteAccountUrl = constructUrl(
+  employerRouteWithBase,
+  "account/delete"
+);
+/**
+ * Name: delete employer account
+ */
+export const employerFetchCandidatesByJobId = constructUrl(
+  employerRouteWithBase,
+  "job/candidate/fetch"
+);
+
+/**
+ * Name: get email template
+ */
+export const employeGetEmailTemplate = constructUrl(
+  employerRouteWithBase,
+  "fetch/templates/email"
+);
+/**
+ * Name: get create question
+ */
+export const employeCreateQuestion = constructUrl(
+  employerRouteWithBase,
+  "question/create"
+);
+/**
+ * Name: send mail to candidate
+ */
+export const employeCandidateSendEmail = constructUrl(
+  employerRouteWithBase,
+  "job/candidate/sendmail"
+);
+/**
+ * Name: Fetch organization locations
+ */
+export const employeFecthOrgLocations = constructUrl(
+  employerRouteWithBase,
+  "organization/locations"
+);
+/**
+ * Name: Fetch job preview details
+ */
+export const employeFecthJobPreviewDetails = constructUrl(
+  employerRouteWithBase,
+  "job/preview"
 );

@@ -8,13 +8,31 @@
 				width: 50%;
 			}
 		}
-		.common-questions-outer {
-			text-align: left;
-		}
 		.cta {
 			display: flex;
 			margin-top: 30px;
 			justify-content: flex-end;
+		}
+	}
+	.action-btn {
+		position: absolute;
+		color: #bcd1e4;
+		top: 24px;
+		right: 20px;
+		font-size: 14px;
+		cursor: pointer;
+		&.edit {
+			right: 40px;
+		}
+	}
+	.options {
+		& + input + label {
+			position: absolute;
+			color: #bcd1e4;
+			top: 24px;
+			right: 50px;
+			font-size: 14px;
+			cursor: pointer;
 		}
 	}
 }

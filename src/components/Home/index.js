@@ -21,8 +21,10 @@ import EmployerCreateJob from "../Employer/CreateJob";
 import EmployerCandidateList from "../Employer/CandidateList";
 import EmployerCandidateView from "../Employer/CandidateView";
 
-import JobView from "../Candidate/Jobs/JobView";
-import GeneralQuestions from "../Candidate/Jobs/GeneralQuestions";
+import JobApplied from "../Candidate/Jobs/JobApplied";
+import JobApplication from "../Candidate/Jobs/Application";
+import JobApply from "../Candidate/Jobs/JobApply";
+import Questions from "../Candidate/Jobs/Questions";
 import JobSpecificQuestions from "../Candidate/Jobs/JobSpecificQuestions";
 import Goals from "../Candidate/Goals";
 import GoalView from "../Candidate/Goals/GoalView";
@@ -89,11 +91,23 @@ function Home(props) {
 									/>
 									<Route path="/profile" component={CandidateProfile} />
 									<Route exact path="/jobs" component={CandidateJobs} />
-									<Route exact path="/jobs/view/:id" component={JobView} />
 									<Route
 										exact
-										path="/jobs/general-questions"
-										component={GeneralQuestions}
+										path="/jobs/preview/:id"
+										component={JobApplied}
+									/>
+									<Route exact path="/jobs/view/:id" component={JobApply} />
+									<Route
+										exact
+										path="/jobs/application"
+										component={JobApplication}
+									/>
+									<Route
+										path="/jobs/questions"
+										exact
+										render={(props) => (
+											<Questions showEmployerQuestions={true} {...props} />
+										)}
 									/>
 									<Route
 										exact
@@ -123,7 +137,8 @@ function Home(props) {
 									/>
 									<Route
 										exact
-										path="/jobs/candidates-list"
+										// path="/jobs/candidates-list"
+										path="/jobs/candidates-list/:jobId"
 										component={EmployerCandidateList}
 									/>
 									<Route

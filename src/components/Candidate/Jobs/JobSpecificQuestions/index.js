@@ -6,14 +6,14 @@ function JobSpecificQuestions() {
 	return (
 		<div className="job-specefic-questions">
 			<h1 className="heading">Job Specific Questions</h1>
-			<ul className="common-questions-outer">
-				<li className="inner">
+			<ul className="general-questions">
+				<li className="general-question">
 					<h2 className="question">Location?</h2>
 					<div className="options">
-						<input type="text" className="full" />
+						<input type="text" className="input_full" />
 					</div>
 				</li>
-				<li className="inner">
+				<li className="general-question">
 					<h2 className="question">Acceptable Shifts?</h2>
 
 					<div className="options">
@@ -46,7 +46,7 @@ function JobSpecificQuestions() {
 						</label>
 					</div>
 				</li>
-				<li className="inner">
+				<li className="general-question">
 					<h2 className="question">Verbal English Fluency?</h2>
 					<div className="options">
 						<input
@@ -87,7 +87,7 @@ function JobSpecificQuestions() {
 						</label>
 					</div>
 				</li>
-				<li className="inner">
+				<li className="general-question">
 					<h2 className="question">Certifications?</h2>
 					<div className="options">
 						<input
@@ -121,7 +121,7 @@ function JobSpecificQuestions() {
 						<label htmlFor="cert4">Other</label>
 					</div>
 				</li>
-				<li className="inner">
+				<li className="general-question">
 					<h2 className="question">Years of CNA experience?</h2>
 					<div className="options">
 						<input
@@ -157,10 +157,12 @@ function JobSpecificQuestions() {
 							type="checkbox"
 							id="3+"
 						/>
-						<label htmlFor="3+">3+</label>
+						<label htmlFor="3+">
+							<span className="input"></span>3+
+						</label>
 					</div>
 				</li>
-				<li className="inner">
+				<li className="general-question">
 					<h2 className="question">Education</h2>
 					<div className="options">
 						<input
@@ -180,12 +182,12 @@ function JobSpecificQuestions() {
 						<label htmlFor="edu2">College Degree</label>
 					</div>
 				</li>
-				<li className="inner">
+				<li className="general-question">
 					<h2 className="question">
 						Do you understand that these are some of the tasks you will perform
 						as a CNA?
 					</h2>
-					<ul className="info">
+					<ul className="question_info">
 						<li>Changing diapers</li>
 						<li>Cleaning beds</li>
 						<li>Mealtime cleanup</li>
@@ -201,7 +203,7 @@ function JobSpecificQuestions() {
 							<span className="input"></span>Yes
 						</label>
 						<input
-							className="fancy-toggle blue radio"
+							className="fancy-toggle blue no radio"
 							id="no1"
 							name="interestedIn1"
 							type="radio"
@@ -212,7 +214,7 @@ function JobSpecificQuestions() {
 						</label>
 					</div>
 				</li>
-				<li className="inner">
+				<li className="general-question">
 					<h2 className="question">
 						The posted wage is $13.50 per hour. This may increase with
 						experience. Do you understand this wage expectation?
@@ -229,7 +231,7 @@ function JobSpecificQuestions() {
 							<span className="input"></span>Yes
 						</label>
 						<input
-							className="fancy-toggle blue radio"
+							className="fancy-toggle blue no radio"
 							id="no"
 							name="interestedIn"
 							type="radio"
@@ -240,9 +242,9 @@ function JobSpecificQuestions() {
 					</div>
 				</li>
 			</ul>
-			{/* <div className="cta">
+			<div className="cta">
 				<button className="primary-btn">Submit</button>
-			</div> */}
+			</div>
 		</div>
 	);
 }

@@ -72,9 +72,24 @@ function AddCertificate({ addEducationCertificate }) {
 		issuer: [],
 		issueDate: [],
 		description: [],
+		certificateLink: [],
 
 		formValid: false,
 	});
+
+	function formatDate(date) {
+		var d = new Date(date),
+			month = '' + (d.getMonth() + 1),
+			day = '' + d.getDate(),
+			year = d.getFullYear();
+
+		if (month.length < 2)
+			month = '0' + month;
+		if (day.length < 2)
+			day = '0' + day;
+
+		return [year, month, day].join('-');
+	}
 
 	const handleSubmit = () => {
 		let oldFormData = { ...formData };
@@ -97,10 +112,24 @@ function AddCertificate({ addEducationCertificate }) {
 		if (oldFormData.formValid) {
 			console.log(oldFormData, "submitting form...");
 			/* send data to api */
+
+
+			console.log(formData);
 			dispatch(toggleOverlay(false));
 			dispatch(togglePopup([false, ""]));
 		}
+		let obj = {
+			"certificateLink": "http://localhost:3000/profile/education",
+			"description": formData ? formData.description[0] : "",
+			"functionId": 2,
+			"industryId": 2,
+			"issuedDate": formData ? formatDate(formData.issueDate[0]) : "",
+			"issuer": formData ? formData.issuer[0] : "",
+			"title": 10605
+		}
+		addEducationCertificate(obj);
 
+		console.log(formData);
 		setFormData(oldFormData);
 	};
 
@@ -201,7 +230,7 @@ function AddCertificate({ addEducationCertificate }) {
 				</li>
 				<li>
 					<label>Certificate Link</label>
-					<Input type="text" id="certificateLink" />
+					<Input type="text" id="certificateLink" onchange={(value) => handleFieldChange("certificateLink", value)} />
 				</li>
 				<li>
 					<label>Certificate Image</label>
@@ -257,9 +286,13 @@ function AddCertificate({ addEducationCertificate }) {
 	);
 }
 
-
+function mapStateToProps(state) {
+	return {
+		cerificatedata: state.candidateSetDataReducer.certificate ? state.candidateSetDataReducer.certificate : ""
+	}
+}
 const mapDispatchToProps = {
 	addEducationCertificate: addEducationCertificate
 };
 
-export default connect(null, mapDispatchToProps)(AddCertificate);
+export default connect(mapStateToProps, mapDispatchToProps)(AddCertificate);

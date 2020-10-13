@@ -2,4 +2,16 @@
 	.applied-jobs {
 		margin-bottom: 40px;
 	}
+	.widget {
+		.top {
+			height: 100px;
+			overflow: hidden;
+		}
+		.bottom {
+			.content {
+				height: 300px;
+				overflow: hidden;
+			}
+		}
+	}
 }

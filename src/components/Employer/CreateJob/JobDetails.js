@@ -1,4 +1,7 @@
 import React from "react";
+import { connect, useDispatch } from 'react-redux';
+import { getEmploymentType, getIndustry, getFunction, getLocations } from '../../../store/thunks/employer';
+import { setNewJob } from '../../../store/actions/employer';
 
 import Input from "../../_Elements/Input";
 import Dropdown from "../../_Elements/Dropdown";
@@ -20,10 +23,37 @@ const _function = {
 
 function CreateJob(props) {
 	const parent = React.useRef();
+	const dispatch = useDispatch();
 
 	React.useEffect(() => {
 		props.calHeight(parent.current.clientHeight);
 	}, [props]);
+
+	React.useEffect(() => {
+		dispatch(getEmploymentType());
+		dispatch(getIndustry());
+		dispatch(getFunction());
+		dispatch(getLocations());
+	}, [dispatch]);
+
+	const handleChangeEmpType = (item) => {
+		dispatch(setNewJob({ "employmentType": item }));
+	}
+	const handleChangeIndustry = (item) => {
+		dispatch(setNewJob({ "industry": item }));
+	}
+	const handleChangeFunction = (item) => {
+		dispatch(setNewJob({ "function": item }));
+	}
+	const handleChangeJobTile = (e) => {
+		dispatch(setNewJob({ "jobTitle": e.target.value }));
+	}
+	const handleChangeLocation = (e) => {
+		// dispatch(setNewJob({"location": e}));
+	}
+	const handleChangeOpenPosition = (e) => {
+		dispatch(setNewJob({ "openPositions": e.target.value }));
+	}
 
 	return (
 		<div className="job-details" ref={parent}>
@@ -38,13 +68,18 @@ function CreateJob(props) {
 						<label>
 							Job Title <span>*</span>
 						</label>
-						<Input type="text" />
+						<Input type="text" onChange={handleChangeJobTile} />
 					</li>
 					<li>
 						<label>
 							Job Location <span>*</span>
 						</label>
-						<Input type="text" placeholder="Zip or city, state" />
+						{/* <Input type="text" placeholder="Zip or city, state" onChange={handleChangeLocation}/> */}
+						<Dropdown
+							placeholder="Zip or city, state"
+							content={props.locations}
+							onchange={(item) => handleChangeLocation(item)}
+						/>
 					</li>
 					<li>
 						<label>
@@ -52,7 +87,8 @@ function CreateJob(props) {
 						</label>
 						<Dropdown
 							placeholder={employmentType.heading}
-							content={employmentType.content}
+							content={props.employmentType}
+							onchange={(item) => handleChangeEmpType(item)}
 						/>
 					</li>
 					<li>
@@ -61,7 +97,8 @@ function CreateJob(props) {
 						</label>
 						<Dropdown
 							placeholder={industry.heading}
-							content={industry.content}
+							content={props.industry}
+							onchange={(item) => handleChangeIndustry(item)}
 						/>
 					</li>
 					<li>
@@ -70,12 +107,13 @@ function CreateJob(props) {
 						</label>
 						<Dropdown
 							placeholder={_function.heading}
-							content={_function.content}
+							content={props.functionType}
+							onchange={(item) => handleChangeFunction(item)}
 						/>
 					</li>
 					<li>
 						<label>How many Open Positions Are There?</label>
-						<Input type="text" />
+						<Input type="text" onChange={handleChangeOpenPosition} />
 					</li>
 				</ul>
 			</div>
@@ -83,4 +121,14 @@ function CreateJob(props) {
 	);
 }
 
-export default CreateJob;
+function mapStateToProps(state) {
+	return {
+		employmentType: state.employerReducer.employmentType.data,
+		functionType: state.employerReducer.functionType.data,
+		industry: state.employerReducer.industry.data,
+		locations: state.employerReducer.locationNames
+	}
+}
+
+// export default CreateJob;
+export default connect(mapStateToProps)(CreateJob);

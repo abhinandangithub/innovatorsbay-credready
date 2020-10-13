@@ -9,7 +9,7 @@ const entityRouteWithBase = constructUrl(BaseUrl, entityControllerRoute);
  */
 export const entityFetchEmployementSatusUrl = constructUrl(
   entityRouteWithBase,
-  "employement_status"
+  "employment_status"
 );
 
 /**

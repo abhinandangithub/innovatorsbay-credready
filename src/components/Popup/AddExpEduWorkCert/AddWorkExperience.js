@@ -12,9 +12,7 @@ import {
 } from "../../../store/actions/popup_overlay";
 import { addWorkExperience } from "../../../modals/candidateProfile/thunk";
 
-function AddWorkExperience({
-	addWorkExperience
-}) {
+function AddWorkExperience({ addWorkExperience }) {
 	const dispatch = useDispatch();
 
 	const [startDate, setStartDate] = useState();
@@ -43,11 +41,13 @@ function AddWorkExperience({
 		startDate: [],
 		endDate: [],
 		description: [],
+		employerWebsite: [],
 
 		supervisorName: [],
 		supervisorTitle: [],
 		phoneNumber: [],
 		email: [],
+		degreeGranted: [],
 
 		formValid: {
 			add: false,
@@ -57,18 +57,15 @@ function AddWorkExperience({
 
 	function formatDate(date) {
 		var d = new Date(date),
-			month = '' + (d.getMonth() + 1),
-			day = '' + d.getDate(),
+			month = "" + (d.getMonth() + 1),
+			day = "" + d.getDate(),
 			year = d.getFullYear();
 
-		if (month.length < 2)
-			month = '0' + month;
-		if (day.length < 2)
-			day = '0' + day;
+		if (month.length < 2) month = "0" + month;
+		if (day.length < 2) day = "0" + day;
 
-		return [year, month, day].join('-');
+		return [year, month, day].join("-");
 	}
-
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
@@ -110,17 +107,24 @@ function AddWorkExperience({
 			dispatch(toggleOverlay(false));
 			dispatch(togglePopup([false, ""]));
 			console.log("formData", formData);
-			let obj = [{
-				"candidate_id": "",
+			let obj = {
 				"title": formData ? formData.title[0] : "",
 				"company": formData ? formData.company[0] : "",
 				"location": formData ? formData.location[0] : "",
-				"is_currently_employed": formData && (formData.location[0] === "on") ? true : false,
-				"employment_from": formData && formData.startDate[0] ? formatDate(formData.startDate[0]) : "",
-				"employment_to": formData && formData.endDate[0] ? formatDate(formData.endDate[0]) : "",
-				"job_description": formData ? formData.description[0] : "",
-				"employer_website": ""
-			}]
+				"currentlyEmployed": formData && (formData.currentCompany[0] === "on") ? true : false,
+				"employmentFrom": formData && formData.startDate[0] ? formatDate(formData.startDate[0]) : "",
+				"employmentTo": formData && formData.endDate[0] ? formatDate(formData.endDate[0]) : "",
+				"jobDescription": formData ? formData.description[0] : "",
+				"employerWebsite": formData ? formData.description[0] : "",
+				"workexVerification": {
+					"contactable": formData && (formData.degreeGranted[0] === "on") ? true : false,
+					"email": formData ? formData.email[0] : "",
+					"phone": formData ? formData.phoneNumber[0] : "",
+					"supervisorName": formData ? formData.supervisorName[0] : "",
+					"title": formData ? formData.supervisorTitle[0] : "",
+
+				}
+			}
 			addWorkExperience(obj);
 		}
 		setFormData(oldFormData);
@@ -300,7 +304,8 @@ function AddWorkExperience({
 					</li>
 					<li>
 						<label htmlFor="employerWebsite">Employer website</label>
-						<Input id="employerWebsite" type="text" />
+						<Input id="employerWebsite" type="text"
+							onChange={(e) => handleFieldChange(e.target.id, e.target.value)} />
 					</li>
 					<li>
 						<label htmlFor="description">
@@ -392,6 +397,7 @@ function AddWorkExperience({
 							type="checkbox"
 							name="termsandconditions"
 							id="degreeGranted"
+							onChange={(e) => handleFieldChange(e.target.id, e.target.value)}
 						/>
 						<label htmlFor="degreeGranted">
 							<span className="input"></span>Allow recruiters to contact your
@@ -422,7 +428,7 @@ function AddWorkExperience({
 }
 
 const mapDispatchToProps = {
-	addWorkExperience: addWorkExperience
+	addWorkExperience: addWorkExperience,
 };
 
 export default connect(null, mapDispatchToProps)(AddWorkExperience);

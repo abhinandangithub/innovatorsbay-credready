@@ -4,6 +4,7 @@ import {
 	togglePopup,
 	toggleOverlay,
 } from "../../../store/actions/popup_overlay";
+import { deleteAccount } from "../../../store/thunks/employer";
 
 import "./index.scss";
 
@@ -15,12 +16,16 @@ function Delete(props) {
 		dispatch(togglePopup(false, ""));
 	};
 
+	const handleDelete = () => {
+		dispatch(deleteAccount());
+	}
+
 	const cta = (
 		<div className="cta">
 			<button className="primary-btn blue" onClick={closePopupOverlay}>
 				Cancel
 			</button>
-			<button className="primary-btn blue outline">Delete</button>
+			<button className="primary-btn blue outline" onClick={handleDelete}>Delete</button>
 		</div>
 	);
 

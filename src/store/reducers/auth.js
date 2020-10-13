@@ -4,12 +4,14 @@ import { updateObject } from "../utility";
 const initialState = {
 	isVerified: {
 		termsAndConditions: false,
-		emailOtp: false,
-		phoneOtp: false,
+		emailOtp: null,
+		phoneOtp: null,
 	},
 	loggedIn: {
-		value: true,
-		as: "employer",
+		value: false,
+		as: "",
+		// value: true,
+		// as: "candidate",
 	},
 	singUp: {
 		email: null,
@@ -57,12 +59,17 @@ const reducer = (state = initialState, action) => {
 			});
 
 		case actionTypes.UPDATE_SINGUP_DETAILS:
+			let data = {
+				email: action.details.email,
+				password: action.details.password,
+				phone: action.details.phone,
+				user_type: action.details.user_type,
+			};
+			if (action.details.user_type === "employer") {
+				data.organisation = action.details.organisation;
+			}
 			return updateObject(state, {
-				signUp: {
-					email: action.details.email,
-					password: action.details.password,
-					phone: action.details.phone,
-				},
+				signUp: data,
 			});
 
 		case actionTypes.UPDATE_JWT_TOKEN:

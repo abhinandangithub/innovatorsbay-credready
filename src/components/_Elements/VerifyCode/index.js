@@ -35,7 +35,7 @@ function VerifyCode(props) {
 		if (props.setOtp) {
 			props.setOtp(otp);
 		}
-	});
+	}, [props, otp]);
 
 	return (
 		<form className="verify-code">

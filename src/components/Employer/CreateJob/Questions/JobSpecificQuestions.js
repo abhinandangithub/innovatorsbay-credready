@@ -1,249 +1,175 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { connect, useDispatch } from "react-redux";
 
-import "./index.scss";
+import Input from "../../../_Elements/Input";
+import AddButton from "../../../_Elements/AddButton";
+import {
+	togglePopup,
+	toggleOverlay,
+} from "../../../../store/actions/popup_overlay";
+import { getQuestionBank } from '../../../../store/thunks/employer';
 
-function JobSpecificQuestions() {
+function JobSpecificQuestions(props) {
+	const dispatch = useDispatch();
+	console.log('props questionBank ', props.questionBank.questionBank.questions);
+	useEffect(() => {
+		console.log('props questionBank dispatch', props.questionBank);
+		dispatch(getQuestionBank());
+	}, [dispatch]);
+
+	useEffect(() => {
+		console.log('props questionBank useeffect', props.questionBank);
+	}, [props.questionBank]);
+
+	const questions = [
+		{
+			question_id: 1,
+			question_name: "What are your hobbies?",
+			category: "Employer Questions",
+			question_type: "text-input",
+			is_public: false,
+			job_title: "CNA",
+			org_id: 1,
+		},
+		{
+			question_id: 2,
+			question_name: "Are you okay with night shift?",
+			category: "Employer Questions",
+			question_type: "mcq",
+			is_public: false,
+			job_title: "CNA",
+			org_id: 1,
+			option_choices: [
+				{
+					id: 1,
+					question_id: 2,
+					option_choice_name: "Yes",
+					question_type: "boolean",
+				},
+				{
+					id: 2,
+					question_id: 2,
+					option_choice_name: "No",
+					question_type: "boolean",
+				},
+			],
+		},
+		{
+			question_id: 3,
+			question_name: "What are you workable timings?",
+			category: "Employer Questions",
+			question_type: "mcq",
+			is_public: true,
+			job_title: "CNA",
+			option_choices: [
+				{
+					id: 3,
+					question_id: 3,
+					option_choice_name: "8 AM - 1 PM",
+					question_type: "checkbox",
+				},
+				{
+					id: 4,
+					question_id: 3,
+					option_choice_name: "1 PM - 5 PM",
+					question_type: "checkbox",
+				},
+				{
+					id: 5,
+					question_id: 3,
+					option_choice_name: "5 PM - 11 PM",
+					question_type: "checkbox",
+				},
+				{
+					id: 6,
+					question_id: 3,
+					option_choice_name: "11 PM - 5 AM",
+					question_type: "checkbox",
+				},
+			],
+		},
+	];
+
+	const addQuestion = () => {
+		dispatch(toggleOverlay(true));
+		dispatch(togglePopup([true, "addNewQuestion"]));
+	};
+
 	return (
 		<div className="job-specefic-questions">
+			<AddButton
+				id={"addQuestionBtn"}
+				onclick={addQuestion}
+				content="Add New Question"
+			/>
 			<ul className="general-questions">
-				<li className="general-question">
-					<h2 className="question">Location?</h2>
-					<div className="options">
-						<input type="text" className="full" />
-					</div>
-				</li>
-				<li className="general-question">
-					<h2 className="question">Acceptable Shifts?</h2>
-
-					<div className="options">
-						<input
-							className="fancy-toggle blue"
-							name="cna"
-							type="checkbox"
-							id="7-3"
-						/>
-						<label htmlFor="7-3">
-							<span className="input"></span>7am – 3pm
-						</label>
-						<input
-							className="fancy-toggle blue "
-							name="cna"
-							type="checkbox"
-							id="3-11"
-						/>
-						<label htmlFor="3-11">
-							<span className="input"></span>3pm – 11pm
-						</label>
-						<input
-							className="fancy-toggle blue"
-							name="cna"
-							type="checkbox"
-							id="11-3"
-						/>
-						<label htmlFor="11-3">
-							<span className="input"></span>11pm - 3am
-						</label>
-					</div>
-				</li>
-				<li className="general-question">
-					<h2 className="question">Verbal English Fluency?</h2>
-					<div className="options">
-						<input
-							className="fancy-toggle blue"
-							name="cna"
-							type="checkbox"
-							id="Limited"
-						/>
-						<label htmlFor="Limited">
-							<span className="input"></span>Limited
-						</label>
-						<input
-							className="fancy-toggle blue"
-							name="cna"
-							type="checkbox"
-							id="Working"
-						/>
-						<label htmlFor="Working">
-							<span className="input"></span>Working
-						</label>
-						<input
-							className="fancy-toggle blue"
-							name="cna"
-							type="checkbox"
-							id="Fluent"
-						/>
-						<label htmlFor="Fluent">
-							<span className="input"></span>Fluent
-						</label>
-						<input
-							className="fancy-toggle blue"
-							name="cna"
-							type="checkbox"
-							id="Native"
-						/>
-						<label htmlFor="Native">
-							<span className="input"></span>Native
-						</label>
-					</div>
-				</li>
-				<li className="general-question">
-					<h2 className="question">Certifications?</h2>
-					<div className="options">
-						<input
-							className="block-toggle blue"
-							id="cert1"
-							name="cert"
-							type="checkbox"
-						/>
-						<label htmlFor="cert1">Certified Nursing Assistant</label>
-						<input
-							className="block-toggle blue"
-							id="cert2"
-							name="cert"
-							defaultChecked
-							type="checkbox"
-						/>
-						<label htmlFor="cert2">Home Health Aid</label>
-						<input
-							className="block-toggle blue"
-							id="cert3"
-							name="cert"
-							type="checkbox"
-						/>
-						<label htmlFor="cert3">Certified Nursing Aid</label>
-						<input
-							className="block-toggle blue"
-							id="cert4"
-							name="cert"
-							type="checkbox"
-						/>
-						<label htmlFor="cert4">Other</label>
-					</div>
-				</li>
-				<li className="general-question">
-					<h2 className="question">Years of CNA experience?</h2>
-					<div className="options">
-						<input
-							className="fancy-toggle blue"
-							name="cna"
-							type="checkbox"
-							id="0"
-						/>
-						<label htmlFor="0">
-							<span className="input"></span>0
-						</label>
-						<input
-							className="fancy-toggle blue"
-							name="cna"
-							type="checkbox"
-							id="1"
-						/>
-						<label htmlFor="1">
-							<span className="input"></span>1
-						</label>
-						<input
-							className="fancy-toggle blue"
-							name="cna"
-							type="checkbox"
-							id="2"
-						/>
-						<label htmlFor="2">
-							<span className="input"></span>2
-						</label>
-						<input
-							className="fancy-toggle blue"
-							name="cna"
-							type="checkbox"
-							id="3+"
-						/>
-						<label htmlFor="3+">3+</label>
-					</div>
-				</li>
-				<li className="general-question">
-					<h2 className="question">Education</h2>
-					<div className="options">
-						<input
-							className="block-toggle blue"
-							id="edu1"
-							name="edu"
-							type="checkbox"
-							defaultChecked
-						/>
-						<label htmlFor="edu1">High School Diploma</label>
-						<input
-							className="block-toggle blue"
-							id="edu2"
-							name="edu"
-							type="checkbox"
-						/>
-						<label htmlFor="edu2">College Degree</label>
-					</div>
-				</li>
-				<li className="general-question">
-					<h2 className="question">
-						Do you understand that these are some of the tasks you will perform
-						as a CNA?
-					</h2>
-					<ul className="info">
-						<li>Changing diapers</li>
-						<li>Cleaning beds</li>
-						<li>Mealtime cleanup</li>
-					</ul>
-					<div className="options">
-						<input
-							className="fancy-toggle blue radio"
-							id="yes1"
-							name="interestedIn1"
-							type="radio"
-						/>
-						<label htmlFor="yes1">
-							<span className="input"></span>Yes
-						</label>
-						<input
-							className="fancy-toggle blue radio"
-							id="no1"
-							name="interestedIn1"
-							type="radio"
-							defaultChecked
-						/>
-						<label htmlFor="no1">
-							<span className="input"></span>No
-						</label>
-					</div>
-				</li>
-				<li className="general-question">
-					<h2 className="question">
-						The posted wage is $13.50 per hour. This may increase with
-						experience. Do you understand this wage expectation?
-					</h2>
-					<div className="options">
-						<input
-							className="fancy-toggle blue radio"
-							id="yes"
-							name="interestedIn"
-							defaultChecked
-							type="radio"
-						/>
-						<label htmlFor="yes">
-							<span className="input"></span>Yes
-						</label>
-						<input
-							className="fancy-toggle blue radio"
-							id="no"
-							name="interestedIn"
-							type="radio"
-						/>
-						<label htmlFor="no">
-							<span className="input"></span>No
-						</label>
-					</div>
-				</li>
+				{props.questionBank.questionBank.questions.map((question, i) => {
+					return (
+						<li className="general-question" key={i}>
+							<h2 className="question">{question.question_name}</h2>
+							<div className="options">
+								{question.question_type === "text-input" ? (
+									<Input type="text" />
+								) : question.question_type === "mcq" ? (
+									<>
+										{question.option_choices.map((option, i) => {
+											if (option.question_type === "checkbox") {
+												return (
+													<div key={i}>
+														<input
+															key={i}
+															className="block-toggle blue"
+															id={`${option.id}${option.question_id}`}
+															name={`${option.question_id}`}
+															type="checkbox"
+															disabled
+														/>
+														<label
+															htmlFor={`${option.id}${option.question_id}`}
+														>
+															{option.option_choice_name}
+														</label>
+													</div>
+												);
+											} else if (option.question_type === "boolean") {
+												return (
+													<div key={i}>
+														<input
+															key={i}
+															className={`fancy-toggle blue ${i === 0 ? "yes" : "no"
+																}`}
+															id={`${option.id}${option.question_id}`}
+															name={`${option.question_id}`}
+															type="radio"
+															disabled
+														/>
+														<label
+															htmlFor={`${option.id}${option.question_id}`}
+														>
+															<span className="input"></span>
+															{option.option_choice_name}
+														</label>
+													</div>
+												);
+											}
+										})}
+									</>
+								) : null}
+							</div>
+						</li>
+					);
+				})}
 			</ul>
-			{/* <div className="cta">
-				<button className="primary-btn">Submit</button>
-			</div> */}
 		</div>
 	);
 }
 
-export default JobSpecificQuestions;
+function mapStateToProps(state) {
+	return {
+		//  questionBank: state.employerReducer.questionBank.questions
+		questionBank: state.employerReducer
+	}
+}
+
+// export default JobSpecificQuestions;
+export default connect(mapStateToProps)(JobSpecificQuestions);

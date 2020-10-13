@@ -5,7 +5,14 @@ import InputRange from "react-input-range";
 
 import "./index.scss";
 
-function Dropdown({ id, placeholder, content, selected, onchange }) {
+function Dropdown({
+	id,
+	placeholder,
+	content,
+	selected,
+	onchange,
+	callback = undefined,
+}) {
 	const [active, setactive] = useState(false);
 	const [value, setvalue] = useState(selected);
 	const [isChanged, setIsChanged] = useState(false);
@@ -13,10 +20,13 @@ function Dropdown({ id, placeholder, content, selected, onchange }) {
 	const dropDownEl = React.useRef();
 
 	const handleItemClick = (item) => {
-		onchange && onchange(item);
-		setvalue(item);
+		onchange && onchange(item.id ? item.id : item);
+		setvalue(item.val ? item.val : item);
 		setactive(false);
 		setIsChanged(true);
+		if (callback) {
+			callback();
+		}
 	};
 
 	const renderContent = () => {
@@ -34,11 +44,11 @@ function Dropdown({ id, placeholder, content, selected, onchange }) {
 		} else {
 			return (
 				<ul className="content">
-					{content &&
+					{content && content.length &&
 						content.map((item, key) => {
 							return (
 								<li onClick={() => handleItemClick(item)} key={key}>
-									{item}
+									{item.val ? item.val : item}
 								</li>
 							);
 						})}
@@ -61,9 +71,8 @@ function Dropdown({ id, placeholder, content, selected, onchange }) {
 
 	return (
 		<div
-			className={`common-dropdown ${active ? "active" : ""}  ${
-				isChanged || selected ? "changed" : ""
-			}`}
+			className={`common-dropdown ${active ? "active" : ""}  ${isChanged || selected ? "changed" : ""
+				}`}
 			id={id && id}
 			ref={dropDownEl}
 		>
