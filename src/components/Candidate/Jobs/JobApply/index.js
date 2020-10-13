@@ -9,10 +9,11 @@ import { fetchjobViewData } from "../../../../modals/candidateProfile/thunk";
 
 function JobView(props) {
 	/* Data comming from API will come here */
-	var index = 30;
 	const dispatch = useDispatch();
 	console.log(props.match.params);
 	const allData = useSelector(state => state.setCandidateJobViewDataReducer.data);
+	console.log(allData);
+	var index = allData.jobDetails && allData.candidateJobApplication.readiness_index;
 	React.useEffect(() => {
 		dispatch(fetchjobViewData(1))
 	}, [])
@@ -24,27 +25,23 @@ function JobView(props) {
 						<img src={ImgWidgetLogo} alt="" />
 					</div>
 					<div className="info">
-						<h3>Certified Nursing Assistent</h3>
-						<p>Hospital to Five Star Nursing</p>
+						<h3>{allData.jobDetails && allData.jobDetails.jobTitle}</h3>
+						<p>{allData.jobDetails && allData.jobDetails.orgName}</p>
 					</div>
 					<div className="short-info">
-						<p>1-3 Years</p>
-						<p>New York</p>
+						<p>{allData.jobDetails && allData.jobDetails.minExp}-{allData.jobDetails && allData.jobDetails.maxExp} Years</p>
+						<p>{allData.jobDetails && allData.jobDetails.location}</p>
 					</div>
 				</div>
 				<div className="bottom">
 					<p>
 						<span className="heading">Job Description: </span>
 						<span className="text">
-							Lorem Ipsum is simply dummy text of the printing and typesetting
-							industry. Lorem Ipsum has been the industry's standard dummy text
-							ever since the 1500s, when an unknown printer took a galley of
-							type and scrambled it to make a type specimen book. It has
-							survived not only five centuries, but also the leap into
-							electronic typesetting, remaining essentially unchanged.
+							<span dangerouslySetInnerHTML={{ __html: allData.jobDetails && allData.jobDetails.jobDescription }}></span>
+							{/* <span dangerouslySetInnerHTML={{ __html: job.job_description }}></span> */}
 						</span>
 					</p>
-					<p>
+					{/* <p>
 						<span className="heading">Skills: </span>
 						<span className="text">
 							Lorem Ipsum is simply dummy text of the printing and typesetting
@@ -54,35 +51,10 @@ function JobView(props) {
 							survived not only five centuries, but also the leap into
 							electronic typesetting, remaining essentially unchanged.
 						</span>
-					</p>
+					</p> */}
 					<h2>A Certified Nursing Assistant's Job</h2>
 					<h3>Responsibilities</h3>
-					<ul>
-						<li>
-							Lorem Ipsum is simply dummy text of the printing and typesetting
-							industry. Lorem Ipsum has been the industry's standard dummy text
-							ever since the 1500s, when an unknown printer took a galley of
-							type and scrambled it to make a type specimen book. It has
-							survived not only five centuries, but also the leap into
-							electronic typesetting, remaining essentially unchanged.
-						</li>
-						<li>
-							Lorem Ipsum is simply dummy text of the printing and typesetting
-							industry. Lorem Ipsum has been the industry's standard dummy text
-							ever since the 1500s, when an unknown printer took a galley of
-							type and scrambled it to make a type specimen book. It has
-							survived not only five centuries, but also the leap into
-							electronic typesetting, remaining essentially unchanged.
-						</li>
-						<li>
-							Lorem Ipsum is simply dummy text of the printing and typesetting
-							industry. Lorem Ipsum has been the industry's standard dummy text
-							ever since the 1500s, when an unknown printer took a galley of
-							type and scrambled it to make a type specimen book. It has
-							survived not only five centuries, but also the leap into
-							electronic typesetting, remaining essentially unchanged.
-						</li>
-					</ul>
+					<span dangerouslySetInnerHTML={{ __html: allData.jobDetails && allData.jobDetails.jobDescription }}></span>
 					<div className="cta flex">
 						{/* <p>Are you interested to apply for this possition?</p> */}
 						{index < 75 ? (
@@ -92,8 +64,8 @@ function JobView(props) {
 								<br /> Are you sure you want to apply?
 							</p>
 						) : (
-							<p></p>
-						)}
+								<p></p>
+							)}
 
 						<Link className="primary-btn blue" to="/jobs/application">
 							Apply

@@ -52,7 +52,7 @@ function PersonalDetails(props) {
 	});
 
 	// setFormData(state.formValues);
-	
+
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
@@ -75,19 +75,18 @@ function PersonalDetails(props) {
 
 		console.log(formData);
 		if (oldFormData.formValid) {
-			let obj = [
-				{
-					"firstName": formData ? formData.firstName[0] : "",
-					"lastName": formData ? formData.lastName[0] : "",
-					"openToOtherRoles": formData && (formData.interestedIn[0] === "on") ? true : false,
-					"currentEmploymentStatusId": formData ? formData.employmentStatus[0] : "",
-					"availableWithin": formData ? formData.joiningDuration[0] : "",
-					"streetAddress": formData ? formData.streetAddress[0] : "",
-					"state": formData ? formData.state[0] : "",
-					"city": formData ? formData.city[0] : "",
-					"zipCode": formData ? parseInt(formData.zipCode[0]) : "",
-				},
-			];
+			let obj =
+			{
+				"firstName": formData ? formData.firstName[0] : "",
+				"lastName": formData ? formData.lastName[0] : "",
+				"openToOtherRoles": formData && (formData.interestedIn[0] === "on") ? true : false,
+				"currentEmploymentStatusId": formData ? formData.employmentStatus[0] : "",
+				"availableWithin": formData ? formData.joiningDuration[0] : "",
+				"streetAddress": formData ? formData.streetAddress[0] : "",
+				"state": formData ? formData.state[0] : "",
+				"city": formData ? formData.city[0] : "",
+				"zipCode": formData ? parseInt(formData.zipCode[0]) : "",
+			}
 			/* send data to api */
 			props.updateCandidateDetails(obj);
 			props.history.push("/profile/work-experience");

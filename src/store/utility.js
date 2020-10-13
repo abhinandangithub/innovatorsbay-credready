@@ -8,7 +8,6 @@ export const updateObject = (oldObject, updatedValues) => {
 };
 
 export const setDefaultAuthorizationHeader = (token) => {
-  console.log('utility ', token);
   if (token) {
     let jwt = JSON.parse(token).map.jwt;
     Axios.defaults.headers.common["Authorization"] = Boolean(token)

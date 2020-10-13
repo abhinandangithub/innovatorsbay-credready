@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPen, faTrash } from "@fortawesome/free-solid-svg-icons";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import "./index.scss";
 import Accordion from "../../../_Elements/Accordion";
@@ -16,10 +16,11 @@ import {
 	togglePopup,
 	toggleOverlay,
 } from "../../../../store/actions/popup_overlay";
+import { fetchCandidateDetails } from "../../../../modals/candidateProfile/thunk";
 
 function Application() {
 	const dispatch = useDispatch();
-
+	const userData = useSelector(state => state.candidateSetDataReducer.data);
 	const handleClick = () => {
 		dispatch(toggleOverlay(true));
 		dispatch(togglePopup([true, "jobApplied"]));
@@ -247,6 +248,9 @@ function Application() {
 		],
 	};
 
+	React.useEffect(() => {
+		dispatch(fetchCandidateDetails());
+	}, [])
 	return (
 		<div className="application_page">
 			<div className="heading">
@@ -277,7 +281,7 @@ function Application() {
 						</div>
 						<div className="bottom">
 							<p>
-								<Link to="/">marryjane_cv.pdf</Link>
+								<Link to="/">{"marryjane_cv.pdf"}</Link>
 							</p>
 						</div>
 					</div>
@@ -303,15 +307,15 @@ function Application() {
 							/>
 						</div>
 						<div className="bottom">
-							<p>First Name : Marry</p>
-							<p>Last Name : Jane</p>
+							<p>First Name : {userData.first_name}</p>
+							<p>Last Name :  {userData.last_name}</p>
 							<p>Current employment status : Employed</p>
-							<p>How long would you begin a new role? : 6 Months</p>
-							<p>
+							<p>How long would you begin a new role? : {userData.available_within}</p>
+							{/* <p>
 								Are you interested in a different function and industry? : Yes
 							</p>
 							<p>Empathy : 35</p>
-							<p>Patient : 80 </p>
+							<p>Patient : 80 </p> */}
 						</div>
 					</div>
 					<div className="group">
@@ -336,58 +340,31 @@ function Application() {
 							/>
 						</div>
 						<div className="bottom">
-							<div className="details">
-								<h2>Certified Nursing Assistant</h2>
-								<p>
-									<span className="heading">ABC Staffing Company</span>
-									{" - "}
-									<span className="text">New York</span>
-								</p>
-								<p>
-									<span className="heading">March 2012</span>
-									{" to "}
-									<span className="text">Present</span>
-								</p>
-								<p>
-									<span className="heading">Current employment status: </span>
-									<span className="text">Employed</span>
-								</p>
-								<p>
-									<span className="heading">Skills: </span>
-									<span className="text">
-										Patient Care & Safety, Medical Terminology, Electronic
-										Medical Records, Diagnostic Testing, Vital Signs & Patient
-										Monitoring, Medication Administration, Patient Advocacy and
-										Support.
-									</span>
-								</p>
-							</div>
-							<div className="details">
-								<h2>Certified Nursing Assistant</h2>
-								<p>
-									<span className="heading">ABC Staffing Company</span>
-									{" - "}
-									<span className="text">New York</span>
-								</p>
-								<p>
-									<span className="heading">March 2012</span>
-									{" to "}
-									<span className="text">Present</span>
-								</p>
-								<p>
-									<span className="heading">Current employment status: </span>
-									<span className="text">Employed</span>
-								</p>
-								<p>
-									<span className="heading">Skills: </span>
-									<span className="text">
-										Patient Care & Safety, Medical Terminology, Electronic
-										Medical Records, Diagnostic Testing, Vital Signs & Patient
-										Monitoring, Medication Administration, Patient Advocacy and
-										Support.
-									</span>
-								</p>
-							</div>
+							{userData && userData.work_experience && userData.work_experience.length > 1 ? userData.work_experience.map((exp, index) => {
+								return (
+									<div className="details" key={index}>
+										<h2>{exp.title}</h2>
+										<p>
+											<span className="text">{exp.location}</span>
+										</p>
+										<p>
+											<span className="heading">{exp.employment_from}</span>
+											{" to "}
+											<span className="text">{exp.employment_to}</span>
+										</p>
+										<p>
+											<span className="heading">Current employment status: </span>
+											<span className="text">Employed</span>
+										</p>
+										<p>
+											<span className="heading">Skills: </span>
+											<span className="text">
+												{exp.job_description}
+											</span>
+										</p>
+									</div>
+								)
+							}) : ""}
 						</div>
 					</div>
 					<div className="group ">
@@ -411,21 +388,31 @@ function Application() {
 								onClick={() => alert(`Deleting`)}
 							/>
 						</div>
-						<div className="bottom">
-							<div className="details">
-								<h2>ABC School, Sometown, CT</h2>
-								<p>
-									<span className="heading">Nurse’s Aide Program:</span>
-									{" - "}
-									<span className="text">ABC University</span>
-								</p>
-								<p>
-									<span className="text">FROM 2010</span>
-									{" to "}
-									<span className="text">1012</span>
-								</p>
-							</div>
-						</div>
+
+						{
+							userData && userData.education_experience && userData.education_experience.length > 1 ? userData.education_experience.map((exp, index) => {
+								return (
+									<div className="bottom">
+										<div className="details">
+											<h2>{exp.title}</h2>
+											<p>
+												<span className="heading">{exp.title}</span>
+												{" - "}
+												<span className="text">ABC University</span>
+											</p>
+											<p>
+												<span className="text">{exp.attended_from}</span>
+												{" to "}
+												<span className="text">{exp.attended_till}</span>
+											</p>
+										</div>
+									</div>
+								)
+							}) : ""
+						}
+
+
+						{}
 					</div>
 					<div className="group ">
 						<div className="top">
@@ -511,7 +498,7 @@ function Application() {
 							</div>
 						</div>
 					</div>
-					<div className="group ">
+					{/* <div className="group ">
 						<div className="top">
 							<h1>
 								Strengths
@@ -551,7 +538,7 @@ function Application() {
 								</p>
 							</div>
 						</div>
-					</div>
+					</div> */}
 				</div>
 			</div>
 

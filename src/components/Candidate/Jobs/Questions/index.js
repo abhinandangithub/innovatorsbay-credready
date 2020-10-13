@@ -24,7 +24,7 @@ export const isAnswer = (data, q, a) => {
 		data.forEach((ques) => {
 			if (q === ques.question_id) {
 				if (Array.isArray(a)) {
-					answer = ques.answer.includes(a[0]);
+					// answer = ques.answer.includes(a[0]);
 				} else if (typeof a === "object") {
 					if (a.sub_question_id_2) {
 						let i = findIndex(ques.answer, a.sub_question_id_2);
@@ -284,7 +284,99 @@ function Questions(props) {
 			},
 		],
 
-		employer_questions: [
+
+		"coursework":
+			[
+				{
+					"question_id": 1,
+					"answer": 1
+				},
+
+				{
+					"question_id": 2,
+					"answer": [
+						{
+							"sub_question_id": 1,
+							"sub_answer": 4
+						},
+						{
+							"sub_question_id": 3,
+							"sub_answer": 4
+						}]
+				},
+
+				{
+					"question_id": 3,
+					"answer": [
+						{
+							"sub_question_id": 1,
+							"sub_answer": 4
+						},
+						{
+							"sub_question_id": 3,
+							"sub_answer": 4
+						}]
+				},
+
+				{
+					"question_id": 4,
+					"answer": 1
+				}
+			],
+
+		"work_history":
+			[
+				{
+					"question_id": 1,
+					"answer": 3
+				},
+				{
+					"question_id": 2,
+					"answer": "2 years 3 months"
+				},
+				{
+					"question_id": 3,
+					"answer": "07-02-2020"
+				},
+				{
+					"question_id": 4,
+					"answer": [1, 2]
+				}
+			],
+
+		"commute":
+			[
+				{
+					"question_id": 1,
+					"answer": "Warren, NJ"
+				},
+				{
+					"question_id": 2,
+					"answer": 1
+				},
+				{
+					"question_id": 3,
+					"answer": [
+						{
+							"sub_question_id": 1,
+							"sub_answer": "street address"
+						},
+						{
+							"sub_question_id": 2,
+							"sub_answer": "zipcode"
+						},
+						{
+							"sub_question_id": 3,
+							"sub_answer": "city"
+						},
+						{
+							"sub_question_id": 4,
+							"sub_answer": "state"
+						}
+					]
+				}
+			],
+		"employer_questions": [
 			{
 				question_id: 1,
 				answer: [1],
@@ -390,6 +482,10 @@ function Questions(props) {
 		coursework: coursework,
 		workHistory: workHistory,
 		commute: commute,
+	};
+
+	const onSubmitHandler = () => {
+		console.log(JSON.stringify(formData));
 	};
 
 	const calHeight = (height) => {
@@ -501,7 +597,7 @@ function Questions(props) {
 						<CourseWork
 							calHeight={calHeight}
 							data={formData.coursework}
-							onchange={(q, a) => handleFieldChange("coursework", q, a)}
+							onchange={(q, a) => handleFieldChange(formData.coursework, q, a)}
 						/>
 						<WorkHistory
 							calHeight={calHeight}
@@ -523,8 +619,8 @@ function Questions(props) {
 								}
 							/>
 						)}
-						<div className="cta">
-							<Link to="/jobs/view/1" className="primary-btn">
+						<div className="cta" >
+							<Link to="/jobs/view/1" className="primary-btn" onClick={onSubmitHandler}>
 								Submit
 							</Link>
 						</div>
@@ -532,7 +628,7 @@ function Questions(props) {
 					</Scrollbars>
 				</div>
 			</div>
-		</div>
+		</div >
 	);
 }
 

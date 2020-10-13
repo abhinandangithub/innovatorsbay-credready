@@ -33,23 +33,16 @@ function ProfileOverview(props) {
 	console.log('employerProfile ', props.type, employerProfile);
 	const [email, setEmail] = useState(
 		props.type === "candidate"
-			? allData.username
-				? allData.username
-				: ""
-			: employerProfile.data.contacts.length > 0
-				? employerProfile.data.contacts.find((el) => el.contact_type === "email")
-					.contact
-				: ""
+			&& allData.contacts && allData.contacts.length > 0
+			? allData.contacts.find((el) => el.contact_type === "email").contact
+			: ""
 	);
+
 	const [phone, setPhone] = useState(
 		props.type === "candidate"
-			? allData.phone_no
-				? allData.phone_no
-				: ""
-			: employerProfile.data.contacts.length > 0
-				? employerProfile.data.contacts.find((el) => el.contact_type === "phone")
-					.contact
-				: ""
+			&& allData.contacts && allData.contacts.length > 0
+			? allData.contacts.find((el) => el.contact_type === "phone").contact
+			: ""
 	);
 	const [editingPhone, setEditingPhone] = useState(false);
 	const [editingEmail, setEditingEmail] = useState(false);

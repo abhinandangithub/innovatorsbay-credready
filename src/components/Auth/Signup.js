@@ -19,7 +19,6 @@ function Signup(props) {
 	const onSubmit = (data) => {
 		data.user_type = signupType === "candidate" ? "jobseeker" : signupType;
 		// data.phone = "+"+ data.phone;
-		console.log(data);
 		dispatch(getVerificationCode(data));
 		dispatch(toggleOverlay(true));
 		dispatch(togglePopup([true, "termsAndConditions"]));
@@ -36,7 +35,6 @@ function Signup(props) {
 	};
 
 	useEffect(() => {
-		console.log("Signup as a " + signupType);
 		return () => {
 			// cleanup
 		};
