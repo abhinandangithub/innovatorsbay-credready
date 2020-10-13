@@ -9,19 +9,61 @@ function CreateNewQuestion() {
 	const [jobTitle, setJobTitle] = useState("");
 	const [questionName, setQuestionName] = useState("");
 	const [questionType, setQuestionType] = useState("");
+	const [optionChoiceName, setOptionChoiceName] = useState(["", "", ""]);
 	const dispatch = useDispatch();
 
 	const handleQuestionAdd = () => {
 		console.log("create");
-		dispatch(createQuestion({
-			"category": "Employer Questions",
-			"forPublicReview": true,
-			"jobTitle": jobTitle,
-			"questionName": questionName,
-			"questionType": questionType
-		}));
+		let addQuestion = {};
+		let optionChoiceMap = [];
+		if(questionType === 'mcq') {
+			optionChoiceMap = optionChoiceName.map((val) => {
+				if(val !== "") {
+					return {
+						optionChoiceName: val,
+						questionType: 'boolean'
+					}
+				} else {
+					return null;
+				}
+			});
+			if(optionChoiceMap.length !== 0) {
+				let optionChoiceMapTemp = optionChoiceMap.filter(val => val !== null);
+				addQuestion = {
+					"category": "Employer Questions",
+					"forPublicReview": true,
+					"jobTitle": jobTitle,
+					"questionName": questionName,
+					"questionType": questionType,
+					"optionChoices": optionChoiceMapTemp
+				}
+			} else {
+				addQuestion = {
+					"category": "Employer Questions",
+					"forPublicReview": true,
+					"jobTitle": jobTitle,
+					"questionName": questionName,
+					"questionType": questionType
+				}
+			}
+		} else {
+			addQuestion = {
+				"category": "Employer Questions",
+				"forPublicReview": true,
+				"jobTitle": jobTitle,
+				"questionName": questionName,
+				"questionType": questionType
+			}
+		}
+		dispatch(createQuestion(addQuestion));
 		dispatch(toggleOverlay(false));
 		dispatch(togglePopup([false, "createNewQuestion"]));
+	}
+
+	const handleOptionChange = (i, value) => {
+		let optionChoiceNameTemp = optionChoiceName.map(val => val);
+		optionChoiceNameTemp[i] = value;
+		setOptionChoiceName(optionChoiceNameTemp)
 	}
 
 	return (
@@ -70,15 +112,15 @@ function CreateNewQuestion() {
 						<button className="add">Add Option</button>
 						<ul>
 							<li>
-								<input type="text" />
+								<input type="text" value={optionChoiceName[0]} id={0} onChange={(e) => handleOptionChange(e.target.id, e.target.value)}/>
 								<button className="delete"></button>
 							</li>
 							<li>
-								<input type="text" />
+								<input type="text" value={optionChoiceName[1]} id={1} onChange={(e) => handleOptionChange(e.target.id, e.target.value)}/>
 								<button className="delete"></button>
 							</li>
 							<li>
-								<input type="text" />
+								<input type="text" value={optionChoiceName[2]} id={2} onChange={(e) => handleOptionChange(e.target.id, e.target.value)}/>
 								<button className="delete"></button>
 							</li>
 						</ul>
