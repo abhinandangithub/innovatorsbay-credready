@@ -637,7 +637,8 @@ const reducer = (state = initialState, action) => {
 
 		case actionTypes.SET_QUESTION_BANK_QUESTIONS:
 			const questionsTemp1 = state.questionBank;
-			questionsTemp1.questions.push(...action.value);
+			// questionsTemp1.questions.push(...action.value);
+			questionsTemp1.questions = action.value;
 			return updateObject(state, {
 				questionBank: questionsTemp1
 			});
