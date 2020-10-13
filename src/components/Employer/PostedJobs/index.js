@@ -51,10 +51,10 @@ function PostedJobs(props) {
 
 				</p>
 				<ul className="common-skills-list">
-				{/* <li>Skills: </li>
-				{!!job.strengths && job.strengths.length && job.strengths.map((val,i) => {
-					return <li key={i}>{val.name}</li>
-				})} */}
+				<li>Certificates: </li>
+				{!!job.certificates && job.certificates.length && job.certificates.map((val,i) => {
+					return <li key={i}>{val.title_name}</li>
+				})}
 			</ul>
 				<p className="job-openings">
 					<span>Job Openings: </span>{job.open_positions}
