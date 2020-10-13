@@ -1,6 +1,9 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
+import Highcharts from "highcharts";
+import HighchartsReact from "highcharts-react-official";
+
 import "./index.scss";
 import ImgWidgetLogo from "../../../../assets/widget-logo.jpg";
 import CredReadyIndex from "../../../_Elements/CredReadyIndex";
@@ -11,12 +14,80 @@ function JobView(props) {
 	/* Data comming from API will come here */
 	const dispatch = useDispatch();
 	console.log(props.match.params);
-	const allData = useSelector(state => state.setCandidateJobViewDataReducer.data);
+	const allData = useSelector(
+		(state) => state.setCandidateJobViewDataReducer.data
+	);
 	console.log(allData);
-	var index = allData.jobDetails && allData.candidateJobApplication.readiness_index;
+	var index =
+		allData.jobDetails && allData.candidateJobApplication.readiness_index;
 	React.useEffect(() => {
-		dispatch(fetchjobViewData(1))
-	}, [])
+		dispatch(fetchjobViewData(1));
+	}, []);
+
+	const marginalAssociation = {
+		chart: {
+			type: "bar",
+		},
+		title: {
+			text: "",
+		},
+
+		xAxis: {
+			categories: [""],
+			title: {
+				text: null,
+			},
+		},
+		yAxis: {
+			min: 0,
+			title: {
+				align: "high",
+			},
+			labels: {
+				overflow: "justify",
+			},
+		},
+		tooltip: {
+			valueSuffix: " millions",
+		},
+		plotOptions: {
+			bar: {
+				dataLabels: {
+					enabled: true,
+				},
+			},
+		},
+		legend: {
+			layout: "vertical",
+			align: "right",
+			verticalAlign: "top",
+			x: -40,
+			y: 80,
+			floating: true,
+			borderWidth: 1,
+			backgroundColor:
+				Highcharts.defaultOptions.legend.backgroundColor || "#FFFFFF",
+			shadow: true,
+		},
+		credits: {
+			enabled: false,
+		},
+		series: [
+			{
+				data: [107],
+			},
+			{
+				data: [133],
+			},
+			{
+				data: [814],
+			},
+			{
+				data: [1216],
+			},
+		],
+	};
+
 	return (
 		<div className="job-view-cmp flex">
 			<div className="left">
@@ -29,7 +100,10 @@ function JobView(props) {
 						<p>{allData.jobDetails && allData.jobDetails.orgName}</p>
 					</div>
 					<div className="short-info">
-						<p>{allData.jobDetails && allData.jobDetails.minExp}-{allData.jobDetails && allData.jobDetails.maxExp} Years</p>
+						<p>
+							{allData.jobDetails && allData.jobDetails.minExp}-
+							{allData.jobDetails && allData.jobDetails.maxExp} Years
+						</p>
 						<p>{allData.jobDetails && allData.jobDetails.location}</p>
 					</div>
 				</div>
@@ -37,7 +111,12 @@ function JobView(props) {
 					<p>
 						<span className="heading">Job Description: </span>
 						<span className="text">
-							<span dangerouslySetInnerHTML={{ __html: allData.jobDetails && allData.jobDetails.jobDescription }}></span>
+							<span
+								dangerouslySetInnerHTML={{
+									__html:
+										allData.jobDetails && allData.jobDetails.jobDescription,
+								}}
+							></span>
 							{/* <span dangerouslySetInnerHTML={{ __html: job.job_description }}></span> */}
 						</span>
 					</p>
@@ -54,7 +133,11 @@ function JobView(props) {
 					</p> */}
 					<h2>A Certified Nursing Assistant's Job</h2>
 					<h3>Responsibilities</h3>
-					<span dangerouslySetInnerHTML={{ __html: allData.jobDetails && allData.jobDetails.jobDescription }}></span>
+					<span
+						dangerouslySetInnerHTML={{
+							__html: allData.jobDetails && allData.jobDetails.jobDescription,
+						}}
+					></span>
 					<div className="cta flex">
 						{/* <p>Are you interested to apply for this possition?</p> */}
 						{index < 75 ? (
@@ -64,8 +147,8 @@ function JobView(props) {
 								<br /> Are you sure you want to apply?
 							</p>
 						) : (
-								<p></p>
-							)}
+							<p></p>
+						)}
 
 						<Link className="primary-btn blue" to="/jobs/application">
 							Apply
@@ -83,7 +166,11 @@ function JobView(props) {
 				</div>
 				<div className="marginal">
 					<h3>Top 5 Contributors to CredREadiness</h3>
-					<img src={ImgMarginalAssociation} alt="Marginal Association" />
+					<HighchartsReact
+						highcharts={Highcharts}
+						options={marginalAssociation}
+					/>
+					{/* <img src={ImgMarginalAssociation} alt="Marginal Association" /> */}
 				</div>
 			</div>
 		</div>

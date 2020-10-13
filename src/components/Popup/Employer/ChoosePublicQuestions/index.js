@@ -3,10 +3,16 @@ import { useDispatch, connect } from "react-redux";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPen, faTrash } from "@fortawesome/free-solid-svg-icons";
-import { togglePopup, toggleOverlay } from "../../../../store/actions/popup_overlay";
-import { createQuestion } from '../../../../store/thunks/employer';
+import {
+	togglePopup,
+	toggleOverlay,
+} from "../../../../store/actions/popup_overlay";
+import { createQuestion } from "../../../../store/thunks/employer";
 import Input from "../../../_Elements/Input";
-import { setQuestionBankQuestion, setNewJob } from "../../../../store/actions/employer";
+import {
+	setQuestionBankQuestion,
+	setNewJob,
+} from "../../../../store/actions/employer";
 
 import "./index.scss";
 
@@ -15,7 +21,7 @@ function ChoosePublicQuestions(props) {
 	let questionToSave = props.questionsSelected;
 	console.log('props ', props);
 	const createNewQuestion = () => {
-		dispatch(togglePopup([true, "createNewQuestion"]));
+		dispatch(togglePopup([true, "createNewQuestion", { type: "public" }]));
 	};
 
 	useEffect(() => {
@@ -48,20 +54,20 @@ function ChoosePublicQuestions(props) {
 	};
 
 	const handleQuestionAdd = () => {
-		console.log('data ', questionToSave)
-		console.log('create');
+		console.log("data ", questionToSave);
+		console.log("create");
 		dispatch(setQuestionBankQuestion(questionToSave));
 		dispatch(setNewJob({ jobQuestionnaireMap: questionToSave }));
 		// dispatch(createQuestion({
-		// 	"category": "Employer Questions",   
-		// 	"forPublicReview": true,   
-		// 	"jobTitle": "CNA",   
-		// 	"questionName": "How would you define yourself?",   
+		// 	"category": "Employer Questions",
+		// 	"forPublicReview": true,
+		// 	"jobTitle": "CNA",
+		// 	"questionName": "How would you define yourself?",
 		// 	"questionType": "text-input"
 		// }));
 		dispatch(toggleOverlay(false));
 		dispatch(togglePopup([false, "addNewQuestion"]));
-	}
+	};
 
 	return (
 		<div className="choose-private-question">
@@ -95,14 +101,14 @@ function ChoosePublicQuestions(props) {
 											<FontAwesomeIcon
 												className="action-btn edit"
 												icon={faPen}
-											// id={"workExperienceEdit_" + i}
-											// onClick={handleEdit}
+												// id={"workExperienceEdit_" + i}
+												// onClick={handleEdit}
 											/>
 											<FontAwesomeIcon
 												className="action-btn delete"
 												icon={faTrash}
-											// id={"workExperienceDelete_" + i}
-											// onClick={() => handleDelete("workExperience")}
+												// id={"workExperienceDelete_" + i}
+												// onClick={() => handleDelete("workExperience")}
 											/>
 										</>
 									) : question.question_type === "mcq" ? (
@@ -131,8 +137,9 @@ function ChoosePublicQuestions(props) {
 														<div key={i}>
 															<input
 																key={i}
-																className={`fancy-toggle blue ${i === 0 ? "yes" : "no"
-																	}`}
+																className={`fancy-toggle blue ${
+																	i === 0 ? "yes" : "no"
+																}`}
 																id={`${option.id}${option.question_id}`}
 																name={`${option.question_id}`}
 																type="radio"
@@ -147,9 +154,7 @@ function ChoosePublicQuestions(props) {
 														</div>
 													);
 												}
-
 											})}
-
 										</>
 									) : null}
 								</div>
@@ -167,21 +172,26 @@ function ChoosePublicQuestions(props) {
 								<FontAwesomeIcon
 									className="action-btn edit"
 									icon={faPen}
-								// id={"workExperienceEdit_" + i}
-								// onClick={handleEdit}
+									// id={"workExperienceEdit_" + i}
+									// onClick={handleEdit}
 								/>
 								<FontAwesomeIcon
 									className="action-btn delete"
 									icon={faTrash}
-								// id={"workExperienceDelete_" + i}
-								// onClick={() => handleDelete("workExperience")}
+									// id={"workExperienceDelete_" + i}
+									// onClick={() => handleDelete("workExperience")}
 								/>
 							</li>
 						);
 					})}
 				</ul>
 				<div className="cta">
-					<button className="primary-btn" onClick={() => handleQuestionAdd()}>Add</button>
+					<button
+						className="primary-btn blue"
+						onClick={() => handleQuestionAdd()}
+					>
+						Done
+					</button>
 				</div>
 			</div>
 		</div>
@@ -189,7 +199,6 @@ function ChoosePublicQuestions(props) {
 }
 
 // export default ChoosePublicQuestions;
-
 
 function mapStateToProps(state) {
 	return {

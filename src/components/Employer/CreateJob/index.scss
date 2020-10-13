@@ -224,6 +224,11 @@
 								}
 							}
 						}
+						& + .cta {
+							margin-top: 60px;
+							background-color: transparent;
+							box-shadow: none;
+						}
 					}
 					&.copy-link {
 						margin-bottom: 0;
@@ -250,10 +255,6 @@
 								font-size: 18px;
 								color: #000;
 							}
-						}
-						& + .cta {
-							background-color: transparent;
-							box-shadow: none;
 						}
 					}
 					&.blank {

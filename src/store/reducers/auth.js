@@ -11,7 +11,7 @@ const initialState = {
 		value: false,
 		as: "",
 		// value: true,
-		// as: "candidate",
+		// as: "employer",
 	},
 	singUp: {
 		email: null,
