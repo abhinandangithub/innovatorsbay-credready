@@ -1,69 +1,21 @@
-import React, { useState } from "react";
+import React from "react";
 import { createQuestion } from '../../../../store/thunks/employer';
 import { useDispatch } from "react-redux";
-import { togglePopup, toggleOverlay } from "../../../../store/actions/popup_overlay";
 
 import "./index.scss";
 
 function CreateNewQuestion() {
-	const [jobTitle, setJobTitle] = useState("");
-	const [questionName, setQuestionName] = useState("");
-	const [questionType, setQuestionType] = useState("");
-	const [optionChoiceName, setOptionChoiceName] = useState(["", "", ""]);
 	const dispatch = useDispatch();
 
 	const handleQuestionAdd = () => {
 		console.log("create");
-		let addQuestion = {};
-		let optionChoiceMap = [];
-		if(questionType === 'mcq') {
-			optionChoiceMap = optionChoiceName.map((val) => {
-				if(val !== "") {
-					return {
-						optionChoiceName: val,
-						questionType: 'boolean'
-					}
-				} else {
-					return null;
-				}
-			});
-			if(optionChoiceMap.length !== 0) {
-				let optionChoiceMapTemp = optionChoiceMap.filter(val => val !== null);
-				addQuestion = {
-					"category": "Employer Questions",
-					"forPublicReview": true,
-					"jobTitle": jobTitle,
-					"questionName": questionName,
-					"questionType": questionType,
-					"optionChoices": optionChoiceMapTemp
-				}
-			} else {
-				addQuestion = {
-					"category": "Employer Questions",
-					"forPublicReview": true,
-					"jobTitle": jobTitle,
-					"questionName": questionName,
-					"questionType": questionType
-				}
-			}
-		} else {
-			addQuestion = {
-				"category": "Employer Questions",
-				"forPublicReview": true,
-				"jobTitle": jobTitle,
-				"questionName": questionName,
-				"questionType": questionType
-			}
-		}
-		dispatch(createQuestion(addQuestion));
-		dispatch(toggleOverlay(false));
-		dispatch(togglePopup([false, "createNewQuestion"]));
-	}
-
-	const handleOptionChange = (i, value) => {
-		let optionChoiceNameTemp = optionChoiceName.map(val => val);
-		optionChoiceNameTemp[i] = value;
-		setOptionChoiceName(optionChoiceNameTemp)
+		dispatch(createQuestion({
+			"category": "Employer Questions",
+			"forPublicReview": true,
+			"jobTitle": "CNA",
+			"questionName": "How would you define yourself?",
+			"questionType": "text-input"
+		}));
 	}
 
 	return (
@@ -73,13 +25,13 @@ function CreateNewQuestion() {
 				<ul>
 					<li>
 						<label htmlFor="questionForJobTitle">Question for Job Title</label>
-						<input type="text" id="questionForJobTitle" value={jobTitle} onChange={(e) => setJobTitle(e.target.value)}/>
+						<input type="text" id="questionForJobTitle" />
 					</li>
 					<li>
 						<label htmlFor="question">
 							Question <span>*</span>
 						</label>
-						<input type="text" id="question" value={questionName} onChange={(e) => setQuestionName(e.target.value)}/>
+						<input type="text" id="question" />
 					</li>
 					<li>
 						<div className="answer-block">
@@ -92,7 +44,6 @@ function CreateNewQuestion() {
 									className="fancy-toggle"
 									type="radio"
 									id="freeText"
-									onChange={() => setQuestionType("text-input")}
 								/>
 								<label htmlFor="freeText">
 									<span className="input"></span>Free Text
@@ -102,7 +53,6 @@ function CreateNewQuestion() {
 									className="fancy-toggle"
 									type="radio"
 									id="multipleChoice"
-									onChange={() => setQuestionType("mcq")}
 								/>
 								<label htmlFor="multipleChoice">
 									<span className="input"></span>Multiple Choice
@@ -112,15 +62,15 @@ function CreateNewQuestion() {
 						<button className="add">Add Option</button>
 						<ul>
 							<li>
-								<input type="text" value={optionChoiceName[0]} id={0} onChange={(e) => handleOptionChange(e.target.id, e.target.value)}/>
+								<input type="text" />
 								<button className="delete"></button>
 							</li>
 							<li>
-								<input type="text" value={optionChoiceName[1]} id={1} onChange={(e) => handleOptionChange(e.target.id, e.target.value)}/>
+								<input type="text" />
 								<button className="delete"></button>
 							</li>
 							<li>
-								<input type="text" value={optionChoiceName[2]} id={2} onChange={(e) => handleOptionChange(e.target.id, e.target.value)}/>
+								<input type="text" />
 								<button className="delete"></button>
 							</li>
 						</ul>
