@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useDispatch, connect } from "react-redux";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -13,18 +13,38 @@ import "./index.scss";
 
 function ChoosePrivateQuestions(props) {
 	const dispatch = useDispatch();
-	let questionToSave = [];
+	let questionToSave = props.questionsSelected;;
 	console.log('props ', props);
 	const createNewQuestion = () => {
 		dispatch(togglePopup([true, "createNewQuestion"]));
 	};
 
+	useEffect(() => {
+		props.questionsSelected.forEach(element => {
+			document.getElementById(element.question_id).checked = true;
+		});
+	},[props.questionsSelected]);
+
 	const handleCheckEvent = (event, question) => {
 		console.log(event.target.value, question);
 		if (document.getElementById(event.target.id).checked) {
-			questionToSave.push(question);
+			// questionToSave.push(question);
+			if (questionToSave.length !== 0) {
+				if((questionToSave.find(x => x.question_id !== event.target.id).question_id).length !== 0) {
+					questionToSave.push(question);
+				}
+			} else {
+				questionToSave.push(question);
+			}
 		} else {
-
+			questionToSave = questionToSave.map((val) => {
+				if(val.question_id != event.target.id) {
+					return val;
+				} else {
+					return null;
+				}
+			});
+			questionToSave = questionToSave.filter(e => e !== null);
 		}
 	};
 
@@ -139,9 +159,9 @@ function ChoosePrivateQuestions(props) {
 									name="question"
 									type="checkbox"
 									onClick={(event) => handleCheckEvent(event, question)}
-									id={"question" + i}
+									id={question.question_id}
 								/>
-								<label htmlFor={"question" + i}>
+								<label htmlFor={question.question_id}>
 									<span className="input"></span>
 								</label>
 
@@ -174,7 +194,8 @@ function ChoosePrivateQuestions(props) {
 
 function mapStateToProps(state) {
 	return {
-		questionBank: state.employerReducer.questionBank.data.private_question_bank
+		questionBank: state.employerReducer.questionBank.data.private_question_bank,
+		questionsSelected: state.employerReducer.questionBank.questions
 	}
 }
 

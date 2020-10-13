@@ -40,7 +40,8 @@ function CopyLink(props) {
 				</div>
 				<div className="content">
 					<h2 className="thank-you">
-						Thank you, You have successfully posted “C.N.A in Warren New Jersey”
+						{/* Thank you, You have successfully posted “C.N.A in Warren New Jersey” */}
+						{"Thank you, You have successfully posted " + props.newJob.jobTitle}
 					</h2>
 					<p className="status">We have sent you a confirmation email.</p>
 					<p className="link">Here is the link to the post on CredReady.com</p>
@@ -80,7 +81,8 @@ Certified Nursing Assistant</a>`}
 function mapStateToProps(state) {
 	return {
 		//jobURL: state.employerReducer.jobURL.replace("https://dev.innovatorsbay.in/credready/jobs/", "http://localhost:3000/postings/")
-		jobURL: state.employerReducer.jobURL
+		jobURL: state.employerReducer.jobURL,
+		newJob: state.employerReducer.newJob
 	}
 }
 
