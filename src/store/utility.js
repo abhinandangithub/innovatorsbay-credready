@@ -8,10 +8,13 @@ export const updateObject = (oldObject, updatedValues) => {
 };
 
 export const setDefaultAuthorizationHeader = (token) => {
-  let jwt = JSON.parse(token).map.jwt;
-  Axios.defaults.headers.common["Authorization"] = Boolean(token)
-    ? `${jwt}`
-    : `Bearer null`;
+  console.log('utility ', token);
+  if (token) {
+    let jwt = JSON.parse(token).map.jwt;
+    Axios.defaults.headers.common["Authorization"] = Boolean(token)
+      ? `${jwt}`
+      : `Bearer null`;
+  }
 };
 
 export const setContentTypeDefaultHeader = () => {

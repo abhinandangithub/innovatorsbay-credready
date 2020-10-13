@@ -1,15 +1,21 @@
 import React from "react";
 import { Link } from "react-router-dom";
-
+import { useDispatch, useSelector } from "react-redux";
 import "./index.scss";
 import ImgWidgetLogo from "../../../../assets/widget-logo.jpg";
 import CredReadyIndex from "../../../_Elements/CredReadyIndex";
 import ImgMarginalAssociation from "../../../../assets/widget-2.jpg";
+import { fetchjobViewData } from "../../../../modals/candidateProfile/thunk";
 
-function JobView() {
+function JobView(props) {
 	/* Data comming from API will come here */
-	var index = 80;
-
+	var index = 30;
+	const dispatch = useDispatch();
+	console.log(props.match.params);
+	const allData = useSelector(state => state.setCandidateJobViewDataReducer.data);
+	React.useEffect(() => {
+		dispatch(fetchjobViewData(1))
+	}, [])
 	return (
 		<div className="job-view-cmp flex">
 			<div className="left">

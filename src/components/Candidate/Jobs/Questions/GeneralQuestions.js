@@ -7,6 +7,7 @@ import { findIndex } from "./index";
 function GeneralQuestions({ data, onchange, calHeight, noHeading }) {
 	const [appliedDate, setAppliedDate] = React.useState();
 	const [separatedDate, setSeparatedDate] = React.useState();
+	const appliedNoEl = React.useRef(null);
 
 	const selectSeparatedDate = (date) => {
 		let i = findIndex(data, 6); // 1 is question_id
@@ -17,7 +18,7 @@ function GeneralQuestions({ data, onchange, calHeight, noHeading }) {
 		}
 		setSeparatedDate(d);
 	};
-	const selectDefaultDate = (date) => {
+	const selectAppliedDate = (date) => {
 		let i = findIndex(data, 1); // 1 is question_id
 		let a = data.length > 0 && data[i].answer;
 		let d = date ? new Date(date) : new Date(a);
@@ -33,7 +34,7 @@ function GeneralQuestions({ data, onchange, calHeight, noHeading }) {
 		if (calHeight) {
 			calHeight(parent.current.clientHeight);
 		}
-		selectDefaultDate();
+		selectAppliedDate();
 		selectSeparatedDate();
 	}, []);
 
@@ -56,16 +57,21 @@ function GeneralQuestions({ data, onchange, calHeight, noHeading }) {
 							<label>When you applied?</label>
 							<DatePicker
 								selected={appliedDate}
-								onChange={(date) => selectDefaultDate(date)}
 								placeholderText="Select Date"
+								onChange={(date) => {
+									appliedNoEl.current.checked = false;
+									setAppliedDate(date);
+									onchange(1, date);
+								}}
 							/>
 							<span style={{ margin: "0 15px" }}>Or</span>
 							<input
 								className="fancy-toggle no radio"
+								ref={appliedNoEl}
 								name="applied"
 								type="radio"
 								id="appliedBefore"
-								defaultChecked={isAnswer(data, 2, 2)}
+								defaultChecked={isAnswer(data, 1, 2)}
 								onChange={() => {
 									setAppliedDate(null);
 									onchange(1, 2);
@@ -232,7 +238,9 @@ function GeneralQuestions({ data, onchange, calHeight, noHeading }) {
 										})}
 										onChange={() => {
 											setSeparatedDate(null);
-											onchange(6, 1);
+											onchange(6, {
+												sub_answer: 1,
+											});
 										}}
 									/>
 									<label htmlFor="disabledVeteran">
@@ -248,7 +256,9 @@ function GeneralQuestions({ data, onchange, calHeight, noHeading }) {
 										})}
 										onChange={() => {
 											selectSeparatedDate();
-											onchange(6, 2);
+											onchange(6, {
+												sub_answer: 2,
+											});
 										}}
 									/>
 									<label htmlFor="separatedVeteran">
@@ -270,7 +280,9 @@ function GeneralQuestions({ data, onchange, calHeight, noHeading }) {
 										})}
 										onChange={() => {
 											setSeparatedDate(null);
-											onchange(6, 1);
+											onchange(6, {
+												sub_answer: 3,
+											});
 										}}
 									/>
 									<label htmlFor="activeVeteran">
@@ -287,7 +299,9 @@ function GeneralQuestions({ data, onchange, calHeight, noHeading }) {
 										})}
 										onChange={() => {
 											setSeparatedDate(null);
-											onchange(6, 4);
+											onchange(6, {
+												sub_answer: 4,
+											});
 										}}
 									/>
 									<label htmlFor="medalVeteran">

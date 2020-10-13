@@ -673,14 +673,16 @@ input[type="number"] {
 /* **************** */
 .widgets {
 	display: flex;
-	justify-content: space-between;
+	// justify-content: space-between;
 	flex-wrap: wrap;
 	.widget {
 		border: 1px solid #bcd1e4;
-		width: calc(33.33% - 20px);
+		width: calc(33.33% - 30px);
 		display: block;
 		color: #6b6c6f;
 		background: white;
+		margin-right: 30px;
+		margin-bottom: 30px;
 		.top {
 			border-bottom: 1px solid #bcd1e4;
 			display: flex;

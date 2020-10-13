@@ -34,3 +34,8 @@ export const candidateSetAllAnswers = (data) => ({
     type: types.SET_CANDIDATE_ALL_ANSWERS,
     data,
 })
+
+export const candidateSetJobViewData = (data) => ({
+    type: types.SET_CANDIDATE_JOB_VIEW_DATA,
+    data,
+})

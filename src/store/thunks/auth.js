@@ -17,7 +17,7 @@ export const tryLogin = (credentials) => async (dispatch, getState) => {
 		/**
 		 * TODO: after uncomment below line, `dispatch(updateLoggedIn([true, type]));` is not working
 		 */
-		setDefaultAuthorizationHeader(token);
+		// setDefaultAuthorizationHeader(token);
 		dispatch(updateJwtToken(token));
 		let type =
 			token && token.map
@@ -25,8 +25,9 @@ export const tryLogin = (credentials) => async (dispatch, getState) => {
 					? "candidate"
 					: token.map.user_type
 				: "";
-		dispatch(updateLoggedIn([true, type]));
 		fetchCandidateDetails();
+		dispatch(updateLoggedIn([true, type]));
+		setDefaultAuthorizationHeader(token);
 	} catch (err) {
 		if (err.response) console.error(`failed to log-in with error ${err}`);
 	}

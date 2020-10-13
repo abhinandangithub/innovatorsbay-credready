@@ -23,10 +23,10 @@ export const isAnswer = (data, q, a) => {
 	data &&
 		data.forEach((ques) => {
 			if (q === ques.question_id) {
-				if (typeof a === "object") {
-					if (a.sub_answer === ques.sub_answer) {
-						answer = true;
-					}
+				if (Array.isArray(a)) {
+					answer = ques.answer.includes(a[0]);
+				} else if (typeof a === "object") {
+					answer = a.sub_answer === ques.sub_answer;
 				} else if (a === ques.answer) {
 					answer = true;
 				}
@@ -37,7 +37,7 @@ export const isAnswer = (data, q, a) => {
 
 /* type="general_questions", q="question_id" */
 export const findIndex = (arr, q) => {
-	console.log(arr);
+	// console.log(arr);
 	let index = false;
 	arr.forEach((ques, i) => {
 		if (ques.question_id === q) {
@@ -67,7 +67,7 @@ function Questions(props) {
 		});
 	};
 
-	const formData = {
+	const _formData = {
 		general_questions: [
 			{
 				question_id: 1,
@@ -192,34 +192,21 @@ function Questions(props) {
 
 			{
 				question_id: 2,
-				answer: [
-					{
-						sub_question_id: 1,
-						sub_answer: 4,
-					},
-					{
-						sub_question_id: 3,
-						sub_answer: 4,
-					},
-				],
+				answer: [1, 3],
 			},
 
 			{
 				question_id: 3,
-				answer: [
-					{
-						sub_question_id: 1,
-						sub_answer: 4,
-					},
-					{
-						sub_question_id: 3,
-						sub_answer: 4,
-					},
-				],
+				answer: 1,
 			},
 
 			{
 				question_id: 4,
+				answer: [1, 2],
+			},
+
+			{
+				question_id: 5,
 				answer: 1,
 			},
 		],
@@ -291,12 +278,25 @@ function Questions(props) {
 		],
 	};
 
+	const [formData, setFormData] = React.useState(_formData);
+
 	/* type="general_questions", q="question_id" a="answer" */
-	const handleFieldChange = (arr, q, a) => {
-		let i = findIndex(arr, q);
-		console.log(arr, i);
-		arr[i].answer = a;
-		console.log(formData);
+	const handleFieldChange = (type, q, a) => {
+		let i = findIndex(formData[type], q);
+		let _formData = { ...formData };
+		if (Array.isArray(a)) {
+			let index = _formData[type][i]["answer"].indexOf(a[0]);
+			if (index > -1) {
+				_formData[type][i]["answer"].splice(index, 1);
+			} else {
+				_formData[type][i]["answer"].push(a[0]);
+			}
+		} else if (typeof a === "object") {
+			_formData[type][i]["sub_answer"] = a.sub_answer;
+		} else {
+			_formData[type][i]["answer"] = a;
+		}
+		setFormData(_formData);
 	};
 
 	const generalAnswers =
@@ -350,7 +350,7 @@ function Questions(props) {
 		heights.push(lastHeight + height);
 	};
 	React.useEffect(() => {
-		console.log(formData.general_questions);
+		console.log(formData.coursework);
 		// dispatch(fetchAllAnswers());
 	}, [formData]);
 
@@ -423,24 +423,22 @@ function Questions(props) {
 							/>
 						)}
 					>
-						<GeneralQuestions
+						{/* <GeneralQuestions
 							calHeight={calHeight}
 							data={formData.general_questions}
-							onchange={(q, a) =>
-								handleFieldChange(formData.general_questions, q, a)
-							}
+							onchange={(q, a) => handleFieldChange("general_questions", q, a)}
 						/>
 						<PersonalityAssessment
 							calHeight={calHeight}
 							data={formData.personality_assessment}
 							onchange={(q, a) =>
-								handleFieldChange(formData.personality_assessment, q, a)
+								handleFieldChange("personality_assessment", q, a)
 							}
-						/>
+						/> */}
 						<CourseWork
 							calHeight={calHeight}
 							data={formData.coursework}
-							onchange={(q, a) => handleFieldChange(formData.coursework, q, a)}
+							onchange={(q, a) => handleFieldChange("coursework", q, a)}
 						/>
 						<WorkHistory
 							calHeight={calHeight}

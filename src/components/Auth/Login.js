@@ -33,7 +33,7 @@ function Login(props) {
 			})
 		);
 		console.log(auth);
-		if(redirectURL !== "") {
+		if (redirectURL !== "") {
 			dispatch(setLogin(true));
 			props.history.push(redirectURL);
 		} else {

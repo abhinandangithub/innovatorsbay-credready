@@ -84,6 +84,10 @@ export const setCandidateAllAnswersInitial = {
     data: []
 }
 
+export const setCandidateJobViewDataInitial = {
+    data: []
+}
+
 export function candidateSetDataReducer(state = initialState, action) {
     switch (action.type) {
         case types.CANDIDATE_PROFILE_SET_DATA:
@@ -159,6 +163,18 @@ export function setCandidateInstitutionTypeReducer(state = setCandidateInstituti
 export function setCandidateAllAnswersReducer(state = setCandidateAllAnswersInitial, action) {
     switch (action.type) {
         case types.SET_CANDIDATE_ALL_ANSWERS:
+            {
+                const { data } = action;
+                state = { ...state, data };
+            }
+        default:
+            return state;
+    }
+}
+
+export function setCandidateJobViewDataReducer(state = setCandidateJobViewDataInitial, action) {
+    switch (action.type) {
+        case types.SET_CANDIDATE_JOB_VIEW_DATA:
             {
                 const { data } = action;
                 state = { ...state, data };

@@ -14,6 +14,7 @@ import {
 	fetchCandidateDegreeTitlesUrl,
 	fetchCandidateInstituteTypeUrl,
 	fetchAllAnswersUrl,
+	fetchjobViewDataUrl
 } from "./api";
 import {
 	candidateSetCurrentStatus,
@@ -22,12 +23,28 @@ import {
 	setCandidateExperienceType,
 	setCandidateDegreeTitles,
 	setCandidateInstitutionType,
-	candidateSetAllAnswers
+	candidateSetAllAnswers,
+	candidateSetJobViewData
 } from "./actions";
 import { updateJwtToken } from "../../store/actions/auth";
 import { setDefaultAuthorizationHeader } from "../../store/utility";
 
 
+export const fetchjobViewData = (id) => async (dispatch, getState) => {
+	try {
+		const state = getState();
+		setDefaultAuthorizationHeader(state.authReducer.JWT);
+		const { data } = await axios.get(
+			fetchjobViewDataUrl + "/" + id,
+			requestConfig
+		);
+		if (!data) return;
+		dispatch(candidateSetJobViewData(data ? data.data : []));
+
+	} catch (err) {
+		console.log(err)
+	}
+};
 
 export const fetchAllAnswers = () => async (dispatch, getState) => {
 	try {

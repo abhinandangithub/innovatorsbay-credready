@@ -31,3 +31,5 @@ export const fetchAllAnswersUrl = `${baseUrl}/candidate/jobs/common_questions`;
 export const submitAnswersUrl = `${baseUrl}/candidate/job/application/answers`;
 
 export const jobApplyUrl = `${baseUrl}/candidate/job/application/answers`;
+
+export const fetchjobViewDataUrl = `${baseUrl}/candidate/jobs/applied`;
