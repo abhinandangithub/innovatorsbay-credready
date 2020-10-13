@@ -26,7 +26,6 @@ function EmailTemplate(props) {
 
 	React.useEffect(() => {
 		dispatch(setNewJob({ emailTemplateId: templateID }));
-		dispatch(setNewJob({ "emailTemplateId": templateID }));
 		// setEmailBody(props.emailTemplate[0].email_body);
 	}, [dispatch, templateID]);
 

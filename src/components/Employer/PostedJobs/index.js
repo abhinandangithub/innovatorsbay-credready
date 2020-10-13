@@ -50,12 +50,12 @@ function PostedJobs(props) {
 					<span dangerouslySetInnerHTML={{ __html: job.job_description }}></span>
 
 				</p>
-				{/* <ul className="common-skills-list">
-				<li>Skills: </li>
+				<ul className="common-skills-list">
+				{/* <li>Skills: </li>
 				{!!job.strengths && job.strengths.length && job.strengths.map((val,i) => {
 					return <li key={i}>{val.name}</li>
-				})}
-			</ul> */}
+				})} */}
+			</ul>
 				<p className="job-openings">
 					<span>Job Openings: </span>{job.open_positions}
 				</p>

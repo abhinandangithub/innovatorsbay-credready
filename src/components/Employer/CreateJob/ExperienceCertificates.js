@@ -3,6 +3,7 @@ import { connect, useDispatch } from 'react-redux';
 import InputRange from "react-input-range";
 import { getSkills } from '../../../store/thunks/employer';
 import { Multiselect } from 'multiselect-react-dropdown';
+import { setNewJob } from "../../../store/actions/employer";
 
 function CreateJob(props) {
 	const dispatch = useDispatch();
@@ -25,6 +26,14 @@ function CreateJob(props) {
 	React.useEffect(() => {
 		dispatch(getSkills());
 	}, [dispatch]);
+
+	const handleSelect = (selectedList, selectedItem) => {
+		dispatch(setNewJob({jobCertificateMap: selectedList}));
+	}
+
+	const handleRemove = (selectedList, selectedItem) => {
+		dispatch(setNewJob({jobCertificateMap: selectedList}));
+	}
 
 	return (
 		<div className="experience-certificates" ref={parent}>
@@ -57,8 +66,8 @@ function CreateJob(props) {
 				<Multiselect style={{ multiselectContainer: { "width": "35%", "height": "50%", "marginBottom": "2%" }, searchBox: { "border-radius": "20px" } }}
 					options={props.skills} // Options to display in the dropdown
 					// selectedValues={this.state.selectedValue} // Preselected value to persist in dropdown
-					// onSelect={this.onSelect} // Function will trigger on select event
-					// onRemove={this.onRemove} // Function will trigger on remove event
+					onSelect={(selectedList,selectedItem) => handleSelect(selectedList,selectedItem)} // Function will trigger on select event
+					onRemove={(selectedList,selectedItem) => handleRemove(selectedList,selectedItem)} // Function will trigger on remove event
 					displayValue="name" // Property name to display in the dropdown options
 				/>
 				{/* </div> */}

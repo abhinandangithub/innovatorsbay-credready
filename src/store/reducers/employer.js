@@ -378,6 +378,7 @@ const initialState = {
 		"industry": 1,
 		"jobDescription": "Some nice job description",
 		"jobQuestionnaireMap": [1, 2, 3],
+		"jobCertificateMap": [15,16,17],
 		"jobTitle": "Senior Nursing Assistant",
 		"location": 1,
 		"maxExp": 7,
@@ -592,6 +593,9 @@ const reducer = (state = initialState, action) => {
 			}
 			if (action.value.jobQuestionnaireMap !== undefined) {
 				newJobTemp.jobQuestionnaireMap = action.value.jobQuestionnaireMap.map((val) => val.question_id);
+			}
+			if (action.value.jobCertificateMap !== undefined) {
+				newJobTemp.jobCertificateMap = action.value.jobCertificateMap.map((val) => val.id);
 			}
 
 			return updateObject(state, {
