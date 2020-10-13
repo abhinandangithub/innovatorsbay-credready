@@ -259,111 +259,7 @@ const initialState = {
 		"status": "OK"
 	},
 	questionBank: {
-		questions: [
-			{
-				"question_id": 1,
-				"question_name": "What are your hobbies?",
-				"category": "Employer Questions",
-				"question_type": "text-input",
-				"is_public": false,
-				"job_title": "CNA",
-				"org_id": 1,
-				"option_choices": [],
-				"created_by": "admin",
-				"created_on": "Oct 6, 2020, 5:55:33 PM",
-				"modified_by": "admin",
-				"modified_on": "Oct 6, 2020, 5:55:33 PM"
-			},
-			{
-				"question_id": 2,
-				"question_name": "Are you okay with night shift?",
-				"category": "Employer Questions",
-				"question_type": "mcq",
-				"is_public": false,
-				"job_title": "CNA",
-				"org_id": 1,
-				"option_choices": [
-					{
-						"id": 2,
-						"question_id": 2,
-						"option_choice_name": "No",
-						"question_type": "boolean",
-						"created_by": "admin",
-						"created_on": "Oct 6, 2020, 5:59:44 PM",
-						"modified_by": "admin",
-						"modified_on": "Oct 6, 2020, 5:59:44 PM"
-					},
-					{
-						"id": 2,
-						"question_id": 2,
-						"option_choice_name": "No",
-						"question_type": "boolean",
-						"created_by": "admin",
-						"created_on": "Oct 6, 2020, 5:59:44 PM",
-						"modified_by": "admin",
-						"modified_on": "Oct 6, 2020, 5:59:44 PM"
-					}
-				],
-				"created_by": "admin",
-				"created_on": "Oct 6, 2020, 5:55:33 PM",
-				"modified_by": "admin",
-				"modified_on": "Oct 6, 2020, 5:55:33 PM"
-			},
-			{
-				"question_id": 3,
-				"question_name": "What are you preferred timings?",
-				"category": "Employer Questions",
-				"question_type": "mcq",
-				"is_public": true,
-				"job_title": "CNA",
-				"option_choices": [
-					{
-						"id": 3,
-						"question_id": 3,
-						"option_choice_name": "8 AM - 1 PM",
-						"question_type": "checkbox",
-						"created_by": "admin",
-						"created_on": "Oct 6, 2020, 5:59:44 PM",
-						"modified_by": "admin",
-						"modified_on": "Oct 6, 2020, 5:59:44 PM"
-					},
-					{
-						"id": 3,
-						"question_id": 3,
-						"option_choice_name": "8 AM - 1 PM",
-						"question_type": "checkbox",
-						"created_by": "admin",
-						"created_on": "Oct 6, 2020, 5:59:44 PM",
-						"modified_by": "admin",
-						"modified_on": "Oct 6, 2020, 5:59:44 PM"
-					},
-					{
-						"id": 3,
-						"question_id": 3,
-						"option_choice_name": "8 AM - 1 PM",
-						"question_type": "checkbox",
-						"created_by": "admin",
-						"created_on": "Oct 6, 2020, 5:59:44 PM",
-						"modified_by": "admin",
-						"modified_on": "Oct 6, 2020, 5:59:44 PM"
-					},
-					{
-						"id": 3,
-						"question_id": 3,
-						"option_choice_name": "8 AM - 1 PM",
-						"question_type": "checkbox",
-						"created_by": "admin",
-						"created_on": "Oct 6, 2020, 5:59:44 PM",
-						"modified_by": "admin",
-						"modified_on": "Oct 6, 2020, 5:59:44 PM"
-					}
-				],
-				"created_by": "admin",
-				"created_on": "Oct 6, 2020, 5:55:33 PM",
-				"modified_by": "admin",
-				"modified_on": "Oct 6, 2020, 5:55:33 PM"
-			}
-		],
+		questions: [],
 		"message": "Question bank fetched successfully",
 		"data": {
 			"private_question_bank": [
@@ -628,7 +524,7 @@ const reducer = (state = initialState, action) => {
 			questionsTemp.message = action.value.message;
 			questionsTemp.status = action.value.status;
 			questionsTemp.data = action.value.data;
-			questionsTemp.questions = [];
+			questionsTemp.questions = state.questionBank.questions;
 			// questionsTemp.questions.push(...action.value.data.private_question_bank);
 			// questionsTemp.questions.push(...action.value.data.public_question_bank);
 			return updateObject(state, {
