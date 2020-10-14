@@ -68,7 +68,7 @@ export const updateProfileThunk = (token, profile) => async (dispatch, getState)
 		profile.companySize = state.employerReducer.companySizeKeys.find(val => val.range_display_value === profile.companySize).id;
 		profile.hiresRequired = state.employerReducer.hiringKeys.find(val => val.range_display_value === profile.hiresRequired).id;
 		// setDefaultAuthorizationHeader(getState().authReducer.JWT.map.jwt);
-		console.log(profile, getState().authReducer.JWT.map.jwt);
+		// console.log(profile, getState().authReducer.JWT.map.jwt);
 		// setDefaultAuthorizationHeader(JSON.parse(state.authReducer.JWT).map.jwt);
 		const data = await Axios.patch(employerUpdateProfileUrl, profile, {
 			headers: {

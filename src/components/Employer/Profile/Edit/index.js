@@ -41,22 +41,40 @@ function Details(props) {
 
 	const [addressCount, setAddressCount] = React.useState([""]);
 
-	const [formData, setFormData] = React.useState({
-		/**
-		 * * field: ['value', 'error']
-		 */
-		name: [props.profile.name],
-		title: [props.profile.title],
-		website: [props.profile.org.website],
-		hiringNeeds: [props.profile.org.hires_required && props.hiringKeys.length > 0 && props.hiringKeys.find(val => val.id === props.profile.org.hires_required).range_display_value],
-		companySize: [props.profile.org.company_size && props.companySizeKeys.length > 0 && props.companySizeKeys.find(val => val.id === props.profile.org.company_size).range_display_value],
-		reference: [props.profile.org.reference_source],
-		street_0: props.profile.org.address.map(val => val.street_address),
-		city_0: props.profile.org.address.map(val => val.city),
-		state_0: props.profile.org.address.map(val => val.state),
-		zipCode_0: props.profile.org.address.map(val => val.zip_code),
+	// const [formData, setFormData] = React.useState({
+	// 	/**
+	// 	 * * field: ['value', 'error']
+	// 	 */
+	// 	name: [props.profile.name],
+	// 	title: [props.profile.title],
+	// 	website: [props.profile.org.website],
+	// 	hiringNeeds: [props.profile.org.hires_required && props.hiringKeys.length > 0 && props.hiringKeys.find(val => val.id === props.profile.org.hires_required).range_display_value],
+	// 	companySize: [props.profile.org.company_size && props.companySizeKeys.length > 0 && props.companySizeKeys.find(val => val.id === props.profile.org.company_size).range_display_value],
+	// 	reference: [props.profile.org.reference_source],
+	// 	street_0: props.profile.org.address.map(val => val.street_address),
+	// 	city_0: props.profile.org.address.map(val => val.city),
+	// 	state_0: props.profile.org.address.map(val => val.state),
+	// 	zipCode_0: props.profile.org.address.map(val => val.zip_code),
 
-		formValid: false,
+	// 	formValid: false,
+	// });
+	const [formData, setFormData] = React.useState(() => {
+		let initialState = {};
+		initialState.name = [props.profile.name];
+		initialState.title = [props.profile.title];
+		initialState.website = [props.profile.org.website];
+		initialState.hiringNeeds = [props.profile.org.hires_required && props.hiringKeys.length > 0 && props.hiringKeys.find(val => val.id === props.profile.org.hires_required).range_display_value];
+		initialState.companySize = [props.profile.org.company_size && props.companySizeKeys.length > 0 && props.companySizeKeys.find(val => val.id === props.profile.org.company_size).range_display_value];
+		initialState.reference = [props.profile.org.reference_source];
+		for(let i = 0; i<props.profile.org.address.length;i++) {
+			initialState["street_"+i] = [props.profile.org.address[i].street_address];
+			initialState["city_"+i] = [props.profile.org.address[i].city];
+			initialState["state_"+i] = [props.profile.org.address[i].state];
+			initialState["zipCode_"+i] = [props.profile.org.address[i].zip_code];
+		}
+		console.log(initialState);
+		return initialState;
+		
 	});
 
 	useEffect(() => {
@@ -109,7 +127,7 @@ function Details(props) {
 
 		for (let i = 0; i < addressCount.length; i++) {
 			let address = {};
-			address.id = i;
+			// address.id = i;
 			address.streetAddress = _formData["street_" + i][0];
 			address.city = _formData["city_" + i][0];
 			address.state = _formData["state_" + i][0];
@@ -333,7 +351,7 @@ function Details(props) {
 								onchange={(value) => handleFieldChange("reference", value)}
 							/>
 						</li>
-						{/* {renderAddresses()} */}
+						{renderAddresses()}
 						<li className="addresses"></li>
 					</ul>
 					<button className="add-address" id="addAdressBtn" onClick={addAdress}>

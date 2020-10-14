@@ -138,7 +138,8 @@ function ProfileOverview(props) {
 						/>
 						<input
 							type="text"
-							defaultValue={allData.contacts[0] && allData.contacts[0].contact ? allData.contacts[0].contact : ""}
+							// defaultValue={allData.contacts[0] && allData.contacts[0].contact ? allData.contacts[0].contact : ""}
+							value={phone}
 							className={`${editingPhone ? "edit" : ""}`}
 							readOnly={editingPhone ? false : true}
 							onChange={(e) => setPhone(e.target.value)}
