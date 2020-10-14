@@ -580,7 +580,7 @@ const reducer = (state = initialState, action) => {
 			}
 			if (action.value.location !== undefined) {
 				// newJobTemp.location = action.value.location;
-				newJobTemp.location = state.locations.data.find(x => x.city === action.value.location).id;
+				newJobTemp.location = state.locations.data.find(x => x.street_address + ", " + x.city + ", " + x.state + ", " + x.zip_code === action.value.location).id;
 			}
 			if (action.value.openPositions !== undefined) {
 				newJobTemp.openPositions = action.value.openPositions;
