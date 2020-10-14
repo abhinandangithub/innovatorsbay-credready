@@ -41,23 +41,6 @@ function Details(props) {
 
 	const [addressCount, setAddressCount] = React.useState([""]);
 
-	// const [formData, setFormData] = React.useState({
-	// 	/**
-	// 	 * * field: ['value', 'error']
-	// 	 */
-	// 	name: [props.profile.name],
-	// 	title: [props.profile.title],
-	// 	website: [props.profile.org.website],
-	// 	hiringNeeds: [props.profile.org.hires_required && props.hiringKeys.length > 0 && props.hiringKeys.find(val => val.id === props.profile.org.hires_required).range_display_value],
-	// 	companySize: [props.profile.org.company_size && props.companySizeKeys.length > 0 && props.companySizeKeys.find(val => val.id === props.profile.org.company_size).range_display_value],
-	// 	reference: [props.profile.org.reference_source],
-	// 	street_0: props.profile.org.address.map(val => val.street_address),
-	// 	city_0: props.profile.org.address.map(val => val.city),
-	// 	state_0: props.profile.org.address.map(val => val.state),
-	// 	zipCode_0: props.profile.org.address.map(val => val.zip_code),
-
-	// 	formValid: false,
-	// });
 	const [formData, setFormData] = React.useState(() => {
 		let initialState = {};
 		initialState.name = [props.profile.name];
