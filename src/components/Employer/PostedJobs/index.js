@@ -147,7 +147,7 @@ function PostedJobs(props) {
 
 	return (
 		<div className="posted-jobs-page">
-			{jobsList.length === 0 ? renderEmptyList : renderJobsList}
+			{props.postedJobs.length === 0 ? renderEmptyList : renderJobsList}
 		</div>
 	);
 }
