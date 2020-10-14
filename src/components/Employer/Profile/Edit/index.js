@@ -50,10 +50,17 @@ function Details(props) {
 		initialState.companySize = [props.profile.org.company_size && props.companySizeKeys.length > 0 && props.companySizeKeys.find(val => val.id === props.profile.org.company_size).range_display_value];
 		initialState.reference = [props.profile.org.reference_source];
 		for(let i = 0; i<props.profile.org.address.length;i++) {
+			initialState["id_"+i] = [props.profile.org.address[i].id];
 			initialState["street_"+i] = [props.profile.org.address[i].street_address];
 			initialState["city_"+i] = [props.profile.org.address[i].city];
 			initialState["state_"+i] = [props.profile.org.address[i].state];
 			initialState["zipCode_"+i] = [props.profile.org.address[i].zip_code];
+		}
+		if(props.profile.org.address.length === 0) {
+			initialState["street_0"] = [""];
+			initialState["city_0"] = [""];
+			initialState["state_0"] = [""];
+			initialState["zipCode_0"] = [""];
 		}
 		console.log(initialState);
 		return initialState;
@@ -111,6 +118,9 @@ function Details(props) {
 		for (let i = 0; i < addressCount.length; i++) {
 			let address = {};
 			// address.id = i;
+			if(_formData["id_"+i]) {
+				address.id = _formData["id_"+i][0];
+			}
 			address.streetAddress = _formData["street_" + i][0];
 			address.city = _formData["city_" + i][0];
 			address.state = _formData["state_" + i][0];
@@ -232,6 +242,7 @@ function Details(props) {
 		let _addressCount = [...addressCount];
 		_addressCount.push("");
 		setAddressCount(_addressCount);
+		console.log(_addressCount);
 
 		/* update form values as well */
 		let i = _addressCount.length - 1;
