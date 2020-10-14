@@ -346,6 +346,7 @@ const reducer = (state = initialState, action) => {
 			});
 
 		case actionTypes.SET_EMPLOYER_PROFILE:
+			action.value.data.org.address.sort((a, b) => b.id - a.id);
 			return updateObject(state, {
 				profile: action.value
 			});

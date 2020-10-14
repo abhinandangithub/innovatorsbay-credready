@@ -27,7 +27,9 @@ function ChoosePrivateQuestions(props) {
 
 	useEffect(() => {
 		props.questionsSelected.forEach((element) => {
-			document.getElementById(element.question_id).checked = true;
+			if(document.getElementById(element.question_id) !== null){
+				document.getElementById(element.question_id).checked = true;
+			}
 		});
 	}, [props.questionsSelected]);
 
@@ -212,7 +214,7 @@ function ChoosePrivateQuestions(props) {
 function mapStateToProps(state) {
 	return {
 		questionBank: state.employerReducer.questionBank.data.private_question_bank,
-		questionsSelected: state.employerReducer.questionBank.questions,
+		questionsSelected: state.employerReducer.questionBank.questions
 	};
 }
 

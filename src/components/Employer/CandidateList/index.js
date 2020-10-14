@@ -330,7 +330,9 @@ function CandidateList(props) {
 							</div>
 						</div>
 					</div>
-					<div className="actions">
+					{props.candidatesList.length > 0 ?
+					<>
+					 <div className="actions">
 						<div className="left">
 							<Link onClick={handleSendEmail} >Send Email</Link>
 								&nbsp;&nbsp;{" |  "}&nbsp;&nbsp;
@@ -383,6 +385,7 @@ function CandidateList(props) {
 							{renderCandidateList}
 						</li>
 					</ul>
+					</>  : <p>No candidates found for this job</p>}
 				</div>
 				<Pagination />
 			</div>

@@ -26,6 +26,7 @@ function ChoosePublicQuestions(props) {
 
 	useEffect(() => {
 		props.questionsSelected.forEach((element) => {
+			if(document.getElementById(element.question_id) !== null)
 			document.getElementById(element.question_id).checked = true;
 		});
 	}, [props.questionsSelected]);
