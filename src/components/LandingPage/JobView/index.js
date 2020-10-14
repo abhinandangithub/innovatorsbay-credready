@@ -85,16 +85,16 @@ function JobView() {
 								</Link>
 							</>
 						) : (
-							<>
-								<p>
-									Your CredReadiness for this job is unknown, login to check if
-									you are CredReady for this job
+								<>
+									<p>
+										Your CredReadiness for this job is unknown, login to check if
+										you are CredReady for this job
 								</p>
-								<Link className="primary-btn blue" to="/login">
-									Login to apply
+									<Link className="primary-btn blue" to="/login">
+										Login to apply
 								</Link>
-							</>
-						)}
+								</>
+							)}
 					</div>
 				</div>
 			</div>

@@ -56,6 +56,7 @@ export const fetchjobViewData = (id) => async (dispatch, getState) => {
 };
 
 export const fetchAllAnswers = () => async (dispatch, getState) => {
+	console.log("function called");
 	try {
 		const { data } = await Axios.get(
 			fetchAllAnswersUrl, {

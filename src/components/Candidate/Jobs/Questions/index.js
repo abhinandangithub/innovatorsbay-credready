@@ -86,8 +86,7 @@ function Questions(props) {
 	};
 
 	const _formData = {
-		job_id: 1,
-
+		job_id: localStorage.getItem("jobId"),
 		general_questions: [
 			{
 				question_id: 1,
@@ -352,39 +351,39 @@ function Questions(props) {
 
 	const generalAnswers =
 		allAnswersData.length > 0 &&
-		allAnswersData.map((entity) => {
-			if (entity.category === "general_questions")
-				return JSON.parse(entity.answer);
-		})
+			allAnswersData.map((entity) => {
+				if (entity.category === "general_questions")
+					return JSON.parse(entity.answer);
+			})
 			? JSON.parse(allAnswersData[0].answer)
 			: [];
 	const personalityAassessment =
 		allAnswersData.length > 0 &&
-		allAnswersData.map((entity) => {
-			if (entity.category === "personality_assessment")
-				return JSON.parse(entity.answer);
-		})
+			allAnswersData.map((entity) => {
+				if (entity.category === "personality_assessment")
+					return JSON.parse(entity.answer);
+			})
 			? JSON.parse(allAnswersData[0].answer)
 			: [];
 	const coursework =
 		allAnswersData.length > 0 &&
-		allAnswersData.map((entity) => {
-			if (entity.category === "coursework") return JSON.parse(entity.answer);
-		})
+			allAnswersData.map((entity) => {
+				if (entity.category === "coursework") return JSON.parse(entity.answer);
+			})
 			? JSON.parse(allAnswersData[0].answer)
 			: [];
 	const workHistory =
 		allAnswersData.length > 0 &&
-		allAnswersData.map((entity) => {
-			if (entity.category === "work_history") return JSON.parse(entity.answer);
-		})
+			allAnswersData.map((entity) => {
+				if (entity.category === "work_history") return JSON.parse(entity.answer);
+			})
 			? JSON.parse(allAnswersData[0].answer)
 			: [];
 	const commute =
 		allAnswersData.length > 0 &&
-		allAnswersData.map((entity) => {
-			if (entity.category === "commute") return JSON.parse(entity.answer);
-		})
+			allAnswersData.map((entity) => {
+				if (entity.category === "commute") return JSON.parse(entity.answer);
+			})
 			? JSON.parse(allAnswersData[0].answer)
 			: [];
 
@@ -398,6 +397,7 @@ function Questions(props) {
 
 	const onSubmitHandler = () => {
 		console.log(JSON.stringify(formData));
+		formData.job = localStorage.getItem("jobId");
 		dispatch(submitCandidateAnswers(formData));
 	};
 
@@ -431,8 +431,8 @@ function Questions(props) {
 			{props.showEmployerQuestions ? (
 				<h1 className="common-heading">Apply for a Job</h1>
 			) : (
-				<h1 className="common-heading">Let Us Know More About You</h1>
-			)}
+					<h1 className="common-heading">Let Us Know More About You</h1>
+				)}
 
 			<div className="outer">
 				<div className="left">
@@ -532,12 +532,8 @@ function Questions(props) {
 								}
 							/>
 						)}
-						<div className="cta">
-							<Link
-								to="/jobs/view/1"
-								className="primary-btn"
-								onClick={onSubmitHandler}
-							>
+						<div className="cta" >
+							<Link to={`/jobs/view/${localStorage.getItem("jobId") ? localStorage.getItem("JobId") : ""}`} className="primary-btn" onClick={onSubmitHandler}>
 								Submit
 							</Link>
 						</div>

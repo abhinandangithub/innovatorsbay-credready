@@ -269,6 +269,45 @@
 				margin-top: 30px;
 				padding-right: 20px;
 			}
+			.experience-certificates {
+				#multiselectContainerReact {
+					width: 100% !important;
+					margin-bottom: 30px !important;
+					& > div:first-child {
+						margin-bottom: 0px;
+						box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.05);
+						border: solid 1px #bcd1e4;
+						padding: 20px 20px 10px 20px;
+						display: flex;
+						flex-wrap: wrap;
+						border-radius: 0 !important;
+						span {
+							font-size: 18px;
+							border-radius: 34.5px;
+							background-color: transparent;
+							border: solid 2px #e1eaf1;
+							color: #526677;
+							display: flex;
+							padding: 7px 9px 7px 20px;
+							margin-right: 15px;
+							align-items: center;
+							margin-bottom: 10px;
+							i {
+								font-size: 18px;
+								color: #b6b9bb;
+								&:hover {
+									opacity: 0.8;
+								}
+							}
+						}
+						input {
+							font-size: 18px;
+							padding: 6px;
+							margin-bottom: 11px;
+						}
+					}
+				}
+			}
 		}
 	}
 }

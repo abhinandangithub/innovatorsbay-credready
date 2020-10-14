@@ -389,33 +389,33 @@ function Application({ onchange }) {
 						</div>
 						<div className="bottom">
 							{userData &&
-							userData.work_experience &&
-							userData.work_experience.length > 1
+								userData.work_experience &&
+								userData.work_experience.length > 1
 								? userData.work_experience.map((exp, index) => {
-										return (
-											<div className="details" key={index}>
-												<h2>{exp.title}</h2>
-												<p>
-													<span className="text">{exp.location}</span>
-												</p>
-												<p>
-													<span className="heading">{exp.employment_from}</span>
-													{" to "}
-													<span className="text">{exp.employment_to}</span>
-												</p>
-												<p>
-													<span className="heading">
-														Current employment status:{" "}
-													</span>
-													<span className="text">Employed</span>
-												</p>
-												<p>
-													<span className="heading">Skills: </span>
-													<span className="text">{exp.job_description}</span>
-												</p>
-											</div>
-										);
-								  })
+									return (
+										<div className="details" key={index}>
+											<h2>{exp.title}</h2>
+											<p>
+												<span className="text">{exp.location}</span>
+											</p>
+											<p>
+												<span className="heading">{exp.employment_from}</span>
+												{" to "}
+												<span className="text">{exp.employment_to}</span>
+											</p>
+											<p>
+												<span className="heading">
+													Current employment status:{" "}
+												</span>
+												<span className="text">Employed</span>
+											</p>
+											<p>
+												<span className="heading">Skills: </span>
+												<span className="text">{exp.job_description}</span>
+											</p>
+										</div>
+									);
+								})
 								: ""}
 						</div>
 					</div>
@@ -442,30 +442,29 @@ function Application({ onchange }) {
 						</div>
 
 						{userData &&
-						userData.education_experience &&
-						userData.education_experience.length > 1
+							userData.education_experience &&
+							userData.education_experience.length > 1
 							? userData.education_experience.map((exp, index) => {
-									return (
-										<div className="bottom">
-											<div className="details">
-												<h2>{exp.title}</h2>
-												<p>
-													<span className="heading">{exp.title}</span>
-													{" - "}
-													<span className="text">ABC University</span>
-												</p>
-												<p>
-													<span className="text">{exp.attended_from}</span>
-													{" to "}
-													<span className="text">{exp.attended_till}</span>
-												</p>
-											</div>
+								return (
+									<div className="bottom">
+										<div className="details">
+											<h2>{exp.title}</h2>
+											<p>
+												<span className="heading">{exp.title}</span>
+												{" - "}
+												<span className="text">ABC University</span>
+											</p>
+											<p>
+												<span className="text">{exp.attended_from}</span>
+												{" to "}
+												<span className="text">{exp.attended_till}</span>
+											</p>
 										</div>
-									);
-							  })
+									</div>
+								);
+							})
 							: ""}
 
-						{}
 					</div>
 					<div className="group ">
 						<div className="top">

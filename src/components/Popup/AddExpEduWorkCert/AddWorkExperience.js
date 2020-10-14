@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import DatePicker from "react-datepicker";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { connect } from "react-redux";
 
 import "./AddExpEduWorkCert.scss";
@@ -14,11 +14,11 @@ import { addWorkExperience } from "../../../modals/candidateProfile/thunk";
 
 function AddWorkExperience({ addWorkExperience }) {
 	const dispatch = useDispatch();
-
+	const id = useSelector(state => state.popupOverlayReducer.popup.info);
 	const [startDate, setStartDate] = useState();
 	const [endDate, setEndDate] = useState();
 	const [activeTab, setActiveTab] = useState("add");
-
+	console.log(id);
 	const handleTabChange = (id) => {
 		setActiveTab(id);
 		setFormData({
@@ -107,25 +107,51 @@ function AddWorkExperience({ addWorkExperience }) {
 			dispatch(toggleOverlay(false));
 			dispatch(togglePopup([false, ""]));
 			console.log("formData", formData);
-			let obj = {
-				"title": formData ? formData.title[0] : "",
-				"company": formData ? formData.company[0] : "",
-				"location": formData ? formData.location[0] : "",
-				"currentlyEmployed": formData && (formData.currentCompany[0] === "on") ? true : false,
-				"employmentFrom": formData && formData.startDate[0] ? formatDate(formData.startDate[0]) : "",
-				"employmentTo": formData && formData.endDate[0] ? formatDate(formData.endDate[0]) : "",
-				"jobDescription": formData ? formData.description[0] : "",
-				"employerWebsite": formData ? formData.description[0] : "",
-				"workexVerification": {
-					"contactable": formData && (formData.degreeGranted[0] === "on") ? true : false,
-					"email": formData ? formData.email[0] : "",
-					"phone": formData ? formData.phoneNumber[0] : "",
-					"supervisorName": formData ? formData.supervisorName[0] : "",
-					"title": formData ? formData.supervisorTitle[0] : "",
+			if (id) {
+				let obj = {
+					"work_ex_id": id,
+					"title": formData ? formData.title[0] : "",
+					"company": formData ? formData.company[0] : "",
+					"location": formData ? formData.location[0] : "",
+					"currentlyEmployed": formData && (formData.currentCompany[0] === "on") ? true : false,
+					"employmentFrom": formData && formData.startDate[0] ? formatDate(formData.startDate[0]) : "",
+					"employmentTo": formData && formData.endDate[0] ? formatDate(formData.endDate[0]) : "",
+					"jobDescription": formData ? formData.description[0] : "",
+					"employerWebsite": formData ? formData.description[0] : "",
+					"workexVerification": {
+						"contactable": formData && (formData.degreeGranted[0] === "on") ? true : false,
+						"email": formData ? formData.email[0] : "",
+						"phone": formData ? formData.phoneNumber[0] : "",
+						"supervisorName": formData ? formData.supervisorName[0] : "",
+						"title": formData ? formData.supervisorTitle[0] : "",
 
+					}
 				}
+				addWorkExperience(obj);
+
 			}
-			addWorkExperience(obj);
+			else {
+
+				let obj = {
+					"title": formData ? formData.title[0] : "",
+					"company": formData ? formData.company[0] : "",
+					"location": formData ? formData.location[0] : "",
+					"currentlyEmployed": formData && (formData.currentCompany[0] === "on") ? true : false,
+					"employmentFrom": formData && formData.startDate[0] ? formatDate(formData.startDate[0]) : "",
+					"employmentTo": formData && formData.endDate[0] ? formatDate(formData.endDate[0]) : "",
+					"jobDescription": formData ? formData.description[0] : "",
+					"employerWebsite": formData ? formData.description[0] : "",
+					"workexVerification": {
+						"contactable": formData && (formData.degreeGranted[0] === "on") ? true : false,
+						"email": formData ? formData.email[0] : "",
+						"phone": formData ? formData.phoneNumber[0] : "",
+						"supervisorName": formData ? formData.supervisorName[0] : "",
+						"title": formData ? formData.supervisorTitle[0] : "",
+
+					}
+				}
+				addWorkExperience(obj);
+			}
 		}
 		setFormData(oldFormData);
 	};

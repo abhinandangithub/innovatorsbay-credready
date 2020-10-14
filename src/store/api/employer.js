@@ -73,7 +73,7 @@ export const employerPostJob = constructUrl(employerRouteWithBase, "job");
  */
 export const employerFetchJobById = constructUrl(
   employerRouteWithBase,
-  "job/appliedcandiates/fetch"
+  "job/appliedcandidates/fetch"
 );
 
 /**
