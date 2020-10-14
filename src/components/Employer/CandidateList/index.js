@@ -385,7 +385,7 @@ function CandidateList(props) {
 							{renderCandidateList}
 						</li>
 					</ul>
-					</>  : <p>No candidates found for this job</p>}
+					</>  : <p>No candidates found for this job </p>}
 				</div>
 				<Pagination />
 			</div>
