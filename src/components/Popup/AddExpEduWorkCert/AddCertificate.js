@@ -1,6 +1,6 @@
 import React, { useState, useRef } from "react";
 import DatePicker from "react-datepicker";
-import { useDispatch, connect } from "react-redux";
+import { useDispatch, connect, useSelector } from "react-redux";
 
 import "./AddExpEduWorkCert.scss";
 import Input from "../../_Elements/Input";
@@ -10,7 +10,7 @@ import {
 	toggleOverlay,
 	togglePopup,
 } from "../../../store/actions/popup_overlay";
-import { addEducationCertificate } from "../../../modals/candidateProfile/thunk";
+import { addEducationCertificate, fetchAllCertificateTitles, fetchAllFunctions, fetchAllIndustries } from "../../../modals/candidateProfile/thunk";
 import { checkFileSize, checkMimeType } from "../../../assets/js/Utility";
 
 const industry = {
@@ -38,12 +38,14 @@ function AddCertificate({ addEducationCertificate }) {
 	const [issueDate, setIssueDate] = useState();
 	const [errorMessage, setErrorMessage] = useState(null);
 	const [selectedFile, setSelectedFile] = useState(null);
-
+	const AllTitles = useSelector(state => state.setCandidateCertificateTitlesReducer.data);
+	const AllIndustries = useSelector(state => state.setAllIndustriesReducer.data);
+	const AllFunctions = useSelector(state => state.setAllFunctionsReducer.data);
 	const uploadBtnRef = useRef(null);
-
 	const handleUpload = (btnId) => {
 		uploadBtnRef.current.click();
 	};
+	console.log(AllIndustries, AllFunctions);
 
 	const handleChange = (e) => {
 		const file = e.target.files[0];
@@ -70,6 +72,7 @@ function AddCertificate({ addEducationCertificate }) {
 		industry: [],
 		title: [],
 		issuer: [],
+		function: [],
 		issueDate: [],
 		description: [],
 		certificateLink: [],
@@ -121,11 +124,11 @@ function AddCertificate({ addEducationCertificate }) {
 		let obj = {
 			"certificateLink": "http://localhost:3000/profile/education",
 			"description": formData ? formData.description[0] : "",
-			"functionId": 2,
-			"industryId": 2,
+			"functionId": formData ? formData.function[0] : "",
+			"industryId": formData ? formData.industry[0] : "",
 			"issuedDate": formData ? formatDate(formData.issueDate[0]) : "",
 			"issuer": formData ? formData.issuer[0] : "",
-			"title": 10605
+			"title": formData ? formData.title[0] : "",
 		}
 		addEducationCertificate(obj);
 
@@ -147,6 +150,12 @@ function AddCertificate({ addEducationCertificate }) {
 		});
 	};
 
+	React.useEffect(() => {
+		dispatch(fetchAllCertificateTitles());
+		dispatch(fetchAllFunctions());
+		dispatch(fetchAllIndustries());
+	}, [])
+
 	return (
 		<div className="add-ex-ed-cert">
 			<h1>Add Certificate</h1>
@@ -161,7 +170,7 @@ function AddCertificate({ addEducationCertificate }) {
 					</label>
 					<Dropdown
 						placeholder={industry.heading}
-						content={industry.content}
+						content={AllIndustries.length > 0 ? AllIndustries.map((val) => ({ val: val.industry_name, id: val.id })) : ""}
 						id="industry"
 						defaultValue={formData.industry[0]}
 						onchange={(value) => handleFieldChange("industry", value)}
@@ -176,7 +185,7 @@ function AddCertificate({ addEducationCertificate }) {
 					</label>
 					<Dropdown
 						placeholder={title.heading}
-						content={title.content}
+						content={AllTitles.length > 0 ? AllTitles.map((val) => ({ val: val.title_name, id: val.id })) : ""}
 						id="title"
 						defaultValue={formData.title[0]}
 						onchange={(value) => handleFieldChange("title", value)}
@@ -186,8 +195,10 @@ function AddCertificate({ addEducationCertificate }) {
 					<label>Function</label>
 					<Dropdown
 						placeholder={functions.heading}
-						content={functions.content}
+						content={AllFunctions.length > 0 ? AllFunctions.map((val) => ({ val: val.function_name, id: val.id })) : ""}
 						id="function"
+						defaultValue={formData.function[0]}
+						onchange={(value) => handleFieldChange("function", value)}
 					/>
 				</li>
 				<li>
@@ -197,13 +208,12 @@ function AddCertificate({ addEducationCertificate }) {
 							Required
 						</span>
 					</label>
-					<Dropdown
-						placeholder={issuer.heading}
-						content={issuer.content}
+					<Input
 						id="issuer"
 						defaultValue={formData.issuer[0]}
-						onchange={(value) => handleFieldChange("issuer", value)}
+						onChange={(e) => handleFieldChange(e.target.id, e.target.value)}
 					/>
+
 				</li>
 				<li>
 					<label>
@@ -225,6 +235,7 @@ function AddCertificate({ addEducationCertificate }) {
 									handleFieldChange("issueDate", date);
 								}}
 							/>
+
 						</div>
 					</div>
 				</li>

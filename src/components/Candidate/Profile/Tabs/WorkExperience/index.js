@@ -18,10 +18,10 @@ function WorkExperience(props) {
 	const [workExperieneData, setworkExperieneData] = React.useState(props.workExpData);
 	const [otherExperienceData, setotherExperienceData] = React.useState(props.otherExpData)
 
-	const handleEdit = (id) => {
+	const handleEdit = (id, type) => {
 		console.log(id);
 		dispatch(toggleOverlay(true));
-		dispatch(togglePopup([true, "addWorkExperience", id]));
+		dispatch(togglePopup([true, type, id]));
 	};
 	const handleDelete = (type) => {
 		// console.log("deleting");
@@ -29,6 +29,9 @@ function WorkExperience(props) {
 		dispatch(togglePopup([true, "delete", { what: type }]));
 	};
 
+	React.useEffect(() => {
+		dispatch(fetchCandidateDetails());
+	}, [workExperieneData, otherExperienceData])
 
 	// const renderWorkExperiences = userData.profile.workExperiences.map(
 	const renderWorkExperiences = workExperieneData.length > 0 ? workExperieneData.map(
@@ -51,7 +54,7 @@ function WorkExperience(props) {
 						className="action-btn edit"
 						icon={faPen}
 						id={"workExperienceEdit_" + i}
-						onClick={() => handleEdit(data.work_ex_id)}
+						onClick={() => handleEdit(data.work_ex_id, "addWorkExperience")}
 					/>
 					<FontAwesomeIcon
 						className="action-btn delete"
@@ -84,7 +87,7 @@ function WorkExperience(props) {
 						className="action-btn edit"
 						icon={faPen}
 						id={"otherExperienceEdit_" + i}
-						onClick={handleEdit}
+						onClick={() => handleEdit(data.id, "addOtherExperience")}
 					/>
 					<FontAwesomeIcon
 						className="action-btn delete"

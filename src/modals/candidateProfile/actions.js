@@ -44,3 +44,18 @@ export const setCandidateJobs = (data) => ({
     type: types.SET_CANDIDATE_JOBS,
     data,
 })
+
+export const setCandidateCertificateData = (data) => ({
+    type: types.SET_CANDIDATE_CERTIFICATE_TITLES,
+    data,
+})
+
+export const setAllIndustries = (data) => ({
+    type: types.SET_ALL_INDUSTRIES,
+    data,
+})
+
+export const setAllFunctions = (data) => ({
+    type: types.SET_ALL_FUNCTIONS,
+    data,
+})

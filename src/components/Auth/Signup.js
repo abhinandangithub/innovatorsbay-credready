@@ -98,7 +98,7 @@ function Signup(props) {
 							name="organisation"
 							type="text"
 							autoComplete="nothing"
-							placeholder="Enter employer name"
+							placeholder="Enter Organisation Name"
 							autoFocus
 							ref={register({
 								required: "Required",
@@ -136,7 +136,7 @@ function Signup(props) {
 						placeholder="123-456-7890"
 						// defaultValue="1234567890"
 						ref={register({
-							required: "required"
+							required: "required",
 							// pattern: {
 							// 	value: /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/,
 							// },

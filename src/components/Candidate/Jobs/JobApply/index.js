@@ -1,17 +1,14 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import Highcharts from "highcharts";
-import HighchartsReact from "highcharts-react-official";
 
 import "./index.scss";
 import ImgWidgetLogo from "../../../../assets/widget-logo.jpg";
 import CredReadyIndex from "../../../_Elements/CredReadyIndex";
-import ImgMarginalAssociation from "../../../../assets/widget-2.jpg";
 import { fetchjobViewData } from "../../../../modals/candidateProfile/thunk";
+import MarginalAssociation from "../../../_Elements/Charts/MarginalAssociation";
 
 function JobView(props) {
-	/* Data comming from API will come here */
 	const dispatch = useDispatch();
 	console.log(props.match.params);
 	const allData = useSelector(
@@ -23,70 +20,6 @@ function JobView(props) {
 	React.useEffect(() => {
 		dispatch(fetchjobViewData(1));
 	}, []);
-
-	const marginalAssociation = {
-		chart: {
-			type: "bar",
-		},
-		title: {
-			text: "",
-		},
-
-		xAxis: {
-			categories: [""],
-			title: {
-				text: null,
-			},
-		},
-		yAxis: {
-			min: 0,
-			title: {
-				align: "high",
-			},
-			labels: {
-				overflow: "justify",
-			},
-		},
-		tooltip: {
-			valueSuffix: " millions",
-		},
-		plotOptions: {
-			bar: {
-				dataLabels: {
-					enabled: true,
-				},
-			},
-		},
-		legend: {
-			layout: "vertical",
-			align: "right",
-			verticalAlign: "top",
-			x: -40,
-			y: 80,
-			floating: true,
-			borderWidth: 1,
-			backgroundColor:
-				Highcharts.defaultOptions.legend.backgroundColor || "#FFFFFF",
-			shadow: true,
-		},
-		credits: {
-			enabled: false,
-		},
-		series: [
-			{
-				data: [107],
-			},
-			{
-				data: [133],
-			},
-			{
-				data: [814],
-			},
-			{
-				data: [1216],
-			},
-		],
-	};
 
 	return (
 		<div className="job-view-cmp flex">
@@ -166,11 +99,7 @@ function JobView(props) {
 				</div>
 				<div className="marginal">
 					<h3>Top 5 Contributors to CredREadiness</h3>
-					<HighchartsReact
-						highcharts={Highcharts}
-						options={marginalAssociation}
-					/>
-					{/* <img src={ImgMarginalAssociation} alt="Marginal Association" /> */}
+					<MarginalAssociation />
 				</div>
 			</div>
 		</div>

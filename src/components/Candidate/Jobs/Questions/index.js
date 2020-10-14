@@ -10,7 +10,10 @@ import WorkHistory from "./WorkHistory";
 import CommuteQuestions from "./CommuteQuestions";
 import EmployerQuestions from "./EmployerQuestions";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchAllAnswers } from "../../../../modals/candidateProfile/thunk";
+import {
+	fetchAllAnswers,
+	submitCandidateAnswers,
+} from "../../../../modals/candidateProfile/thunk";
 
 let scrollBarStyle = {
 	height: "calc(100vh - 280px)",
@@ -84,6 +87,7 @@ function Questions(props) {
 
 	const _formData = {
 		job_id: 1,
+
 		general_questions: [
 			{
 				question_id: 1,
@@ -284,99 +288,7 @@ function Questions(props) {
 			},
 		],
 
-
-		"coursework":
-			[
-				{
-					"question_id": 1,
-					"answer": 1
-				},
-
-				{
-					"question_id": 2,
-					"answer": [
-						{
-							"sub_question_id": 1,
-							"sub_answer": 4
-						},
-						{
-							"sub_question_id": 3,
-							"sub_answer": 4
-						}]
-				},
-
-				{
-					"question_id": 3,
-					"answer": [
-						{
-							"sub_question_id": 1,
-							"sub_answer": 4
-						},
-						{
-							"sub_question_id": 3,
-							"sub_answer": 4
-						}]
-				},
-
-				{
-					"question_id": 4,
-					"answer": 1
-				}
-			],
-
-		"work_history":
-			[
-				{
-					"question_id": 1,
-					"answer": 3
-				},
-				{
-					"question_id": 2,
-					"answer": "2 years 3 months"
-				},
-				{
-					"question_id": 3,
-					"answer": "07-02-2020"
-				},
-				{
-					"question_id": 4,
-					"answer": [1, 2]
-				}
-			],
-
-		"commute":
-			[
-				{
-					"question_id": 1,
-					"answer": "Warren, NJ"
-				},
-				{
-					"question_id": 2,
-					"answer": 1
-				},
-				{
-					"question_id": 3,
-					"answer": [
-						{
-							"sub_question_id": 1,
-							"sub_answer": "street address"
-						},
-						{
-							"sub_question_id": 2,
-							"sub_answer": "zipcode"
-						},
-						{
-							"sub_question_id": 3,
-							"sub_answer": "city"
-						},
-						{
-							"sub_question_id": 4,
-							"sub_answer": "state"
-						}
-					]
-				}
-			],
-		"employer_questions": [
+		employer_questions: [
 			{
 				question_id: 1,
 				answer: [1],
@@ -440,39 +352,39 @@ function Questions(props) {
 
 	const generalAnswers =
 		allAnswersData.length > 0 &&
-			allAnswersData.map((entity) => {
-				if (entity.category === "general_questions")
-					return JSON.parse(entity.answer);
-			})
+		allAnswersData.map((entity) => {
+			if (entity.category === "general_questions")
+				return JSON.parse(entity.answer);
+		})
 			? JSON.parse(allAnswersData[0].answer)
 			: [];
 	const personalityAassessment =
 		allAnswersData.length > 0 &&
-			allAnswersData.map((entity) => {
-				if (entity.category === "personality_assessment")
-					return JSON.parse(entity.answer);
-			})
+		allAnswersData.map((entity) => {
+			if (entity.category === "personality_assessment")
+				return JSON.parse(entity.answer);
+		})
 			? JSON.parse(allAnswersData[0].answer)
 			: [];
 	const coursework =
 		allAnswersData.length > 0 &&
-			allAnswersData.map((entity) => {
-				if (entity.category === "coursework") return JSON.parse(entity.answer);
-			})
+		allAnswersData.map((entity) => {
+			if (entity.category === "coursework") return JSON.parse(entity.answer);
+		})
 			? JSON.parse(allAnswersData[0].answer)
 			: [];
 	const workHistory =
 		allAnswersData.length > 0 &&
-			allAnswersData.map((entity) => {
-				if (entity.category === "work_history") return JSON.parse(entity.answer);
-			})
+		allAnswersData.map((entity) => {
+			if (entity.category === "work_history") return JSON.parse(entity.answer);
+		})
 			? JSON.parse(allAnswersData[0].answer)
 			: [];
 	const commute =
 		allAnswersData.length > 0 &&
-			allAnswersData.map((entity) => {
-				if (entity.category === "commute") return JSON.parse(entity.answer);
-			})
+		allAnswersData.map((entity) => {
+			if (entity.category === "commute") return JSON.parse(entity.answer);
+		})
 			? JSON.parse(allAnswersData[0].answer)
 			: [];
 
@@ -486,6 +398,7 @@ function Questions(props) {
 
 	const onSubmitHandler = () => {
 		console.log(JSON.stringify(formData));
+		dispatch(submitCandidateAnswers(formData));
 	};
 
 	const calHeight = (height) => {
@@ -518,8 +431,8 @@ function Questions(props) {
 			{props.showEmployerQuestions ? (
 				<h1 className="common-heading">Apply for a Job</h1>
 			) : (
-					<h1 className="common-heading">Let Us Know More About You</h1>
-				)}
+				<h1 className="common-heading">Let Us Know More About You</h1>
+			)}
 
 			<div className="outer">
 				<div className="left">
@@ -597,7 +510,7 @@ function Questions(props) {
 						<CourseWork
 							calHeight={calHeight}
 							data={formData.coursework}
-							onchange={(q, a) => handleFieldChange(formData.coursework, q, a)}
+							onchange={(q, a) => handleFieldChange("coursework", q, a)}
 						/>
 						<WorkHistory
 							calHeight={calHeight}
@@ -619,8 +532,12 @@ function Questions(props) {
 								}
 							/>
 						)}
-						<div className="cta" >
-							<Link to="/jobs/view/1" className="primary-btn" onClick={onSubmitHandler}>
+						<div className="cta">
+							<Link
+								to="/jobs/view/1"
+								className="primary-btn"
+								onClick={onSubmitHandler}
+							>
 								Submit
 							</Link>
 						</div>
@@ -628,7 +545,7 @@ function Questions(props) {
 					</Scrollbars>
 				</div>
 			</div>
-		</div >
+		</div>
 	);
 }
 

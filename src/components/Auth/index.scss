@@ -147,6 +147,10 @@
 						&.error-input {
 							border: 1px solid red;
 						}
+						&[name="organisation"] {
+							background-image: url(../../assets/employee-name.jpg);
+							background-size: 27px;
+						}
 						&[name="name"] {
 							background-image: url(../../assets/employee-name.jpg);
 							background-size: 27px;

@@ -21,10 +21,10 @@ function Education(props) {
 		dispatch(togglePopup([true, "certificate", { certificate }]));
 	};
 
-	const handleEdit = () => {
+	const handleEdit = (id, type) => {
 		// console.log("editing");
 		dispatch(toggleOverlay(true));
-		dispatch(togglePopup([true, "addWorkExperience"]));
+		dispatch(togglePopup([true, type, id]));
 	};
 	const handleDelete = (type) => {
 		// console.log("deleting");
@@ -60,7 +60,7 @@ function Education(props) {
 					className="action-btn edit"
 					icon={faPen}
 					id={"educationEdit_" + i}
-					onClick={handleEdit}
+					onClick={() => handleEdit(data.id, "addEducation")}
 				/>
 				<FontAwesomeIcon
 					className="action-btn delete"
@@ -92,7 +92,7 @@ function Education(props) {
 							className="action-btn edit"
 							icon={faPen}
 							id={"otherExperienceEdit_" + i}
-							onClick={handleEdit}
+							onClick={() => handleEdit(data.id, "addEduOtherExperience")}
 						/>
 						<FontAwesomeIcon
 							className="action-btn delete"
@@ -144,7 +144,7 @@ function Education(props) {
 						className="action-btn edit"
 						icon={faPen}
 						id={"certificateEdit_" + i}
-						onClick={handleEdit}
+						onClick={() => handleEdit(data.id, "addCertificate")}
 					/>
 					<FontAwesomeIcon
 						className="action-btn delete"

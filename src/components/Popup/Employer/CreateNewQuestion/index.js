@@ -1,18 +1,16 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { createQuestion } from "../../../../store/thunks/employer";
 import { useDispatch } from "react-redux";
-import {
-	togglePopup,
-	toggleOverlay,
-} from "../../../../store/actions/popup_overlay";
+import { togglePopup } from "../../../../store/actions/popup_overlay";
 
 import "./index.scss";
 
 function CreateNewQuestion(props) {
 	const [jobTitle, setJobTitle] = useState("");
 	const [questionName, setQuestionName] = useState("");
-	const [questionType, setQuestionType] = useState("");
-	const [optionChoiceName, setOptionChoiceName] = useState(["", "", ""]);
+	const [questionType, setQuestionType] = useState("mcq");
+	const [optionChoiceName, setOptionChoiceName] = useState([""]);
+	const [optionInput, setOptionInput] = useState([""]);
 	const dispatch = useDispatch();
 
 	const handleQuestionAdd = () => {
@@ -72,6 +70,25 @@ function CreateNewQuestion(props) {
 		setOptionChoiceName(optionChoiceNameTemp);
 	};
 
+	const handleAddOption = () => {
+		let _optionChoiceName = [...optionChoiceName];
+		_optionChoiceName.push("");
+		setOptionChoiceName(_optionChoiceName);
+	};
+
+	const handleOptionDelete = (i) => {
+		let _optionChoiceName = [...optionChoiceName];
+		_optionChoiceName.splice(i, 1);
+		setOptionChoiceName(_optionChoiceName);
+	};
+
+	useEffect(() => {
+		// console.log(optionChoiceName);
+		return () => {
+			// cleanup
+		};
+	}, [optionChoiceName]);
+
 	return (
 		<div className="create-new-question">
 			<h1>Create New Question</h1>
@@ -118,6 +135,7 @@ function CreateNewQuestion(props) {
 									className="fancy-toggle"
 									type="radio"
 									id="multipleChoice"
+									defaultChecked
 									onChange={() => setQuestionType("mcq")}
 								/>
 								<label htmlFor="multipleChoice">
@@ -125,42 +143,42 @@ function CreateNewQuestion(props) {
 								</label>
 							</div>
 						</div>
-						<button className="add">Add Option</button>
-						<ul>
-							<li>
+
+						{questionType === "mcq" ? (
+							<>
+								<button className="add" onClick={handleAddOption}>
+									Add Option
+								</button>
+								<ul>
+									{optionChoiceName.map((choice, i) => {
+										return (
+											<li key={i}>
+												<input
+													type="text"
+													value={choice}
+													id={i}
+													onChange={(e) =>
+														handleOptionChange(i, e.target.value)
+													}
+												/>
+												<button
+													className="delete"
+													onClick={() => handleOptionDelete(i)}
+												></button>
+											</li>
+										);
+									})}
+								</ul>
+							</>
+						) : (
+							<ul>
 								<input
 									type="text"
-									value={optionChoiceName[0]}
-									id={0}
-									onChange={(e) =>
-										handleOptionChange(e.target.id, e.target.value)
-									}
+									value={optionInput}
+									onChange={(e) => setOptionInput(e.target.value)}
 								/>
-								<button className="delete"></button>
-							</li>
-							<li>
-								<input
-									type="text"
-									value={optionChoiceName[1]}
-									id={1}
-									onChange={(e) =>
-										handleOptionChange(e.target.id, e.target.value)
-									}
-								/>
-								<button className="delete"></button>
-							</li>
-							<li>
-								<input
-									type="text"
-									value={optionChoiceName[2]}
-									id={2}
-									onChange={(e) =>
-										handleOptionChange(e.target.id, e.target.value)
-									}
-								/>
-								<button className="delete"></button>
-							</li>
-						</ul>
+							</ul>
+						)}
 					</li>
 				</ul>
 				<div className="cta">

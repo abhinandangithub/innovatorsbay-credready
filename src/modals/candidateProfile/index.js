@@ -92,6 +92,18 @@ export const setCandidateJobsInitial = {
     data: []
 }
 
+export const setCandidateJobTitlesInitial = {
+    data: []
+}
+
+export const setAllFunctionsInitial = {
+    data: []
+}
+
+export const setAllIndustriesInitial = {
+    data: []
+}
+
 export function candidateSetDataReducer(state = initialState, action) {
     switch (action.type) {
         case types.CANDIDATE_PROFILE_SET_DATA:
@@ -190,6 +202,42 @@ export function setCandidateJobViewDataReducer(state = setCandidateJobViewDataIn
 export function setCandidateJobsReducer(state = setCandidateJobsInitial, action) {
     switch (action.type) {
         case types.SET_CANDIDATE_JOBS:
+            {
+                const { data } = action;
+                state = { ...state, data };
+            }
+        default:
+            return state;
+    }
+}
+
+export function setCandidateCertificateTitlesReducer(state = setCandidateJobTitlesInitial, action) {
+    switch (action.type) {
+        case types.SET_CANDIDATE_CERTIFICATE_TITLES:
+            {
+                const { data } = action;
+                state = { ...state, data };
+            }
+        default:
+            return state;
+    }
+}
+
+export function setAllIndustriesReducer(state = setAllIndustriesInitial, action) {
+    switch (action.type) {
+        case types.SET_ALL_INDUSTRIES:
+            {
+                const { data } = action;
+                state = { ...state, data };
+            }
+        default:
+            return state;
+    }
+}
+
+export function setAllFunctionsReducer(state = setAllFunctionsInitial, action) {
+    switch (action.type) {
+        case types.SET_ALL_FUNCTIONS:
             {
                 const { data } = action;
                 state = { ...state, data };

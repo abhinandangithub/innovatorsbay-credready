@@ -46,8 +46,8 @@ function GeneralQuestions({ data, onchange, calHeight, noHeading }) {
 					<h2>General Questions</h2>
 				</div>
 			) : (
-					""
-				)}
+				""
+			)}
 			<div className="content">
 				<ul className="general-questions">
 					<li className="general-question applied">

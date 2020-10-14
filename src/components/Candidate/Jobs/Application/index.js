@@ -17,16 +17,58 @@ import {
 	toggleOverlay,
 } from "../../../../store/actions/popup_overlay";
 import { fetchCandidateDetails } from "../../../../modals/candidateProfile/thunk";
+import { findIndex } from "../Questions/index";
 
-function Application() {
+function Application({ onchange }) {
 	const dispatch = useDispatch();
-	const userData = useSelector(state => state.candidateSetDataReducer.data);
+
+	const userData = useSelector((state) => state.candidateSetDataReducer.data);
+
 	const handleClick = () => {
 		dispatch(toggleOverlay(true));
 		dispatch(togglePopup([true, "jobApplied"]));
 	};
 
-	const formData = {
+	const handleFieldChange = (type, q, a) => {
+		let i = findIndex(formData[type], q);
+		let _formData = { ...formData };
+
+		if (Array.isArray(a)) {
+			let index = _formData[type][i]["answer"].indexOf(a[0]);
+			if (index > -1) {
+				_formData[type][i]["answer"].splice(index, 1);
+			} else {
+				_formData[type][i]["answer"].push(a[0]);
+			}
+		} else if (typeof a === "object") {
+			if (a.sub_question_id_2) {
+				let index = findIndex(formData[type][i].answer, a.sub_question_id_2);
+				_formData[type][i]["answer"][index].sub_answer = a.sub_answer;
+			} else if (a.sub_answer) {
+				_formData[type][i]["sub_answer"] = a.sub_answer;
+			} else if (a.sub_question_id) {
+				let obj = {
+					sub_question_id: a.sub_question_id,
+					sub_answer: null,
+				};
+
+				let index = findIndex(formData[type][i].answer, a.sub_question_id);
+				if (index > -1) {
+					_formData[type][i]["answer"].splice(index, 1);
+				} else {
+					_formData[type][i]["answer"].push(obj);
+				}
+			} else if (a.address) {
+				_formData[type][i]["answer"][a.address] = a.value;
+			}
+		} else {
+			_formData[type][i]["answer"] = a;
+		}
+
+		setFormData(_formData);
+	};
+
+	const _formData = {
 		job_id: 1,
 		general_questions: [
 			{
@@ -248,9 +290,12 @@ function Application() {
 		],
 	};
 
+	const [formData, setFormData] = React.useState(_formData);
+
 	React.useEffect(() => {
 		dispatch(fetchCandidateDetails());
-	}, [])
+	}, []);
+
 	return (
 		<div className="application_page">
 			<div className="heading">
@@ -308,9 +353,12 @@ function Application() {
 						</div>
 						<div className="bottom">
 							<p>First Name : {userData.first_name}</p>
-							<p>Last Name :  {userData.last_name}</p>
+							<p>Last Name : {userData.last_name}</p>
 							<p>Current employment status : Employed</p>
-							<p>How long would you begin a new role? : {userData.available_within}</p>
+							<p>
+								How long would you begin a new role? :{" "}
+								{userData.available_within}
+							</p>
 							{/* <p>
 								Are you interested in a different function and industry? : Yes
 							</p>
@@ -340,31 +388,35 @@ function Application() {
 							/>
 						</div>
 						<div className="bottom">
-							{userData && userData.work_experience && userData.work_experience.length > 1 ? userData.work_experience.map((exp, index) => {
-								return (
-									<div className="details" key={index}>
-										<h2>{exp.title}</h2>
-										<p>
-											<span className="text">{exp.location}</span>
-										</p>
-										<p>
-											<span className="heading">{exp.employment_from}</span>
-											{" to "}
-											<span className="text">{exp.employment_to}</span>
-										</p>
-										<p>
-											<span className="heading">Current employment status: </span>
-											<span className="text">Employed</span>
-										</p>
-										<p>
-											<span className="heading">Skills: </span>
-											<span className="text">
-												{exp.job_description}
-											</span>
-										</p>
-									</div>
-								)
-							}) : ""}
+							{userData &&
+							userData.work_experience &&
+							userData.work_experience.length > 1
+								? userData.work_experience.map((exp, index) => {
+										return (
+											<div className="details" key={index}>
+												<h2>{exp.title}</h2>
+												<p>
+													<span className="text">{exp.location}</span>
+												</p>
+												<p>
+													<span className="heading">{exp.employment_from}</span>
+													{" to "}
+													<span className="text">{exp.employment_to}</span>
+												</p>
+												<p>
+													<span className="heading">
+														Current employment status:{" "}
+													</span>
+													<span className="text">Employed</span>
+												</p>
+												<p>
+													<span className="heading">Skills: </span>
+													<span className="text">{exp.job_description}</span>
+												</p>
+											</div>
+										);
+								  })
+								: ""}
 						</div>
 					</div>
 					<div className="group ">
@@ -389,28 +441,29 @@ function Application() {
 							/>
 						</div>
 
-						{
-							userData && userData.education_experience && userData.education_experience.length > 1 ? userData.education_experience.map((exp, index) => {
-								return (
-									<div className="bottom">
-										<div className="details">
-											<h2>{exp.title}</h2>
-											<p>
-												<span className="heading">{exp.title}</span>
-												{" - "}
-												<span className="text">ABC University</span>
-											</p>
-											<p>
-												<span className="text">{exp.attended_from}</span>
-												{" to "}
-												<span className="text">{exp.attended_till}</span>
-											</p>
+						{userData &&
+						userData.education_experience &&
+						userData.education_experience.length > 1
+							? userData.education_experience.map((exp, index) => {
+									return (
+										<div className="bottom">
+											<div className="details">
+												<h2>{exp.title}</h2>
+												<p>
+													<span className="heading">{exp.title}</span>
+													{" - "}
+													<span className="text">ABC University</span>
+												</p>
+												<p>
+													<span className="text">{exp.attended_from}</span>
+													{" to "}
+													<span className="text">{exp.attended_till}</span>
+												</p>
+											</div>
 										</div>
-									</div>
-								)
-							}) : ""
-						}
-
+									);
+							  })
+							: ""}
 
 						{}
 					</div>
@@ -543,25 +596,46 @@ function Application() {
 			</div>
 
 			<Accordion title="General Questions">
-				<GeneralQuestions noHeading data={formData.general_questions} />
+				<GeneralQuestions
+					noHeading
+					data={formData.general_questions}
+					onchange={(q, a) => handleFieldChange("general_questions", q, a)}
+				/>
 			</Accordion>
 			<Accordion title="Personality Assessment">
 				<PersonalityAssessment
 					noHeading
 					data={formData.personality_assessment}
+					onchange={(q, a) => handleFieldChange("personality_assessment", q, a)}
 				/>
 			</Accordion>
 			<Accordion title="Coursework">
-				<CourseWork noHeading data={formData.coursework} />
+				<CourseWork
+					noHeading
+					data={formData.coursework}
+					onchange={(q, a) => handleFieldChange("coursework", q, a)}
+				/>
 			</Accordion>
 			<Accordion title="Work History" type="addEducation">
-				<WorkHistory noHeading data={formData.work_history} />
+				<WorkHistory
+					noHeading
+					data={formData.work_history}
+					onchange={(q, a) => handleFieldChange("work_history", q, a)}
+				/>
 			</Accordion>
 			<Accordion title="Commute" type="addEducation">
-				<CommuteQuestions noHeading data={formData.commute} />
+				<CommuteQuestions
+					noHeading
+					data={formData.commute}
+					onchange={(q, a) => handleFieldChange("commute", q, a)}
+				/>
 			</Accordion>
 			<Accordion title="Employer Questions" type="addEducation">
-				<EmployerQuestions noHeading data={formData.employer_questions} />
+				<EmployerQuestions
+					noHeading
+					data={formData.employer_questions}
+					onchange={(q, a) => handleFieldChange("employer_questions", q, a)}
+				/>
 			</Accordion>
 
 			<div className="cta">

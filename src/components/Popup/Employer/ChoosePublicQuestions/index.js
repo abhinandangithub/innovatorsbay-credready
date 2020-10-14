@@ -19,23 +19,26 @@ import "./index.scss";
 function ChoosePublicQuestions(props) {
 	const dispatch = useDispatch();
 	let questionToSave = props.questionsSelected;
-	console.log('props ', props);
+	console.log("props ", props);
 	const createNewQuestion = () => {
 		dispatch(togglePopup([true, "createNewQuestion", { type: "public" }]));
 	};
 
 	useEffect(() => {
-		props.questionsSelected.forEach(element => {
+		props.questionsSelected.forEach((element) => {
 			document.getElementById(element.question_id).checked = true;
 		});
-	},[props.questionsSelected]);
+	}, [props.questionsSelected]);
 
 	const handleCheckEvent = (event, question) => {
 		console.log(event.target.value, question);
 		if (document.getElementById(event.target.id).checked) {
 			// questionToSave.push(question);
 			if (questionToSave.length !== 0) {
-				if((questionToSave.find(x => x.question_id !== event.target.id).question_id).length !== 0) {
+				if (
+					questionToSave.find((x) => x.question_id !== event.target.id)
+						.question_id.length !== 0
+				) {
 					questionToSave.push(question);
 				}
 			} else {
@@ -43,13 +46,13 @@ function ChoosePublicQuestions(props) {
 			}
 		} else {
 			questionToSave = questionToSave.map((val) => {
-				if(val.question_id != event.target.id) {
+				if (val.question_id != event.target.id) {
 					return val;
 				} else {
 					return null;
 				}
 			});
-			questionToSave = questionToSave.filter(e => e !== null);
+			questionToSave = questionToSave.filter((e) => e !== null);
 		}
 	};
 
@@ -67,6 +70,13 @@ function ChoosePublicQuestions(props) {
 		// }));
 		dispatch(toggleOverlay(false));
 		dispatch(togglePopup([false, "addNewQuestion"]));
+	};
+
+	const handleEdit = () => {
+		dispatch(togglePopup([true, "createNewQuestion", { type: "private" }]));
+	};
+	const handleDelete = () => {
+		alert("Are you sure to delete?");
 	};
 
 	return (
@@ -101,14 +111,12 @@ function ChoosePublicQuestions(props) {
 											<FontAwesomeIcon
 												className="action-btn edit"
 												icon={faPen}
-												// id={"workExperienceEdit_" + i}
-												// onClick={handleEdit}
+												onClick={handleEdit}
 											/>
 											<FontAwesomeIcon
 												className="action-btn delete"
 												icon={faTrash}
-												// id={"workExperienceDelete_" + i}
-												// onClick={() => handleDelete("workExperience")}
+												onClick={handleDelete}
 											/>
 										</>
 									) : question.question_type === "mcq" ? (
@@ -172,14 +180,12 @@ function ChoosePublicQuestions(props) {
 								<FontAwesomeIcon
 									className="action-btn edit"
 									icon={faPen}
-									// id={"workExperienceEdit_" + i}
-									// onClick={handleEdit}
+									onClick={handleEdit}
 								/>
 								<FontAwesomeIcon
 									className="action-btn delete"
 									icon={faTrash}
-									// id={"workExperienceDelete_" + i}
-									// onClick={() => handleDelete("workExperience")}
+									onClick={handleDelete}
 								/>
 							</li>
 						);
@@ -203,8 +209,8 @@ function ChoosePublicQuestions(props) {
 function mapStateToProps(state) {
 	return {
 		questionBank: state.employerReducer.questionBank.data.public_question_bank,
-		questionsSelected: state.employerReducer.questionBank.questions
-	}
+		questionsSelected: state.employerReducer.questionBank.questions,
+	};
 }
 
 // export default JobSpecificQuestions;

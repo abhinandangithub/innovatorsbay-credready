@@ -18,17 +18,91 @@ const metrics = {
 	content: ["All", "Certified Nursing Assistant", "Personal Care Aid"],
 };
 
+// Age categories
+var categories = ["0-4", "5-9", "10-14", "15-19", "20-24", "25-29"];
+
 function Dashboard() {
 	const recruitmentFunnel = {
 		chart: {
-			type: "spline",
+			type: "bar",
 		},
 		title: {
 			text: "",
 		},
+		accessibility: {
+			point: {
+				valueDescriptionFormat: "{index}. Age {xDescription}, {value}%.",
+			},
+		},
+		xAxis: [
+			{
+				categories: categories,
+				reversed: false,
+				labels: {
+					step: 1,
+				},
+				accessibility: {
+					description: "Age (male)",
+				},
+			},
+			{
+				// mirror axis on right side
+				opposite: true,
+				reversed: false,
+				categories: categories,
+				linkedTo: 0,
+				labels: {
+					step: 1,
+				},
+				accessibility: {
+					description: "Age (female)",
+				},
+			},
+		],
+		yAxis: {
+			title: {
+				text: null,
+			},
+			labels: {
+				formatter: function () {
+					return Math.abs(this.value) + "%";
+				},
+			},
+			accessibility: {
+				description: "Percentage population",
+				rangeDescription: "Range: 0 to 5%",
+			},
+		},
+
+		plotOptions: {
+			series: {
+				stacking: "normal",
+			},
+		},
+
+		tooltip: {
+			formatter: function () {
+				return (
+					"<b>" +
+					this.series.name +
+					", age " +
+					this.point.category +
+					"</b><br/>" +
+					"Population: " +
+					Highcharts.numberFormat(Math.abs(this.point.y), 1) +
+					"%"
+				);
+			},
+		},
+
 		series: [
 			{
-				data: [1, 2, 1, 4, 3, 6],
+				name: "Male",
+				data: [-2.2, -2.1, -2.2, -2.4, -2.7],
+			},
+			{
+				name: "Female",
+				data: [2.1, 2.0, 2.1, 2.3, 2.6],
 			},
 		],
 	};

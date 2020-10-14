@@ -30,11 +30,13 @@ function Header(props) {
 	return (
 		<header className="header flex">
 			<div className="left flex">
-				<button className="menu" onClick={props.onMenuClick}>
-					<FontAwesomeIcon icon={faBars} className="lines" />
-					<FontAwesomeIcon icon={faAngleLeft} className="arrow" />
-					<FontAwesomeIcon icon={faTimes} className="close" />
-				</button>
+				<div className="menu_outer">
+					<button className="menu" onClick={props.onMenuClick}>
+						<FontAwesomeIcon icon={faBars} className="lines" />
+						<FontAwesomeIcon icon={faAngleLeft} className="arrow" />
+						<FontAwesomeIcon icon={faTimes} className="close" />
+					</button>
+				</div>
 				<Link to="/dashboard" className="logo">
 					<img src={ImgLogo} alt="CredReady" />
 				</Link>

@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 // import { useForm } from "react-hook-form";
-import { connect } from "react-redux";
+import { connect, useSelector } from "react-redux";
 
 import "./index.scss";
 import Input from "../../../../_Elements/Input";
@@ -33,7 +33,6 @@ const joiningDuration = {
 };
 
 function PersonalDetails(props) {
-	const [prevData, setPrevData] = React.useState(props.candidatePreviousData)
 	const [formData, setFormData] = React.useState({
 		/**
 		 * * field: ['value', 'error']
@@ -53,7 +52,7 @@ function PersonalDetails(props) {
 
 	// setFormData(state.formValues);
 
-
+	const data = useSelector(state => state.candidateSetDataReducer.data)
 	const handleSubmit = (e) => {
 		e.preventDefault();
 		let oldFormData = { ...formData };
@@ -112,7 +111,7 @@ function PersonalDetails(props) {
 		if (props.currentStatus.length > 1) return;
 		props.fetchCandidateCurrentStatus();
 		props.fetchCandidateDetails();
-	}, []);
+	}, [data]);
 
 	return (
 		<div className="personal-details">
@@ -132,7 +131,7 @@ function PersonalDetails(props) {
 								type="text"
 								placeholder="First name"
 								id="firstName"
-								defaultValue={formData.firstName[0]}
+								defaultValue={data.first_name}
 								onChange={(e) => handleFieldChange(e.target.id, e.target.value)}
 							/>
 						</li>
@@ -149,7 +148,7 @@ function PersonalDetails(props) {
 								type="text"
 								placeholder="Last name"
 								id="lastName"
-								defaultValue={formData.lastName[0]}
+								defaultValue={data.last_name}
 								onChange={(e) => handleFieldChange(e.target.id, e.target.value)}
 							/>
 						</li>
@@ -165,6 +164,7 @@ function PersonalDetails(props) {
 							</label>
 							<Dropdown
 								placeholder={employmentStatus.heading}
+								selected={props.currentStatus.find(val => val.id === data.current_employment_status) ? props.currentStatus.find(val => val.id === data.current_employment_status).employment_status : ""}
 								content={props.currentStatus.map((val) => ({ val: val.employment_status, id: val.id }))}
 								id="employmentStatus"
 								onchange={(value) =>
@@ -224,6 +224,7 @@ function PersonalDetails(props) {
 								placeholder={joiningDuration.heading}
 								content={joiningDuration.content}
 								id="joiningDuration"
+								selected={data.available_within}
 								onchange={(value) =>
 									handleFieldChange("joiningDuration", value)
 								}
@@ -243,7 +244,7 @@ function PersonalDetails(props) {
 								type="text"
 								placeholder="Street address"
 								id="streetAddress"
-								defaultValue={formData.streetAddress[0]}
+								defaultValue={data.address.street_address}
 								onChange={(e) => handleFieldChange(e.target.id, e.target.value)}
 							/>
 						</li>
@@ -258,7 +259,7 @@ function PersonalDetails(props) {
 								type="text"
 								placeholder="City"
 								id="city"
-								defaultValue={formData.city[0]}
+								defaultValue={data.address.city}
 								onChange={(e) => handleFieldChange(e.target.id, e.target.value)}
 							/>
 						</li>
@@ -275,7 +276,7 @@ function PersonalDetails(props) {
 								type="text"
 								placeholder="State"
 								id="state"
-								defaultValue={formData.state[0]}
+								defaultValue={data.address.state}
 								onChange={(e) => handleFieldChange(e.target.id, e.target.value)}
 							/>
 						</li>
@@ -292,7 +293,7 @@ function PersonalDetails(props) {
 								type="text"
 								placeholder="Zip code"
 								id="zipCode"
-								defaultValue={formData.zipCode[0]}
+								defaultValue={data.address.zip_code}
 								onChange={(e) => handleFieldChange(e.target.id, e.target.value)}
 							/>
 						</li>

@@ -10,8 +10,7 @@ const initialState = {
 	loggedIn: {
 		value: false,
 		as: "",
-		// value: true,
-		// as: "employer",
+		// as: "candidate",
 	},
 	singUp: {
 		email: null,

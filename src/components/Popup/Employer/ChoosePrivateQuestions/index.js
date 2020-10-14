@@ -19,24 +19,27 @@ import "./index.scss";
 
 function ChoosePrivateQuestions(props) {
 	const dispatch = useDispatch();
-	let questionToSave = props.questionsSelected;;
-	console.log('props ', props);
+	let questionToSave = props.questionsSelected;
+	console.log("props ", props);
 	const createNewQuestion = () => {
 		dispatch(togglePopup([true, "createNewQuestion", { type: "private" }]));
 	};
 
 	useEffect(() => {
-		props.questionsSelected.forEach(element => {
+		props.questionsSelected.forEach((element) => {
 			document.getElementById(element.question_id).checked = true;
 		});
-	},[props.questionsSelected]);
+	}, [props.questionsSelected]);
 
 	const handleCheckEvent = (event, question) => {
 		console.log(event.target.value, question);
 		if (document.getElementById(event.target.id).checked) {
 			// questionToSave.push(question);
 			if (questionToSave.length !== 0) {
-				if((questionToSave.find(x => x.question_id !== event.target.id).question_id).length !== 0) {
+				if (
+					questionToSave.find((x) => x.question_id !== event.target.id)
+						.question_id.length !== 0
+				) {
 					questionToSave.push(question);
 				}
 			} else {
@@ -44,13 +47,13 @@ function ChoosePrivateQuestions(props) {
 			}
 		} else {
 			questionToSave = questionToSave.map((val) => {
-				if(val.question_id != event.target.id) {
+				if (val.question_id != event.target.id) {
 					return val;
 				} else {
 					return null;
 				}
 			});
-			questionToSave = questionToSave.filter(e => e !== null);
+			questionToSave = questionToSave.filter((e) => e !== null);
 		}
 	};
 
@@ -70,11 +73,18 @@ function ChoosePrivateQuestions(props) {
 		dispatch(togglePopup([false, "addNewQuestion"]));
 	};
 
+	const handleEdit = () => {
+		dispatch(togglePopup([true, "createNewQuestion", { type: "private" }]));
+	};
+	const handleDelete = () => {
+		alert("Are you sure to delete?");
+	};
+
 	return (
 		<div className="choose-private-question">
 			<h1>
 				Choose from Private Questions
-				<button class="common-heading-btn" onClick={createNewQuestion}>
+				<button className="common-heading-btn" onClick={createNewQuestion}>
 					<span></span>Create New Question
 				</button>
 			</h1>
@@ -103,13 +113,13 @@ function ChoosePrivateQuestions(props) {
 												className="action-btn edit"
 												icon={faPen}
 												// id={"workExperienceEdit_" + i}
-												// onClick={handleEdit}
+												onClick={handleEdit}
 											/>
 											<FontAwesomeIcon
 												className="action-btn delete"
 												icon={faTrash}
 												// id={"workExperienceDelete_" + i}
-												// onClick={() => handleDelete("workExperience")}
+												onClick={handleDelete}
 											/>
 										</>
 									) : question.question_type === "mcq" ? (
@@ -173,14 +183,12 @@ function ChoosePrivateQuestions(props) {
 								<FontAwesomeIcon
 									className="action-btn edit"
 									icon={faPen}
-									// id={"workExperienceEdit_" + i}
-									// onClick={handleEdit}
+									onClick={handleEdit}
 								/>
 								<FontAwesomeIcon
 									className="action-btn delete"
 									icon={faTrash}
-									// id={"workExperienceDelete_" + i}
-									// onClick={() => handleDelete("workExperience")}
+									onClick={handleDelete}
 								/>
 							</li>
 						);
@@ -204,8 +212,8 @@ function ChoosePrivateQuestions(props) {
 function mapStateToProps(state) {
 	return {
 		questionBank: state.employerReducer.questionBank.data.private_question_bank,
-		questionsSelected: state.employerReducer.questionBank.questions
-	}
+		questionsSelected: state.employerReducer.questionBank.questions,
+	};
 }
 
 // export default JobSpecificQuestions;

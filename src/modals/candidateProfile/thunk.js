@@ -15,7 +15,11 @@ import {
 	fetchCandidateInstituteTypeUrl,
 	fetchAllAnswersUrl,
 	fetchjobViewDataUrl,
-	fetchCandidateJobsUrl
+	fetchCandidateJobsUrl,
+	submitCandidateAnswersUrl,
+	fetchAllCertificateTitlesUrl,
+	fetchAllFunctionsUrl,
+	fetchAllIndustriesUrl
 } from "./api";
 import {
 	candidateSetCurrentStatus,
@@ -26,10 +30,12 @@ import {
 	setCandidateInstitutionType,
 	candidateSetAllAnswers,
 	candidateSetJobViewData,
-	setCandidateJobs
+	setCandidateJobs,
+	setCandidateCertificateData,
+	setAllFunctions,
+	setAllIndustries
 } from "./actions";
 import { updateJwtToken } from "../../store/actions/auth";
-import { setDefaultAuthorizationHeader } from "../../store/utility";
 
 
 export const fetchjobViewData = (id) => async (dispatch, getState) => {
@@ -96,6 +102,23 @@ export const addWorkExperience = (formData) => async (dispatch, getState) => {
 		if (!data) return;
 		dispatch(fetchCandidateDetails());
 
+	} catch (err) {
+		console.log(err)
+	}
+}
+
+export const submitCandidateAnswers = (formData) => async (dispatch, getState) => {
+	try {
+		const { data } = await Axios.post(
+			submitCandidateAnswersUrl,
+			formData, {
+			headers: {
+				'Authorization': getState().authReducer.JWT.map.jwt,
+				'Content-Type': 'application/vnd.credready.com+json'
+			}
+		});
+		if (!data) return;
+		dispatch(fetchCandidateDetails());
 	} catch (err) {
 		console.log(err)
 	}
@@ -293,6 +316,30 @@ export const fetchCandidateInstituteType = () => async (dispatch, getState) => {
 	}
 }
 
+export const fetchAllFunctions = () => async (dispatch, getState) => {
+	try {
+		const { data } = await Axios.get(
+			fetchAllFunctionsUrl,
+		);
+		dispatch(setAllFunctions(data ? data.data : []))
+		if (!data) return;
+	} catch (err) {
+		console.log(err)
+	}
+}
+
+export const fetchAllIndustries = () => async (dispatch, getState) => {
+	try {
+		const { data } = await Axios.get(
+			fetchAllIndustriesUrl,
+		);
+		dispatch(setAllIndustries(data ? data.data : []))
+		if (!data) return;
+	} catch (err) {
+		console.log(err)
+	}
+}
+
 export const fetchCandidateJobs = () => async (dispatch, getState) => {
 	try {
 		const data = await Axios.get(fetchCandidateJobsUrl, {
@@ -301,13 +348,25 @@ export const fetchCandidateJobs = () => async (dispatch, getState) => {
 				'Content-Type': 'application/vnd.credready.com+json'
 			}
 		});
-		// setDefaultAuthorizationHeader(state.authReducer.JWT);
-		// const { data } = await Axios.get(
-		// 	fetchCandidateJobsUrl,
-		// 	requestConfig
-		// );
 		if (!data) return;
-		dispatch(setCandidateJobs(data ? data.data : []));
+		dispatch(setCandidateJobs(data && data.data ? data.data.data : []));
+
+	} catch (err) {
+		console.log(err)
+	}
+}
+
+
+export const fetchAllCertificateTitles = () => async (dispatch, getState) => {
+	try {
+		const data = await Axios.get(fetchAllCertificateTitlesUrl, {
+			headers: {
+				'Authorization': getState().authReducer.JWT.map.jwt,
+				'Content-Type': 'application/vnd.credready.com+json'
+			}
+		});
+		if (!data) return;
+		dispatch(setCandidateCertificateData(data && data.data ? data.data.data : []));
 
 	} catch (err) {
 		console.log(err)
