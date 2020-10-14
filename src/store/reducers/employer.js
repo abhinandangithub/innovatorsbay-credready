@@ -75,34 +75,34 @@ const initialState = {
 	candidatesList: {
 		"message": "Candidate fetched successfully",
 		"data": [
-			{
-				"job_app_id": 1,
-				"candidate_id": 1,
-				"job_id": 1,
-				"email_template_id": 3,
-				"candidate_name": "Mike Rogers",
-				"title": "Certified Nursing Assistant",
-				"candidate_experience": "2.0 year(s)",
-				"current_organization": "ABC Staffing",
-				"status": "Emailed",
-				"readiness_index": 82,
-				"modified_by": "Jane Feldner",
-				"modified_on": "Oct 7, 2020, 4:54:54 PM"
-			},
-			{
-				"job_app_id": 2,
-				"candidate_id": 3,
-				"job_id": 1,
-				"email_template_id": 3,
-				"candidate_name": "Peter Gray",
-				"title": "Developer",
-				"candidate_experience": "3.0 year(s)",
-				"current_organization": "ABC Staffing",
-				"status": "Applied",
-				"readiness_index": 20,
-				"modified_by": "admin",
-				"modified_on": "Oct 6, 2020, 6:02:26 PM"
-			}
+			// {
+			// 	"job_app_id": 1,
+			// 	"candidate_id": 1,
+			// 	"job_id": 1,
+			// 	"email_template_id": 3,
+			// 	"candidate_name": "Mike Rogers",
+			// 	"title": "Certified Nursing Assistant",
+			// 	"candidate_experience": "2.0 year(s)",
+			// 	"current_organization": "ABC Staffing",
+			// 	"status": "Emailed",
+			// 	"readiness_index": 82,
+			// 	"modified_by": "Jane Feldner",
+			// 	"modified_on": "Oct 7, 2020, 4:54:54 PM"
+			// },
+			// {
+			// 	"job_app_id": 2,
+			// 	"candidate_id": 3,
+			// 	"job_id": 1,
+			// 	"email_template_id": 3,
+			// 	"candidate_name": "Peter Gray",
+			// 	"title": "Developer",
+			// 	"candidate_experience": "3.0 year(s)",
+			// 	"current_organization": "ABC Staffing",
+			// 	"status": "Applied",
+			// 	"readiness_index": 20,
+			// 	"modified_by": "admin",
+			// 	"modified_on": "Oct 6, 2020, 6:02:26 PM"
+			// }
 		],
 		"status": "OK"
 	},

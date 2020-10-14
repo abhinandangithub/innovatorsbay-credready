@@ -27,6 +27,10 @@ function CreateJob(props) {
 		dispatch(getSkills());
 	}, [dispatch]);
 
+	React.useEffect(() => {
+		dispatch(setNewJob({"minExp": value.min, "maxExp": value.max}));
+	}, [value]);
+
 	const handleSelect = (selectedList, selectedItem) => {
 		dispatch(setNewJob({jobCertificateMap: selectedList}));
 	}
