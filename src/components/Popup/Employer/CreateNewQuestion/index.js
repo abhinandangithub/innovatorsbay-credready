@@ -46,7 +46,7 @@ function CreateNewQuestion(props) {
 				if (val !== "") {
 					return {
 						optionChoiceName: val,
-						questionType: props.data.option_choices.length !== 0 ? props.data.option_choices[0].question_type : "boolean"
+						questionType: props.data ? ( props.data.option_choices.length !== 0 ? props.data.option_choices[0].question_type : "boolean") : "boolean"
 					};
 				} else {
 					return null;
