@@ -18,7 +18,9 @@ import {
 	employeCreateQuestion,
 	employeCandidateSendEmail,
 	employeFecthOrgLocations,
-	employeFecthJobPreviewDetails
+	employeFecthJobPreviewDetails,
+	employerDeleteQuestionsFromJobUrl,
+	employerDeleteQuestionFromJobUrl
 } from "../api/employer";
 
 import {
@@ -429,6 +431,23 @@ export const getJobDetails = (jobID) => async (dispatch, getState) => {
 	} catch (err) {
 		console.log(err);
 		if (err.response) console.error(`failed to fetch job details ${err}`);
+	}
+};
+
+export const deleteQuestion = (id) => async (dispatch, getState) => {
+	try {
+		// setDefaultAuthorizationHeader(getState().authReducer.JWT.map.jwt);
+		let URL = employerDeleteQuestionFromJobUrl + '/' + id;
+		const data = await Axios.delete(URL, {
+			headers: {
+				'Authorization': getState().authReducer.JWT.map.jwt,
+				'Content-Type': 'application/vnd.credready.com+json'
+			}
+		});
+		if (!data) return false;
+		// dispatch(setLocations(data.data));
+	} catch (err) {
+		if (err.response) console.error(`failed to post the question ${err}`);
 	}
 };
 

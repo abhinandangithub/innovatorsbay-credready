@@ -7,7 +7,7 @@ import {
 	togglePopup,
 	toggleOverlay,
 } from "../../../../store/actions/popup_overlay";
-import { createQuestion } from "../../../../store/thunks/employer";
+import { createQuestion, deleteQuestion } from "../../../../store/thunks/employer";
 import Input from "../../../_Elements/Input";
 import {
 	setQuestionBankQuestion,
@@ -76,8 +76,9 @@ function ChoosePublicQuestions(props) {
 	const handleEdit = () => {
 		dispatch(togglePopup([true, "createNewQuestion", { type: "private" }]));
 	};
-	const handleDelete = () => {
+	const handleDelete = (e, question) => {
 		alert("Are you sure to delete?");
+		dispatch(deleteQuestion(question.question_id));
 	};
 
 	return (
@@ -117,7 +118,7 @@ function ChoosePublicQuestions(props) {
 											<FontAwesomeIcon
 												className="action-btn delete"
 												icon={faTrash}
-												onClick={handleDelete}
+												onClick={(e) => handleDelete(e, question)}
 											/>
 										</>
 									) : question.question_type === "mcq" ? (
@@ -186,7 +187,7 @@ function ChoosePublicQuestions(props) {
 								<FontAwesomeIcon
 									className="action-btn delete"
 									icon={faTrash}
-									onClick={handleDelete}
+									onClick={(e) => handleDelete(e, question)}
 								/>
 							</li>
 						);
