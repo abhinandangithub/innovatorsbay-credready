@@ -7,7 +7,7 @@ import {
 	togglePopup,
 	toggleOverlay,
 } from "../../../../store/actions/popup_overlay";
-import { createQuestion, deleteQuestion } from "../../../../store/thunks/employer";
+import { getQuestionBank, deleteQuestion } from "../../../../store/thunks/employer";
 import {
 	setQuestionBankQuestion,
 	setNewJob,
@@ -32,6 +32,10 @@ function ChoosePrivateQuestions(props) {
 			}
 		});
 	}, [props.questionsSelected]);
+
+	useEffect(() => {
+		dispatch(getQuestionBank());
+	}, [dispatch]);
 
 	const handleCheckEvent = (event, question) => {
 		console.log(event.target.value, question);
