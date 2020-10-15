@@ -24,7 +24,7 @@ function CreateNewQuestion(props) {
 		if(props.action === "edit") {
 			return props.data.question_type;
 		} else {
-			return "";
+			return "text-input";
 		}
 	});
 	const [optionChoiceName, setOptionChoiceName] = useState(() => {
@@ -154,6 +154,7 @@ function CreateNewQuestion(props) {
 									className="fancy-toggle"
 									type="radio"
 									id="freeText"
+									defaultChecked
 									onChange={() => setQuestionType("text-input")}
 								/>
 								<label htmlFor="freeText">
@@ -164,7 +165,6 @@ function CreateNewQuestion(props) {
 									className="fancy-toggle"
 									type="radio"
 									id="multipleChoice"
-									defaultChecked
 									onChange={() => setQuestionType("mcq")}
 								/>
 								<label htmlFor="multipleChoice">
