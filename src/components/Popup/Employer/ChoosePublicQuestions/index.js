@@ -73,8 +73,8 @@ function ChoosePublicQuestions(props) {
 		dispatch(togglePopup([false, "addNewQuestion"]));
 	};
 
-	const handleEdit = () => {
-		dispatch(togglePopup([true, "createNewQuestion", { type: "private" }]));
+	const handleEdit = (e, question) => {
+		dispatch(togglePopup([true, "createNewQuestion", { type: "private", action: "edit", question: question }]));
 	};
 	const handleDelete = (e, question) => {
 		alert("Are you sure to delete?");
@@ -113,7 +113,7 @@ function ChoosePublicQuestions(props) {
 											<FontAwesomeIcon
 												className="action-btn edit"
 												icon={faPen}
-												onClick={handleEdit}
+												onClick={(e) => handleEdit(e, question)}
 											/>
 											<FontAwesomeIcon
 												className="action-btn delete"
@@ -182,7 +182,7 @@ function ChoosePublicQuestions(props) {
 								<FontAwesomeIcon
 									className="action-btn edit"
 									icon={faPen}
-									onClick={handleEdit}
+									onClick={(e) => handleEdit(e, question)}
 								/>
 								<FontAwesomeIcon
 									className="action-btn delete"

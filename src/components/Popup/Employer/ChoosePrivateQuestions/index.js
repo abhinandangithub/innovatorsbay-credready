@@ -75,8 +75,8 @@ function ChoosePrivateQuestions(props) {
 		dispatch(togglePopup([false, "addNewQuestion"]));
 	};
 
-	const handleEdit = () => {
-		dispatch(togglePopup([true, "createNewQuestion", { type: "private" }]));
+	const handleEdit = (e, question) => {
+		dispatch(togglePopup([true, "createNewQuestion", { type: "private", action: "edit", question: question }]));
 	};
 	const handleDelete = (e, question) => {
 		// console.log(question);
@@ -117,7 +117,7 @@ function ChoosePrivateQuestions(props) {
 												className="action-btn edit"
 												icon={faPen}
 												// id={"workExperienceEdit_" + i}
-												onClick={handleEdit}
+												onClick={(e) => handleEdit(e, question)}
 											/>
 											<FontAwesomeIcon
 												className="action-btn delete"
@@ -187,7 +187,7 @@ function ChoosePrivateQuestions(props) {
 								<FontAwesomeIcon
 									className="action-btn edit"
 									icon={faPen}
-									onClick={handleEdit}
+									onClick={(e) => handleEdit(e, question)}
 								/>
 								<FontAwesomeIcon
 									className="action-btn delete"

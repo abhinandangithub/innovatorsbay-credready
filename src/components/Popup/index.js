@@ -67,7 +67,7 @@ function Popup(props) {
 			case "createEmailTemplate":
 				return <CreateEmailTemplate />;
 			case "createNewQuestion":
-				return <CreateNewQuestion type={info.type} />;
+				return <CreateNewQuestion type={info.type} action={info.action} data={info.question} />;
 			case "choosePrivateQuestions":
 				return <ChoosePrivateQuestions />;
 			case "choosePublicQuestions":

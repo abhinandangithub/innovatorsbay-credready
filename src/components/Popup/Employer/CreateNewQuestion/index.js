@@ -6,10 +6,34 @@ import { togglePopup } from "../../../../store/actions/popup_overlay";
 import "./index.scss";
 
 function CreateNewQuestion(props) {
-	const [jobTitle, setJobTitle] = useState("");
-	const [questionName, setQuestionName] = useState("");
-	const [questionType, setQuestionType] = useState("mcq");
-	const [optionChoiceName, setOptionChoiceName] = useState([""]);
+	const [jobTitle, setJobTitle] = useState(() => {
+		if(props.action === "edit") {
+			return props.data.job_title;
+		} else {
+			return "";
+		}
+	});
+	const [questionName, setQuestionName] = useState(() => {
+		if(props.action === "edit") {
+			return props.data.question_name;
+		} else {
+			return "";
+		}
+	});
+	const [questionType, setQuestionType] = useState(() => {
+		if(props.action === "edit") {
+			return props.data.question_type;
+		} else {
+			return "";
+		}
+	});
+	const [optionChoiceName, setOptionChoiceName] = useState(() => {
+		if(props.action === "edit") {
+			return props.data.option_choices.map(val => val.option_choice_name);
+		} else {
+			return [""];
+		}
+	});
 	const [optionInput, setOptionInput] = useState([""]);
 	const dispatch = useDispatch();
 
@@ -22,7 +46,7 @@ function CreateNewQuestion(props) {
 				if (val !== "") {
 					return {
 						optionChoiceName: val,
-						questionType: "boolean",
+						questionType: props.data.option_choices.length !== 0 ? props.data.option_choices[0].question_type : "boolean"
 					};
 				} else {
 					return null;
@@ -56,7 +80,12 @@ function CreateNewQuestion(props) {
 				questionType: questionType,
 			};
 		}
-		dispatch(createQuestion(addQuestion));
+		if(props.action === "edit"){
+			addQuestion.questionId = props.data.question_id;
+			dispatch(createQuestion(addQuestion, 'edit'));
+		} else {
+			dispatch(createQuestion(addQuestion, 'create'));
+		}
 		if (props.type === "private") {
 			dispatch(togglePopup([true, "choosePrivateQuestions"]));
 		} else {

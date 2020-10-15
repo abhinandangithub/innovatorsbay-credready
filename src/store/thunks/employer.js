@@ -20,7 +20,8 @@ import {
 	employeFecthOrgLocations,
 	employeFecthJobPreviewDetails,
 	employerDeleteQuestionsFromJobUrl,
-	employerDeleteQuestionFromJobUrl
+	employerDeleteQuestionFromJobUrl,
+	employerUpdateQuestion
 } from "../api/employer";
 
 import {
@@ -348,16 +349,26 @@ export const postJob = (job) => async (dispatch, getState) => {
 	}
 };
 
-export const createQuestion = (question) => async (dispatch, getState) => {
+export const createQuestion = (question, action) => async (dispatch, getState) => {
 	try {
 		const state = getState();
+		let data = null;
 		// setDefaultAuthorizationHeader(getState().authReducer.JWT.map.jwt);
-		const data = await Axios.post(employeCreateQuestion, question, {
-			headers: {
-				'Authorization': getState().authReducer.JWT.map.jwt,
-				'Content-Type': 'application/vnd.credready.com+json'
-			}
-		});
+		if(action === 'edit') {
+			data = await Axios.put(employerUpdateQuestion, question, {
+				headers: {
+					'Authorization': getState().authReducer.JWT.map.jwt,
+					'Content-Type': 'application/vnd.credready.com+json'
+				}
+			});
+		} else {
+			data = await Axios.post(employeCreateQuestion, question, {
+				headers: {
+					'Authorization': getState().authReducer.JWT.map.jwt,
+					'Content-Type': 'application/vnd.credready.com+json'
+				}
+			});
+		}
 		if (!data) return false;
 		// dispatch(setPostedJobURL(data.data.data));
 	} catch (err) {
