@@ -24,6 +24,7 @@ function Header(props) {
 
 	const onLogout = () => {
 		Cookies.remove("JWT");
+		localStorage.clear();
 		dispatch(updateLoggedIn([false, ""]));
 	};
 

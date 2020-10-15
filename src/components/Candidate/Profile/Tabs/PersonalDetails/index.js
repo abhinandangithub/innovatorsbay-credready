@@ -40,9 +40,9 @@ function PersonalDetails(props) {
 		 */
 		firstName: [data.first_name],
 		lastName: [data.last_name],
-		employmentStatus: [props.currentStatus.find(val => val.id === data.current_employment_status) ? props.currentStatus.find(val => val.id === data.current_employment_status).employment_status : ""],
+		employmentStatus: [props.currentStatus.find(val => val.id === data.current_employment_status) ? props.currentStatus.find(val => val.id === data.current_employment_status) : ""],
 		interestedIn: ['on'],
-		joiningDuration: [joiningDuration.content.find(val => val === data.availableWithin) ? joiningDuration.content.find(val => val === data.availableWithin).availableWithin : ""],
+		joiningDuration: [joiningDuration.content.find(val => val === data.availableWithin) ? joiningDuration.content.find(val => val === data.availableWithin) : ""],
 		streetAddress: [data.address.street_address],
 		city: [data.address.city],
 		state: [data.address.state],
@@ -79,7 +79,7 @@ function PersonalDetails(props) {
 				"firstName": formData ? formData.firstName[0] : "",
 				"lastName": formData ? formData.lastName[0] : "",
 				"openToOtherRoles": formData && (formData.interestedIn[0] === "on") ? true : false,
-				"currentEmploymentStatusId": formData ? formData.employmentStatus[0] : "",
+				"currentEmploymentStatusId": formData ? formData.employmentStatus[0].id : "",
 				"availableWithin": formData ? formData.joiningDuration[0] : "",
 				"streetAddress": formData ? formData.streetAddress[0] : "",
 				"state": formData ? formData.state[0] : "",
@@ -111,7 +111,7 @@ function PersonalDetails(props) {
 		if (props.currentStatus.length > 1) return;
 		props.fetchCandidateCurrentStatus();
 		props.fetchCandidateDetails();
-	}, [data]);
+	}, [data, formData]);
 
 	return (
 		<div className="personal-details">
@@ -164,7 +164,7 @@ function PersonalDetails(props) {
 							</label>
 							<Dropdown
 								placeholder={employmentStatus.heading}
-								selected={formData.employmentStatus[0]}
+								selected={formData.employmentStatus[0].employment_status}
 								content={props.currentStatus.map((val) => ({ val: val.employment_status, id: val.id }))}
 								id="employmentStatus"
 								onchange={(value) =>
@@ -189,6 +189,7 @@ function PersonalDetails(props) {
 									id="interestedInYes"
 									name="interestedIn"
 									type="radio"
+									defaultValue={formData.interestedIn[0]}
 									onChange={(e) =>
 										handleFieldChange("interestedIn", e.target.value)
 									}

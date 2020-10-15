@@ -10,15 +10,14 @@ import MarginalAssociation from "../../../_Elements/Charts/MarginalAssociation";
 
 function JobView(props) {
 	const dispatch = useDispatch();
-	console.log(props.match.params);
+	console.log(props.match.params.id);
 	const allData = useSelector(
 		(state) => state.setCandidateJobViewDataReducer.data
 	);
 	console.log(allData);
-	var index =
-		allData.jobDetails && allData.candidateJobApplication.readiness_index;
+	var index = 30;
 	React.useEffect(() => {
-		dispatch(fetchjobViewData(1));
+		dispatch(fetchjobViewData(props.match.params.id));
 	}, []);
 
 	return (
@@ -29,13 +28,13 @@ function JobView(props) {
 						<img src={ImgWidgetLogo} alt="" />
 					</div>
 					<div className="info">
-						<h3>{allData.jobDetails && allData.jobDetails.jobTitle}</h3>
-						<p>{allData.jobDetails && allData.jobDetails.orgName}</p>
+						<h3>{allData.length > 0 && allData.job_title}</h3>
+						<p>{allData.length > 0 && allData.organisation.org_name}</p>
 					</div>
 					<div className="short-info">
 						<p>
-							{allData.jobDetails && allData.jobDetails.minExp}-
-							{allData.jobDetails && allData.jobDetails.maxExp} Years
+							{allData.length > 0 && allData.min_experience}-
+							{allData.length > 0 && allData.max_experience} Years
 						</p>
 						<p>{allData.jobDetails && allData.jobDetails.location}</p>
 					</div>
@@ -47,7 +46,7 @@ function JobView(props) {
 							<span
 								dangerouslySetInnerHTML={{
 									__html:
-										allData.jobDetails && allData.jobDetails.jobDescription,
+										allData.job_description && allData.jobDescription,
 								}}
 							></span>
 							{/* <span dangerouslySetInnerHTML={{ __html: job.job_description }}></span> */}
@@ -80,8 +79,8 @@ function JobView(props) {
 								<br /> Are you sure you want to apply?
 							</p>
 						) : (
-							<p></p>
-						)}
+								<p></p>
+							)}
 
 						<Link className="primary-btn blue" to="/jobs/application">
 							Apply

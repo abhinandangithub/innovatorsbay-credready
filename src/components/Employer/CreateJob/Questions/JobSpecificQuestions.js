@@ -7,18 +7,18 @@ import {
 	togglePopup,
 	toggleOverlay,
 } from "../../../../store/actions/popup_overlay";
-import { getQuestionBank } from '../../../../store/thunks/employer';
+import { getQuestionBank } from "../../../../store/thunks/employer";
 
 function JobSpecificQuestions(props) {
 	const dispatch = useDispatch();
-	console.log('props questionBank ', props.questionBank.questionBank.questions);
+	// console.log('props questionBank ', props.questionBank.questionBank.questions);
 	useEffect(() => {
-		console.log('props questionBank dispatch', props.questionBank);
+		// console.log('props questionBank dispatch', props.questionBank);
 		dispatch(getQuestionBank());
 	}, [dispatch]);
 
 	useEffect(() => {
-		console.log('props questionBank useeffect', props.questionBank);
+		// console.log('props questionBank useeffect', props.questionBank);
 	}, [props.questionBank]);
 
 	const questions = [
@@ -136,8 +136,9 @@ function JobSpecificQuestions(props) {
 													<div key={i}>
 														<input
 															key={i}
-															className={`fancy-toggle blue ${i === 0 ? "yes" : "no"
-																}`}
+															className={`fancy-toggle blue ${
+																i === 0 ? "yes" : "no"
+															}`}
 															id={`${option.id}${option.question_id}`}
 															name={`${option.question_id}`}
 															type="radio"
@@ -167,8 +168,8 @@ function JobSpecificQuestions(props) {
 function mapStateToProps(state) {
 	return {
 		//  questionBank: state.employerReducer.questionBank.questions
-		questionBank: state.employerReducer
-	}
+		questionBank: state.employerReducer,
+	};
 }
 
 // export default JobSpecificQuestions;

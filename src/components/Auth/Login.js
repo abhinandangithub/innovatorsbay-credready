@@ -20,6 +20,7 @@ function Login(props) {
 	const [loginType, setLoginType] = useState("candidate");
 	const [passwordShown, setPasswordShown] = useState(false);
 	const [pwError, setPwError] = useState(false);
+	const [authError, setAuthError] = useState(null);
 
 	// const pw = "123";
 	// console.log(auth.loggedIn);
@@ -32,6 +33,7 @@ function Login(props) {
 				remember_me: loginRemeber,
 			})
 		);
+
 		console.log(auth);
 		if (redirectURL !== "") {
 			dispatch(setLogin(true));
@@ -77,7 +79,9 @@ function Login(props) {
 			} else {
 				props.history.push("/");
 			}
+
 		}
+
 		return () => {
 			// cleanup
 		};
@@ -109,9 +113,10 @@ function Login(props) {
 					<label htmlFor="employer">Employer</label>
 				</li>
 			</ul>
-			{errors.email && <p className="error">Enter an valid email-id</p>}
+			{authError && <p className="error">Wrong credentials</p>}
+			{errors.email && errors.email && <p className="error">Enter an valid email-id</p>}
 			{!errors.email && errors.password && (
-				<p className="error">Please enter password</p>
+				<p className="error">Please enter a valid password</p>
 			)}
 			{pwError && <p className="error">Enter valid password</p>}
 
@@ -147,6 +152,9 @@ function Login(props) {
 							placeholder="Enter your password"
 							ref={register({
 								required: "required",
+								pattern: {
+									value: /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/
+								},
 							})}
 						/>
 						<span

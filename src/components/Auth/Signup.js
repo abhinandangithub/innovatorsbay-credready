@@ -137,9 +137,9 @@ function Signup(props) {
 						// defaultValue="1234567890"
 						ref={register({
 							required: "required",
-							// pattern: {
-							// 	value: /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/,
-							// },
+							pattern: {
+								value: /^(\+\d{1,2}\s?)?1?\-?\.?\s?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$/,
+							},
 						})}
 					/>
 				</li>

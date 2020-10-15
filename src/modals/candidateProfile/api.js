@@ -32,7 +32,7 @@ export const submitCandidateAnswersUrl = `${baseUrl}/candidate/job/application/a
 
 export const jobApplyUrl = `${baseUrl}/candidate/apply_for_job`;
 
-export const fetchjobViewDataUrl = `${baseUrl}/candidate/jobs/applied`;
+export const fetchjobViewDataUrl = `${baseUrl}/employer/job/fetch`;
 
 export const fetchCandidateJobsUrl = `${baseUrl}/candidate/jobs/dashboard`;
 

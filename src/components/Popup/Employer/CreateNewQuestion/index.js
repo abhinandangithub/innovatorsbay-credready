@@ -24,7 +24,7 @@ function CreateNewQuestion(props) {
 		if(props.action === "edit") {
 			return props.data.question_type;
 		} else {
-			return "text-input";
+			return "";
 		}
 	});
 	const [optionChoiceName, setOptionChoiceName] = useState(() => {

@@ -206,7 +206,7 @@ export const updateCandidateDetails = (formData) => async (dispatch, getState) =
 export const addEducationCertificate = (formData) => async (dispatch, getState) => {
 	try {
 
-		const { data } = await Axios.patch(
+		const { data } = await Axios.post(
 			addEducationCertificateUrl,
 			formData, {
 			headers: {

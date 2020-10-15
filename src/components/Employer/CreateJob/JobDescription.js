@@ -1,7 +1,7 @@
 import React from "react";
 import RichTextEditor from "react-rte";
-import { useDispatch } from 'react-redux';
-import { setNewJob } from '../../../store/actions/employer';
+import { useDispatch } from "react-redux";
+import { setNewJob } from "../../../store/actions/employer";
 
 const toolbarConfig = {
 	// Optionally specify the groups to display (displayed in the order listed).
@@ -41,9 +41,9 @@ function CreateJob(props) {
 	}, [props]);
 
 	const onRichTextEditorChange = (value) => {
-		console.log(value.toString("html"));
+		// console.log(value.toString("html"));
 		setRichTextEditorvalue(value);
-		dispatch(setNewJob({"jobDescription": value.toString("markdown")}));
+		dispatch(setNewJob({ jobDescription: value.toString("markdown") }));
 	};
 
 	return (

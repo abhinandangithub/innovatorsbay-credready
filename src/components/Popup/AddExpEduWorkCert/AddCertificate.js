@@ -112,15 +112,9 @@ function AddCertificate({ addEducationCertificate }) {
 			}
 		}
 
-		if (oldFormData.formValid) {
-			console.log(oldFormData, "submitting form...");
-			/* send data to api */
-
-
-			console.log(formData);
-			dispatch(toggleOverlay(false));
-			dispatch(togglePopup([false, ""]));
-		}
+		// if (oldFormData.formValid) {
+		console.log(oldFormData, "submitting form...");
+		/* send data to api */
 		let obj = {
 			"certificateLink": "http://localhost:3000/profile/education",
 			"description": formData ? formData.description[0] : "",
@@ -131,6 +125,10 @@ function AddCertificate({ addEducationCertificate }) {
 			"title": formData ? formData.title[0] : "",
 		}
 		addEducationCertificate(obj);
+		console.log(formData);
+		dispatch(toggleOverlay(false));
+		dispatch(togglePopup([false, ""]));
+		// }
 
 		console.log(formData);
 		setFormData(oldFormData);

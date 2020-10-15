@@ -77,18 +77,18 @@ function VerifyPhone(props) {
 				{isCodeError && timerDisplay !== "" ? (
 					<p className="error-code">Code is incorrect, try again!</p>
 				) : (
-					""
-				)}
+						""
+					)}
 				{timerDisplay !== "" ? (
 					<p className="status">
 						Verification Code Expires in
 						<span className="time"> {timerDisplay} minutes</span>
 					</p>
 				) : (
-					<p className="status resend" id="resendVerificationCodeLink">
-						Resend Verification Code
-					</p>
-				)}
+						<p className="status resend" id="resendVerificationCodeLink">
+							Resend Verification Code
+						</p>
+					)}
 			</div>
 		</div>
 	);

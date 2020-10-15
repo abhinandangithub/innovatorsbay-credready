@@ -31,7 +31,7 @@ function CreateJob(props) {
 	}, [dispatch]);
 
 	React.useEffect(() => {
-		dispatch(setNewJob({"minExp": value.min, "maxExp": value.max}));
+		dispatch(setNewJob({ minExp: value.min, maxExp: value.max }));
 	}, [value]);
 
 	const handleSelect = (selectedList, selectedItem) => {
@@ -78,7 +78,6 @@ function CreateJob(props) {
 							height: "50%",
 							marginBottom: "2%",
 						},
-						searchBox: { "border-radius": "20px" },
 					}}
 					options={props.skills} // Options to display in the dropdown
 					// selectedValues={this.state.selectedValue} // Preselected value to persist in dropdown

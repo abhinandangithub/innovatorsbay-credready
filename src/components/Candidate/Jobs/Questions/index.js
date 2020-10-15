@@ -397,7 +397,9 @@ function Questions(props) {
 
 	const onSubmitHandler = () => {
 		console.log(JSON.stringify(formData));
-		formData.job = localStorage.getItem("jobId");
+		const localStorageId = localStorage.getItem("jobId")
+		// if()
+		formData.job_id = localStorage.getItem("jobId");
 		dispatch(submitCandidateAnswers(formData));
 	};
 
@@ -533,7 +535,7 @@ function Questions(props) {
 							/>
 						)}
 						<div className="cta" >
-							<Link to={`/jobs/view/${localStorage.getItem("jobId") ? localStorage.getItem("JobId") : ""}`} className="primary-btn" onClick={onSubmitHandler}>
+							<Link to={`/jobs/view/${localStorage.getItem("jobId") ? localStorage.getItem("jobId") : ""}`} className="primary-btn" onClick={onSubmitHandler}>
 								Submit
 							</Link>
 						</div>
