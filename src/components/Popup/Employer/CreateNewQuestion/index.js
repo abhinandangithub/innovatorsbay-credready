@@ -82,9 +82,9 @@ function CreateNewQuestion(props) {
 		}
 		if(props.action === "edit"){
 			addQuestion.questionId = props.data.question_id;
-			dispatch(createQuestion(addQuestion, 'edit'));
+			dispatch(createQuestion(addQuestion));
 		} else {
-			dispatch(createQuestion(addQuestion, 'create'));
+			dispatch(createQuestion(addQuestion));
 		}
 		if (props.type === "private") {
 			dispatch(togglePopup([true, "choosePrivateQuestions"]));
