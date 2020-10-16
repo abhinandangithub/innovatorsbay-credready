@@ -16,18 +16,16 @@ import {
 	togglePopup,
 	toggleOverlay,
 } from "../../../../store/actions/popup_overlay";
-import { fetchCandidateDetails } from "../../../../modals/candidateProfile/thunk";
+import { fetchAllCertificateTitles, fetchCandidateDetails, jobApply, fetchCandidateDegreeTitles } from "../../../../modals/candidateProfile/thunk";
 import { findIndex } from "../Questions/index";
 
 function Application({ onchange }) {
 	const dispatch = useDispatch();
 
 	const userData = useSelector((state) => state.candidateSetDataReducer.data);
+	const allCertificates = useSelector((state) => state.setCandidateCertificateTitlesReducer.data);
+	const allDegress = useSelector((state) => state.setCandidateDegreeTitlesReducer.data);
 
-	const handleClick = () => {
-		dispatch(toggleOverlay(true));
-		dispatch(togglePopup([true, "jobApplied"]));
-	};
 
 	const handleFieldChange = (type, q, a) => {
 		let i = findIndex(formData[type], q);
@@ -69,7 +67,7 @@ function Application({ onchange }) {
 	};
 
 	const _formData = {
-		job_id: 1,
+		job_id: localStorage.getItem("jobItem") ? localStorage.getItem("jobItem") : 84,
 		general_questions: [
 			{
 				question_id: 1,
@@ -277,7 +275,7 @@ function Application({ onchange }) {
 			},
 			{
 				question_id: 2,
-				answer: 2,
+				answer: [2],
 			},
 			{
 				question_id: 3,
@@ -285,17 +283,25 @@ function Application({ onchange }) {
 			},
 			{
 				question_id: 4,
-				answer: 2,
+				answer: [2],
 			},
 		],
 	};
 
 	const [formData, setFormData] = React.useState(_formData);
+	const handleClick = () => {
+		dispatch(toggleOverlay(true));
+		dispatch(togglePopup([true, "jobApplied"]));
+		console.log(formData);
+		dispatch(jobApply(formData, localStorage.getItem("jobId")));
+	};
 
 	React.useEffect(() => {
 		dispatch(fetchCandidateDetails());
+		dispatch(fetchAllCertificateTitles());
+		dispatch(fetchCandidateDegreeTitles());
 	}, []);
-
+	console.log(userData);
 	return (
 		<div className="application_page">
 			<div className="heading">
@@ -443,12 +449,15 @@ function Application({ onchange }) {
 
 						{userData &&
 							userData.education_experience &&
-							userData.education_experience.length > 1
+							userData.education_experience.length > 0
 							? userData.education_experience.map((exp, index) => {
 								return (
 									<div className="bottom">
 										<div className="details">
-											<h2>{exp.title}</h2>
+											<h2>{allDegress.map((cert) => {
+												if (cert.id === parseInt(exp.title_id))
+													return cert.title
+											})}</h2>
 											<p>
 												<span className="heading">{exp.title}</span>
 												{" - "}
@@ -487,68 +496,45 @@ function Application({ onchange }) {
 								onClick={() => alert(`Deleting`)}
 							/>
 						</div>
-						<div className="bottom">
-							<div className="details">
-								<h2>GHI Nursing Certificate</h2>
-								<p>
-									<span className="heading">Description: </span>
-									{" - "}
-									<span className="text">
-										Patient Care & Safety, Medical Terminology, Electronic
-										Medical Records, Diagnostic Testing, Vital Signs & Patient
-										Monitoring, Medication Administration, Patient Advocacy and
-										Support.
-									</span>
-								</p>
-								<p>
-									<span className="heading">Issued Date: </span>
-									{" to "}
-									<span className="text">2014</span>
-								</p>
-								<p>
-									<span className="heading">Certificate link: </span>
-									<span className="text">
-										<Link to="/">
-											https://www.certificatelink.com/certi.pdf
-										</Link>
-									</span>
-								</p>
-								<p>
-									<span className="heading">Certificate Image: </span>
-									<span className="text">Image here</span>
-								</p>
-							</div>
-							<div className="details">
-								<h2>GHI Nursing Certificate</h2>
-								<p>
-									<span className="heading">Description: </span>
-									{" - "}
-									<span className="text">
-										Patient Care & Safety, Medical Terminology, Electronic
-										Medical Records, Diagnostic Testing, Vital Signs & Patient
-										Monitoring, Medication Administration, Patient Advocacy and
-										Support.
-									</span>
-								</p>
-								<p>
-									<span className="heading">Issued Date: </span>
-									{" to "}
-									<span className="text">2014</span>
-								</p>
-								<p>
-									<span className="heading">Certificate link: </span>
-									<span className="text">
-										<Link to="/">
-											https://www.certificatelink.com/certi.pdf
-										</Link>
-									</span>
-								</p>
-								<p>
-									<span className="heading">Certificate Image: </span>
-									<span className="text">Image here</span>
-								</p>
-							</div>
-						</div>
+						{userData &&
+							userData.certificate &&
+							userData.certificate.length > 1
+							? userData.certificate.map((entity) => {
+								return (
+									<div className="bottom">
+										<div className="details">
+											<h2>{allCertificates.map((cert) => {
+												if (cert.id === entity.title_id)
+													return cert.title_name
+											})}</h2>
+											<p>
+												<span className="heading">Description: </span>
+												{" - "}
+												<span className="text">
+													{entity.description}
+												</span>
+											</p>
+											<p>
+												<span className="heading">Issued Date: </span>
+												{" to "}
+												<span className="text">{entity.issued_date}</span>
+											</p>
+											<p>
+												<span className="heading">Certificate link: </span>
+												<span className="text">
+													<Link to="/">
+														https://www.certificatelink.com/certi.pdf
+												</Link>
+												</span>
+											</p>
+											{/* <p>
+												<span className="heading">Certificate Image: </span>
+												<span className="text">Image here</span>
+											</p> */}
+										</div>
+									</div>
+								)
+							}) : ""}
 					</div>
 					{/* <div className="group ">
 						<div className="top">

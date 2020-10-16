@@ -1,5 +1,7 @@
 import React, { useEffect } from "react";
 import { connect, useDispatch } from "react-redux";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPen, faTrash } from "@fortawesome/free-solid-svg-icons";
 
 import Input from "../../../_Elements/Input";
 import AddButton from "../../../_Elements/AddButton";
@@ -95,6 +97,14 @@ function JobSpecificQuestions(props) {
 		dispatch(togglePopup([true, "addNewQuestion"]));
 	};
 
+	const handleEdit = () => {
+		dispatch(toggleOverlay(true));
+		dispatch(togglePopup([true, "createNewQuestion", { type: "private" }]));
+	};
+	const handleDelete = () => {
+		alert("Are you sure to delete?");
+	};
+
 	return (
 		<div className="job-specefic-questions">
 			<AddButton
@@ -156,6 +166,16 @@ function JobSpecificQuestions(props) {
 										})}
 									</>
 								) : null}
+								<FontAwesomeIcon
+									className="action-btn edit"
+									icon={faPen}
+									onClick={handleEdit}
+								/>
+								<FontAwesomeIcon
+									className="action-btn delete"
+									icon={faTrash}
+									onClick={handleDelete}
+								/>
 							</div>
 						</li>
 					);

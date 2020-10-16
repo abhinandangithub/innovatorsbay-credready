@@ -84,8 +84,12 @@ function Popup(props) {
 	};
 
 	const closePopupOverlay = () => {
-		dispatch(toggleOverlay(false));
-		dispatch(togglePopup(false));
+		if (popup.which === "createNewQuestion") {
+			dispatch(togglePopup([true, popup.previousWhich]));
+		} else {
+			dispatch(toggleOverlay(false));
+			dispatch(togglePopup(false));
+		}
 	};
 
 	return (

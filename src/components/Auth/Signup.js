@@ -41,7 +41,7 @@ function Signup(props) {
 	}, [signupType]);
 
 	const showErrorMessage = () => {
-		if (errors.name) {
+		if (errors.organisation) {
 			return <p className="error">Name is required.</p>;
 		} else if (errors.email) {
 			return <p className="error">Enter an valid email-id</p>;
@@ -54,6 +54,8 @@ function Signup(props) {
 					case, one lowercase, 1 number and 1 special character.
 				</p>
 			);
+		} else if (errors.agree) {
+			return <p className="error">Accept Terms And Conditions.</p>;
 		}
 	};
 
@@ -158,7 +160,7 @@ function Signup(props) {
 							ref={register({
 								required: "required",
 								pattern: {
-									value: /^(?=.*\d)(?=.*[a-z])(?=.*[a-z])(?=.*[^a-zA-Z0-9])(?!.*\s).{8,15}$/,
+									value: /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{8,100}$/,
 								},
 							})}
 						/>
@@ -179,6 +181,9 @@ function Signup(props) {
 							id="agree"
 							name="agree"
 							type="checkbox"
+							ref={register({
+								required: "Required",
+							})}
 						/>
 						<label htmlFor="agree">
 							<span className="input"></span>I agree to the &nbsp;

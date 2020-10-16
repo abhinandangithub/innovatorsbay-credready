@@ -50,7 +50,7 @@ function ProfileOverview(props) {
 
 	useEffect(() => {
 		dispatch(getProfileThunk());
-	}, [dispatch]);
+	}, [dispatch, phone, email, allData]);
 
 	useEffect(() => {
 		setEmail(
@@ -65,8 +65,9 @@ function ProfileOverview(props) {
 		);
 		setPhone(
 			props.type === "candidate"
-				? allData.phone_no
-					? allData.phone_no
+				? allData.contacts
+					? allData.contacts.find((el) => el.contact_type === "phone")
+						.contact
 					: ""
 				: employerProfile.data.contacts.length > 0
 					? employerProfile.data.contacts.find((el) => el.contact_type === "phone")

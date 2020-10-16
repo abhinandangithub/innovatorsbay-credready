@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch, useSelector, connect } from "react-redux";
 
 import { updatePhoneOtp } from "../../../store/actions/auth";
 import {
@@ -19,20 +19,36 @@ function VerifyPhone(props) {
 	const [isCodeError, setIsCodeError] = useState(null);
 	const [timeLeft, setTimeLeft] = useState(calculateTimeLeft(timerDuration));
 	let timerDisplay = "";
+	const [isOtpVerifying, setIsOtpVerifying] = useState(false);
 
-	const handleClick = () => {
+	const handleClick = async () => {
+		console.log('otp ', otp);
 		if (
-			otp.filter((i) => i.length > 0).length === 4
+			// otp.filter((i) => i.length > 0).length === 4
+			otp.filter((i) => i !== "").length === 4
 		) {
+			setIsOtpVerifying(true);
 			dispatch(verifyUserCode("phone", otp.join("")));
-			dispatch(updatePhoneOtp(true));
-			dispatch(toggleOverlay(false));
-			dispatch(togglePopup(false));
+			//	dispatch(updatePhoneOtp(true));
+			//	dispatch(toggleOverlay(false));
+			//	dispatch(togglePopup(false));
 			setIsCodeError(false);
 		} else {
 			setIsCodeError(true);
+			setIsOtpVerifying(false);
 		}
 	};
+
+	useEffect(() => {
+		if (props.isVerified.phoneOtp) {
+			setIsOtpVerifying(false);
+			dispatch(toggleOverlay(false));
+			dispatch(togglePopup(false));
+		} else {
+			setIsCodeError(true);
+			setIsOtpVerifying(false);
+		}
+	}, [props.isVerified.phoneOtp]);
 
 	useEffect(() => {
 		setIsCodeError(false);
@@ -60,7 +76,7 @@ function VerifyPhone(props) {
 					We have sent a verification code on your phone{" "}
 					{auth.loggedIn.as === "employer" && "and email"}.
 					<br />
-					To proceed, enter the verification code | 1111
+					To proceed, enter the verification code
 				</p>
 				<div className="code-box flex">
 					<p>
@@ -71,8 +87,8 @@ function VerifyPhone(props) {
 						<VerifyCode setOtp={(otp) => setOtp(otp)} type="Phone" />
 					</div>
 				</div>
-				<button className="primary-btn" onClick={handleClick} id="submitBtn">
-					Validate
+				<button className="primary-btn" disabled={isOtpVerifying} onClick={handleClick} id="submitBtn">
+					{!isOtpVerifying ? "Validate" : "Validating..."}
 				</button>
 				{isCodeError && timerDisplay !== "" ? (
 					<p className="error-code">Code is incorrect, try again!</p>
@@ -94,4 +110,13 @@ function VerifyPhone(props) {
 	);
 }
 
-export default VerifyPhone;
+// export default VerifyPhone;
+
+function mapStateToProps(state) {
+	return {
+		isVerified: state.authReducer.isVerified
+	};
+}
+
+// export default JobSpecificQuestions;
+export default connect(mapStateToProps)(VerifyPhone);

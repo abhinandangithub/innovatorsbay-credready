@@ -17,9 +17,8 @@ function VerifyEmail(props) {
 	let timerDisplay = "";
 
 	const handleClick = () => {
-		if (
-			otp.filter((i) => i.length > 0).length === 4 
-		) {
+		console.log("otp: ", otp);
+		if (otp.length === 4) {
 			dispatch(verifyUserCode("email", otp.join("")));
 			dispatch(updateEmailOtp(true));
 			dispatch(togglePopup([true, "phoneOtp"]));

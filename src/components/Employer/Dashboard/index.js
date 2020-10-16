@@ -1,17 +1,10 @@
 import React, { useState } from "react";
-import DatePicker from "react-datepicker";
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 
 import "./index.scss";
 import Dropdown from "../../_Elements/Dropdown";
-import ImgWD1 from "../../../assets/wd-1.jpg";
-import ImgWD2 from "../../../assets/wd-2.jpg";
-import ImgWD3 from "../../../assets/wd-3.jpg";
-import ImgWD4 from "../../../assets/wd-4.jpg";
-import ImgWD5 from "../../../assets/wd-5.jpg";
-import ImgWD7 from "../../../assets/wd-7.jpg";
-import ImgWD8 from "../../../assets/wd-8.jpg";
+import CustomDatePicker from "../../_Elements/CustomDatePicker";
 
 const metrics = {
 	heading: "Select Metrics",
@@ -652,8 +645,8 @@ function Dashboard() {
 		],
 	};
 
-	const [fromDate, setFromDate] = useState();
-	const [toDate, setToDate] = useState();
+	const [startDate, setStartDate] = useState(new Date("05/24/99"));
+	const [endDate, setEndDate] = useState(new Date());
 
 	return (
 		<div className="dashboard-employer">
@@ -693,17 +686,18 @@ function Dashboard() {
 				<div className="right flex">
 					<h3>Duration</h3>
 					<div className="start-date">
-						<DatePicker
-							selected={fromDate}
-							onChange={(date) => setFromDate(date)}
+						<CustomDatePicker
 							placeholderText="Start Date"
+							selected={startDate}
+							onChange={(date) => setStartDate(date)}
 						/>
 					</div>
 					<div className="date">
-						<DatePicker
-							selected={toDate}
-							onChange={(date) => setToDate(date)}
+						<CustomDatePicker
 							placeholderText="End Date"
+							selected={endDate}
+							minDate={startDate}
+							onChange={(date) => setEndDate(date)}
 						/>
 					</div>
 				</div>
@@ -717,7 +711,6 @@ function Dashboard() {
 							highcharts={Highcharts}
 							options={recruitmentFunnel}
 						/>
-						{/* <img src={ImgWD1} alt="Recruitment funnel" /> */}
 					</div>
 				</div>
 				<div className="widget">
@@ -729,7 +722,6 @@ function Dashboard() {
 							highcharts={Highcharts}
 							options={applicationsRecieved}
 						/>
-						{/* <img src={ImgWD2} alt="Trend of applications received over time" /> */}
 					</div>
 				</div>
 				<div className="widget">
@@ -738,10 +730,6 @@ function Dashboard() {
 					</div>
 					<div className="content">
 						<HighchartsReact highcharts={Highcharts} options={offersMade} />
-						{/* <img
-							src={ImgWD3}
-							alt="Ratio of offers made to candidates interviewed"
-						/> */}
 					</div>
 				</div>
 				<div className="widget">
@@ -751,7 +739,6 @@ function Dashboard() {
 							highcharts={Highcharts}
 							options={applicationsBySource}
 						/>
-						{/* <img src={ImgWD4} alt="Applications by source" /> */}
 					</div>
 				</div>
 				<div className="widget">
@@ -763,10 +750,6 @@ function Dashboard() {
 							highcharts={Highcharts}
 							options={applicantsAverage}
 						/>
-						{/* <img
-							src={ImgWD5}
-							alt="Number of applicants across average days to hire"
-						/> */}
 					</div>
 				</div>
 				<div className="widget">
@@ -782,13 +765,11 @@ function Dashboard() {
 				<div className="widget">
 					<div className="content">
 						<HighchartsReact highcharts={Highcharts} options={jobPosts1} />
-						{/* <img src={ImgWD7} alt="Job Posts" /> */}
 					</div>
 				</div>
 				<div className="widget">
 					<div className="content">
 						<HighchartsReact highcharts={Highcharts} options={jobPosts2} />
-						{/* <img src={ImgWD8} alt="Job Posts" /> */}
 					</div>
 				</div>
 				<div className="widget"></div>

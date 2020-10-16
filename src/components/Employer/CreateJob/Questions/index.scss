@@ -216,6 +216,17 @@
 				display: flex;
 				list-style: none;
 			}
+			.action-btn {
+				position: absolute;
+				color: #bcd1e4;
+				top: 24px;
+				right: 20px;
+				font-size: 14px;
+				cursor: pointer;
+				&.edit {
+					right: 40px;
+				}
+			}
 		}
 		.level_2,
 		.level_3 {

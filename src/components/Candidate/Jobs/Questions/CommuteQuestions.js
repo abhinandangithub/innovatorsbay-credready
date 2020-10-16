@@ -101,7 +101,7 @@ function CommuteQuestions({ data, onchange, calHeight, noHeading, ...props }) {
 													/>
 												</li>
 												<li>
-													<label htmlFor="street">Zip Code</label>
+													<label htmlFor="street">City</label>
 													<Input
 														type="text"
 														autoComplete="none"
@@ -117,7 +117,7 @@ function CommuteQuestions({ data, onchange, calHeight, noHeading, ...props }) {
 													/>
 												</li>
 												<li>
-													<label htmlFor="street">City</label>
+													<label htmlFor="street">State</label>
 													<Input
 														type="text"
 														autoComplete="none"
@@ -133,7 +133,7 @@ function CommuteQuestions({ data, onchange, calHeight, noHeading, ...props }) {
 													/>
 												</li>
 												<li>
-													<label htmlFor="street">State</label>
+													<label htmlFor="street">Zip Code</label>
 													<Input
 														type="text"
 														autoComplete="none"

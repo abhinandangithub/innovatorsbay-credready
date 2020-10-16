@@ -14,8 +14,12 @@ function JobView(props) {
 	const allData = useSelector(
 		(state) => state.setCandidateJobViewDataReducer.data
 	);
-	console.log(allData);
-	var index = 30;
+	const jobDetails = allData.jobDetails ? allData.jobDetails : [];
+	console.log(jobDetails);
+	var index = jobDetails.readinessIndex;
+	const onSubmitHandler = () => {
+		console.log("applying for job")
+	}
 	React.useEffect(() => {
 		dispatch(fetchjobViewData(props.match.params.id));
 	}, []);
@@ -28,15 +32,15 @@ function JobView(props) {
 						<img src={ImgWidgetLogo} alt="" />
 					</div>
 					<div className="info">
-						<h3>{allData.length > 0 && allData.job_title}</h3>
-						<p>{allData.length > 0 && allData.organisation.org_name}</p>
+						<h3>{jobDetails.jobTitle}</h3>
+						<p>{jobDetails.orgName}</p>
 					</div>
 					<div className="short-info">
 						<p>
-							{allData.length > 0 && allData.min_experience}-
-							{allData.length > 0 && allData.max_experience} Years
+							{jobDetails.minExp}-
+							{jobDetails.maxExp} Years
 						</p>
-						<p>{allData.jobDetails && allData.jobDetails.location}</p>
+						<p>{jobDetails.location}</p>
 					</div>
 				</div>
 				<div className="bottom">
@@ -46,7 +50,7 @@ function JobView(props) {
 							<span
 								dangerouslySetInnerHTML={{
 									__html:
-										allData.job_description && allData.jobDescription,
+										jobDetails.jobDescription,
 								}}
 							></span>
 							{/* <span dangerouslySetInnerHTML={{ __html: job.job_description }}></span> */}
@@ -63,7 +67,7 @@ function JobView(props) {
 							electronic typesetting, remaining essentially unchanged.
 						</span>
 					</p> */}
-					<h2>A Certified Nursing Assistant's Job</h2>
+					<h2>{jobDetails.jobTitle}</h2>
 					<h3>Responsibilities</h3>
 					<span
 						dangerouslySetInnerHTML={{
@@ -82,7 +86,7 @@ function JobView(props) {
 								<p></p>
 							)}
 
-						<Link className="primary-btn blue" to="/jobs/application">
+						<Link className="primary-btn blue" to="/jobs/application" >
 							Apply
 						</Link>
 					</div>

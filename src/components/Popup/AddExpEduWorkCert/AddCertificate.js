@@ -10,7 +10,12 @@ import {
 	toggleOverlay,
 	togglePopup,
 } from "../../../store/actions/popup_overlay";
-import { addEducationCertificate, fetchAllCertificateTitles, fetchAllFunctions, fetchAllIndustries } from "../../../modals/candidateProfile/thunk";
+import {
+	addEducationCertificate,
+	fetchAllCertificateTitles,
+	fetchAllFunctions,
+	fetchAllIndustries,
+} from "../../../modals/candidateProfile/thunk";
 import { checkFileSize, checkMimeType } from "../../../assets/js/Utility";
 
 const industry = {
@@ -38,9 +43,15 @@ function AddCertificate({ addEducationCertificate }) {
 	const [issueDate, setIssueDate] = useState();
 	const [errorMessage, setErrorMessage] = useState(null);
 	const [selectedFile, setSelectedFile] = useState(null);
-	const AllTitles = useSelector(state => state.setCandidateCertificateTitlesReducer.data);
-	const AllIndustries = useSelector(state => state.setAllIndustriesReducer.data);
-	const AllFunctions = useSelector(state => state.setAllFunctionsReducer.data);
+	const AllTitles = useSelector(
+		(state) => state.setCandidateCertificateTitlesReducer.data
+	);
+	const AllIndustries = useSelector(
+		(state) => state.setAllIndustriesReducer.data
+	);
+	const AllFunctions = useSelector(
+		(state) => state.setAllFunctionsReducer.data
+	);
 	const uploadBtnRef = useRef(null);
 	const handleUpload = (btnId) => {
 		uploadBtnRef.current.click();
@@ -82,16 +93,14 @@ function AddCertificate({ addEducationCertificate }) {
 
 	function formatDate(date) {
 		var d = new Date(date),
-			month = '' + (d.getMonth() + 1),
-			day = '' + d.getDate(),
+			month = "" + (d.getMonth() + 1),
+			day = "" + d.getDate(),
 			year = d.getFullYear();
 
-		if (month.length < 2)
-			month = '0' + month;
-		if (day.length < 2)
-			day = '0' + day;
+		if (month.length < 2) month = "0" + month;
+		if (day.length < 2) day = "0" + day;
 
-		return [year, month, day].join('-');
+		return [year, month, day].join("-");
 	}
 
 	const handleSubmit = () => {
@@ -107,8 +116,10 @@ function AddCertificate({ addEducationCertificate }) {
 					oldFormData[field][0] === null)
 			) {
 				oldFormData[field][0] = "";
-				oldFormData[field].push("Required");
 				oldFormData.formValid = false;
+				if (oldFormData[field][1] !== "Required") {
+					oldFormData[field].push("Required");
+				}
 			}
 		}
 
@@ -116,14 +127,14 @@ function AddCertificate({ addEducationCertificate }) {
 		console.log(oldFormData, "submitting form...");
 		/* send data to api */
 		let obj = {
-			"certificateLink": "http://localhost:3000/profile/education",
-			"description": formData ? formData.description[0] : "",
-			"functionId": formData ? formData.function[0] : "",
-			"industryId": formData ? formData.industry[0] : "",
-			"issuedDate": formData ? formatDate(formData.issueDate[0]) : "",
-			"issuer": formData ? formData.issuer[0] : "",
-			"title": formData ? formData.title[0] : "",
-		}
+			certificateLink: "http://localhost:3000/profile/education",
+			description: formData ? formData.description[0] : "",
+			functionId: formData ? formData.function[0] : "",
+			industryId: formData ? formData.industry[0] : "",
+			issuedDate: formData ? formatDate(formData.issueDate[0]) : "",
+			issuer: formData ? formData.issuer[0] : "",
+			title: formData ? formData.title[0] : "",
+		};
 		addEducationCertificate(obj);
 		console.log(formData);
 		dispatch(toggleOverlay(false));
@@ -152,7 +163,7 @@ function AddCertificate({ addEducationCertificate }) {
 		dispatch(fetchAllCertificateTitles());
 		dispatch(fetchAllFunctions());
 		dispatch(fetchAllIndustries());
-	}, [])
+	}, []);
 
 	return (
 		<div className="add-ex-ed-cert">
@@ -168,7 +179,14 @@ function AddCertificate({ addEducationCertificate }) {
 					</label>
 					<Dropdown
 						placeholder={industry.heading}
-						content={AllIndustries.length > 0 ? AllIndustries.map((val) => ({ val: val.industry_name, id: val.id })) : ""}
+						content={
+							AllIndustries.length > 0
+								? AllIndustries.map((val) => ({
+										val: val.industry_name,
+										id: val.id,
+								  }))
+								: ""
+						}
 						id="industry"
 						defaultValue={formData.industry[0]}
 						onchange={(value) => handleFieldChange("industry", value)}
@@ -183,7 +201,11 @@ function AddCertificate({ addEducationCertificate }) {
 					</label>
 					<Dropdown
 						placeholder={title.heading}
-						content={AllTitles.length > 0 ? AllTitles.map((val) => ({ val: val.title_name, id: val.id })) : ""}
+						content={
+							AllTitles.length > 0
+								? AllTitles.map((val) => ({ val: val.title_name, id: val.id }))
+								: ""
+						}
 						id="title"
 						defaultValue={formData.title[0]}
 						onchange={(value) => handleFieldChange("title", value)}
@@ -193,7 +215,14 @@ function AddCertificate({ addEducationCertificate }) {
 					<label>Function</label>
 					<Dropdown
 						placeholder={functions.heading}
-						content={AllFunctions.length > 0 ? AllFunctions.map((val) => ({ val: val.function_name, id: val.id })) : ""}
+						content={
+							AllFunctions.length > 0
+								? AllFunctions.map((val) => ({
+										val: val.function_name,
+										id: val.id,
+								  }))
+								: ""
+						}
 						id="function"
 						defaultValue={formData.function[0]}
 						onchange={(value) => handleFieldChange("function", value)}
@@ -211,7 +240,6 @@ function AddCertificate({ addEducationCertificate }) {
 						defaultValue={formData.issuer[0]}
 						onChange={(e) => handleFieldChange(e.target.id, e.target.value)}
 					/>
-
 				</li>
 				<li>
 					<label>
@@ -233,13 +261,16 @@ function AddCertificate({ addEducationCertificate }) {
 									handleFieldChange("issueDate", date);
 								}}
 							/>
-
 						</div>
 					</div>
 				</li>
 				<li>
 					<label>Certificate Link</label>
-					<Input type="text" id="certificateLink" onchange={(value) => handleFieldChange("certificateLink", value)} />
+					<Input
+						type="text"
+						id="certificateLink"
+						onchange={(value) => handleFieldChange("certificateLink", value)}
+					/>
 				</li>
 				<li>
 					<label>Certificate Image</label>
@@ -297,11 +328,13 @@ function AddCertificate({ addEducationCertificate }) {
 
 function mapStateToProps(state) {
 	return {
-		cerificatedata: state.candidateSetDataReducer.certificate ? state.candidateSetDataReducer.certificate : ""
-	}
+		cerificatedata: state.candidateSetDataReducer.certificate
+			? state.candidateSetDataReducer.certificate
+			: "",
+	};
 }
 const mapDispatchToProps = {
-	addEducationCertificate: addEducationCertificate
+	addEducationCertificate: addEducationCertificate,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(AddCertificate);

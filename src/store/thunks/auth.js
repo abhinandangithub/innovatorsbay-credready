@@ -1,5 +1,11 @@
 import Axios from "axios";
-import { loginUrl, signUpUrl, verifyUserUrl, authVcodeRequestPostUrl } from "../api/auth";
+import {
+	loginUrl,
+	signUpUrl,
+	verifyUserUrl,
+	authVcodeRequestPostUrl,
+} from "../api/auth";
+import { updatePhoneOtp } from "../../store/actions/auth";
 
 import { updateLoggedIn, updateJwtToken } from "../actions/auth";
 import { fetchCandidateDetails } from "../../modals/candidateProfile/thunk";
@@ -29,15 +35,20 @@ export const tryLogin = (credentials) => async (dispatch, getState) => {
 		dispatch(updateLoggedIn([true, type]));
 		setDefaultAuthorizationHeader(token);
 	} catch (err) {
+		// dispatch(updateLoggedIn([null, ""]));
 		if (err.response) console.error(`failed to log-in with error ${err}`);
 	}
 };
 
 export const getVerificationCode = (userData) => async (dispatch, getState) => {
-	console.log('userData ', userData);
+	console.log("userData ", userData);
 	try {
 		//dispatch(updatePhoneOtp(1111));
-		const { message } = await Axios.post(authVcodeRequestPostUrl, userData, requestConfig);
+		const { message } = await Axios.post(
+			authVcodeRequestPostUrl,
+			userData,
+			requestConfig
+		);
 		if (!message) return;
 		dispatch();
 	} catch (err) {
@@ -45,22 +56,25 @@ export const getVerificationCode = (userData) => async (dispatch, getState) => {
 	}
 };
 
-export const verifyUserCode = (type = "phone", otp) => async (dispatch, getState) => {
+export const verifyUserCode = (type = "phone", otp) => async (
+	dispatch,
+	getState
+) => {
 	let data = {
-		"type": type,
-		"contact": getState().authReducer.signUp.phone,
-		"verification_code": otp
-	}
-	console.log('userData ', data, getState().authReducer.signUp);
-	// dispatch(signUpUser(getState().authReducer.signUp))
+		type: type,
+		contact: getState().authReducer.signUp.phone,
+		verification_code: otp,
+	};
 	try {
 		const { message } = await Axios.post(verifyUserUrl, data, requestConfig);
 		if (!message) {
-			dispatch(signUpUser(getState().authReducer.signUp))
-			return
-		};
+			dispatch(updatePhoneOtp(true));
+			dispatch(signUpUser(getState().authReducer.signUp));
+			return;
+		}
 		dispatch();
 	} catch (err) {
+		dispatch(updatePhoneOtp(false));
 		console.error(`failed to sign-up user with error ${err}`);
 	}
 };

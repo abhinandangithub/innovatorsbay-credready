@@ -6,7 +6,11 @@ import { connect, useSelector } from "react-redux";
 import "./index.scss";
 import Input from "../../../../_Elements/Input";
 import Dropdown from "../../../../_Elements/Dropdown";
-import { updateCandidateDetails, fetchCandidateCurrentStatus, fetchCandidateDetails } from "../../../../../modals/candidateProfile/thunk";
+import {
+	updateCandidateDetails,
+	fetchCandidateCurrentStatus,
+	fetchCandidateDetails,
+} from "../../../../../modals/candidateProfile/thunk";
 import InputDropdown from "../../../../_Elements/InputDropdown";
 
 const employmentStatus = {
@@ -29,24 +33,46 @@ const employmentStatus = {
 
 const joiningDuration = {
 	heading: "Select Durations",
-	content: ["Immediately", "Less than 2 weeks", "2-3 weeks", "3 weeks to 1 month", "1-3 months", "3-6 months", "6-9 months", "1 year", "more than 1 year"],
+	content: [
+		"Immediately",
+		"Less than 2 weeks",
+		"2-3 weeks",
+		"3 weeks to 1 month",
+		"1-3 months",
+		"3-6 months",
+		"6-9 months",
+		"1 year",
+		"more than 1 year",
+	],
 };
 
 function PersonalDetails(props) {
-	const data = useSelector(state => state.candidateSetDataReducer.data)
+	const data = useSelector((state) => state.candidateSetDataReducer.data);
 	const [formData, setFormData] = React.useState({
 		/**
 		 * * field: ['value', 'error']
 		 */
 		firstName: [data.first_name],
 		lastName: [data.last_name],
-		employmentStatus: [props.currentStatus.find(val => val.id === data.current_employment_status) ? props.currentStatus.find(val => val.id === data.current_employment_status) : ""],
-		interestedIn: ['on'],
-		joiningDuration: [joiningDuration.content.find(val => val === data.availableWithin) ? joiningDuration.content.find(val => val === data.availableWithin) : ""],
-		streetAddress: [data.address.street_address],
-		city: [data.address.city],
-		state: [data.address.state],
-		zipCode: [data.address.zip_code],
+		employmentStatus: [
+			props.currentStatus.find(
+				(val) => val.id === data.current_employment_status
+			)
+				? props.currentStatus.find(
+						(val) => val.id === data.current_employment_status
+				  )
+				: "",
+		],
+		interestedIn: ["on"],
+		joiningDuration: [
+			joiningDuration.content.find((val) => val === data.availableWithin)
+				? joiningDuration.content.find((val) => val === data.availableWithin)
+				: "",
+		],
+		streetAddress: [data.address && data.address.street_address],
+		city: [data.address && data.address.city],
+		state: [data.address && data.address.state],
+		zipCode: [data.address && data.address.zip_code],
 
 		formValid: false,
 	});
@@ -67,25 +93,29 @@ function PersonalDetails(props) {
 					oldFormData[field][0] === null)
 			) {
 				oldFormData[field][0] = "";
-				oldFormData[field].push("Required");
 				oldFormData.formValid = false;
+				if (oldFormData[field][1] !== "Required") {
+					oldFormData[field].push("Required");
+				}
 			}
 		}
 
 		console.log(formData);
 		if (oldFormData.formValid) {
-			let obj =
-			{
-				"firstName": formData ? formData.firstName[0] : "",
-				"lastName": formData ? formData.lastName[0] : "",
-				"openToOtherRoles": formData && (formData.interestedIn[0] === "on") ? true : false,
-				"currentEmploymentStatusId": formData ? formData.employmentStatus[0].id : "",
-				"availableWithin": formData ? formData.joiningDuration[0] : "",
-				"streetAddress": formData ? formData.streetAddress[0] : "",
-				"state": formData ? formData.state[0] : "",
-				"city": formData ? formData.city[0] : "",
-				"zipCode": formData ? parseInt(formData.zipCode[0]) : "",
-			}
+			let obj = {
+				firstName: formData ? formData.firstName[0] : "",
+				lastName: formData ? formData.lastName[0] : "",
+				openToOtherRoles:
+					formData && formData.interestedIn[0] === "on" ? true : false,
+				currentEmploymentStatusId: formData
+					? formData.employmentStatus[0].id
+					: "",
+				availableWithin: formData ? formData.joiningDuration[0] : "",
+				streetAddress: formData ? formData.streetAddress[0] : "",
+				state: formData ? formData.state[0] : "",
+				city: formData ? formData.city[0] : "",
+				zipCode: formData ? parseInt(formData.zipCode[0]) : "",
+			};
 			/* send data to api */
 			props.updateCandidateDetails(obj);
 			props.history.push("/profile/work-experience");
@@ -156,8 +186,9 @@ function PersonalDetails(props) {
 							<label htmlFor="employmentStatus">
 								Current employment status <span>*</span>
 								<span
-									className={`error-text ${!formData.employmentStatus[1] && "hidden"
-										}`}
+									className={`error-text ${
+										!formData.employmentStatus[1] && "hidden"
+									}`}
 								>
 									Required
 								</span>
@@ -165,7 +196,10 @@ function PersonalDetails(props) {
 							<Dropdown
 								placeholder={employmentStatus.heading}
 								selected={formData.employmentStatus[0].employment_status}
-								content={props.currentStatus.map((val) => ({ val: val.employment_status, id: val.id }))}
+								content={props.currentStatus.map((val) => ({
+									val: val.employment_status,
+									id: val.id,
+								}))}
 								id="employmentStatus"
 								onchange={(value) =>
 									handleFieldChange("employmentStatus", value)
@@ -177,8 +211,9 @@ function PersonalDetails(props) {
 								Are you interested in a different function and industry?{" "}
 								<span>*</span>
 								<span
-									className={`error-text ${!formData.interestedIn[1] && "hidden"
-										}`}
+									className={`error-text ${
+										!formData.interestedIn[1] && "hidden"
+									}`}
 								>
 									Required
 								</span>
@@ -215,8 +250,9 @@ function PersonalDetails(props) {
 							<label htmlFor="joiningDuration">
 								How long until you can begin a new role? <span>*</span>
 								<span
-									className={`error-text ${!formData.joiningDuration[1] && "hidden"
-										}`}
+									className={`error-text ${
+										!formData.joiningDuration[1] && "hidden"
+									}`}
 								>
 									Required
 								</span>
@@ -235,8 +271,9 @@ function PersonalDetails(props) {
 							<label htmlFor="streetAddress">
 								Street address <span>*</span>
 								<span
-									className={`error-text ${!formData.streetAddress[1] && "hidden"
-										}`}
+									className={`error-text ${
+										!formData.streetAddress[1] && "hidden"
+									}`}
 								>
 									Required
 								</span>
@@ -323,21 +360,21 @@ function PersonalDetails(props) {
 					</Link> */}
 				</div>
 			</form>
-		</div >
+		</div>
 	);
 }
 
 function mapStateToProps(state) {
 	return {
 		currentStatus: state.candidateCurrentStatusReducer.data,
-		candidatePreviousData: state.candidateSetDataReducer.data
+		candidatePreviousData: state.candidateSetDataReducer.data,
 	};
 }
 
 const mapDispatchToProps = {
 	updateCandidateDetails: updateCandidateDetails,
 	fetchCandidateCurrentStatus: fetchCandidateCurrentStatus,
-	fetchCandidateDetails: fetchCandidateDetails
+	fetchCandidateDetails: fetchCandidateDetails,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(PersonalDetails);

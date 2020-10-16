@@ -71,21 +71,35 @@ function Login(props) {
 	};
 
 	useEffect(() => {
-		// console.log("Loging as a " + loginType);
-		// console.log("auth " + auth);
-		if (auth.loggedIn.value) {
-			if (auth.loggedIn.as === "candidate") {
-				props.history.push("/profile/resume");
-			} else {
-				props.history.push("/");
+		// console.log("auth ", auth.loggedIn);
+		if (auth.loggedIn.value === null) {
+			// setAuthError(true);
+		} else {
+			setAuthError(false);
+			if (auth.loggedIn.value) {
+				if (auth.loggedIn.as === "candidate") {
+					props.history.push("/profile/resume");
+				} else {
+					props.history.push("/");
+				}
 			}
-
 		}
-
 		return () => {
 			// cleanup
 		};
-	}, [loginType, pwError, auth, props.history]);
+	}, [auth, props]);
+
+	// useEffect(() => {
+	// 	console.log("auth ", auth.loggedIn);
+	// 	if (auth.loggedIn.value === null) {
+	// 		setAuthError(true);
+	// 	} else {
+	// 		setAuthError(false);
+	// 	}
+	// 	return () => {
+	// 		// cleanup
+	// 	};
+	// }, [auth]);
 
 	return (
 		<form onSubmit={handleSubmit(onSubmit)} className="content">
@@ -114,7 +128,9 @@ function Login(props) {
 				</li>
 			</ul>
 			{authError && <p className="error">Wrong credentials</p>}
-			{errors.email && errors.email && <p className="error">Enter an valid email-id</p>}
+			{errors.email && errors.email && (
+				<p className="error">Enter an valid email-id</p>
+			)}
 			{!errors.email && errors.password && (
 				<p className="error">Please enter a valid password</p>
 			)}
@@ -137,6 +153,7 @@ function Login(props) {
 								value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
 							},
 						})}
+						onChange={() => setAuthError(false)}
 					/>
 				</li>
 				<li>
@@ -153,9 +170,10 @@ function Login(props) {
 							ref={register({
 								required: "required",
 								pattern: {
-									value: /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/
+									value: /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/,
 								},
 							})}
+							onChange={() => setAuthError(false)}
 						/>
 						<span
 							className="toggle"

@@ -68,10 +68,10 @@ function EmployerQuestions({ data, onchange, calHeight, noHeading, ...props }) {
 								className="block-toggle blue"
 								id="engAbility_none"
 								name="engAbility"
-								type="radio"
-								defaultChecked={isAnswer(data, 2, 1)}
+								type="checkbox"
+								defaultChecked={isAnswer(data, 2, [1])}
 								onChange={() => {
-									onchange(2, 1);
+									onchange(2, [1]);
 								}}
 							/>
 							<label htmlFor="engAbility_none">None</label>
@@ -79,10 +79,10 @@ function EmployerQuestions({ data, onchange, calHeight, noHeading, ...props }) {
 								className="block-toggle blue"
 								id="engAbility_limited"
 								name="engAbility"
-								type="radio"
-								defaultChecked={isAnswer(data, 2, 2)}
+								type="checkbox"
+								defaultChecked={isAnswer(data, 2, [2])}
 								onChange={() => {
-									onchange(2, 2);
+									onchange(2, [2]);
 								}}
 							/>
 							<label htmlFor="engAbility_limited">Limited</label>
@@ -90,10 +90,10 @@ function EmployerQuestions({ data, onchange, calHeight, noHeading, ...props }) {
 								className="block-toggle blue"
 								id="engAbility_working"
 								name="engAbility"
-								type="radio"
-								defaultChecked={isAnswer(data, 2, 3)}
+								type="checkbox"
+								defaultChecked={isAnswer(data, 2, [3])}
 								onChange={() => {
-									onchange(2, 3);
+									onchange(2, [3]);
 								}}
 							/>
 							<label htmlFor="engAbility_working">Working</label>
@@ -101,10 +101,10 @@ function EmployerQuestions({ data, onchange, calHeight, noHeading, ...props }) {
 								className="block-toggle blue"
 								id="engAbility_fluent"
 								name="engAbility"
-								type="radio"
-								defaultChecked={isAnswer(data, 2, 4)}
+								type="checkbox"
+								defaultChecked={isAnswer(data, 2, [4])}
 								onChange={() => {
-									onchange(2, 4);
+									onchange(2, [4]);
 								}}
 							/>
 							<label htmlFor="engAbility_fluent">Fluent & Native</label>
@@ -165,34 +165,47 @@ function EmployerQuestions({ data, onchange, calHeight, noHeading, ...props }) {
 					</li>
 					<li className="general-question">
 						<h2 className="question">
-							Are you Comfortable with the Posted Wage?
+							Which languages are you comfortable with?
 						</h2>
 						<div className="options">
 							<input
-								className="fancy-toggle blue yes radio"
+								className="block-toggle blue"
 								name="postedWages"
-								type="radio"
-								id="postedWagesYes"
-								defaultChecked={isAnswer(data, 4, 1)}
+								type="checkbox"
+								id="postedWages1"
+								defaultChecked={isAnswer(data, 4, [1])}
 								onChange={() => {
-									onchange(4, 1);
+									onchange(4, [1]);
 								}}
 							/>
-							<label htmlFor="postedWagesYes">
-								<span className="input"></span>Yes
+							<label htmlFor="postedWages1">
+								<span className="input"></span>English
 							</label>
 							<input
-								className="fancy-toggle no radio"
+								className="block-toggle blue"
 								name="postedWages"
-								type="radio"
-								id="postedWagesNo"
-								defaultChecked={isAnswer(data, 4, 2)}
+								type="checkbox"
+								id="postedWages2"
+								defaultChecked={isAnswer(data, 4, [2])}
 								onChange={() => {
-									onchange(4, 2);
+									onchange(4, [2]);
 								}}
 							/>
-							<label htmlFor="postedWagesNo">
-								<span className="input"></span>No
+							<label htmlFor="postedWages2">
+								<span className="input"></span>German
+							</label>
+							<input
+								className="block-toggle blue"
+								name="postedWages"
+								type="checkbox"
+								id="postedWages3"
+								defaultChecked={isAnswer(data, 4, [3])}
+								onChange={() => {
+									onchange(4, [3]);
+								}}
+							/>
+							<label htmlFor="postedWages3">
+								<span className="input"></span>Spanish
 							</label>
 						</div>
 					</li>

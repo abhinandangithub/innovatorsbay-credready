@@ -10,7 +10,20 @@ import authReducer from "./store/reducers/auth";
 import commonReducer from "./store/reducers/common";
 import popupOverlayReducer from "./store/reducers/popup_overlay";
 import employerReducer from "./store/reducers/employer";
-import { candidateSetDataReducer, setAllFunctionsReducer, setAllIndustriesReducer, setCandidateCertificateTitlesReducer, setCandidateAllAnswersReducer, candidateCurrentStatusReducer, setCandidateJobsReducer, setCandidateAppliedJobsDataReducer, setCandidateExperienceTypeReducer, setCandidateDegreeTitlesReducer, setCandidateInstitutionTypeReducer, setCandidateJobViewDataReducer } from "./modals/candidateProfile/index";
+import {
+	candidateSetDataReducer,
+	setAllFunctionsReducer,
+	setAllIndustriesReducer,
+	setCandidateCertificateTitlesReducer,
+	setCandidateAllAnswersReducer,
+	candidateCurrentStatusReducer,
+	setCandidateJobsReducer,
+	setCandidateAppliedJobsDataReducer,
+	setCandidateExperienceTypeReducer,
+	setCandidateDegreeTitlesReducer,
+	setCandidateInstitutionTypeReducer,
+	setCandidateJobViewDataReducer,
+} from "./modals/candidateProfile/index";
 
 const rootReducer = combineReducers({
 	authReducer,
@@ -27,8 +40,7 @@ const rootReducer = combineReducers({
 	employerReducer,
 	setCandidateCertificateTitlesReducer,
 	setAllFunctionsReducer,
-	setAllIndustriesReducer
-
+	setAllIndustriesReducer,
 });
 
 /* Middleware */

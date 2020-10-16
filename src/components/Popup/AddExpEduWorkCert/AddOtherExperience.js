@@ -1,8 +1,6 @@
 import React, { useState } from "react";
 import DatePicker from "react-datepicker";
-import { useDispatch } from "react-redux";
-import { connect } from "react-redux";
-
+import { useDispatch, useSelector } from "react-redux";
 
 import "./AddExpEduWorkCert.scss";
 import Input from "../../_Elements/Input";
@@ -13,9 +11,20 @@ import {
 	togglePopup,
 } from "../../../store/actions/popup_overlay";
 import { addOtherWorkExperience } from "../../../modals/candidateProfile/thunk";
+import { findIndexOfObjInArr } from "../../../assets/js/Utility";
 
-function AddOtherExperience({ addOtherWorkExperience }) {
+const experienceType = {
+	heading: "Select Experience Type",
+	content: ["Music", "Teaching", "Software", "Consultant"],
+};
+
+function AddOtherExperience() {
 	const dispatch = useDispatch();
+
+	const info = useSelector((state) => state.popupOverlayReducer.popup.info);
+	const dataArr = useSelector(
+		(state) => state.candidateSetDataReducer.data.additional_experiences
+	);
 	const [startDate, setStartDate] = useState();
 	const [endDate, setEndDate] = useState();
 
@@ -33,20 +42,18 @@ function AddOtherExperience({ addOtherWorkExperience }) {
 
 		formValid: false,
 	});
+
 	function formatDate(date) {
 		var d = new Date(date),
-			month = '' + (d.getMonth() + 1),
-			day = '' + d.getDate(),
+			month = "" + (d.getMonth() + 1),
+			day = "" + d.getDate(),
 			year = d.getFullYear();
 
-		if (month.length < 2)
-			month = '0' + month;
-		if (day.length < 2)
-			day = '0' + day;
+		if (month.length < 2) month = "0" + month;
+		if (day.length < 2) day = "0" + day;
 
-		return [year, month, day].join('-');
+		return [year, month, day].join("-");
 	}
-
 
 	const handleSubmit = () => {
 		let oldFormData = { ...formData };
@@ -61,30 +68,40 @@ function AddOtherExperience({ addOtherWorkExperience }) {
 					oldFormData[field][0] === null)
 			) {
 				oldFormData[field][0] = "";
-				oldFormData[field].push("Required");
 				oldFormData.formValid = false;
+				if (oldFormData[field][1] !== "Required") {
+					oldFormData[field].push("Required");
+				}
 			}
 		}
 
 		if (oldFormData.formValid) {
 			console.log("submitting form...");
 			/* send data to api */
-			var obj =
-			{
-				"careerPath": "work",
-				"experienceType": formData ? 1 : "",
-				"organizationName": formData ? formData.organizationName[0] : "",
-				"title": formData ? formData.title[0] : "",
-				"location": formData ? formData.location[0] : "",
-				"from": formData && formData.startDate[0] ? formatDate(formData.startDate[0]) : "",
-				"to": formData && formData.endDate[0] ? formatDate(formData.endDate[0]) : "",
-				"description": formData ? formData.description[0] : "",
-			}
-			addOtherWorkExperience(obj)
+
+			var obj = {
+				// candidate_id: 24,
+				// career_path: "work",
+				// created_by: "Samay Cook",
+				// created_on: "Oct 15, 2020, 12:52:13 PM",
+				description: formData.description[0],
+				employed_from: formatDate(formData.startDate[0]),
+				employed_till: formatDate(formData.startDate[1]),
+				experience_type: formData.description[0],
+				// id: 74,
+				location: formData.location[0],
+				modified_by: "Samay Cook",
+				modified_on: "Oct 15, 2020, 12:52:13 PM",
+				organization_name: formData.organizationName[0],
+				skills: [],
+				title: formData.title[0],
+			};
+
+			dispatch(addOtherWorkExperience(obj));
 			dispatch(toggleOverlay(false));
 			dispatch(togglePopup([false, ""]));
 		}
-		console.log("addOtherExperieces", formData);
+
 		setFormData(oldFormData);
 	};
 
@@ -101,10 +118,31 @@ function AddOtherExperience({ addOtherWorkExperience }) {
 		});
 	};
 
-	const experienceType = {
-		heading: "Select Experience Type",
-		content: ["Music", "Teaching", "Software", "Consultant"],
-	};
+	React.useEffect(() => {
+		if (info) {
+			let i = findIndexOfObjInArr(dataArr, "id", info.id);
+			console.log(dataArr[i]);
+
+			setFormData({
+				...formData,
+				experienceType: [dataArr[i].experience_type],
+				organizationName: [dataArr[i].organization_name],
+				title: [dataArr[i].title],
+				startDate: [dataArr[i].employed_from],
+				endDate: [dataArr[i].employed_till],
+				location: [dataArr[i].location],
+				description: [dataArr[i].description],
+			});
+
+			/**
+			 * TODO: fetching date in wrong format, that's why using static date, Dropdown error handling also not working
+			 */
+			// setStartDate(new Date(dataArr[i].employment_from));
+			// setEndDate(new Date(dataArr[i].employment_to));
+			setStartDate(new Date("Oct 7, 2020, 12:00:00 AM"));
+			setEndDate(new Date("Oct 7, 2020, 12:00:00 AM"));
+		}
+	}, []);
 
 	return (
 		<div className="add-ex-ed-cert">
@@ -114,8 +152,9 @@ function AddOtherExperience({ addOtherWorkExperience }) {
 					<label htmlFor="experienceType">
 						Experience Type <span>*</span>
 						<span
-							className={`error-text ${!formData.experienceType[1] && "hidden"
-								}`}
+							className={`error-text ${
+								!formData.experienceType[1] && "hidden"
+							}`}
 						>
 							Required
 						</span>
@@ -123,8 +162,8 @@ function AddOtherExperience({ addOtherWorkExperience }) {
 					<Dropdown
 						id="experienceType"
 						placeholder={experienceType.heading}
+						selected={experienceType.content[formData.experienceType[0]]}
 						content={experienceType.content}
-						defaultValue={formData.experienceType[0]}
 						onchange={(value) => handleFieldChange("experienceType", value)}
 					/>
 				</li>
@@ -132,8 +171,9 @@ function AddOtherExperience({ addOtherWorkExperience }) {
 					<label htmlFor="organisationName">
 						Organisation Name <span>*</span>
 						<span
-							className={`error-text ${!formData.organizationName[1] && "hidden"
-								}`}
+							className={`error-text ${
+								!formData.organizationName[1] && "hidden"
+							}`}
 						>
 							Required
 						</span>
@@ -163,8 +203,9 @@ function AddOtherExperience({ addOtherWorkExperience }) {
 					<label>
 						Date <span>*</span>
 						<span
-							className={`error-text ${!formData.startDate[1] && !formData.endDate[1] && "hidden"
-								}`}
+							className={`error-text ${
+								!formData.startDate[1] && !formData.endDate[1] && "hidden"
+							}`}
 						>
 							Required
 						</span>
@@ -238,9 +279,4 @@ function AddOtherExperience({ addOtherWorkExperience }) {
 	);
 }
 
-
-const mapDispatchToProps = {
-	addOtherWorkExperience: addOtherWorkExperience
-};
-
-export default connect(null, mapDispatchToProps)(AddOtherExperience);
+export default AddOtherExperience;

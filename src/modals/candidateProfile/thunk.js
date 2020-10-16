@@ -19,7 +19,8 @@ import {
 	submitCandidateAnswersUrl,
 	fetchAllCertificateTitlesUrl,
 	fetchAllFunctionsUrl,
-	fetchAllIndustriesUrl
+	fetchAllIndustriesUrl,
+	jobApplyUrl
 } from "./api";
 import {
 	candidateSetCurrentStatus,
@@ -102,6 +103,23 @@ export const addWorkExperience = (formData) => async (dispatch, getState) => {
 		});
 		if (!data) return;
 		dispatch(fetchCandidateDetails());
+
+	} catch (err) {
+		console.log(err)
+	}
+}
+export const jobApply = (formData, id) => async (dispatch, getState) => {
+	try {
+		const { data } = await Axios.put(
+			jobApplyUrl + "/" + id,
+			formData, {
+			headers: {
+				'Authorization': getState().authReducer.JWT.map.jwt,
+				'Content-Type': 'application/vnd.credready.com+json'
+			}
+		});
+		if (!data) return;
+		dispatch(candidateGetAppliedJobs());
 
 	} catch (err) {
 		console.log(err)
