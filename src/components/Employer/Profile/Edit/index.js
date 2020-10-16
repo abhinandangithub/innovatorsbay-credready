@@ -41,22 +41,30 @@ function Details(props) {
 
 	const [addressCount, setAddressCount] = React.useState([""]);
 
-	const [formData, setFormData] = React.useState({
-		/**
-		 * * field: ['value', 'error']
-		 */
-		name: [props.profile.name],
-		title: [props.profile.title],
-		website: [props.profile.org.website],
-		hiringNeeds: [props.hiringKeys.length > 0 && props.hiringKeys.find(val => val.id === props.profile.org.hires_required).range_display_value],
-		companySize: [props.companySizeKeys.length > 0 && props.companySizeKeys.find(val => val.id === props.profile.org.company_size).range_display_value],
-		reference: [props.profile.org.reference_source],
-		street_0: props.profile.org.address.map(val => val.street_address),
-		city_0: props.profile.org.address.map(val => val.city),
-		state_0: props.profile.org.address.map(val => val.state),
-		zipCode_0: props.profile.org.address.map(val => val.zip_code),
-
-		formValid: false,
+	const [formData, setFormData] = React.useState(() => {
+		let initialState = {};
+		initialState.name = [props.profile.name];
+		initialState.title = [props.profile.title];
+		initialState.website = [props.profile.org.website];
+		initialState.hiringNeeds = [props.profile.org.hires_required && props.hiringKeys.length > 0 && props.hiringKeys.find(val => val.id === props.profile.org.hires_required).range_display_value];
+		initialState.companySize = [props.profile.org.company_size && props.companySizeKeys.length > 0 && props.companySizeKeys.find(val => val.id === props.profile.org.company_size).range_display_value];
+		initialState.reference = [props.profile.org.reference_source];
+		for(let i = 0; i<props.profile.org.address.length;i++) {
+			initialState["id_"+i] = [props.profile.org.address[i].id];
+			initialState["street_"+i] = [props.profile.org.address[i].street_address];
+			initialState["city_"+i] = [props.profile.org.address[i].city];
+			initialState["state_"+i] = [props.profile.org.address[i].state];
+			initialState["zipCode_"+i] = [props.profile.org.address[i].zip_code];
+		}
+		if(props.profile.org.address.length === 0) {
+			initialState["street_0"] = [""];
+			initialState["city_0"] = [""];
+			initialState["state_0"] = [""];
+			initialState["zipCode_0"] = [""];
+		}
+		console.log(initialState);
+		return initialState;
+		
 	});
 
 	useEffect(() => {
@@ -110,6 +118,9 @@ function Details(props) {
 		for (let i = 0; i < addressCount.length; i++) {
 			let address = {};
 			// address.id = i;
+			if(_formData["id_"+i]) {
+				address.id = _formData["id_"+i][0];
+			}
 			address.streetAddress = _formData["street_" + i][0];
 			address.city = _formData["city_" + i][0];
 			address.state = _formData["state_" + i][0];
@@ -154,8 +165,7 @@ function Details(props) {
 						<label htmlFor={`street_${i}`}>
 							Street Address <span>*</span>
 							<span
-								className={`error-text ${
-									!formData[`street_${i}`][1] && "hidden"
+								className={`error-text ${!formData[`street_${i}`][1] && "hidden"
 									}`}
 							>
 								Required
@@ -173,8 +183,7 @@ function Details(props) {
 						<label htmlFor={`city_${i}`}>
 							City <span>*</span>
 							<span
-								className={`error-text ${
-									!formData[`city_${i}`][1] && "hidden"
+								className={`error-text ${!formData[`city_${i}`][1] && "hidden"
 									}`}
 							>
 								Required
@@ -192,8 +201,7 @@ function Details(props) {
 						<label htmlFor={`state_${i}`}>
 							State <span>*</span>
 							<span
-								className={`error-text ${
-									!formData[`state_${i}`][1] && "hidden"
+								className={`error-text ${!formData[`state_${i}`][1] && "hidden"
 									}`}
 							>
 								Required
@@ -211,8 +219,7 @@ function Details(props) {
 						<label htmlFor={`zipCode_${i}`}>
 							Zip Code <span>*</span>
 							<span
-								className={`error-text ${
-									!formData[`zipCode_${i}`][1] && "hidden"
+								className={`error-text ${!formData[`zipCode_${i}`][1] && "hidden"
 									}`}
 							>
 								Required
@@ -235,6 +242,7 @@ function Details(props) {
 		let _addressCount = [...addressCount];
 		_addressCount.push("");
 		setAddressCount(_addressCount);
+		console.log(_addressCount);
 
 		/* update form values as well */
 		let i = _addressCount.length - 1;
@@ -261,8 +269,8 @@ function Details(props) {
 		(
 			< div className="profile-details" >
 				Welcome Aboard! Please fill in the details below about your company to get
-	started.
-			< div className="content" >
+				started.
+				< div className="content" >
 					<ul className="listing">
 						<li>
 							<label htmlFor="name">
@@ -337,7 +345,8 @@ function Details(props) {
 								onchange={(value) => handleFieldChange("reference", value)}
 							/>
 						</li>
-						<li className="addresses">{renderAddresses()}</li>
+						{renderAddresses()}
+						<li className="addresses"></li>
 					</ul>
 					<button className="add-address" id="addAdressBtn" onClick={addAdress}>
 						<span className="text">Add Address</span>

@@ -10,7 +10,10 @@ import {
 	toggleOverlay,
 	togglePopup,
 } from "../../../store/actions/popup_overlay";
-import { addOtherEducationExperience, fetchCandidateExperienceType } from "../../../modals/candidateProfile/thunk";
+import {
+	addOtherEducationExperience,
+	fetchCandidateExperienceType,
+} from "../../../modals/candidateProfile/thunk";
 
 function AddEduOtherExperience(props) {
 	const dispatch = useDispatch();
@@ -34,16 +37,14 @@ function AddEduOtherExperience(props) {
 
 	function formatDate(date) {
 		var d = new Date(date),
-			month = '' + (d.getMonth() + 1),
-			day = '' + d.getDate(),
+			month = "" + (d.getMonth() + 1),
+			day = "" + d.getDate(),
 			year = d.getFullYear();
 
-		if (month.length < 2)
-			month = '0' + month;
-		if (day.length < 2)
-			day = '0' + day;
+		if (month.length < 2) month = "0" + month;
+		if (day.length < 2) day = "0" + day;
 
-		return [year, month, day].join('-');
+		return [year, month, day].join("-");
 	}
 
 	const handleSubmit = () => {
@@ -59,8 +60,10 @@ function AddEduOtherExperience(props) {
 					oldFormData[field][0] === null)
 			) {
 				oldFormData[field][0] = "";
-				oldFormData[field].push("Required");
 				oldFormData.formValid = false;
+				if (oldFormData[field][1] !== "Required") {
+					oldFormData[field].push("Required");
+				}
 			}
 		}
 		// {
@@ -79,15 +82,15 @@ function AddEduOtherExperience(props) {
 			console.log("submitting form...");
 			/* send data to api */
 			let obj = {
-				"careerPath": "EDUCATION",
-				"description": formData ? formData.description[0] : "",
-				"experienceType": formData ? formData.experienceType[0] : "",
-				"location": formData ? formData.location[0] : "",
-				"organizationName": formData ? formData.organizationName[0] : "",
-				"title": formData ? formData.title[0] : "",
-				"from": formData ? formatDate(formData.startDate[0]) : "",
-				"to": formData ? formatDate(formData.endDate[0]) : ""
-			}
+				careerPath: "EDUCATION",
+				description: formData ? formData.description[0] : "",
+				experienceType: formData ? formData.experienceType[0] : "",
+				location: formData ? formData.location[0] : "",
+				organizationName: formData ? formData.organizationName[0] : "",
+				title: formData ? formData.title[0] : "",
+				from: formData ? formatDate(formData.startDate[0]) : "",
+				to: formData ? formatDate(formData.endDate[0]) : "",
+			};
 			dispatch(toggleOverlay(false));
 			dispatch(togglePopup([false, ""]));
 			props.addOtherEducationExperience(obj);
@@ -115,9 +118,8 @@ function AddEduOtherExperience(props) {
 	};
 
 	React.useEffect(() => {
-		if (props.experienceType.length === 0)
-			props.fetchCandidateExperienceType()
-	}, [])
+		if (props.experienceType.length === 0) props.fetchCandidateExperienceType();
+	}, []);
 
 	return (
 		<div className="add-ex-ed-cert">
@@ -127,8 +129,9 @@ function AddEduOtherExperience(props) {
 					<label htmlFor="experienceType">
 						Experience Type <span>*</span>
 						<span
-							className={`error-text ${!formData.experienceType[1] && "hidden"
-								}`}
+							className={`error-text ${
+								!formData.experienceType[1] && "hidden"
+							}`}
 						>
 							Required
 						</span>
@@ -136,7 +139,10 @@ function AddEduOtherExperience(props) {
 					<Dropdown
 						id="experienceType"
 						placeholder={experienceType.heading}
-						content={props.experienceType.map((val) => ({ val: val.experience_type, id: val.id }))}
+						content={props.experienceType.map((val) => ({
+							val: val.experience_type,
+							id: val.id,
+						}))}
 						defaultValue={formData.experienceType[0]}
 						onchange={(value) => handleFieldChange("experienceType", value)}
 					/>
@@ -145,8 +151,9 @@ function AddEduOtherExperience(props) {
 					<label htmlFor="organizationName">
 						Organisation Name <span>*</span>
 						<span
-							className={`error-text ${!formData.organizationName[1] && "hidden"
-								}`}
+							className={`error-text ${
+								!formData.organizationName[1] && "hidden"
+							}`}
 						>
 							Required
 						</span>
@@ -176,8 +183,9 @@ function AddEduOtherExperience(props) {
 					<label>
 						Date <span>*</span>
 						<span
-							className={`error-text ${!formData.startDate[1] && !formData.endDate[1] && "hidden"
-								}`}
+							className={`error-text ${
+								!formData.startDate[1] && !formData.endDate[1] && "hidden"
+							}`}
 						>
 							Required
 						</span>
@@ -259,7 +267,10 @@ function mapStateToProps(state) {
 
 const mapDispatchToProps = {
 	fetchCandidateExperienceType: fetchCandidateExperienceType,
-	addOtherEducationExperience: addOtherEducationExperience
+	addOtherEducationExperience: addOtherEducationExperience,
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(AddEduOtherExperience);
+export default connect(
+	mapStateToProps,
+	mapDispatchToProps
+)(AddEduOtherExperience);

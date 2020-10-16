@@ -50,12 +50,12 @@ function PostedJobs(props) {
 					<span dangerouslySetInnerHTML={{ __html: job.job_description }}></span>
 
 				</p>
-				{/* <ul className="common-skills-list">
-				<li>Skills: </li>
-				{!!job.strengths && job.strengths.length && job.strengths.map((val,i) => {
-					return <li key={i}>{val.name}</li>
+				<ul className="common-skills-list">
+				<li>Certificates: </li>
+				{!!job.certificates && job.certificates.length && job.certificates.map((val,i) => {
+					return <li key={i}>{val.title_name}</li>
 				})}
-			</ul> */}
+			</ul>
 				<p className="job-openings">
 					<span>Job Openings: </span>{job.open_positions}
 				</p>
@@ -147,7 +147,7 @@ function PostedJobs(props) {
 
 	return (
 		<div className="posted-jobs-page">
-			{jobsList.length === 0 ? renderEmptyList : renderJobsList}
+			{props.postedJobs.length === 0 ? renderEmptyList : renderJobsList}
 		</div>
 	);
 }

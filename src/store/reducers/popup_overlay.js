@@ -6,6 +6,7 @@ const initialState = {
 		show: false,
 		which: "",
 		info: {},
+		previousWhich: ""
 	},
 	overlay: {
 		show: false,
@@ -20,6 +21,7 @@ const reducer = (state = initialState, action) => {
 					show: action.payload[0] ? true : false,
 					which: action.payload[1],
 					info: action.payload[2],
+					previousWhich: state.popup.which
 				},
 			});
 		case actionTypes.TOGGLE_OVERLAY:

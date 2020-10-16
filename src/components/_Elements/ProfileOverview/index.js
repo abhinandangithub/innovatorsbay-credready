@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import React, { useState, useEffect } from "react";
+import { useDispatch, useSelector, connect } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
 	faPen,
@@ -23,35 +23,59 @@ import {
 	deleteAccount,
 	updateEmailThunk,
 	updatePhoneThunk,
+	getProfileThunk,
 } from "../../../store/thunks/employer";
 
 function ProfileOverview(props) {
 	const dispatch = useDispatch();
 	const allData = useSelector((state) => state.candidateSetDataReducer.data);
 	const employerProfile = useSelector((state) => state.employerReducer.profile);
+	console.log('employerProfile ', props.type, employerProfile);
 	const [email, setEmail] = useState(
 		props.type === "candidate"
-			? allData.username
-				? allData.username
-				: ""
-			: employerProfile.data.contacts.length > 0
-			? employerProfile.data.contacts.find((el) => el.contact_type === "email")
-					.contact
+			&& allData.contacts && allData.contacts.length > 0
+			? allData.contacts.find((el) => el.contact_type === "email").contact
 			: ""
 	);
+
 	const [phone, setPhone] = useState(
 		props.type === "candidate"
-			? allData.phone_no
-				? allData.phone_no
-				: ""
-			: employerProfile.data.contacts.length > 0
-			? employerProfile.data.contacts.find((el) => el.contact_type === "phone")
-					.contact
+			&& allData.contacts && allData.contacts.length > 0
+			? allData.contacts.find((el) => el.contact_type === "phone").contact
 			: ""
 	);
 	const [editingPhone, setEditingPhone] = useState(false);
 	const [editingEmail, setEditingEmail] = useState(false);
 	const [editingAboutMe, setEditingAboutMe] = useState(false);
+
+	useEffect(() => {
+		dispatch(getProfileThunk());
+	}, [dispatch, phone, email, allData]);
+
+	useEffect(() => {
+		setEmail(
+			props.type === "candidate"
+				? allData.username
+					? allData.username
+					: ""
+				: employerProfile.data.contacts.length > 0
+					? employerProfile.data.contacts.find((el) => el.contact_type === "email")
+						.contact
+					: ""
+		);
+		setPhone(
+			props.type === "candidate"
+				? allData.contacts
+					? allData.contacts.find((el) => el.contact_type === "phone")
+						.contact
+					: ""
+				: employerProfile.data.contacts.length > 0
+					? employerProfile.data.contacts.find((el) => el.contact_type === "phone")
+						.contact
+					: ""
+		);
+	}, [employerProfile]);
+
 
 	const handleDelete = () => {
 		// console.log("deleting");
@@ -90,8 +114,8 @@ function ProfileOverview(props) {
 					{props.type === "candidate" ? (
 						<img src={ImgUserPlaceholder} alt="Guest" />
 					) : (
-						<img src={ImgNYP} alt="NYP" />
-					)}
+							<img src={ImgUserPlaceholder} alt="NYP" />
+						)}
 					<div className="edit" id="editPicBtn">
 						<FontAwesomeIcon className="btn" icon={faPen} />
 					</div>
@@ -115,13 +139,8 @@ function ProfileOverview(props) {
 						/>
 						<input
 							type="text"
-							// defaultValue={allData.phone_no ? allData.phone_no : ""}
+							// defaultValue={allData.contacts[0] && allData.contacts[0].contact ? allData.contacts[0].contact : ""}
 							value={phone}
-							defaultValue={
-								allData.contacts && allData.contacts[1]
-									? allData.contacts[1].contact
-									: ""
-							}
 							className={`${editingPhone ? "edit" : ""}`}
 							readOnly={editingPhone ? false : true}
 							onChange={(e) => setPhone(e.target.value)}
@@ -231,4 +250,10 @@ function ProfileOverview(props) {
 	);
 }
 
-export default ProfileOverview;
+function mapStateToProps(state) {
+	return {
+		employerProfile: state.employerReducer.profile,
+	}
+}
+
+export default connect(mapStateToProps)(ProfileOverview);

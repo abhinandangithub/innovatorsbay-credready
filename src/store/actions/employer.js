@@ -6,8 +6,8 @@ export const getHiringNeeds = (val) => {
 	return {
 		type: actionTypes.GET_HIRING_NEEDS,
 		value: val,
-    };
-    // getHiringNeedsThunk();
+	};
+	// getHiringNeedsThunk();
 };
 
 /* val: true or false */

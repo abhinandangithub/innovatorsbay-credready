@@ -1,8 +1,9 @@
 import React from "react";
-import { connect, useDispatch } from 'react-redux';
+import { connect, useDispatch } from "react-redux";
 import InputRange from "react-input-range";
-import { getSkills } from '../../../store/thunks/employer';
-import { setNewJob } from '../../../store/actions/employer';
+import { getSkills } from "../../../store/thunks/employer";
+import { Multiselect } from "multiselect-react-dropdown";
+import { setNewJob } from "../../../store/actions/employer";
 
 function CreateJob(props) {
 	const dispatch = useDispatch();
@@ -10,6 +11,11 @@ function CreateJob(props) {
 		min: 3,
 		max: 7,
 	});
+
+	const options = [
+		{ name: "Srigar", id: 1 },
+		{ name: "Sam", id: 2 },
+	];
 
 	// value.min
 	// value.max
@@ -21,12 +27,20 @@ function CreateJob(props) {
 	}, [props]);
 
 	React.useEffect(() => {
-		dispatch(setNewJob({"minExp": value.min, "maxExp": value.max}));
-	}, [value]);
-	
-	React.useEffect(() => {
 		dispatch(getSkills());
 	}, [dispatch]);
+
+	React.useEffect(() => {
+		dispatch(setNewJob({ minExp: value.min, maxExp: value.max }));
+	}, [value]);
+
+	const handleSelect = (selectedList, selectedItem) => {
+		dispatch(setNewJob({ jobCertificateMap: selectedList }));
+	};
+
+	const handleRemove = (selectedList, selectedItem) => {
+		dispatch(setNewJob({ jobCertificateMap: selectedList }));
+	};
 
 	return (
 		<div className="experience-certificates" ref={parent}>
@@ -39,22 +53,43 @@ function CreateJob(props) {
 				<h2 className="sub-heading">
 					Certificates <span>*</span>
 				</h2>
-				<ul className="added-items">
+				{/* <ul className="added-items">
 					{props.skills.map((val, i) => {
-						return(
-							<li key={val.id}>
+						if (i > 4) return false;
+						return (
+							<li>
 								{val.name} <span></span>{" "}
 							</li>
 						);
 					})}
-					{/* <li>
+					<li>
 						Nursing <span></span>{" "}
 					</li>
 					<li>
 						Take Care <span></span>{" "}
-					</li> */}
+					</li>
 					<li className="btn"></li>
-				</ul>
+				</ul> */}
+				{/* <div style={{width: '50%'}}> */}
+				<Multiselect
+					style={{
+						multiselectContainer: {
+							width: "35%",
+							height: "50%",
+							marginBottom: "2%",
+						},
+					}}
+					options={props.skills} // Options to display in the dropdown
+					// selectedValues={this.state.selectedValue} // Preselected value to persist in dropdown
+					onSelect={(selectedList, selectedItem) =>
+						handleSelect(selectedList, selectedItem)
+					} // Function will trigger on select event
+					onRemove={(selectedList, selectedItem) =>
+						handleRemove(selectedList, selectedItem)
+					} // Function will trigger on remove event
+					displayValue="name" // Property name to display in the dropdown options
+				/>
+				{/* </div> */}
 				<h2 className="sub-heading">
 					Years of experience <span>*</span>
 				</h2>
@@ -75,7 +110,7 @@ function CreateJob(props) {
 function mapStateToProps(state) {
 	return {
 		skills: state.employerReducer.skills.data,
-	}
+	};
 }
 
 // export default CreateJob;

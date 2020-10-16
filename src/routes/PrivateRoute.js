@@ -5,13 +5,22 @@ import { Redirect, Route } from "react-router-dom";
 
 import { useSelector, useDispatch } from "react-redux";
 import Cookies from "js-cookie";
-import { updateJwtToken } from "../store/actions/auth";
+import { updateJwtToken, updateLoggedIn } from "../store/actions/auth";
 
 const PrivateRoute = ({ component: Component, ...rest }) => {
 	const dispatch = useDispatch();
 	const auth = useSelector((state) => state.authReducer);
+	// const userType = localStorage.getItem("user_type")
 	const token = Cookies.get("JWT");
-	if (token && !auth.JWT) dispatch(updateJwtToken(token));
+	if (token && !auth.JWT) {
+		console.log("abhi ", JSON.parse(token).map.user_type);
+		dispatch(updateJwtToken(JSON.parse(token)));
+		let userType = JSON.parse(token).map.user_type;
+		if (userType === "jobseeker") {
+			userType = "candidate";
+		}
+		dispatch(updateLoggedIn([true, userType]));
+	}
 
 	return (
 		<Route

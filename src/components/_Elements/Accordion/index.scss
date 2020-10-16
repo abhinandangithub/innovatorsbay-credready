@@ -134,6 +134,7 @@
 	&.active {
 		.contents {
 			padding-bottom: 20px;
+			overflow: visible;
 		}
 		.title {
 			color: #fff;

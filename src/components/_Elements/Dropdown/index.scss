@@ -20,12 +20,12 @@
 		}
 	}
 	& > .content {
+		z-index: 50;
 		color: #6b6c6f;
 		background-color: #fff;
 		position: absolute;
 		top: 50%;
 		width: calc(100% + 2px);
-		z-index: 9;
 		border-radius: 0 0 20px 20px;
 		border: 1px solid #cdcdcd;
 		height: 0px;

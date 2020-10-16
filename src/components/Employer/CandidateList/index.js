@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Link, useParams  } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { connect, useDispatch } from 'react-redux';
 import { sendEmail, updateStatus, getAppliedCandidateDetails, getCandidatesList } from '../../../store/thunks/employer';
 
@@ -249,143 +249,147 @@ function CandidateList(props) {
 	console.log(props.candidatesList.length);
 	return (
 
-		props.loading ? (
-			<Spinner />
-		) : (
-				<div className="candidate-list">
-					<div className="top-heading">
-						<h1>
-							Candidates for “Certified Nursing Assistant - in Warren New Jersey”
+		// props.loading ? (
+		// 	<Spinner />
+		// ) : 
+		(
+			<div className="candidate-list">
+				<div className="top-heading">
+					<h1>
+						Candidates for “Certified Nursing Assistant - in Warren New Jersey”
 				</h1>
-						<h3>CredReadiness Index for this job is 75</h3>
+					<h3>CredReadiness Index for this job is 75</h3>
+				</div>
+				<div className="search-panel">
+					<div className="searches">
+						<input type="text" placeholder="Candidate Name" />
+						<Dropdown placeholder={crRange.heading} content="slider" />
+						<Dropdown placeholder={status.heading} content={status.content} onchange={handleUpdateStatus} />
+						<Dropdown
+							placeholder={experience.heading}
+							content={experience.content}
+						/>
+						<Dropdown
+							placeholder={currentOrganisation.heading}
+							content={currentOrganisation.content}
+						/>
 					</div>
-					<div className="search-panel">
-						<div className="searches">
-							<input type="text" placeholder="Candidate Name" />
-							<Dropdown placeholder={crRange.heading} content="slider" />
-							<Dropdown placeholder={status.heading} content={status.content} onchange={handleUpdateStatus} />
-							<Dropdown
-								placeholder={experience.heading}
-								content={experience.content}
-							/>
-							<Dropdown
-								placeholder={currentOrganisation.heading}
-								content={currentOrganisation.content}
-							/>
-						</div>
-					</div>
-					<div className="lists-outer">
-						<div className="heading flex">
-							<h2>List of Candidate</h2>
-							{/* <p>Showing Result 1-10 of 200</p> */}
-							<div className="search_filter flex">
-								<Input type="text" placeholder="Search by name/position..." />
-								<button
-									className="primary-btn blue"
-									onClick={() => setFilterOptions(!filterOptions)}
-								>
-									Filter
+				</div>
+				<div className="lists-outer">
+					<div className="heading flex">
+						<h2>List of Candidate</h2>
+						{/* <p>Showing Result 1-10 of 200</p> */}
+						<div className="search_filter flex">
+							<Input type="text" placeholder="Search by name/position..." />
+							<button
+								className="primary-btn blue"
+								onClick={() => setFilterOptions(!filterOptions)}
+							>
+								Filter
 						</button>
-								<div className={`options ${filterOptions ? "on" : "off"}`}>
-									<div className="listing">
-										{filtersList.map((filter, i) => {
-											let trimTitle = filter.title.replace(/ /g, "");
-											return (
-												<ul key={i}>
-													<li>{filter.title}</li>
-													{filter.options.map((option, i) => {
-														return (
-															<li key={i}>
-																<input
-																	id={`${trimTitle}_${i}`}
-																	type="checkbox"
-																	className="fancy-toggle blue"
-																/>
-																<label htmlFor={`${trimTitle}_${i}`}>
-																	<span className="input"></span>
-																	{option}
-																</label>
-															</li>
-														);
-													})}
-												</ul>
-											);
-										})}
-									</div>
-									<div className="cta">
-										<button
-											className="primary-btn blue outline"
-											onClick={() => setFilterOptions(false)}
-										>
-											Cancel
+							<div className={`options ${filterOptions ? "on" : "off"}`}>
+								<div className="listing">
+									{filtersList.map((filter, i) => {
+										let trimTitle = filter.title.replace(/ /g, "");
+										return (
+											<ul key={i}>
+												<li>{filter.title}</li>
+												{filter.options.map((option, i) => {
+													return (
+														<li key={i}>
+															<input
+																id={`${trimTitle}_${i}`}
+																type="checkbox"
+																className="fancy-toggle blue"
+															/>
+															<label htmlFor={`${trimTitle}_${i}`}>
+																<span className="input"></span>
+																{option}
+															</label>
+														</li>
+													);
+												})}
+											</ul>
+										);
+									})}
+								</div>
+								<div className="cta">
+									<button
+										className="primary-btn blue outline"
+										onClick={() => setFilterOptions(false)}
+									>
+										Cancel
 								</button>
-										<button
-											className="primary-btn blue"
-											onClick={() => setFilterOptions(false)}
-										>
-											Done
+									<button
+										className="primary-btn blue"
+										onClick={() => setFilterOptions(false)}
+									>
+										Done
 								</button>
-									</div>
 								</div>
 							</div>
 						</div>
-						<div className="actions">
-							<div className="left">
-								<Link onClick={handleSendEmail} >Send Email</Link>
+					</div>
+					{props.candidatesList.length > 0 ?
+					<>
+					 <div className="actions">
+						<div className="left">
+							<Link onClick={handleSendEmail} >Send Email</Link>
 								&nbsp;&nbsp;{" |  "}&nbsp;&nbsp;
 						<Link onClick={handleUpdateStatus}>Change Status</Link>
-							</div>
-							<div className="right">
-								<input
-									className="fancy-toggle"
-									id="viewRejectedCandidate"
-									type="checkbox"
-								/>
-								<label htmlFor="viewRejectedCandidate">
-									<span className="input"></span>View Rejected Candidates
-						</label>
-							</div>
 						</div>
-						<ul className="lists">
-							<li className="list">
-								<ul className="head">
-									<li>
-										<input className="fancy-toggle" id="1" type="checkbox" />
-										<label htmlFor="1">
-											<span className="input"></span>
-										</label>
-									</li>
-									<li>
-										<img src={ImgUser} alt="User" />
-										Name <SortIcon active="up" />
-									</li>
-									<li>
-										Current Position <SortIcon />
-									</li>
-									<li>
-										Exp (in years) <SortIcon />
-									</li>
-									<li>
-										CredReadiness <SortIcon />
-									</li>
-									<li>
-										Current Organization <SortIcon />
-									</li>
-									<li>
-										Last Update <SortIcon />
-									</li>
-									<li>
-										Status <SortIcon />
-									</li>
-									<li>Action</li>
-								</ul>
-								{renderCandidateList}
-							</li>
-						</ul>
+						<div className="right">
+							<input
+								className="fancy-toggle"
+								id="viewRejectedCandidate"
+								type="checkbox"
+							/>
+							<label htmlFor="viewRejectedCandidate">
+								<span className="input"></span>View Rejected Candidates
+						</label>
+						</div>
 					</div>
-					<Pagination />
+					<ul className="lists">
+						<li className="list">
+							<ul className="head">
+								<li>
+									<input className="fancy-toggle" id="1" type="checkbox" />
+									<label htmlFor="1">
+										<span className="input"></span>
+									</label>
+								</li>
+								<li>
+									<img src={ImgUser} alt="User" />
+										Name <SortIcon active="up" />
+								</li>
+								<li>
+									Current Position <SortIcon />
+								</li>
+								<li>
+									Exp (in years) <SortIcon />
+								</li>
+								<li>
+									CredReadiness <SortIcon />
+								</li>
+								<li>
+									Current Organization <SortIcon />
+								</li>
+								<li>
+									Last Update <SortIcon />
+								</li>
+								<li>
+									Status <SortIcon />
+								</li>
+								<li>Action</li>
+							</ul>
+							{renderCandidateList}
+						</li>
+					</ul>
+					</>  : <p>No candidates found for this job </p>}
 				</div>
-			)
+				<Pagination />
+			</div>
+		)
 
 	);
 }
@@ -393,7 +397,7 @@ function CandidateList(props) {
 function mapStateToProps(state) {
 	return {
 		candidatesList: state.employerReducer.candidatesList.data,
-		loading: state.commonReducer.apiCallsInProgress
+		// loading: state.commonReducer.apiCallsInProgress
 	}
 }
 

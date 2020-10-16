@@ -19,7 +19,6 @@ function Signup(props) {
 	const onSubmit = (data) => {
 		data.user_type = signupType === "candidate" ? "jobseeker" : signupType;
 		// data.phone = "+"+ data.phone;
-		console.log(data);
 		dispatch(getVerificationCode(data));
 		dispatch(toggleOverlay(true));
 		dispatch(togglePopup([true, "termsAndConditions"]));
@@ -36,14 +35,13 @@ function Signup(props) {
 	};
 
 	useEffect(() => {
-		console.log("Signup as a " + signupType);
 		return () => {
 			// cleanup
 		};
 	}, [signupType]);
 
 	const showErrorMessage = () => {
-		if (errors.name) {
+		if (errors.organisation) {
 			return <p className="error">Name is required.</p>;
 		} else if (errors.email) {
 			return <p className="error">Enter an valid email-id</p>;
@@ -56,6 +54,8 @@ function Signup(props) {
 					case, one lowercase, 1 number and 1 special character.
 				</p>
 			);
+		} else if (errors.agree) {
+			return <p className="error">Accept Terms And Conditions.</p>;
 		}
 	};
 
@@ -100,7 +100,7 @@ function Signup(props) {
 							name="organisation"
 							type="text"
 							autoComplete="nothing"
-							placeholder="Enter employer name"
+							placeholder="Enter Organisation Name"
 							autoFocus
 							ref={register({
 								required: "Required",
@@ -138,10 +138,10 @@ function Signup(props) {
 						placeholder="123-456-7890"
 						// defaultValue="1234567890"
 						ref={register({
-							required: "required"
-							// pattern: {
-							// 	value: /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/,
-							// },
+							required: "required",
+							pattern: {
+								value: /^(\+\d{1,2}\s?)?1?\-?\.?\s?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$/,
+							},
 						})}
 					/>
 				</li>
@@ -160,7 +160,7 @@ function Signup(props) {
 							ref={register({
 								required: "required",
 								pattern: {
-									value: /^(?=.*\d)(?=.*[a-z])(?=.*[a-z])(?=.*[^a-zA-Z0-9])(?!.*\s).{8,15}$/,
+									value: /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{8,100}$/,
 								},
 							})}
 						/>
@@ -181,6 +181,9 @@ function Signup(props) {
 							id="agree"
 							name="agree"
 							type="checkbox"
+							ref={register({
+								required: "Required",
+							})}
 						/>
 						<label htmlFor="agree">
 							<span className="input"></span>I agree to the &nbsp;

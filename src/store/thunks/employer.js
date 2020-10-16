@@ -18,7 +18,10 @@ import {
 	employeCreateQuestion,
 	employeCandidateSendEmail,
 	employeFecthOrgLocations,
-	employeFecthJobPreviewDetails
+	employeFecthJobPreviewDetails,
+	employerDeleteQuestionsFromJobUrl,
+	employerDeleteQuestionFromJobUrl,
+	employerUpdateQuestion
 } from "../api/employer";
 
 import {
@@ -32,6 +35,7 @@ import {
 import {
 	beginApiCall, apiCallError
 } from "../actions/common";
+
 
 // import Cookies from "js-cookie";
 import { setDefaultAuthorizationHeader, setAllowAccessHeader } from "../utility";
@@ -66,16 +70,17 @@ export const updateProfileThunk = (token, profile) => async (dispatch, getState)
 		const state = getState();
 		profile.companySize = state.employerReducer.companySizeKeys.find(val => val.range_display_value === profile.companySize).id;
 		profile.hiresRequired = state.employerReducer.hiringKeys.find(val => val.range_display_value === profile.hiresRequired).id;
+		// setDefaultAuthorizationHeader(getState().authReducer.JWT.map.jwt);
+		// console.log(profile, getState().authReducer.JWT.map.jwt);
 		// setDefaultAuthorizationHeader(JSON.parse(state.authReducer.JWT).map.jwt);
-		console.log(profile);
 		const data = await Axios.patch(employerUpdateProfileUrl, profile, {
 			headers: {
-				'Authorization': JSON.parse(state.authReducer.JWT).map.jwt,
+				'Authorization': getState().authReducer.JWT.map.jwt,
 				'Content-Type': 'application/vnd.credready.com+json'
 			}
 		});
 		if (!data) return false;
-		dispatch(setEmployerProfile(profile));
+		// dispatch(setEmployerProfile(profile));
 	} catch (err) {
 		if (err.response) console.error(`failed to update employer profile ${err}`);
 	}
@@ -84,17 +89,15 @@ export const updateProfileThunk = (token, profile) => async (dispatch, getState)
 export const getProfileThunk = (token) => async (dispatch, getState) => {
 	try {
 		const state = getState();
-		dispatch(beginApiCall())
-		// setDefaultAuthorizationHeader(JSON.parse(state.authReducer.JWT).map.jwt);
 		const data = await Axios.get(employerUpdateProfileUrl, {
 			headers: {
-				'Authorization': JSON.parse(state.authReducer.JWT).map.jwt,
+				'Authorization': getState().authReducer.JWT.map.jwt,
 				'Content-Type': 'application/vnd.credready.com+json'
 			}
 		});
 		if (!data) return false;
 		dispatch(setEmployerProfile(data.data));
-		dispatch(apiCallError())
+		// dispatch(apiCallError())
 	} catch (err) {
 		if (err.response) console.error(`failed to update employer profile ${err}`);
 	}
@@ -115,7 +118,7 @@ export const updateEmailThunk = (email) => async (dispatch, getState) => {
 		const state = getState();
 		const data = await Axios.put(employerUpdateEmailUrl, { "email": email }, {
 			headers: {
-				'Authorization': JSON.parse(state.authReducer.JWT).map.jwt,
+				'Authorization': getState().authReducer.JWT.map.jwt,
 				'Content-Type': 'application/vnd.credready.com+json'
 			}
 		});
@@ -131,7 +134,7 @@ export const updatePhoneThunk = (phone) => async (dispatch, getState) => {
 		const state = getState();
 		const data = await Axios.put(employerUpdateUserPhoneUrl, { "phone": phone }, {
 			headers: {
-				'Authorization': JSON.parse(state.authReducer.JWT).map.jwt,
+				'Authorization': getState().authReducer.JWT.map.jwt,
 				'Content-Type': 'application/vnd.credready.com+json'
 			}
 		});
@@ -147,7 +150,7 @@ export const deleteAccount = (token) => async (dispatch, getState) => {
 		const state = getState();
 		const data = await Axios.delete(employerDeleteAccountUrl, {
 			headers: {
-				'Authorization': JSON.parse(state.authReducer.JWT).map.jwt,
+				'Authorization': getState().authReducer.JWT.map.jwt,
 				'Content-Type': 'application/vnd.credready.com+json'
 			}
 		});
@@ -160,12 +163,12 @@ export const deleteAccount = (token) => async (dispatch, getState) => {
 export const getPostedJobs = (token) => async (dispatch, getState) => {
 	try {
 		const state = getState();
-		// setDefaultAuthorizationHeader(JSON.parse(state.authReducer.JWT).map.jwt);
+		// setDefaultAuthorizationHeader(getState().authReducer.JWT.map.jwt);
 		// setContentTypeDefaultHeader();
 		// setAllowAccessHeader();
 		const data = await Axios.get(employerFetchAllPostedJobsUrl, {
 			headers: {
-				'Authorization': JSON.parse(state.authReducer.JWT).map.jwt,
+				'Authorization': getState().authReducer.JWT.map.jwt,
 				'Content-Type': 'application/vnd.credready.com+json'
 			}
 		});
@@ -179,10 +182,11 @@ export const getPostedJobs = (token) => async (dispatch, getState) => {
 export const sendEmail = (notif) => async (dispatch, getState) => {
 	try {
 		const state = getState();
+		// setDefaultAuthorizationHeader(getState().authReducer.JWT.map.jwt);
 		// setDefaultAuthorizationHeader(JSON.parse(state.authReducer.JWT).map.jwt);
 		const data = await Axios.post(employeCandidateSendEmail, notif, {
 			headers: {
-				'Authorization': JSON.parse(state.authReducer.JWT).map.jwt,
+				'Authorization': getState().authReducer.JWT.map.jwt,
 				'Content-Type': 'application/vnd.credready.com+json'
 			}
 		});
@@ -195,10 +199,11 @@ export const sendEmail = (notif) => async (dispatch, getState) => {
 export const sendNotification = (notif) => async (dispatch, getState) => {
 	try {
 		const state = getState();
+		// setDefaultAuthorizationHeader(getState().authReducer.JWT.map.jwt);
 		// setDefaultAuthorizationHeader(JSON.parse(state.authReducer.JWT).map.jwt);
 		const data = await Axios.put(employerJobFollowUpUrl, notif, {
 			headers: {
-				'Authorization': JSON.parse(state.authReducer.JWT).map.jwt,
+				'Authorization': getState().authReducer.JWT.map.jwt,
 				'Content-Type': 'application/vnd.credready.com+json'
 			}
 		});
@@ -211,10 +216,11 @@ export const sendNotification = (notif) => async (dispatch, getState) => {
 export const updateStatus = (status) => async (dispatch, getState) => {
 	try {
 		const state = getState();
+		// setDefaultAuthorizationHeader(getState().authReducer.JWT.map.jwt);
 		// setDefaultAuthorizationHeader(JSON.parse(state.authReducer.JWT).map.jwt);
 		const data = await Axios.put(employerUpdateApplicationStatusOfCandidateUrl, status, {
 			headers: {
-				'Authorization': JSON.parse(state.authReducer.JWT).map.jwt,
+				'Authorization': getState().authReducer.JWT.map.jwt,
 				'Content-Type': 'application/vnd.credready.com+json'
 			}
 		});
@@ -227,11 +233,11 @@ export const updateStatus = (status) => async (dispatch, getState) => {
 export const getCandidatesList = (jobID) => async (dispatch, getState) => {
 	try {
 		const state = getState();
-		// setDefaultAuthorizationHeader(JSON.parse(state.authReducer.JWT).map.jwt);
+		// setDefaultAuthorizationHeader(getState().authReducer.JWT.map.jwt);
 		const URL = employerFetchJobById + "/" + jobID;
 		const data = await Axios.get(URL, {
 			headers: {
-				'Authorization': JSON.parse(state.authReducer.JWT).map.jwt,
+				'Authorization': getState().authReducer.JWT.map.jwt,
 				'Content-Type': 'application/vnd.credready.com+json'
 			}
 		});
@@ -245,6 +251,7 @@ export const getCandidatesList = (jobID) => async (dispatch, getState) => {
 export const getEmploymentType = () => async (dispatch, getState) => {
 	try {
 		// const state = getState();
+		// setDefaultAuthorizationHeader(getState().authReducer.JWT.map.jwt);
 		// setDefaultAuthorizationHeader(JSON.parse(state.authReducer.JWT).map.jwt);
 		const data = await Axios.get(entityFetchEmployementSatusUrl);
 		if (!data) return false;
@@ -257,6 +264,7 @@ export const getEmploymentType = () => async (dispatch, getState) => {
 export const getIndustry = () => async (dispatch, getState) => {
 	try {
 		// const state = getState();
+		// setDefaultAuthorizationHeader(getState().authReducer.JWT.map.jwt);
 		// setDefaultAuthorizationHeader(JSON.parse(state.authReducer.JWT).map.jwt);
 		const data = await Axios.get(entityFetchEntityIndustryUrl);
 		if (!data) return false;
@@ -269,7 +277,7 @@ export const getIndustry = () => async (dispatch, getState) => {
 export const getFunction = () => async (dispatch, getState) => {
 	try {
 		// const state = getState();
-		// setDefaultAuthorizationHeader(JSON.parse(state.authReducer.JWT).map.jwt);
+		// setDefaultAuthorizationHeader(getState().authReducer.JWT.map.jwt);
 		const data = await Axios.get(entityFetchEntitityFunctionUrl);
 		if (!data) return false;
 		dispatch(setFunction(data.data));
@@ -281,7 +289,7 @@ export const getFunction = () => async (dispatch, getState) => {
 export const getSkills = () => async (dispatch, getState) => {
 	try {
 		// const state = getState();
-		// setDefaultAuthorizationHeader(JSON.parse(state.authReducer.JWT).map.jwt);
+		// setDefaultAuthorizationHeader(getState().authReducer.JWT.map.jwt);
 		const data = await Axios.get(entityFetchSkillsUrl);
 		if (!data) return false;
 		dispatch(setSkills(data.data));
@@ -293,10 +301,10 @@ export const getSkills = () => async (dispatch, getState) => {
 export const getQuestionBank = () => async (dispatch, getState) => {
 	try {
 		const state = getState();
-		// setDefaultAuthorizationHeader(JSON.parse(state.authReducer.JWT).map.jwt);
+		// setDefaultAuthorizationHeader(getState().authReducer.JWT.map.jwt);
 		const data = await Axios.get(employeFetchQuestionbankUrl, {
 			headers: {
-				'Authorization': JSON.parse(state.authReducer.JWT).map.jwt,
+				'Authorization': getState().authReducer.JWT.map.jwt,
 				'Content-Type': 'application/vnd.credready.com+json'
 			}
 		});
@@ -310,10 +318,10 @@ export const getQuestionBank = () => async (dispatch, getState) => {
 export const getEmailTemplate = () => async (dispatch, getState) => {
 	try {
 		const state = getState();
-		// setDefaultAuthorizationHeader(JSON.parse(state.authReducer.JWT).map.jwt);
+		// setDefaultAuthorizationHeader(getState().authReducer.JWT.map.jwt);
 		const data = await Axios.get(employeGetEmailTemplate, {
 			headers: {
-				'Authorization': JSON.parse(state.authReducer.JWT).map.jwt,
+				'Authorization': getState().authReducer.JWT.map.jwt,
 				'Content-Type': 'application/vnd.credready.com+json'
 			}
 		});
@@ -327,10 +335,10 @@ export const getEmailTemplate = () => async (dispatch, getState) => {
 export const postJob = (job) => async (dispatch, getState) => {
 	try {
 		const state = getState();
-		// setDefaultAuthorizationHeader(JSON.parse(state.authReducer.JWT).map.jwt);
+		// setDefaultAuthorizationHeader(getState().authReducer.JWT.map.jwt);
 		const data = await Axios.post(employerPostJob, state.employerReducer.newJob, {
 			headers: {
-				'Authorization': JSON.parse(state.authReducer.JWT).map.jwt,
+				'Authorization': getState().authReducer.JWT.map.jwt,
 				'Content-Type': 'application/vnd.credready.com+json'
 			}
 		});
@@ -344,13 +352,13 @@ export const postJob = (job) => async (dispatch, getState) => {
 export const createQuestion = (question) => async (dispatch, getState) => {
 	try {
 		const state = getState();
-		// setDefaultAuthorizationHeader(JSON.parse(state.authReducer.JWT).map.jwt);
+		// setDefaultAuthorizationHeader(getState().authReducer.JWT.map.jwt);
 		const data = await Axios.post(employeCreateQuestion, question, {
-			headers: {
-				'Authorization': JSON.parse(state.authReducer.JWT).map.jwt,
-				'Content-Type': 'application/vnd.credready.com+json'
-			}
-		});
+				headers: {
+					'Authorization': getState().authReducer.JWT.map.jwt,
+					'Content-Type': 'application/vnd.credready.com+json'
+				}
+			});
 		if (!data) return false;
 		// dispatch(setPostedJobURL(data.data.data));
 	} catch (err) {
@@ -361,10 +369,10 @@ export const createQuestion = (question) => async (dispatch, getState) => {
 export const getAppliedCandidateDetails = (candidateID, jobID) => async (dispatch, getState) => {
 	try {
 		const state = getState();
-		// setDefaultAuthorizationHeader(JSON.parse(state.authReducer.JWT).map.jwt);
+		// setDefaultAuthorizationHeader(getState().authReducer.JWT.map.jwt);
 		const data = await Axios.get(employerFetchCandidatesByJobId + "/" + jobID + '/' + candidateID, {
 			headers: {
-				'Authorization': JSON.parse(state.authReducer.JWT).map.jwt,
+				'Authorization': getState().authReducer.JWT.map.jwt,
 				'Content-Type': 'application/vnd.credready.com+json'
 			}
 		});
@@ -378,10 +386,10 @@ export const getAppliedCandidateDetails = (candidateID, jobID) => async (dispatc
 export const getLocations = () => async (dispatch, getState) => {
 	try {
 		const state = getState();
-		// setDefaultAuthorizationHeader(JSON.parse(state.authReducer.JWT).map.jwt);
+		// setDefaultAuthorizationHeader(getState().authReducer.JWT.map.jwt);
 		const data = await Axios.get(employeFecthOrgLocations, {
 			headers: {
-				'Authorization': JSON.parse(state.authReducer.JWT).map.jwt,
+				'Authorization': getState().authReducer.JWT.map.jwt,
 				'Content-Type': 'application/vnd.credready.com+json'
 			}
 		});
@@ -410,7 +418,7 @@ export const getJobDetails = (jobID) => async (dispatch, getState) => {
 				'Content-Type': 'application/vnd.credready.com+json'
 			}
 		}
-		// setDefaultAuthorizationHeader(JSON.parse(state.authReducer.JWT).map.jwt);
+		// setDefaultAuthorizationHeader(getState().authReducer.JWT.map.jwt);
 		const data = await Axios.get(URL, {
 			headers: headers
 		});
@@ -426,3 +434,22 @@ export const getJobDetails = (jobID) => async (dispatch, getState) => {
 		if (err.response) console.error(`failed to fetch job details ${err}`);
 	}
 };
+
+export const deleteQuestion = (id) => async (dispatch, getState) => {
+	try {
+		// setDefaultAuthorizationHeader(getState().authReducer.JWT.map.jwt);
+		let URL = employerDeleteQuestionFromJobUrl + '/' + id;
+		const data = await Axios.delete(URL, {
+			headers: {
+				'Authorization': getState().authReducer.JWT.map.jwt,
+				'Content-Type': 'application/vnd.credready.com+json'
+			}
+		});
+		if (!data) return false;
+		// dispatch(setLocations(data.data));
+	} catch (err) {
+		if (err.response) console.error(`failed to post the question ${err}`);
+	}
+};
+
+// //setDefaultAuthorizationHeader(JSON.parse(state.authReducer.JWT).map.jwt);

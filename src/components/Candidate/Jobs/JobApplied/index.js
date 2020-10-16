@@ -6,7 +6,7 @@ import { faPen, faTrash } from "@fortawesome/free-solid-svg-icons";
 import "./index.scss";
 import ImgWidgetLogo from "../../../../assets/widget-logo.jpg";
 import CredReadyIndex from "../../../_Elements/CredReadyIndex";
-import ImgMarginalAssociation from "../../../../assets/widget-2.jpg";
+import MarginalAssociation from "../../../_Elements/Charts/MarginalAssociation";
 
 function JobApplied() {
 	var isLoggedIn = true;
@@ -100,7 +100,7 @@ function JobApplied() {
 					</div>
 					<div className="marginal">
 						<h3>Top 5 Contributors to CredREadiness</h3>
-						<img src={ImgMarginalAssociation} alt="Marginal Association" />
+						<MarginalAssociation />
 						<div className={`${isLoggedIn ? "hidden" : "login_screen"}`}></div>
 					</div>
 				</div>

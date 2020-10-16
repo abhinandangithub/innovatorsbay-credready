@@ -37,22 +37,22 @@ function CreateJob(props) {
 	}, [dispatch]);
 
 	const handleChangeEmpType = (item) => {
-		dispatch(setNewJob({"employmentType": item}));
+		dispatch(setNewJob({ "employmentType": item }));
 	}
 	const handleChangeIndustry = (item) => {
-		dispatch(setNewJob({"industry": item}));
+		dispatch(setNewJob({ "industry": item }));
 	}
 	const handleChangeFunction = (item) => {
-		dispatch(setNewJob({"function": item}));
+		dispatch(setNewJob({ "function": item }));
 	}
 	const handleChangeJobTile = (e) => {
-		dispatch(setNewJob({"jobTitle": e.target.value}));
+		dispatch(setNewJob({ "jobTitle": e.target.value }));
 	}
 	const handleChangeLocation = (e) => {
-		// dispatch(setNewJob({"location": e}));
+		dispatch(setNewJob({ "location": e }));
 	}
 	const handleChangeOpenPosition = (e) => {
-		dispatch(setNewJob({"openPositions": e.target.value}));
+		dispatch(setNewJob({ "openPositions": e.target.value }));
 	}
 
 	return (
@@ -68,7 +68,7 @@ function CreateJob(props) {
 						<label>
 							Job Title <span>*</span>
 						</label>
-						<Input type="text" onChange={handleChangeJobTile}/>
+						<Input type="text" onChange={handleChangeJobTile} />
 					</li>
 					<li>
 						<label>
@@ -113,7 +113,7 @@ function CreateJob(props) {
 					</li>
 					<li>
 						<label>How many Open Positions Are There?</label>
-						<Input type="text" onChange={handleChangeOpenPosition}/>
+						<Input type="text" onChange={handleChangeOpenPosition} />
 					</li>
 				</ul>
 			</div>

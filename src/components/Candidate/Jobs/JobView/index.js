@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import "./index.scss";
 import ImgWidgetLogo from "../../../../assets/widget-logo.jpg";
 import CredReadyIndex from "../../../_Elements/CredReadyIndex";
-import ImgMarginalAssociation from "../../../../assets/widget-2.jpg";
+import MarginalAssociation from "../../../_Elements/Charts/MarginalAssociation";
 
 function JobView() {
 	return (
@@ -96,7 +96,7 @@ function JobView() {
 				</div>
 				<div className="marginal">
 					<h3>Top 5 Contributors to CredREadiness</h3>
-					<img src={ImgMarginalAssociation} alt="Marginal Association" />
+					<MarginalAssociation />
 				</div>
 			</div>
 		</div>

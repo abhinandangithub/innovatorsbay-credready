@@ -30,11 +30,11 @@ function Profile(props) {
 					)}
 				/>
 			) : (
-				<>
-					<ProfileOverview type="candidate" />
-					<Details />
-				</>
-			)}
+					<>
+						<ProfileOverview type="candidate" />
+						<Details />
+					</>
+				)}
 		</div>
 	);
 }

@@ -11,7 +11,10 @@ let scrollBarStyle = {
 	height: "100%",
 };
 
-function index() {
+function index(props) {
+	const { match: { params } } = props;
+	localStorage.setItem("jobId", params.id);
+
 	return (
 		<div className="landing_page">
 			<header>
@@ -36,7 +39,7 @@ function index() {
 						/>
 					)}
 				>
-					<JobView />
+					<JobView jobId={"sachin"} />
 				</Scrollbars>
 			</main>
 			<footer>© 2020 CredReady, All Rights Reserved</footer>

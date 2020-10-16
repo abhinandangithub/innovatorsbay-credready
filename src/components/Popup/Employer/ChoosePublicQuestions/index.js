@@ -1,46 +1,85 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useDispatch, connect } from "react-redux";
-
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPen, faTrash } from "@fortawesome/free-solid-svg-icons";
-import { togglePopup, toggleOverlay } from "../../../../store/actions/popup_overlay";
-import { createQuestion } from '../../../../store/thunks/employer';
+
+import {
+	togglePopup,
+	toggleOverlay,
+} from "../../../../store/actions/popup_overlay";
+import { createQuestion, deleteQuestion } from "../../../../store/thunks/employer";
 import Input from "../../../_Elements/Input";
-import { setQuestionBankQuestion } from "../../../../store/actions/employer";
+import {
+	setQuestionBankQuestion,
+	setNewJob,
+} from "../../../../store/actions/employer";
 
 import "./index.scss";
 
 function ChoosePublicQuestions(props) {
 	const dispatch = useDispatch();
-	let questionToSave = [];
-	console.log('props ', props);
+	let questionToSave = props.questionsSelected;
+	console.log("props ", props);
 	const createNewQuestion = () => {
-		dispatch(togglePopup([true, "createNewQuestion"]));
+		dispatch(togglePopup([true, "createNewQuestion", { type: "public" }]));
 	};
+
+	useEffect(() => {
+		props.questionsSelected.forEach((element) => {
+			if(document.getElementById(element.question_id) !== null)
+			document.getElementById(element.question_id).checked = true;
+		});
+	}, [props.questionsSelected]);
 
 	const handleCheckEvent = (event, question) => {
 		console.log(event.target.value, question);
 		if (document.getElementById(event.target.id).checked) {
-			questionToSave.push(question);
+			// questionToSave.push(question);
+			if (questionToSave.length !== 0) {
+				if (
+					questionToSave.find((x) => x.question_id !== event.target.id)
+						.question_id.length !== 0
+				) {
+					questionToSave.push(question);
+				}
+			} else {
+				questionToSave.push(question);
+			}
 		} else {
-
+			questionToSave = questionToSave.map((val) => {
+				if (val.question_id != event.target.id) {
+					return val;
+				} else {
+					return null;
+				}
+			});
+			questionToSave = questionToSave.filter((e) => e !== null);
 		}
 	};
 
 	const handleQuestionAdd = () => {
-		console.log('data ', questionToSave)
-		console.log('create');
+		console.log("data ", questionToSave);
+		console.log("create");
 		dispatch(setQuestionBankQuestion(questionToSave));
+		dispatch(setNewJob({ jobQuestionnaireMap: questionToSave }));
 		// dispatch(createQuestion({
-		// 	"category": "Employer Questions",   
-		// 	"forPublicReview": true,   
-		// 	"jobTitle": "CNA",   
-		// 	"questionName": "How would you define yourself?",   
+		// 	"category": "Employer Questions",
+		// 	"forPublicReview": true,
+		// 	"jobTitle": "CNA",
+		// 	"questionName": "How would you define yourself?",
 		// 	"questionType": "text-input"
 		// }));
 		dispatch(toggleOverlay(false));
 		dispatch(togglePopup([false, "addNewQuestion"]));
-	}
+	};
+
+	const handleEdit = (e, question) => {
+		dispatch(togglePopup([true, "createNewQuestion", { type: "private", action: "edit", question: question }]));
+	};
+	const handleDelete = (e, question) => {
+		alert("Are you sure to delete?");
+		dispatch(deleteQuestion(question.question_id));
+	};
 
 	return (
 		<div className="choose-private-question">
@@ -74,14 +113,12 @@ function ChoosePublicQuestions(props) {
 											<FontAwesomeIcon
 												className="action-btn edit"
 												icon={faPen}
-											// id={"workExperienceEdit_" + i}
-											// onClick={handleEdit}
+												onClick={(e) => handleEdit(e, question)}
 											/>
 											<FontAwesomeIcon
 												className="action-btn delete"
 												icon={faTrash}
-											// id={"workExperienceDelete_" + i}
-											// onClick={() => handleDelete("workExperience")}
+												onClick={(e) => handleDelete(e, question)}
 											/>
 										</>
 									) : question.question_type === "mcq" ? (
@@ -112,7 +149,7 @@ function ChoosePublicQuestions(props) {
 																key={i}
 																className={`fancy-toggle blue ${
 																	i === 0 ? "yes" : "no"
-																	}`}
+																}`}
 																id={`${option.id}${option.question_id}`}
 																name={`${option.question_id}`}
 																type="radio"
@@ -127,9 +164,7 @@ function ChoosePublicQuestions(props) {
 														</div>
 													);
 												}
-
 											})}
-
 										</>
 									) : null}
 								</div>
@@ -137,31 +172,34 @@ function ChoosePublicQuestions(props) {
 									className="fancy-toggle"
 									name="question"
 									type="checkbox"
-									id={"question" + i}
+									id={question.question_id}
 									onClick={(event) => handleCheckEvent(event, question)}
 								/>
-								<label htmlFor={"question" + i}>
+								<label htmlFor={question.question_id}>
 									<span className="input"></span>
 								</label>
 
 								<FontAwesomeIcon
 									className="action-btn edit"
 									icon={faPen}
-								// id={"workExperienceEdit_" + i}
-								// onClick={handleEdit}
+									onClick={(e) => handleEdit(e, question)}
 								/>
 								<FontAwesomeIcon
 									className="action-btn delete"
 									icon={faTrash}
-								// id={"workExperienceDelete_" + i}
-								// onClick={() => handleDelete("workExperience")}
+									onClick={(e) => handleDelete(e, question)}
 								/>
 							</li>
 						);
 					})}
 				</ul>
 				<div className="cta">
-					<button className="primary-btn" onClick={() => handleQuestionAdd()}>Add</button>
+					<button
+						className="primary-btn blue"
+						onClick={() => handleQuestionAdd()}
+					>
+						Done
+					</button>
 				</div>
 			</div>
 		</div>
@@ -170,11 +208,11 @@ function ChoosePublicQuestions(props) {
 
 // export default ChoosePublicQuestions;
 
-
 function mapStateToProps(state) {
 	return {
-		questionBank: state.employerReducer.questionBank.data.public_question_bank
-	}
+		questionBank: state.employerReducer.questionBank.data.public_question_bank,
+		questionsSelected: state.employerReducer.questionBank.questions,
+	};
 }
 
 // export default JobSpecificQuestions;

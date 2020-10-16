@@ -1,17 +1,19 @@
 import React from "react";
 
-function EmployerQuestions(props) {
+import { isAnswer } from "./index";
+
+function EmployerQuestions({ data, onchange, calHeight, noHeading, ...props }) {
 	const parent = React.useRef();
 
 	React.useEffect(() => {
-		if (props.calHeight) {
-			props.calHeight(parent.current.clientHeight);
+		if (calHeight) {
+			calHeight(parent.current.clientHeight);
 		}
 	}, [props]);
 
 	return (
 		<div className="employer-questions" ref={parent}>
-			{!props.noHeading ? (
+			{!noHeading ? (
 				<div className="heading">
 					<h2>Employer Questions</h2>
 				</div>
@@ -29,7 +31,10 @@ function EmployerQuestions(props) {
 								id="shift_7_3"
 								name="shift"
 								type="checkbox"
-								defaultChecked
+								defaultChecked={isAnswer(data, 1, [1])}
+								onChange={() => {
+									onchange(1, [1]);
+								}}
 							/>
 							<label htmlFor="shift_7_3">7am - 3pm</label>
 							<input
@@ -37,6 +42,10 @@ function EmployerQuestions(props) {
 								id="shift_3_11"
 								name="shift"
 								type="checkbox"
+								defaultChecked={isAnswer(data, 1, [2])}
+								onChange={() => {
+									onchange(1, [2]);
+								}}
 							/>
 							<label htmlFor="shift_3_11">3pm - 11pm</label>
 							<input
@@ -44,6 +53,10 @@ function EmployerQuestions(props) {
 								id="shift_11_7"
 								name="shift"
 								type="checkbox"
+								defaultChecked={isAnswer(data, 1, [3])}
+								onChange={() => {
+									onchange(1, [3]);
+								}}
 							/>
 							<label htmlFor="shift_11_7">11pm - 7am</label>
 						</div>
@@ -56,7 +69,10 @@ function EmployerQuestions(props) {
 								id="engAbility_none"
 								name="engAbility"
 								type="checkbox"
-								defaultChecked
+								defaultChecked={isAnswer(data, 2, [1])}
+								onChange={() => {
+									onchange(2, [1]);
+								}}
 							/>
 							<label htmlFor="engAbility_none">None</label>
 							<input
@@ -64,6 +80,10 @@ function EmployerQuestions(props) {
 								id="engAbility_limited"
 								name="engAbility"
 								type="checkbox"
+								defaultChecked={isAnswer(data, 2, [2])}
+								onChange={() => {
+									onchange(2, [2]);
+								}}
 							/>
 							<label htmlFor="engAbility_limited">Limited</label>
 							<input
@@ -71,6 +91,10 @@ function EmployerQuestions(props) {
 								id="engAbility_working"
 								name="engAbility"
 								type="checkbox"
+								defaultChecked={isAnswer(data, 2, [3])}
+								onChange={() => {
+									onchange(2, [3]);
+								}}
 							/>
 							<label htmlFor="engAbility_working">Working</label>
 							<input
@@ -78,6 +102,10 @@ function EmployerQuestions(props) {
 								id="engAbility_fluent"
 								name="engAbility"
 								type="checkbox"
+								defaultChecked={isAnswer(data, 2, [4])}
+								onChange={() => {
+									onchange(2, [4]);
+								}}
 							/>
 							<label htmlFor="engAbility_fluent">Fluent & Native</label>
 						</div>
@@ -90,7 +118,10 @@ function EmployerQuestions(props) {
 								id="certifications_cna"
 								name="certifications"
 								type="checkbox"
-								defaultChecked
+								defaultChecked={isAnswer(data, 3, [1])}
+								onChange={() => {
+									onchange(3, [1]);
+								}}
 							/>
 							<label htmlFor="certifications_cna">
 								Certified Nursing Assistant
@@ -100,6 +131,10 @@ function EmployerQuestions(props) {
 								id="certifications_hha"
 								name="certifications"
 								type="checkbox"
+								defaultChecked={isAnswer(data, 3, [2])}
+								onChange={() => {
+									onchange(3, [2]);
+								}}
 							/>
 							<label htmlFor="certifications_hha">Home Health Aid</label>
 							<input
@@ -107,6 +142,10 @@ function EmployerQuestions(props) {
 								id="certifications_cma"
 								name="certifications"
 								type="checkbox"
+								defaultChecked={isAnswer(data, 3, [3])}
+								onChange={() => {
+									onchange(3, [3]);
+								}}
 							/>
 							<label htmlFor="certifications_cma">
 								Certified Medication Aid
@@ -116,32 +155,57 @@ function EmployerQuestions(props) {
 								id="certifications_others"
 								name="certifications"
 								type="checkbox"
+								defaultChecked={isAnswer(data, 3, [4])}
+								onChange={() => {
+									onchange(3, [4]);
+								}}
 							/>
 							<label htmlFor="certifications_others">Others</label>
 						</div>
 					</li>
 					<li className="general-question">
 						<h2 className="question">
-							Are you Comfortable with the Posted Wage?
+							Which languages are you comfortable with?
 						</h2>
 						<div className="options">
 							<input
-								className="fancy-toggle blue yes radio"
-								name="highSchoolGraduate"
-								type="radio"
-								id="highSchoolGraduateYes"
+								className="block-toggle blue"
+								name="postedWages"
+								type="checkbox"
+								id="postedWages1"
+								defaultChecked={isAnswer(data, 4, [1])}
+								onChange={() => {
+									onchange(4, [1]);
+								}}
 							/>
-							<label htmlFor="highSchoolGraduateYes">
-								<span className="input"></span>Yes
+							<label htmlFor="postedWages1">
+								<span className="input"></span>English
 							</label>
 							<input
-								className="fancy-toggle no radio"
-								name="highSchoolGraduate"
-								type="radio"
-								id="highSchoolGraduateNo"
+								className="block-toggle blue"
+								name="postedWages"
+								type="checkbox"
+								id="postedWages2"
+								defaultChecked={isAnswer(data, 4, [2])}
+								onChange={() => {
+									onchange(4, [2]);
+								}}
 							/>
-							<label htmlFor="highSchoolGraduateNo">
-								<span className="input"></span>No
+							<label htmlFor="postedWages2">
+								<span className="input"></span>German
+							</label>
+							<input
+								className="block-toggle blue"
+								name="postedWages"
+								type="checkbox"
+								id="postedWages3"
+								defaultChecked={isAnswer(data, 4, [3])}
+								onChange={() => {
+									onchange(4, [3]);
+								}}
+							/>
+							<label htmlFor="postedWages3">
+								<span className="input"></span>Spanish
 							</label>
 						</div>
 					</li>

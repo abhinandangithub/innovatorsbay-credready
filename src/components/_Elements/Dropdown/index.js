@@ -14,7 +14,7 @@ function Dropdown({
 	callback = undefined,
 }) {
 	const [active, setactive] = useState(false);
-	const [value, setvalue] = useState(selected);
+	const [value, setvalue] = useState(null);
 	const [isChanged, setIsChanged] = useState(false);
 	const [sliderValue, setSliderValue] = useState(40);
 	const dropDownEl = React.useRef();
@@ -45,6 +45,7 @@ function Dropdown({
 			return (
 				<ul className="content">
 					{content &&
+						content.length &&
 						content.map((item, key) => {
 							return (
 								<li onClick={() => handleItemClick(item)} key={key}>
@@ -67,7 +68,7 @@ function Dropdown({
 		return () => {
 			document.removeEventListener("mousedown", handleClickOutside);
 		};
-	}, [active]);
+	}, [active, selected]);
 
 	return (
 		<div
@@ -78,7 +79,7 @@ function Dropdown({
 			ref={dropDownEl}
 		>
 			<div className="heading" onClick={() => setactive(!active)}>
-				{value ? value : placeholder}
+				{selected ? selected : value ? value : placeholder}
 				<FontAwesomeIcon
 					icon={active ? faChevronUp : faChevronDown}
 					className="arrow"

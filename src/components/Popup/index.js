@@ -67,7 +67,7 @@ function Popup(props) {
 			case "createEmailTemplate":
 				return <CreateEmailTemplate />;
 			case "createNewQuestion":
-				return <CreateNewQuestion />;
+				return <CreateNewQuestion type={info.type} action={info.action} data={info.question} />;
 			case "choosePrivateQuestions":
 				return <ChoosePrivateQuestions />;
 			case "choosePublicQuestions":
@@ -84,8 +84,12 @@ function Popup(props) {
 	};
 
 	const closePopupOverlay = () => {
-		dispatch(toggleOverlay(false));
-		dispatch(togglePopup(false));
+		if (popup.which === "createNewQuestion") {
+			dispatch(togglePopup([true, popup.previousWhich]));
+		} else {
+			dispatch(toggleOverlay(false));
+			dispatch(togglePopup(false));
+		}
 	};
 
 	return (

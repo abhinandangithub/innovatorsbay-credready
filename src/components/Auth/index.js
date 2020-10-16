@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { Route } from "react-router-dom";
 import { useSelector } from "react-redux";
+import Cookies from "js-cookie";
 
 import "./index.scss";
 import Login from "./Login";
@@ -8,17 +9,17 @@ import Signup from "./Signup";
 import ThankYou from "./ThankYou";
 import TermsAndConditions from "./TermsAndConditions";
 import PrivacyAndPolicy from "./PrivacyAndPolicy";
-
 import ImgLogo from "../../assets/logo.png";
 
 function LoginSignupPage(props) {
 	const auth = useSelector((state) => state.authReducer);
 	const [show_tnc, setShow_tnc] = React.useState(false);
 	const [show_pnp, setShow_pnp] = React.useState(false);
+	const token = Cookies.get("JWT");
 
 	/* redirect user to User Profile page if phone otp is verified */
 	useEffect(() => {
-		if (auth.isVerified.phoneOtp) {
+		if (auth.isVerified.phoneOtp && token === undefined) {
 			props.history.push("/thank-you");
 		}
 	}, [auth.isVerified.phoneOtp, props.history]);

@@ -12,6 +12,11 @@
 		}
 	}
 	&.open {
+		header {
+			.menu_outer {
+				width: 230px;
+			}
+		}
 		.navigation {
 			width: 230px;
 			ul {

@@ -10,7 +10,10 @@ import WorkHistory from "./WorkHistory";
 import CommuteQuestions from "./CommuteQuestions";
 import EmployerQuestions from "./EmployerQuestions";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchAllAnswers } from "../../../../modals/candidateProfile/thunk";
+import {
+	fetchAllAnswers,
+	submitCandidateAnswers,
+} from "../../../../modals/candidateProfile/thunk";
 
 let scrollBarStyle = {
 	height: "calc(100vh - 280px)",
@@ -23,24 +26,39 @@ export const isAnswer = (data, q, a) => {
 	data &&
 		data.forEach((ques) => {
 			if (q === ques.question_id) {
-				if (typeof a === "object") {
-					if (a.sub_answer === ques.sub_answer) {
-						answer = true;
+				if (Array.isArray(a)) {
+					// answer = ques.answer.includes(a[0]);
+				} else if (typeof a === "object") {
+					if (a.sub_question_id_2) {
+						let i = findIndex(ques.answer, a.sub_question_id_2);
+						if (i > -1) {
+							answer = a.sub_answer === ques.answer[i].sub_answer;
+						}
+					} else if (a.sub_answer) {
+						answer = a.sub_answer === ques.sub_answer;
+					} else if (a.sub_question_id) {
+						let i = findIndex(ques.answer, a.sub_question_id);
+						if (i > -1) {
+							answer = a.sub_question_id === ques.answer[i].sub_question_id;
+						}
 					}
 				} else if (a === ques.answer) {
 					answer = true;
 				}
 			}
 		});
+	// console.log(data, answer);
 	return answer;
 };
 
 /* type="general_questions", q="question_id" */
 export const findIndex = (arr, q) => {
-	console.log(arr);
-	let index = false;
+	// console.log(arr);
+	let index = -1;
 	arr.forEach((ques, i) => {
 		if (ques.question_id === q) {
+			index = i;
+		} else if (ques.sub_question_id === q) {
 			index = i;
 		}
 	});
@@ -52,7 +70,7 @@ function Questions(props) {
 	const allAnswersData = useSelector(
 		(state) => state.setCandidateAllAnswersReducer.data
 	);
-	console.log(allAnswersData);
+	// console.log(allAnswersData);
 	let heights = [0];
 	const [activeTab, setActiveTab] = React.useState(0);
 
@@ -67,11 +85,12 @@ function Questions(props) {
 		});
 	};
 
-	const formData = {
+	const _formData = {
+		job_id: localStorage.getItem("jobId"),
 		general_questions: [
 			{
 				question_id: 1,
-				answer: "10/15/20",
+				answer: "10/20/90",
 			},
 
 			{
@@ -98,7 +117,7 @@ function Questions(props) {
 				question_id: 6,
 				answer: 2,
 				sub_answer: 2,
-				followup_sub_answer: "18-09-2019",
+				followup_sub_answer: "10/20/90",
 			},
 		],
 
@@ -195,17 +214,22 @@ function Questions(props) {
 				answer: [
 					{
 						sub_question_id: 1,
-						sub_answer: 4,
+						sub_answer: 2,
 					},
 					{
 						sub_question_id: 3,
-						sub_answer: 4,
+						sub_answer: 2,
 					},
 				],
 			},
 
 			{
 				question_id: 3,
+				answer: 1,
+			},
+
+			{
+				question_id: 4,
 				answer: [
 					{
 						sub_question_id: 1,
@@ -219,7 +243,7 @@ function Questions(props) {
 			},
 
 			{
-				question_id: 4,
+				question_id: 5,
 				answer: 1,
 			},
 		],
@@ -231,22 +255,22 @@ function Questions(props) {
 			},
 			{
 				question_id: 2,
-				answer: "2 years 3 months",
+				answer: 7,
 			},
 			{
 				question_id: 3,
-				answer: "10/11/20",
+				answer: "09/10/18",
 			},
 			{
 				question_id: 4,
-				answer: [1, 2],
+				answer: 1,
 			},
 		],
 
 		commute: [
 			{
 				question_id: 1,
-				answer: "Warren, NJ",
+				answer: "",
 			},
 			{
 				question_id: 2,
@@ -254,49 +278,75 @@ function Questions(props) {
 			},
 			{
 				question_id: 3,
-				answer: [
-					{
-						sub_question_id: 1,
-						sub_answer: "street address",
-					},
-					{
-						sub_question_id: 2,
-						sub_answer: "zipcode",
-					},
-					{
-						sub_question_id: 3,
-						sub_answer: "city",
-					},
-					{
-						sub_question_id: 4,
-						sub_answer: "state",
-					},
-				],
+				answer: {
+					street_0: "",
+					city_0: "",
+					state_0: "",
+					zipCode_0: "",
+				},
 			},
 		],
 
 		employer_questions: [
 			{
 				question_id: 1,
-				answer: "some answer",
-			},
-			{
-				question_id: 2,
 				answer: [1],
 			},
 			{
+				question_id: 2,
+				answer: [],
+			},
+			{
 				question_id: 3,
-				answer: [2, 3],
+				answer: [1, 4],
+			},
+			{
+				question_id: 4,
+				answer: [],
 			},
 		],
 	};
 
+	const [formData, setFormData] = React.useState(_formData);
+
 	/* type="general_questions", q="question_id" a="answer" */
-	const handleFieldChange = (arr, q, a) => {
-		let i = findIndex(arr, q);
-		console.log(arr, i);
-		arr[i].answer = a;
-		console.log(formData);
+	const handleFieldChange = (type, q, a) => {
+		let i = findIndex(formData[type], q);
+		let _formData = { ...formData };
+
+		if (Array.isArray(a)) {
+			let index = _formData[type][i]["answer"].indexOf(a[0]);
+			if (index > -1) {
+				_formData[type][i]["answer"].splice(index, 1);
+			} else {
+				_formData[type][i]["answer"].push(a[0]);
+			}
+		} else if (typeof a === "object") {
+			if (a.sub_question_id_2) {
+				let index = findIndex(formData[type][i].answer, a.sub_question_id_2);
+				_formData[type][i]["answer"][index].sub_answer = a.sub_answer;
+			} else if (a.sub_answer) {
+				_formData[type][i]["sub_answer"] = a.sub_answer;
+			} else if (a.sub_question_id) {
+				let obj = {
+					sub_question_id: a.sub_question_id,
+					sub_answer: null,
+				};
+
+				let index = findIndex(formData[type][i].answer, a.sub_question_id);
+				if (index > -1) {
+					_formData[type][i]["answer"].splice(index, 1);
+				} else {
+					_formData[type][i]["answer"].push(obj);
+				}
+			} else if (a.address) {
+				_formData[type][i]["answer"][a.address] = a.value;
+			}
+		} else {
+			_formData[type][i]["answer"] = a;
+		}
+
+		setFormData(_formData);
 	};
 
 	const generalAnswers =
@@ -345,14 +395,38 @@ function Questions(props) {
 		commute: commute,
 	};
 
+	const onSubmitHandler = () => {
+		console.log(JSON.stringify(formData));
+		const localStorageId = localStorage.getItem("jobId");
+		// if()
+		formData.job_id = localStorage.getItem("jobId");
+		dispatch(submitCandidateAnswers(formData));
+	};
+
 	const calHeight = (height) => {
 		let lastHeight = heights[heights.length - 1];
 		heights.push(lastHeight + height);
 	};
 	React.useEffect(() => {
-		console.log(formData.general_questions);
+		console.log(formData);
 		// dispatch(fetchAllAnswers());
 	}, [formData]);
+
+	const handleAddress = (_addressCount) => {
+		console.log(_addressCount);
+
+		/* update form values as well */
+		let i = _addressCount.length - 1;
+		let _formData = { ...formData };
+		let j = findIndex(_formData["commute"], 3);
+
+		_formData["commute"][j]["answer"][`street_${i}`] = "";
+		_formData["commute"][j]["answer"][`city_${i}`] = "";
+		_formData["commute"][j]["answer"][`state_${i}`] = "";
+		_formData["commute"][j]["answer"][`zipCode_${i}`] = "";
+
+		setFormData(_formData);
+	};
 
 	return (
 		<div className="questions">
@@ -426,45 +500,50 @@ function Questions(props) {
 						<GeneralQuestions
 							calHeight={calHeight}
 							data={formData.general_questions}
-							onchange={(q, a) =>
-								handleFieldChange(formData.general_questions, q, a)
-							}
+							onchange={(q, a) => handleFieldChange("general_questions", q, a)}
 						/>
 						<PersonalityAssessment
 							calHeight={calHeight}
 							data={formData.personality_assessment}
 							onchange={(q, a) =>
-								handleFieldChange(formData.personality_assessment, q, a)
+								handleFieldChange("personality_assessment", q, a)
 							}
 						/>
 						<CourseWork
 							calHeight={calHeight}
 							data={formData.coursework}
-							onchange={(q, a) => handleFieldChange(formData.coursework, q, a)}
+							onchange={(q, a) => handleFieldChange("coursework", q, a)}
 						/>
 						<WorkHistory
 							calHeight={calHeight}
 							data={formData.work_history}
-							onchange={(q, a) =>
-								handleFieldChange(formData.work_history, q, a)
-							}
+							onchange={(q, a) => handleFieldChange("work_history", q, a)}
 						/>
 						<CommuteQuestions
 							calHeight={calHeight}
 							data={formData.commute}
-							onchange={(q, a) => handleFieldChange(formData.commute, q, a)}
+							onchange={(q, a) => handleFieldChange("commute", q, a)}
+							newAddress={(count) => handleAddress(count)}
 						/>
 						{props.showEmployerQuestions && (
 							<EmployerQuestions
 								calHeight={calHeight}
 								data={formData.employer_questions}
 								onchange={(q, a) =>
-									handleFieldChange(formData.employer_questions, q, a)
+									handleFieldChange("employer_questions", q, a)
 								}
 							/>
 						)}
 						<div className="cta">
-							<Link to="/jobs/view/1" className="primary-btn">
+							<Link
+								to={
+									localStorage.getItem("jobId")
+										? `/jobs/view/${localStorage.getItem("jobId")}`
+										: "/goals"
+								}
+								className="primary-btn"
+								onClick={onSubmitHandler}
+							>
 								Submit
 							</Link>
 						</div>

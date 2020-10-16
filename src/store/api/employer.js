@@ -220,6 +220,13 @@ export const employeCreateQuestion = constructUrl(
   "question/create"
 );
 /**
+ * Name: get create question
+ */
+export const employerUpdateQuestion = constructUrl(
+  employerRouteWithBase,
+  "question/update"
+);
+/**
  * Name: send mail to candidate
  */
 export const employeCandidateSendEmail = constructUrl(

@@ -4,13 +4,11 @@ import "./index.scss";
 import userData from "../../_data/userData.json";
 import WidgetAppliedRelatedJobs from "../../_Elements/Widgets/AppliedRelatedJobs";
 import { useDispatch, useSelector } from "react-redux";
-import { candidateGetAppliedJobs, fetchCandidateDetails } from "../../../modals/candidateProfile/thunk";
+import { candidateGetAppliedJobs, fetchCandidateDetails, fetchCandidateJobs } from "../../../modals/candidateProfile/thunk";
 
 function Jobs() {
 	const dispatch = useDispatch();
-
-
-	const allJobs = useSelector(state => state.setCandidateAppliedJobsDataReducer.data);
+	const allJobs = useSelector(state => state.setCandidateJobsReducer.data);
 	const appliedJob = allJobs.appliedJobs ? allJobs.appliedJobs : "";
 	const relatedJob = allJobs.relatedJobs ? allJobs.relatedJobs : "";
 	console.log(appliedJob, relatedJob)
@@ -27,6 +25,7 @@ function Jobs() {
 	useEffect(() => {
 		dispatch(fetchCandidateDetails());
 		dispatch(candidateGetAppliedJobs());
+		dispatch(fetchCandidateJobs())
 	}, [])
 
 

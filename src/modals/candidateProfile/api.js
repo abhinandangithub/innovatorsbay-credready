@@ -14,7 +14,7 @@ export const addOtherEducationExperienceUrl = `${baseUrl}/candidate/additional_e
 
 export const addStrengthUrl = `${baseUrl}/candidate/strengths/add`;
 
-export const addEducationCertificateUrl = `${baseUrl}candidate/certificate_details`;
+export const addEducationCertificateUrl = `${baseUrl}/candidate/certificate_details`;
 
 export const fetchCandidateCurrentStatusUrl = `${baseUrl}/entity/employment_status`;
 
@@ -28,6 +28,16 @@ export const fetchCandidateInstituteTypeUrl = `${baseUrl}/candidate/institute`;
 
 export const fetchAllAnswersUrl = `${baseUrl}/candidate/jobs/common_questions`;
 
-export const submitAnswersUrl = `${baseUrl}/candidate/job/application/answers`;
+export const submitCandidateAnswersUrl = `${baseUrl}/candidate/job/application/answers`;
 
-export const jobApplyUrl = `${baseUrl}/candidate/job/application/answers`;
+export const jobApplyUrl = `${baseUrl}/candidate/apply_for_job`;
+
+export const fetchjobViewDataUrl = `${baseUrl}/candidate/jobs/applied`;
+
+export const fetchCandidateJobsUrl = `${baseUrl}/candidate/jobs/dashboard`;
+
+export const fetchAllCertificateTitlesUrl = `${baseUrl}/candidate/certificate_title`;
+
+export const fetchAllFunctionsUrl = `${baseUrl}/entity/function`;
+
+export const fetchAllIndustriesUrl = `${baseUrl}/entity/industry`;

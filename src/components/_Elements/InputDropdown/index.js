@@ -44,9 +44,8 @@ function InputDropdown({ id, placeholder, content, selected, onchange }) {
 
 	return (
 		<div
-			className={`common-dropdown common-input-dropdown ${
-				active ? "active" : ""
-			}  ${isChanged || selected ? "changed" : ""}`}
+			className={`common-dropdown common-input-dropdown ${active ? "active" : ""
+				}  ${isChanged || selected ? "changed" : ""}`}
 			id={id && id}
 			ref={dropDownEl}
 		>

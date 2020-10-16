@@ -55,7 +55,7 @@ function Navigation(props) {
 					</NavLink>
 				</li>
 			</ul>
-			<ul className="bottom">
+			{/* <ul className="bottom">
 				<li>
 					<NavLink className="flex" to="/term-and-conditions">
 						<span className="icon flex">
@@ -65,7 +65,7 @@ function Navigation(props) {
 						<span className="text">Term & Conditions</span>
 					</NavLink>
 				</li>
-			</ul>
+			</ul> */}
 		</nav>
 	);
 }

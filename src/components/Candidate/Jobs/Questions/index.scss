@@ -316,4 +316,13 @@
 			}
 		}
 	}
+
+	.commute-questions {
+		.add-address {
+			cursor: pointer;
+			&:hover {
+				opacity: 0.8;
+			}
+		}
+	}
 }

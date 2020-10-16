@@ -1,15 +1,41 @@
 import React from "react";
 
-import { isAnswer } from "./index";
+import { isAnswer, findIndex } from "./index";
 
-function CourseWork({ data, onchange, calHeight, noHeading }) {
+const courses = ["Biology I", "Chemistry I", "Geometry", "Algebra II"];
+const languages = ["French", "Spanish", "German", "Latin", "Other"];
+// const years = ["1st year", "2nd year", "3rd year", "4th year"];
+
+function CourseWork({ data, onchange, calHeight, noHeading, ...props }) {
 	const parent = React.useRef();
+	const [highSchool, setHighSchool] = React.useState({
+		show: false,
+		options: {
+			bio1: false,
+			chem: false,
+			geo: false,
+			alg: false,
+		},
+	});
+
+	const updateHighSchool = (key, value) => {
+		let _highSchool = { ...highSchool };
+
+		if (key === "show") {
+			_highSchool[key] = value;
+		} else {
+			_highSchool["options"][key] = value === "on" ? true : false;
+		}
+		setHighSchool(_highSchool);
+	};
 
 	React.useEffect(() => {
 		if (calHeight) {
 			calHeight(parent.current.clientHeight);
 		}
 	}, []);
+
+	React.useEffect(() => { }, [props]);
 
 	return (
 		<div className="course_works" ref={parent}>
@@ -18,8 +44,8 @@ function CourseWork({ data, onchange, calHeight, noHeading }) {
 					<h2>Course Work</h2>
 				</div>
 			) : (
-				""
-			)}
+					""
+				)}
 			<div className="content">
 				<ul className="general-questions">
 					<li className="general-question">
@@ -31,7 +57,9 @@ function CourseWork({ data, onchange, calHeight, noHeading }) {
 								type="radio"
 								id="highSchoolGraduateYes"
 								defaultChecked={isAnswer(data, 1, 1)}
-								onChange={() => onchange(1, 1)}
+								onChange={() => {
+									onchange(1, 1);
+								}}
 							/>
 							<label htmlFor="highSchoolGraduateYes">
 								<span className="input"></span>Yes
@@ -42,133 +70,147 @@ function CourseWork({ data, onchange, calHeight, noHeading }) {
 								type="radio"
 								id="highSchoolGraduateNo"
 								defaultChecked={isAnswer(data, 1, 2)}
-								onChange={() => onchange(1, 2)}
+								onChange={() => {
+									onchange(1, 2);
+								}}
 							/>
 							<label htmlFor="highSchoolGraduateNo">
 								<span className="input"></span>No
 							</label>
 						</div>
-					</li>
-					<li className="general-question">
-						<h2 className="question">
-							Which of these High School course have you taken?
-						</h2>
-						<div className="options">
-							<input
-								id="course_1"
-								type="checkbox"
-								className="block-toggle blue"
-								defaultChecked
-							/>
-							<label htmlFor="course_1">Biology I</label>
-							<input
-								id="course_2"
-								type="checkbox"
-								className="block-toggle blue"
-							/>
-							<label htmlFor="course_2">Chemistry I</label>
-							<input
-								id="course_3"
-								type="checkbox"
-								className="block-toggle blue"
-								defaultChecked
-							/>
-							<label htmlFor="course_3">Geometry</label>
-							<input
-								id="course_4"
-								type="checkbox"
-								className="block-toggle blue"
-							/>
-							<label htmlFor="course_4">Algebra II</label>
-						</div>
-						<ul className="level_2">
-							<li className="general-question border">
-								<h2 className="question">
-									In which year did you take Biology I ?
-								</h2>
-								<div className="options">
-									<input
-										className="fancy-toggle blue  radio"
-										name="year1"
-										type="radio"
-										id="year1"
-									/>
-									<label htmlFor="year1">
-										<span className="input"></span>1st year
-									</label>
-									<input
-										className="fancy-toggle blue radio"
-										name="year1"
-										type="radio"
-										id="year2"
-									/>
-									<label htmlFor="year2">
-										<span className="input"></span>2nd year
-									</label>
-									<input
-										className="fancy-toggle blue radio"
-										name="year1"
-										type="radio"
-										id="year3"
-									/>
-									<label htmlFor="year3">
-										<span className="input"></span>3rd year
-									</label>
-									<input
-										className="fancy-toggle blue radio"
-										name="year1"
-										type="radio"
-										id="year4"
-									/>
-									<label htmlFor="year4">
-										<span className="input"></span>4th year
-									</label>
-								</div>
-							</li>
-							<li className="general-question border">
-								<h2 className="question">
-									In which year did you take Geometry ?
-								</h2>
-								<div className="options">
-									<input
-										className="fancy-toggle blue  radio"
-										name="year2"
-										type="radio"
-										id="year5"
-									/>
-									<label htmlFor="year5">
-										<span className="input"></span>1st year
-									</label>
-									<input
-										className="fancy-toggle blue radio"
-										name="year2"
-										type="radio"
-										id="year6"
-									/>
-									<label htmlFor="year6">
-										<span className="input"></span>2nd year
-									</label>
-									<input
-										className="fancy-toggle blue radio"
-										name="year2"
-										type="radio"
-										id="year7"
-									/>
-									<label htmlFor="year7">
-										<span className="input"></span>3rd year
-									</label>
-									<input
-										className="fancy-toggle blue radio"
-										name="year2"
-										type="radio"
-										id="year8"
-									/>
-									<label htmlFor="year8">
-										<span className="input"></span>4th year
-									</label>
-								</div>
-							</li>
-						</ul>
+						{isAnswer(data, 1, 1) && (
+							<>
+								<ul className="level_2">
+									<li className="general-question border">
+										<h2 className="question">
+											Which of these High School course have you taken?
+										</h2>
+										<div className="options">
+											{courses.map((course, i) => {
+												return (
+													<>
+														<input
+															id={`course_${i}`}
+															name="course"
+															type="checkbox"
+															className="block-toggle blue"
+															defaultChecked={isAnswer(data, 2, {
+																sub_question_id: i + 1,
+															})}
+															onChange={(e) => {
+																onchange(2, {
+																	sub_question_id: i + 1,
+																});
+															}}
+														/>
+														<label htmlFor={`course_${i}`}>{course}</label>
+													</>
+												);
+											})}
+										</div>
+									</li>
+								</ul>
+								{data[findIndex(data, 2)]["answer"].length > 0 && (
+									<ul className="level_3">
+										{data[findIndex(data, 2)]["answer"].map((ques, i) => {
+											let course =
+												ques.sub_question_id === 1
+													? "Biology I"
+													: ques.sub_question_id === 2
+														? "Chemistry 1"
+														: ques.sub_question_id === 3
+															? "Geometry"
+															: "Algebra II";
+											return (
+												<li className="general-question border" key={i}>
+													<h2 className="question">
+														In which year did you take {course} ?
+													</h2>
+													<div className="options">
+														<input
+															className="fancy-toggle blue  radio"
+															type="radio"
+															name={`year_1${i}`}
+															id={`year_1${i}`}
+															defaultChecked={isAnswer(data, 2, {
+																sub_question_id_2: ques.sub_question_id,
+																sub_answer: 1,
+															})}
+															onChange={(e) => {
+																onchange(2, {
+																	sub_question_id_2: ques.sub_question_id,
+																	sub_answer: 1,
+																});
+															}}
+														/>
+														<label htmlFor={`year_1${i}`}>
+															<span className="input"></span>1st year
+														</label>
+														<input
+															className="fancy-toggle blue radio"
+															name={`year_1${i}`}
+															type="radio"
+															id={`year_2${i}`}
+															defaultChecked={isAnswer(data, 2, {
+																sub_question_id_2: ques.sub_question_id,
+																sub_answer: 2,
+															})}
+															onChange={(e) => {
+																onchange(2, {
+																	sub_question_id_2: ques.sub_question_id,
+																	sub_answer: 2,
+																});
+															}}
+														/>
+														<label htmlFor={`year_2${i}`}>
+															<span className="input"></span>2nd year
+														</label>
+														<input
+															className="fancy-toggle blue radio"
+															name={`year_1${i}`}
+															type="radio"
+															id={`year_3${i}`}
+															defaultChecked={isAnswer(data, 2, {
+																sub_question_id_2: ques.sub_question_id,
+																sub_answer: 3,
+															})}
+															onChange={(e) => {
+																onchange(2, {
+																	sub_question_id_2: ques.sub_question_id,
+																	sub_answer: 3,
+																});
+															}}
+														/>
+														<label htmlFor={`year_3${i}`}>
+															<span className="input"></span>3rd year
+														</label>
+														<input
+															className="fancy-toggle blue radio"
+															name={`year_1${i}`}
+															type="radio"
+															id={`year_4${i}`}
+															defaultChecked={isAnswer(data, 2, {
+																sub_question_id_2: ques.sub_question_id,
+																sub_answer: 4,
+															})}
+															onChange={(e) => {
+																onchange(2, {
+																	sub_question_id_2: ques.sub_question_id,
+																	sub_answer: 4,
+																});
+															}}
+														/>
+														<label htmlFor={`year_4${i}`}>
+															<span className="input"></span>4th year
+														</label>
+													</div>
+												</li>
+											);
+										})}
+									</ul>
+								)}
+							</>
+						)}
 					</li>
 					<li className="general-question">
 						<h2 className="question">Did you take a Foreign language?</h2>
@@ -178,6 +220,10 @@ function CourseWork({ data, onchange, calHeight, noHeading }) {
 								name="foreignLanguage"
 								type="radio"
 								id="foreignLanguageYes"
+								defaultChecked={isAnswer(data, 3, 1)}
+								onChange={() => {
+									onchange(3, 1);
+								}}
 							/>
 							<label htmlFor="foreignLanguageYes">
 								<span className="input"></span>Yes
@@ -187,195 +233,148 @@ function CourseWork({ data, onchange, calHeight, noHeading }) {
 								name="foreignLanguage"
 								type="radio"
 								id="foreignLanguageNo"
+								defaultChecked={isAnswer(data, 3, 2)}
+								onChange={() => {
+									onchange(3, 2);
+								}}
 							/>
 							<label htmlFor="foreignLanguageNo">
 								<span className="input"></span>No
 							</label>
 						</div>
-						<ul className="level_2">
-							<li className="general-question border">
-								<h2 className="question">Which language ?</h2>
-								<div className="options coloumn">
-									<input
-										id="lanuguage_1"
-										type="checkbox"
-										className="block-toggle blue"
-										defaultChecked
-									/>
-									<label htmlFor="lanuguage_1">French</label>
-									<input
-										id="lanuguage_2"
-										type="checkbox"
-										className="block-toggle blue"
-									/>
-									<label htmlFor="lanuguage_2">Spanish</label>
-									<input
-										id="lanuguage_3"
-										type="checkbox"
-										className="block-toggle blue"
-										defaultChecked
-									/>
-									<label htmlFor="lanuguage_3">German</label>
-									<input
-										id="lanuguage_4"
-										type="checkbox"
-										className="block-toggle blue"
-									/>
-									<label htmlFor="lanuguage_4">Latin</label>
-									<input
-										id="lanuguage_4"
-										type="checkbox"
-										className="block-toggle blue"
-									/>
-									<label htmlFor="lanuguage_4">Other</label>
-								</div>
-							</li>
-						</ul>
-						<ul className="level_3">
-							<li className="general-question border">
-								<h2 className="question">
-									How many years of foreign language?
-								</h2>
-								<div className="options">
-									<input
-										className="fancy-toggle blue  radio"
-										name="foreign1"
-										type="radio"
-										id="foreign1"
-									/>
-									<label htmlFor="foreign1">
-										<span className="input"></span>1 year
-									</label>
-									<input
-										className="fancy-toggle blue radio"
-										name="foreign1"
-										type="radio"
-										id="foreign2"
-									/>
-									<label htmlFor="foreign2">
-										<span className="input"></span>2 year
-									</label>
-									<input
-										className="fancy-toggle blue radio"
-										name="foreign1"
-										type="radio"
-										id="foreign3"
-									/>
-									<label htmlFor="foreign3">
-										<span className="input"></span>3 year
-									</label>
-									<input
-										className="fancy-toggle blue radio"
-										name="foreign1"
-										type="radio"
-										id="foreign4"
-									/>
-									<label htmlFor="foreign4">
-										<span className="input"></span>4 year
-									</label>
-									<input
-										className="fancy-toggle blue radio"
-										name="foreign1"
-										type="radio"
-										id="foreign4"
-									/>
-									<label htmlFor="foreign4">
-										<span className="input"></span>5 year
-									</label>
-									<input
-										className="fancy-toggle blue radio"
-										name="foreign1"
-										type="radio"
-										id="foreign4"
-									/>
-									<label htmlFor="foreign4">
-										<span className="input"></span>6 year
-									</label>
-								</div>
-							</li>
-							<li className="general-question border">
-								<h2 className="question">What was your last year of French?</h2>
-								<div className="options">
-									<input
-										className="fancy-toggle blue  radio"
-										name="french2"
-										type="radio"
-										id="french5"
-									/>
-									<label htmlFor="french5">
-										<span className="input"></span>1st year
-									</label>
-									<input
-										className="fancy-toggle blue radio"
-										name="french2"
-										type="radio"
-										id="french6"
-									/>
-									<label htmlFor="french6">
-										<span className="input"></span>2nd year
-									</label>
-									<input
-										className="fancy-toggle blue radio"
-										name="french2"
-										type="radio"
-										id="french7"
-									/>
-									<label htmlFor="french7">
-										<span className="input"></span>3rd year
-									</label>
-									<input
-										className="fancy-toggle blue radio"
-										name="french2"
-										type="radio"
-										id="french8"
-									/>
-									<label htmlFor="french8">
-										<span className="input"></span>4th year
-									</label>
-								</div>
-							</li>
-							<li className="general-question border">
-								<h2 className="question">What was your last year of German?</h2>
-								<div className="options">
-									<input
-										className="fancy-toggle blue  radio"
-										name="german2"
-										type="radio"
-										id="german5"
-									/>
-									<label htmlFor="german5">
-										<span className="input"></span>1st year
-									</label>
-									<input
-										className="fancy-toggle blue radio"
-										name="german2"
-										type="radio"
-										id="german6"
-									/>
-									<label htmlFor="german6">
-										<span className="input"></span>2nd year
-									</label>
-									<input
-										className="fancy-toggle blue radio"
-										name="german2"
-										type="radio"
-										id="german7"
-									/>
-									<label htmlFor="german7">
-										<span className="input"></span>3rd year
-									</label>
-									<input
-										className="fancy-toggle blue radio"
-										name="german2"
-										type="radio"
-										id="german8"
-									/>
-									<label htmlFor="german8">
-										<span className="input"></span>4th year
-									</label>
-								</div>
-							</li>
-						</ul>
+						{isAnswer(data, 3, 1) && (
+							<>
+								<ul className="level_2">
+									<li className="general-question border">
+										<h2 className="question">Which language ?</h2>
+										<div className="options coloumn">
+											{languages.map((language, i) => {
+												return (
+													<>
+														<input
+															id={`language_${i}`}
+															name="language"
+															type="checkbox"
+															className="block-toggle blue"
+															defaultChecked={isAnswer(data, 4, {
+																sub_question_id: i + 1,
+															})}
+															onChange={(e) => {
+																onchange(4, {
+																	sub_question_id: i + 1,
+																});
+															}}
+														/>
+														<label htmlFor={`language_${i}`}>{language}</label>
+													</>
+												);
+											})}
+										</div>
+									</li>
+								</ul>
+								{data[findIndex(data, 4)]["answer"].length > 0 && (
+									<ul className="level_3">
+										{data[findIndex(data, 4)]["answer"].map((ques, i) => {
+											let lang =
+												ques.sub_question_id === 1
+													? "French"
+													: ques.sub_question_id === 2
+														? "Spanish"
+														: ques.sub_question_id === 3
+															? "Germal"
+															: ques.sub_question_id === 4
+																? "Latin"
+																: "Other";
+											return (
+												<li className="general-question border" key={i}>
+													<h2 className="question">
+														In which year did you take {lang} ?
+													</h2>
+													<div className="options">
+														<input
+															className="fancy-toggle blue  radio"
+															type="radio"
+															name={`year_2${i}`}
+															id={`year_11${i}`}
+															defaultChecked={isAnswer(data, 4, {
+																sub_question_id_2: ques.sub_question_id,
+																sub_answer: 1,
+															})}
+															onChange={(e) => {
+																onchange(4, {
+																	sub_question_id_2: ques.sub_question_id,
+																	sub_answer: 1,
+																});
+															}}
+														/>
+														<label htmlFor={`year_11${i}`}>
+															<span className="input"></span>1st year
+														</label>
+														<input
+															className="fancy-toggle blue radio"
+															type="radio"
+															name={`year_2${i}`}
+															id={`year_22${i}`}
+															defaultChecked={isAnswer(data, 4, {
+																sub_question_id_2: ques.sub_question_id,
+																sub_answer: 2,
+															})}
+															onChange={(e) => {
+																onchange(4, {
+																	sub_question_id_2: ques.sub_question_id,
+																	sub_answer: 2,
+																});
+															}}
+														/>
+														<label htmlFor={`year_22${i}`}>
+															<span className="input"></span>2nd year
+														</label>
+														<input
+															className="fancy-toggle blue radio"
+															type="radio"
+															name={`year_2${i}`}
+															id={`year_33${i}`}
+															defaultChecked={isAnswer(data, 4, {
+																sub_question_id_2: ques.sub_question_id,
+																sub_answer: 3,
+															})}
+															onChange={(e) => {
+																onchange(4, {
+																	sub_question_id_2: ques.sub_question_id,
+																	sub_answer: 3,
+																});
+															}}
+														/>
+														<label htmlFor={`year_33${i}`}>
+															<span className="input"></span>3rd year
+														</label>
+														<input
+															className="fancy-toggle blue radio"
+															type="radio"
+															name={`year_2${i}`}
+															id={`year_44${i}`}
+															defaultChecked={isAnswer(data, 4, {
+																sub_question_id_2: ques.sub_question_id,
+																sub_answer: 4,
+															})}
+															onChange={(e) => {
+																onchange(4, {
+																	sub_question_id_2: ques.sub_question_id,
+																	sub_answer: 4,
+																});
+															}}
+														/>
+														<label htmlFor={`year_44${i}`}>
+															<span className="input"></span>4th year
+														</label>
+													</div>
+												</li>
+											);
+										})}
+									</ul>
+								)}
+							</>
+						)}
 					</li>
 					<li className="general-question">
 						<h2 className="question">
@@ -387,6 +386,10 @@ function CourseWork({ data, onchange, calHeight, noHeading }) {
 								name="afterHighSchoolDegree"
 								type="radio"
 								id="afterHighSchoolDegreeYes"
+								defaultChecked={isAnswer(data, 5, 1)}
+								onChange={() => {
+									onchange(5, 1);
+								}}
 							/>
 							<label htmlFor="afterHighSchoolDegreeYes">
 								<span className="input"></span>Yes
@@ -396,6 +399,10 @@ function CourseWork({ data, onchange, calHeight, noHeading }) {
 								name="afterHighSchoolDegree"
 								type="radio"
 								id="afterHighSchoolDegreeNo"
+								defaultChecked={isAnswer(data, 5, 2)}
+								onChange={() => {
+									onchange(5, 2);
+								}}
 							/>
 							<label htmlFor="afterHighSchoolDegreeNo">
 								<span className="input"></span>No
@@ -403,8 +410,8 @@ function CourseWork({ data, onchange, calHeight, noHeading }) {
 						</div>
 					</li>
 				</ul>
-			</div>
-		</div>
+			</div >
+		</div >
 	);
 }
 

@@ -11,6 +11,7 @@ import ImgPreview from "../../../../assets/preview.png";
 import "./index.scss";
 
 const Tabs = (props) => {
+	// console.log(localStorage.getItem("jobId"));
 	return (
 		<ul className="tabs flex">
 			<li>

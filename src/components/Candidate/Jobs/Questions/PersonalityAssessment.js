@@ -83,8 +83,8 @@ function PersonalityAssessment({ data, calHeight, onchange, noHeading }) {
 					</ul>
 				</div>
 			) : (
-				""
-			)}
+					""
+				)}
 			<div className="content">
 				<ul>{renderList()}</ul>
 			</div>

@@ -1,8 +1,7 @@
 import React from "react";
+import MarginalAssociation from "../../../_Elements/Charts/MarginalAssociation";
 
 import "./index.scss";
-import ImgWidget1 from "../../../../assets/widget-1.jpg";
-import ImgWidget2 from "../../../../assets/widget-2.jpg";
 import CredReadyIndex from "../../../_Elements/CredReadyIndex";
 
 function GoalView() {
@@ -13,11 +12,10 @@ function GoalView() {
 					<div className="index">
 						<h2>CredReadiness</h2>
 						<CredReadyIndex index={80} noSubHeading />
-						{/* <img src={ImgWidget1} alt="UserName" /> */}
 					</div>
 					<div className="marginal">
 						<h2>Marginal Association</h2>
-						<img src={ImgWidget2} alt="UserName" />
+						<MarginalAssociation />
 					</div>
 				</div>
 				{/* <p>
