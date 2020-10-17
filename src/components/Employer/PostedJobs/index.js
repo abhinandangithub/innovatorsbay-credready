@@ -1,17 +1,24 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { connect, useDispatch } from 'react-redux';
 import { getPostedJobs, sendNotification, getCandidatesList } from '../../../store/thunks/employer';
+import { clearSelectedJobs } from "../../../store/actions/employer";
 
 import { Link } from "react-router-dom";
 
 import "./index.scss";
 
 function PostedJobs(props) {
+	const [jobs, setJobs] = useState(props.postedJobs);
 	const dispatch = useDispatch();
 
 	useEffect(() => {
 		dispatch(getPostedJobs());
+		dispatch(clearSelectedJobs());
 	}, [dispatch]);
+
+	useEffect(() => {
+		setJobs(props.postedJobs);
+	}, [props.postedJobs])
 
 	const handleSendEmail = (e, job_id) => {
 		// if(e.target.checked) {
@@ -35,6 +42,10 @@ function PostedJobs(props) {
 
 	const handleViewCandidates = (job_id) => {
 		dispatch(getCandidatesList(job_id));
+	}
+
+	const handleSearch = (searchSting) => {
+		setJobs(props.postedJobs.filter(val => val.job_title.includes(searchSting)));
 	}
 
 	const jobsList = [1, 2];
@@ -106,7 +117,7 @@ function PostedJobs(props) {
 			</div>
 			<div className="search-panel">
 				<div className="searches">
-					<input type="text" placeholder="Search by Job Title" />
+					<input type="text" placeholder="Search by Job Title" onChange={(e) => handleSearch(e.target.value)}/>
 					<input type="text" placeholder="Search by Skills" />
 				</div>
 			</div>
@@ -116,7 +127,7 @@ function PostedJobs(props) {
 					{/* {jobsList.map((_, i) => {
 						return <li key={i}>{list}</li>;
 					})} */}
-					{props.postedJobs.map((_, i) => {
+					{jobs.map((_, i) => {
 						// console.log(_);
 						return <li key={i}><List job={_}></List></li>;
 					})}

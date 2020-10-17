@@ -158,3 +158,10 @@ export const setRedirectURL = (val) => {
 		value: val,
 	};
 };
+
+export const clearSelectedJobs = (val) => {
+	return {
+		type: actionTypes.CLEAR_SELECTED_JOBS,
+		value: val,
+	};
+};

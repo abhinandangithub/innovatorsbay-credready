@@ -419,6 +419,14 @@ const reducer = (state = initialState, action) => {
 				questionBank: questionsTemp1
 			});
 
+		case actionTypes.CLEAR_SELECTED_JOBS:
+			const questionsTemp2 = state.questionBank;
+			// questionsTemp1.questions.push(...action.value);
+			questionsTemp2.questions = [];
+			return updateObject(state, {
+				questionBank: questionsTemp2
+			});
+
 		case actionTypes.SET_EMAIL_TEMPLATE:
 			let emailTemplateNamesTemp = state.emailTemplateNames;
 			emailTemplateNamesTemp = action.value.data.private_email_template.map((value) => value.template_name);

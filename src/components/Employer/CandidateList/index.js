@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { connect, useDispatch } from 'react-redux';
 import { sendEmail, updateStatus, getAppliedCandidateDetails, getCandidatesList } from '../../../store/thunks/employer';
@@ -18,6 +18,17 @@ const faker = require("faker");
 function CandidateList(props) {
 	let { jobId } = useParams();
 	const dispatch = useDispatch();
+	const [jobTitle, setJobTitle] = useState(() => {
+		let job = props.postedJobs.map(val => {
+			if(val.job_id == jobId) {
+				return val.job_title;
+			} else {
+				return "";
+			}
+		});
+		console.log(job);
+		return job;
+	});
 
 	const handleUpdateStatus = (e, job_app_id) => {
 		dispatch(updateStatus({
@@ -252,11 +263,12 @@ function CandidateList(props) {
 		// props.loading ? (
 		// 	<Spinner />
 		// ) : 
-		(
+		// (
 			<div className="candidate-list">
 				<div className="top-heading">
 					<h1>
-						Candidates for “Certified Nursing Assistant - in Warren New Jersey”
+						{/* Candidates for “Certified Nursing Assistant - in Warren New Jersey” */}
+						{jobTitle}
 				</h1>
 					<h3>CredReadiness Index for this job is 75</h3>
 				</div>
@@ -389,7 +401,7 @@ function CandidateList(props) {
 				</div>
 				<Pagination />
 			</div>
-		)
+		// )
 
 	);
 }
@@ -397,6 +409,7 @@ function CandidateList(props) {
 function mapStateToProps(state) {
 	return {
 		candidatesList: state.employerReducer.candidatesList.data,
+		postedJobs: state.employerReducer.postedJobs.data
 		// loading: state.commonReducer.apiCallsInProgress
 	}
 }

@@ -1,10 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
+import { useDispatch } from 'react-redux';
 
 import "./index.scss";
 import Dropdown from "../../_Elements/Dropdown";
 import CustomDatePicker from "../../_Elements/CustomDatePicker";
+import { clearSelectedJobs } from "../../../store/actions/employer";
 
 const metrics = {
 	heading: "Select Metrics",
@@ -15,6 +17,12 @@ const metrics = {
 var categories = ["0-4", "5-9", "10-14", "15-19", "20-24", "25-29"];
 
 function Dashboard() {
+	const dispatch = useDispatch();
+
+	useEffect(() => {
+		dispatch(clearSelectedJobs());
+	},[dispatch]);
+
 	const recruitmentFunnel = {
 		chart: {
 			type: "bar",
