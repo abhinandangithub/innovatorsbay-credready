@@ -90,6 +90,10 @@ function CandidateList(props) {
 		}
 	}
 
+	const handleFreeSearch = (searchString) => {
+		setCandidateList(props.candidatesList.filter(val => val.candidate_name.includes(searchString)));
+	}
+
 	const [filterOptions, setFilterOptions] = React.useState(false);
 
 	const crRange = {
@@ -315,7 +319,7 @@ function CandidateList(props) {
 						<h2>List of Candidate</h2>
 						{/* <p>Showing Result 1-10 of 200</p> */}
 						<div className="search_filter flex">
-							<Input type="text" placeholder="Search by name/position..." />
+							<Input type="text" placeholder="Search by name/position..." onChange={(e) => handleFreeSearch(e.target.value)}/>
 							<button
 								className="primary-btn blue"
 								onClick={() => setFilterOptions(!filterOptions)}
