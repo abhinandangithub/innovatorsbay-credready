@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { connect, useDispatch } from 'react-redux';
-import { sendEmail, updateStatus, getAppliedCandidateDetails, getCandidatesList } from '../../../store/thunks/employer';
+import { sendEmail, updateStatus, getAppliedCandidateDetails, getCandidatesList, getPostedJobs } from '../../../store/thunks/employer';
 
 import "./index.scss";
 import Dropdown from "../../_Elements/Dropdown";
@@ -29,6 +29,7 @@ function CandidateList(props) {
 		console.log(job);
 		return job;
 	});
+	const [candidateList, setCandidateList] = useState(props.candidatesList);
 
 	const handleUpdateStatus = (e, job_app_id) => {
 		dispatch(updateStatus({
@@ -63,9 +64,31 @@ function CandidateList(props) {
 		dispatch(getAppliedCandidateDetails(e.candidate_id, e.job_id));
 	}
 
-	// useEffect(() => {
-	// 		dispatch(getCandidatesList(jobId));
-	// }, [dispatch]);
+	useEffect(() => {
+			dispatch(getCandidatesList(jobId));
+			dispatch(getPostedJobs());
+	}, [dispatch]);
+	
+	useEffect(() => {
+		const jobTitleTemp = props.postedJobs.map(val => {
+			if(val.job_id == jobId) {
+				return val.job_title;
+			} else {
+				return "";
+			}
+		});
+		setJobTitle(jobTitleTemp);
+	}, [props.postedJobs]);
+	
+	useEffect(() => {
+		setCandidateList(props.candidatesList);
+	}, [props.candidatesList]);
+
+	const handleFilterSelect = (option, id) => {
+		if(document.getElementById(id).checked) {
+			setCandidateList(props.candidatesList.filter(val => val.status === option));
+		}
+	}
 
 	const [filterOptions, setFilterOptions] = React.useState(false);
 
@@ -93,89 +116,89 @@ function CandidateList(props) {
 		heading: "Current Organisation",
 		content: ["cr 1", "cr 2", "cr 3", "No cr"],
 	};
-	const candidateList = [
-		{
-			name: "Mary Jane",
-			currentPosition: "CNA",
-			experience: 5,
-			credReadiness: 82,
-			currentOrganisation: "One Springfield",
-			lastUpdate: "9/15/2020",
-			status: "Viewed",
-		},
-		{
-			name: "William",
-			currentPosition: "Home Health Aid",
-			experience: 4,
-			credReadiness: 73,
-			currentOrganisation: "XYZ Company",
-			lastUpdate: "9/15/2020",
-			status: "Phone",
-		},
-		{
-			name: "Charlotte",
-			currentPosition: "CNA",
-			experience: 2,
-			credReadiness: 73,
-			currentOrganisation: "ABC Company",
-			lastUpdate: "9/15/2020",
-			status: "Viewed",
-		},
-		{
-			name: "Marry jane",
-			currentPosition: "Certified Nursing Assistant",
-			experience: 5,
-			credReadiness: 50,
-			currentOrganisation: "ABC Company",
-			lastUpdate: "9/15/2020",
-			status: "Offer",
-		},
-		{
-			name: "Kris Connor",
-			currentPosition: "CNA",
-			experience: 1,
-			credReadiness: 40,
-			currentOrganisation: "ABC Company",
-			lastUpdate: "9/15/2020",
-			status: "Hired",
-		},
-		{
-			name: "Mary jane",
-			currentPosition: "Home Health Aid",
-			experience: 2,
-			credReadiness: 35,
-			currentOrganisation: "ABC Company",
-			lastUpdate: "9/15/2020",
-			status: "Hired",
-		},
-		{
-			name: "Mary jane",
-			currentPosition: "CNA",
-			experience: 4,
-			credReadiness: 35,
-			currentOrganisation: "ABC Company",
-			lastUpdate: "9/15/2020",
-			status: "Viewed",
-		},
-		{
-			name: "Charlotte",
-			currentPosition: "Certified Nursing Assistant",
-			experience: 5,
-			credReadiness: 35,
-			currentOrganisation: "ABC Company",
-			lastUpdate: "9/15/2020",
-			status: "Emailed",
-		},
-		{
-			name: "Kris Connor",
-			currentPosition: "Home Health Aid",
-			experience: 5,
-			credReadiness: 35,
-			currentOrganisation: "ABC Company",
-			lastUpdate: "9/15/2020",
-			status: "Viewed",
-		},
-	];
+	// const candidateList = [
+	// 	{
+	// 		name: "Mary Jane",
+	// 		currentPosition: "CNA",
+	// 		experience: 5,
+	// 		credReadiness: 82,
+	// 		currentOrganisation: "One Springfield",
+	// 		lastUpdate: "9/15/2020",
+	// 		status: "Viewed",
+	// 	},
+	// 	{
+	// 		name: "William",
+	// 		currentPosition: "Home Health Aid",
+	// 		experience: 4,
+	// 		credReadiness: 73,
+	// 		currentOrganisation: "XYZ Company",
+	// 		lastUpdate: "9/15/2020",
+	// 		status: "Phone",
+	// 	},
+	// 	{
+	// 		name: "Charlotte",
+	// 		currentPosition: "CNA",
+	// 		experience: 2,
+	// 		credReadiness: 73,
+	// 		currentOrganisation: "ABC Company",
+	// 		lastUpdate: "9/15/2020",
+	// 		status: "Viewed",
+	// 	},
+	// 	{
+	// 		name: "Marry jane",
+	// 		currentPosition: "Certified Nursing Assistant",
+	// 		experience: 5,
+	// 		credReadiness: 50,
+	// 		currentOrganisation: "ABC Company",
+	// 		lastUpdate: "9/15/2020",
+	// 		status: "Offer",
+	// 	},
+	// 	{
+	// 		name: "Kris Connor",
+	// 		currentPosition: "CNA",
+	// 		experience: 1,
+	// 		credReadiness: 40,
+	// 		currentOrganisation: "ABC Company",
+	// 		lastUpdate: "9/15/2020",
+	// 		status: "Hired",
+	// 	},
+	// 	{
+	// 		name: "Mary jane",
+	// 		currentPosition: "Home Health Aid",
+	// 		experience: 2,
+	// 		credReadiness: 35,
+	// 		currentOrganisation: "ABC Company",
+	// 		lastUpdate: "9/15/2020",
+	// 		status: "Hired",
+	// 	},
+	// 	{
+	// 		name: "Mary jane",
+	// 		currentPosition: "CNA",
+	// 		experience: 4,
+	// 		credReadiness: 35,
+	// 		currentOrganisation: "ABC Company",
+	// 		lastUpdate: "9/15/2020",
+	// 		status: "Viewed",
+	// 	},
+	// 	{
+	// 		name: "Charlotte",
+	// 		currentPosition: "Certified Nursing Assistant",
+	// 		experience: 5,
+	// 		credReadiness: 35,
+	// 		currentOrganisation: "ABC Company",
+	// 		lastUpdate: "9/15/2020",
+	// 		status: "Emailed",
+	// 	},
+	// 	{
+	// 		name: "Kris Connor",
+	// 		currentPosition: "Home Health Aid",
+	// 		experience: 5,
+	// 		credReadiness: 35,
+	// 		currentOrganisation: "ABC Company",
+	// 		lastUpdate: "9/15/2020",
+	// 		status: "Viewed",
+	// 	},
+	// ];
 
 	const filtersList = [
 		{
@@ -211,7 +234,7 @@ function CandidateList(props) {
 	];
 
 
-	const renderCandidateList = props.candidatesList.map((candidate, i) => {
+	const renderCandidateList = candidateList.map((candidate, i) => {
 		let index = candidate.readiness_index;
 		let crColor = index < 40 ? "red" : index > 70 ? "green" : "yellow";
 		return (
@@ -313,6 +336,7 @@ function CandidateList(props) {
 																id={`${trimTitle}_${i}`}
 																type="checkbox"
 																className="fancy-toggle blue"
+																onChange={() => handleFilterSelect(option, `${trimTitle}_${i}`)}
 															/>
 															<label htmlFor={`${trimTitle}_${i}`}>
 																<span className="input"></span>
