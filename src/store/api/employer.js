@@ -162,7 +162,7 @@ export const employerUpdateProfileUrl = constructUrl(
  */
 export const employerDeleteQuestionFromJobUrl = constructUrl(
   employerRouteWithBase,
-  "question/delete"
+  "private/question"
 );
 
 /**

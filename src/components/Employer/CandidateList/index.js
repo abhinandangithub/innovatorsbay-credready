@@ -36,6 +36,13 @@ function CandidateList(props) {
 			"jobAppId": job_app_id,
 			"status": e
 		}));
+		let candidateListTemp = candidateList.map((val) => {
+			if(val.job_app_id == job_app_id) {
+				val.status = e;
+			}
+			return val;
+		});
+		setCandidateList(candidateListTemp);
 	}
 
 	const handleSendEmail = (candidate_id, template_id) => {

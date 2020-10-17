@@ -349,16 +349,26 @@ export const postJob = (job) => async (dispatch, getState) => {
 	}
 };
 
-export const createQuestion = (question) => async (dispatch, getState) => {
+export const createQuestion = (question, action) => async (dispatch, getState) => {
 	try {
 		const state = getState();
 		// setDefaultAuthorizationHeader(getState().authReducer.JWT.map.jwt);
-		const data = await Axios.post(employeCreateQuestion, question, {
+		let data = "";
+		if(action === "edit") {
+			data = await Axios.patch(employerUpdateQuestion, question, {
+					headers: {
+						'Authorization': getState().authReducer.JWT.map.jwt,
+						'Content-Type': 'application/vnd.credready.com+json'
+					}
+				});
+		} else {
+			data = await Axios.post(employeCreateQuestion, question, {
 				headers: {
 					'Authorization': getState().authReducer.JWT.map.jwt,
 					'Content-Type': 'application/vnd.credready.com+json'
 				}
 			});
+		}
 		if (!data) return false;
 		// dispatch(setPostedJobURL(data.data.data));
 	} catch (err) {
@@ -446,7 +456,7 @@ export const deleteQuestion = (id) => async (dispatch, getState) => {
 			}
 		});
 		if (!data) return false;
-		// dispatch(setLocations(data.data));
+		dispatch(getQuestionBank());
 	} catch (err) {
 		if (err.response) console.error(`failed to post the question ${err}`);
 	}

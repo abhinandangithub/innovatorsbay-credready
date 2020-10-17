@@ -29,9 +29,12 @@ function CreateNewQuestion(props) {
 	});
 	const [optionChoiceName, setOptionChoiceName] = useState(() => {
 		if(props.action === "edit") {
-			return props.data.option_choices.map(val => val.option_choice_name);
+			return props.data.option_choices;
 		} else {
-			return [""];
+			return [{
+				option_choice_name : "",
+				question_type: "boolean"
+			}];
 		}
 	});
 	const [optionInput, setOptionInput] = useState([""]);
@@ -43,10 +46,19 @@ function CreateNewQuestion(props) {
 		let optionChoiceMap = [];
 		if (questionType === "mcq") {
 			optionChoiceMap = optionChoiceName.map((val) => {
-				if (val !== "") {
-					return {
-						optionChoiceName: val,
-						questionType: props.data ? ( props.data.option_choices.length !== 0 ? props.data.option_choices[0].question_type : "boolean") : "boolean"
+				if (val.option_choice_name !== "") {
+					if(props.action === "edit") {
+						return {
+							optionChoiceName: val.option_choice_name,
+							questionType: val.question_type ? val.question_type : "boolean",
+							id: val.id,
+							questionId: val.question_id
+					}
+					} else {
+						return {
+							optionChoiceName: val.option_choice_name,
+							questionType: props.data ? ( props.data.option_choices.length !== 0 ? props.data.option_choices[0].question_type : "boolean") : "boolean"
+					}
 					};
 				} else {
 					return null;
@@ -82,26 +94,32 @@ function CreateNewQuestion(props) {
 		}
 		if(props.action === "edit"){
 			addQuestion.questionId = props.data.question_id;
-			dispatch(createQuestion(addQuestion));
+			addQuestion.orgId = props.data.org_id;
+			dispatch(createQuestion(addQuestion, "edit"));
 		} else {
-			dispatch(createQuestion(addQuestion));
+			dispatch(createQuestion(addQuestion, "create"));
 		}
 		if (props.type === "private") {
+			setTimeout(5000);
 			dispatch(togglePopup([true, "choosePrivateQuestions"]));
 		} else {
+			setTimeout(5000);
 			dispatch(togglePopup([true, "choosePublicQuestions"]));
 		}
 	};
 
 	const handleOptionChange = (i, value) => {
 		let optionChoiceNameTemp = optionChoiceName.map((val) => val);
-		optionChoiceNameTemp[i] = value;
+		optionChoiceNameTemp[i].option_choice_name = value;
 		setOptionChoiceName(optionChoiceNameTemp);
 	};
 
 	const handleAddOption = () => {
 		let _optionChoiceName = [...optionChoiceName];
-		_optionChoiceName.push("");
+		_optionChoiceName.push({
+			option_choice_name : "",
+			question_type: "boolean"
+		});
 		setOptionChoiceName(_optionChoiceName);
 	};
 
@@ -113,10 +131,14 @@ function CreateNewQuestion(props) {
 
 	useEffect(() => {
 		// console.log(optionChoiceName);
-		return () => {
+
+		// return () => {
 			// cleanup
-		};
-	}, [optionChoiceName]);
+		// };
+		if(props.data && props.data.question_type === "mcq") {
+			document.getElementById("multipleChoice").checked = true;
+		}
+	}, [props.data]);
 
 	return (
 		<div className="create-new-question">
@@ -184,7 +206,7 @@ function CreateNewQuestion(props) {
 											<li key={i}>
 												<input
 													type="text"
-													value={choice}
+													value={choice.option_choice_name}
 													id={i}
 													onChange={(e) =>
 														handleOptionChange(i, e.target.value)

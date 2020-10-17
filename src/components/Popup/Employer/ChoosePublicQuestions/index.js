@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, connect } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPen, faTrash } from "@fortawesome/free-solid-svg-icons";
@@ -18,6 +18,7 @@ import "./index.scss";
 
 function ChoosePublicQuestions(props) {
 	const dispatch = useDispatch();
+	const [questionBanks, setQuestionBanks] = useState(props.questionBank);
 	let questionToSave = props.questionsSelected;
 	console.log("props ", props);
 	const createNewQuestion = () => {
@@ -79,7 +80,11 @@ function ChoosePublicQuestions(props) {
 	const handleDelete = (e, question) => {
 		alert("Are you sure to delete?");
 		dispatch(deleteQuestion(question.question_id));
+		setQuestionBanks(props.questionBank.filter(val => val.question_id !== question.question_id));
 	};
+	const handleJobTitleSearch = (searchString) => {
+		setQuestionBanks(props.questionBank.filter(val => val.question_name.includes(searchString)));
+	}
 
 	return (
 		<div className="choose-private-question">
@@ -92,13 +97,13 @@ function ChoosePublicQuestions(props) {
 			<div className="content">
 				<div className="search-panel">
 					<div className="searches">
-						<input type="text" placeholder="Job Title" />
+						<input type="text" placeholder="Job Title" onChange={(e) => handleJobTitleSearch(e.target.value)}/>
 						<input type="text" placeholder="Skills" />
 					</div>
 				</div>
 
 				<ul className="general-questions">
-					{props.questionBank.map((question, i) => {
+					{questionBanks.map((question, i) => {
 						return (
 							<li className="general-question" key={i}>
 								<h2 className="question">{question.question_name}</h2>
