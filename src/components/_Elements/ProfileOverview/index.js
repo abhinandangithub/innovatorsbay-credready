@@ -74,7 +74,7 @@ function ProfileOverview(props) {
 						.contact
 					: ""
 		);
-	}, [employerProfile]);
+	}, [employerProfile, allData]);
 
 
 	const handleDelete = () => {
