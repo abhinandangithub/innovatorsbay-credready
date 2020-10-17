@@ -17,6 +17,8 @@ const faker = require("faker");
 
 function CandidateList(props) {
 	let { jobId } = useParams();
+	const [selectedStatus, setSelectedStatus] = useState([]);
+	// let selectedStatus = [];
 	const dispatch = useDispatch();
 	const [jobTitle, setJobTitle] = useState(() => {
 		let job = props.postedJobs.map(val => {
@@ -91,10 +93,42 @@ function CandidateList(props) {
 		setCandidateList(props.candidatesList);
 	}, [props.candidatesList]);
 
-	const handleFilterSelect = (option, id) => {
+	const handleFilterSelect = (option, id, title) => {
+		console.log(selectedStatus);
+		// let selectedStatusTemp = selectedStatus.map;
 		if(document.getElementById(id).checked) {
-			setCandidateList(props.candidatesList.filter(val => val.status === option));
+			if(title === "Status") {
+				// selectedStatus.push(option);
+				setSelectedStatus([...selectedStatus,option]);
+			}
+			// setCandidateList(props.candidatesList.filter(val => val.status === option));
+		} if(!document.getElementById(id).checked) {
+			if(title === "Status") {
+				setSelectedStatus(selectedStatus.filter(val => val !== option));
+				// let index = selectedStatus.indexOf(option);
+				// selectedStatus.splice(index, 1);
+			}
 		}
+		console.log(selectedStatus);
+	}
+
+	const handleApplyFilters = () => {
+		setFilterOptions(false);
+		// let temp = props.candidatesList.filter((val) => {
+		// 	for(let i = 0; i < selectedStatus.length; i++) {
+		// 		if(val.status == selectedStatus[i]) {
+		// 			return val;
+		// 		}
+		// 	}
+		// });
+		// console.log(temp);
+		setCandidateList(selectedStatus.length !== 0 ? props.candidatesList.filter((val) => {
+			for(let i = 0; i < selectedStatus.length; i++) {
+				if(val.status == selectedStatus[i]) {
+					return val;
+				}
+			}
+		}): props.candidatesList);
 	}
 
 	const handleFreeSearch = (searchString) => {
@@ -347,7 +381,7 @@ function CandidateList(props) {
 																id={`${trimTitle}_${i}`}
 																type="checkbox"
 																className="fancy-toggle blue"
-																onChange={() => handleFilterSelect(option, `${trimTitle}_${i}`)}
+																onChange={() => handleFilterSelect(option, `${trimTitle}_${i}`, filter.title)}
 															/>
 															<label htmlFor={`${trimTitle}_${i}`}>
 																<span className="input"></span>
@@ -369,7 +403,7 @@ function CandidateList(props) {
 								</button>
 									<button
 										className="primary-btn blue"
-										onClick={() => setFilterOptions(false)}
+										onClick={() => handleApplyFilters()}
 									>
 										Done
 								</button>
