@@ -41,6 +41,7 @@ const rootReducer = combineReducers({
 	setCandidateCertificateTitlesReducer,
 	setAllFunctionsReducer,
 	setAllIndustriesReducer,
+	commonReducer
 });
 
 /* Middleware */

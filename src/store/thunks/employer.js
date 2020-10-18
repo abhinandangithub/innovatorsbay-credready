@@ -73,6 +73,7 @@ export const updateProfileThunk = (token, profile) => async (dispatch, getState)
 		// setDefaultAuthorizationHeader(getState().authReducer.JWT.map.jwt);
 		// console.log(profile, getState().authReducer.JWT.map.jwt);
 		// setDefaultAuthorizationHeader(JSON.parse(state.authReducer.JWT).map.jwt);
+		dispatch(beginApiCall());
 		const data = await Axios.patch(employerUpdateProfileUrl, profile, {
 			headers: {
 				'Authorization': getState().authReducer.JWT.map.jwt,
@@ -80,7 +81,8 @@ export const updateProfileThunk = (token, profile) => async (dispatch, getState)
 			}
 		});
 		if (!data) return false;
-		// dispatch(setEmployerProfile(profile));
+		dispatch(getProfileThunk());
+		dispatch(apiCallError());
 	} catch (err) {
 		if (err.response) console.error(`failed to update employer profile ${err}`);
 	}

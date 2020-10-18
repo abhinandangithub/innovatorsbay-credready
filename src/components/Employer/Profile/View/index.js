@@ -25,6 +25,7 @@ function View(props) {
 	// props.loading ?
 	// 	< Spinner /> :
 	return (
+		props.loading ? <Spinner /> : 
 		<div className="profile-view">
 			<div className="content">
 				<ul className="listing">
@@ -105,7 +106,7 @@ function mapStateToProps(state) {
 		profile: state.employerReducer.profile.data,
 		companySizeKeys: state.employerReducer.companySizeKeys,
 		hiringKeys: state.employerReducer.hiringKeys,
-		// loading: state.commonReducer.apiCallsInProgress
+		loading: state.commonReducer.apiCallsInProgress
 	};
 }
 
