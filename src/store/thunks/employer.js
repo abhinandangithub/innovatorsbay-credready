@@ -372,7 +372,7 @@ export const createQuestion = (question, action) => async (dispatch, getState) =
 			});
 		}
 		if (!data) return false;
-		// dispatch(setPostedJobURL(data.data.data));
+		dispatch(getQuestionBank());
 	} catch (err) {
 		if (err.response) console.error(`failed to post the question ${err}`);
 	}

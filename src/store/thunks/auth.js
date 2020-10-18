@@ -12,6 +12,7 @@ import { fetchCandidateDetails } from "../../modals/candidateProfile/thunk";
 import Cookies from "js-cookie";
 import { setDefaultAuthorizationHeader } from "../utility";
 import { requestConfig } from "./utils";
+import { getProfileThunk } from "./employer";
 
 export const tryLogin = (credentials) => async (dispatch, getState) => {
 	try {
@@ -33,6 +34,7 @@ export const tryLogin = (credentials) => async (dispatch, getState) => {
 				: "";
 		fetchCandidateDetails();
 		dispatch(updateLoggedIn([true, type]));
+		dispatch(getProfileThunk());
 		setDefaultAuthorizationHeader(token);
 	} catch (err) {
 		// dispatch(updateLoggedIn([null, ""]));

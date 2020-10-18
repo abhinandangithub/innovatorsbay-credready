@@ -40,6 +40,7 @@ let scrollBarStyle = {
 
 function Home(props) {
 	const auth = useSelector((state) => state.authReducer);
+	const profile = useSelector((state) => state.employerReducer.profile.data);
 	const [navOpen, setNavOpen] = useState(false);
 
 	if (navOpen) {
@@ -80,7 +81,10 @@ function Home(props) {
 				<div className="scroll-wrapper">
 					<div className="content">
 						<Switch>
-							<Redirect exact from="/" to="/dashboard" />
+							{profile.name === "" ? 
+							<Redirect exact from="/" to="/dashboard" /> :
+							<Redirect exact from="/" to="/profile" /> 
+							}
 
 							{auth.loggedIn.as === "candidate" ? (
 								<>
