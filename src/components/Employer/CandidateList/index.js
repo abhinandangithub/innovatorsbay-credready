@@ -12,12 +12,16 @@ import ImgMail from "../../../assets/mail.jpg";
 import ImgDownload from "../../../assets/download.jpg";
 import Input from "../../_Elements/Input";
 import Spinner from "../../_Elements/Spinner";
+import { dateFormats } from "highcharts";
 
 const faker = require("faker");
 
 function CandidateList(props) {
 	let { jobId } = useParams();
 	const [selectedStatus, setSelectedStatus] = useState([]);
+	const [selectedExperience, setSelectedExperience] = useState([]);
+	const [selectedLastUpdate, setSelectedLastUpdate] = useState([]);
+	const [selectedRedinessIndex, setSelectedRedinessIndex] = useState([]);
 	// let selectedStatus = [];
 	const dispatch = useDispatch();
 	const [jobTitle, setJobTitle] = useState(() => {
@@ -94,41 +98,132 @@ function CandidateList(props) {
 	}, [props.candidatesList]);
 
 	const handleFilterSelect = (option, id, title) => {
-		console.log(selectedStatus);
-		// let selectedStatusTemp = selectedStatus.map;
 		if(document.getElementById(id).checked) {
 			if(title === "Status") {
-				// selectedStatus.push(option);
 				setSelectedStatus([...selectedStatus,option]);
 			}
-			// setCandidateList(props.candidatesList.filter(val => val.status === option));
+			if(title === "Experience") {
+				setSelectedExperience([...selectedExperience,option]);
+			}
+			if(title === "Last Update") {
+				setSelectedLastUpdate([...selectedLastUpdate,option]);
+			}
+			if(title === "CredReadiness Range") {
+				setSelectedRedinessIndex([...selectedRedinessIndex,option]);
+			}
 		} if(!document.getElementById(id).checked) {
 			if(title === "Status") {
 				setSelectedStatus(selectedStatus.filter(val => val !== option));
-				// let index = selectedStatus.indexOf(option);
-				// selectedStatus.splice(index, 1);
+			}
+			if(title === "Experience") {
+				setSelectedExperience(selectedExperience.filter(val => val !== option));
+			}
+			if(title === "Last Update") {
+				setSelectedLastUpdate([selectedLastUpdate.filter(val => val !== option)]);
+			}
+			if(title === "CredReadiness Range") {
+				setSelectedRedinessIndex([selectedRedinessIndex.filter(val => val !== option)]);
 			}
 		}
-		console.log(selectedStatus);
 	}
 
 	const handleApplyFilters = () => {
 		setFilterOptions(false);
-		// let temp = props.candidatesList.filter((val) => {
-		// 	for(let i = 0; i < selectedStatus.length; i++) {
-		// 		if(val.status == selectedStatus[i]) {
-		// 			return val;
-		// 		}
-		// 	}
-		// });
-		// console.log(temp);
-		setCandidateList(selectedStatus.length !== 0 ? props.candidatesList.filter((val) => {
+		let candidatesListStatusFiltered = selectedStatus.length !== 0 ? props.candidatesList.filter((val) => {
 			for(let i = 0; i < selectedStatus.length; i++) {
 				if(val.status == selectedStatus[i]) {
 					return val;
 				}
 			}
-		}): props.candidatesList);
+		}): props.candidatesList;
+
+		let candidatesListExpFiltered = selectedExperience.length !== 0 ? candidatesListStatusFiltered.filter((val) => {
+			for(let i = 0; i < selectedExperience.length; i++) {
+				if(selectedExperience[i] == "10+ years") {
+					let exp = val.candidate_experience.substring(0, 2);
+					if(parseInt(exp) >= 10) {
+						return val;
+					}
+				}
+				if(selectedExperience[i] == "6 to 9 years") {
+					let exp = val.candidate_experience.substring(0, 2);
+					if(parseInt(exp) >= 6 && parseInt(exp) <= 9) {
+						return val;
+					}
+				}
+				if(selectedExperience[i] == "3 to 5 years") {
+					let exp = val.candidate_experience.substring(0, 2);
+					if(parseInt(exp) >= 3 && parseInt(exp) <= 5) {
+						return val;
+					}
+				}
+				if(selectedExperience[i] == "0 to 2 years") {
+					let exp = val.candidate_experience.substring(0, 2);
+					if(parseInt(exp) >= 0 && parseInt(exp) <= 2) {
+						return val;
+					}
+				}
+			}
+		}) : candidatesListStatusFiltered;
+
+		let candidatesListLastUpdateFiltered = selectedLastUpdate.length !== 0 ? candidatesListExpFiltered.filter((val) => {
+			for(let i = 0; i < selectedLastUpdate.length; i++) {
+				const today = new Date();
+				if(selectedLastUpdate[i] == "1 Week") {
+					let date = new Date(val.modified_on);
+  					let lastWeek = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 7);
+					if(date >= lastWeek && date <= today)
+					{
+						return val;
+					}
+				}
+				if(selectedLastUpdate[i] == "2 Weeks") {
+					let date = new Date(val.modified_on);
+					let lastWeek = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 7);
+  					let lastTwoWeeks = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 14);
+					if(date >= lastTwoWeeks && date <= lastWeek) {
+						return val;
+					}
+				}
+				if(selectedLastUpdate[i] == "3 Weeks") {
+					let date = new Date(val.modified_on);
+					let lastTwoWeeks = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 14);
+					let lastThreeWeeks = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 21);
+					if(date >= lastThreeWeeks && date <= lastTwoWeeks) {
+						return val;
+					}
+				}
+				if(selectedLastUpdate[i] == "4 Weeks +") {
+					let date = new Date(val.modified_on);
+					let lastFourWeeks = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 28);
+					if(date >= lastFourWeeks) {
+						return val;
+					}
+				}
+			}
+		}) : candidatesListExpFiltered;
+
+		let candidatesListRedIndexFiltered = selectedRedinessIndex.length !== 0 ? candidatesListLastUpdateFiltered.filter((val) => {
+			for(let i = 0; i < selectedRedinessIndex.length; i++) {
+				if(selectedRedinessIndex[i] == "70 to 100 (Ready)") {
+					if(parseInt(val.readiness_index) >= 71 && parseInt(val.readiness_index) <= 100) {
+						return val;
+					}
+				}
+				if(selectedRedinessIndex[i] == "41 to 70 (Almost Ready)") {
+					if(parseInt(val.readiness_index) >= 41 && parseInt(val.readiness_index) <= 70) {
+						return val;
+					}
+				}
+				if(selectedRedinessIndex[i] == "0 to 40 (Getting Started)") {
+					if(parseInt(val.readiness_index) >= 0 && parseInt(val.readiness_index) <= 40) {
+						return val;
+					}
+				}
+			}
+		}) : candidatesListLastUpdateFiltered;
+
+		setCandidateList(candidatesListRedIndexFiltered);
 	}
 
 	const handleFreeSearch = (searchString) => {
@@ -325,7 +420,7 @@ function CandidateList(props) {
 		);
 	});
 
-	console.log(props.candidatesList.length);
+	// console.log(props.candidatesList.length);
 	return (
 
 		// props.loading ? (
