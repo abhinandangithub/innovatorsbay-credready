@@ -21,7 +21,7 @@ const initialState = {
 		"data": {
 			"employerId": 2,
 			"username": "",
-			"name": "",
+			"name": "Test",
 			"title": "",
 			"role_id": 0,
 			"org_id": 0,
