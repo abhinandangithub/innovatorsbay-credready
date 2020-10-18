@@ -8,6 +8,7 @@ import "./AddExpEduWorkCert.scss";
 import Input from "../../_Elements/Input";
 import Textarea from "../../_Elements/Textarea";
 import Dropdown from "../../_Elements/Dropdown";
+import InputDropdown from "../../_Elements/InputDropdown";
 import {
 	toggleOverlay,
 	togglePopup,
@@ -17,9 +18,7 @@ import {
 	fetchCandidateInstituteType,
 	fetchCandidateDegreeTitles,
 } from "../../../modals/candidateProfile/thunk";
-import InputDropdown from "../../_Elements/InputDropdown";
-// import { addWorkExperience } from "../../../modals/candidateProfile/thunk";
-// import { findIndexOfObjInArr } from "../../../assets/js/Utility";
+import { findIndexOfObjInArr } from "../../../assets/js/Utility";
 
 const degreeTitle = {
 	heading: "Select Title of Degree",
@@ -38,7 +37,10 @@ const institution = {
 
 function AddEducation(props) {
 	var data = props.candidateInstiType;
-	const id = useSelector((state) => state.popupOverlayReducer.popup.info);
+	const info = useSelector((state) => state.popupOverlayReducer.popup.info);
+	const dataArr = useSelector(
+		(state) => state.candidateSetDataReducer.data.education_experience
+	);
 
 	const dispatch = useDispatch();
 	const [startDate, setStartDate] = useState();
@@ -71,6 +73,7 @@ function AddEducation(props) {
 
 		formValid: false,
 	});
+
 	function formatDate(date) {
 		var d = new Date(date),
 			month = "" + (d.getMonth() + 1),
@@ -103,45 +106,24 @@ function AddEducation(props) {
 				}
 			}
 		}
-		if (id) {
-			let objEdited = {
-				work_ex_id: id,
-				titleOfDegree: formData ? formData.degreeTitle[0] : "",
-				majors: [731, 732],
-				minors: [741, 742],
-				institution: 2,
-				isUnfinished:
-					formData && formData.degreeGranted[0] === "on" ? false : true,
-				educationDescription: formData ? formData.comments[0] : "",
-				attendedFrom: formData ? formatDate(formData.startDate[0]) : "",
-				attendedTill: formData ? formatDate(formData.endDate[0]) : "",
+
+		if (oldFormData.formValid) {
+			console.log("submitting form...");
+			/* send data to api */
+
+			var obj = {
+				title: formData.degreeTitle[0],
+				institution: formData.description[0],
+				attended_from: startDate,
+				attended_till: endDate,
+				education_major: major,
+				education_minor: minor,
+				education_description: formData.comments[0],
 			};
-			if (oldFormData.formValid) {
-				console.log("submitting form...");
-				/* send data to api */
-				props.addEducationExperience(objEdited);
-				dispatch(toggleOverlay(false));
-				dispatch(togglePopup([false, ""]));
-			}
-		} else {
-			let obj = {
-				titleOfDegree: formData ? formData.degreeTitle[0] : "",
-				majors: [731, 732],
-				minors: [741, 742],
-				institution: 2,
-				isUnfinished:
-					formData && formData.degreeGranted[0] === "on" ? false : true,
-				educationDescription: formData ? formData.comments[0] : "",
-				attendedFrom: formData ? formatDate(formData.startDate[0]) : "",
-				attendedTill: formData ? formatDate(formData.endDate[0]) : "",
-			};
-			if (oldFormData.formValid) {
-				console.log("submitting form...");
-				/* send data to api */
-				props.addEducationExperience(obj);
-				dispatch(toggleOverlay(false));
-				dispatch(togglePopup([false, ""]));
-			}
+
+			dispatch(addEducationExperience(obj));
+			dispatch(toggleOverlay(false));
+			dispatch(togglePopup([false, ""]));
 		}
 
 		setFormData(oldFormData);
@@ -161,26 +143,53 @@ function AddEducation(props) {
 	};
 
 	const handleInstitutionSearch = (value) => {
-		console.log(value);
 		if (typeof value === "number") return;
 		const filteredData = data.filter(
 			({ institute_name }) =>
 				institute_name.toUpperCase().indexOf(value.toUpperCase()) > -1
 		);
-		console.log(filteredData);
 		setInstitutions([...filteredData]);
 	};
 
 	React.useEffect(() => {
 		if (props.candidateInstiType.length === 0)
-			props.fetchCandidateInstituteType();
+			dispatch(fetchCandidateInstituteType());
 		if (props.candidateDegreeTitles.length === 0)
-			props.fetchCandidateDegreeTitles();
+			dispatch(fetchCandidateDegreeTitles());
+	}, []);
+
+	React.useEffect(() => {
+		if (info) {
+			let i = findIndexOfObjInArr(dataArr, "id", info.id);
+			let arr = dataArr[i];
+
+			setFormData({
+				...formData,
+				degreeTitle: [arr.title],
+				institution: [arr.institution],
+				startDate: [arr.attended_from],
+				endDate: [arr.attended_till],
+				major: [arr.education_major],
+				minor: [arr.education_minor],
+				// strengths: [arr.],
+				comments: [arr.education_description],
+				// degreeGranted: [arr.],
+			});
+
+			setMajor(arr.education_major);
+			setMinor(arr.education_minor);
+			setStartDate(new Date(arr.attended_from));
+			setEndDate(new Date(arr.attended_till));
+		}
 	}, []);
 
 	return (
 		<div className="add-ex-ed-cert">
-			<h1>Add Education</h1>
+			{info && info.purpose === "edit" ? (
+				<h1>Edit Education</h1>
+			) : (
+				<h1>Add Education</h1>
+			)}
 
 			<ul className="listing">
 				<li>
@@ -198,8 +207,12 @@ function AddEducation(props) {
 							val: val.title,
 							id: val.id,
 						}))}
+						selected={props.candidateDegreeTitles.reduce((val) => {
+							if (val.id === +formData.degreeTitle[0]) {
+								return val.title;
+							}
+						})}
 						id="degreeTitle"
-						defaultValue={formData.degreeTitle[0]}
 						onchange={(value) => handleFieldChange("degreeTitle", value)}
 					/>
 				</li>
@@ -219,7 +232,7 @@ function AddEducation(props) {
 							id: val.id,
 						}))}
 						id="institution"
-						defaultValue={formData.institution[0]}
+						selected={institution.content[formData.institution[0]]}
 						onchange={(value) => {
 							handleFieldChange("institution", value);
 							handleInstitutionSearch(value);
@@ -273,12 +286,13 @@ function AddEducation(props) {
 						</label>
 					</div>
 					<div className="inputs">
-						{major.map((mj, i) => {
+						{major.map((m, i) => {
 							return (
 								<Input
 									type="text"
 									key={i}
 									id={`major_${i}`}
+									value={m && m.name}
 									onChange={(e) => handleFieldChange("major", e.target.value)}
 								/>
 							);
@@ -310,6 +324,7 @@ function AddEducation(props) {
 									type="text"
 									key={i}
 									id={`minor_${i}`}
+									value={m && m.name}
 									onChange={(e) => handleFieldChange("minor", e.target.value)}
 								/>
 							);
@@ -350,6 +365,7 @@ function AddEducation(props) {
 					</label>
 					<Textarea
 						id="comments"
+						defaultValue={formData.comments[0]}
 						onChange={(e) => handleFieldChange(e.target.id, e.target.value)}
 					/>
 				</li>
@@ -381,10 +397,5 @@ function mapStateToProps(state) {
 		candidateDegreeTitles: state.setCandidateDegreeTitlesReducer.data,
 	};
 }
-const mapDispatchToProps = {
-	addEducationExperience: addEducationExperience,
-	fetchCandidateInstituteType: fetchCandidateInstituteType,
-	fetchCandidateDegreeTitles: fetchCandidateDegreeTitles,
-};
 
-export default connect(mapStateToProps, mapDispatchToProps)(AddEducation);
+export default connect(mapStateToProps)(AddEducation);

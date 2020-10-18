@@ -152,17 +152,18 @@ function AddWorkExperience() {
 	React.useEffect(() => {
 		if (info) {
 			let i = findIndexOfObjInArr(dataArr, "work_ex_id", info.id);
-			// console.log(dataArr[i]);
+			let arr = dataArr[i];
+			// console.log(arr)
 
 			setFormData({
 				...formData,
-				title: [dataArr[i].title],
-				company: [dataArr[i].company],
-				location: [dataArr[i].location],
-				startDate: [dataArr[i].employment_from],
-				endDate: [dataArr[i].employment_to],
-				description: [dataArr[i].job_description],
-				employerWebsite: [dataArr[i].employer_website],
+				title: [arr.title],
+				company: [arr.company],
+				location: [arr.location],
+				startDate: [arr.employment_from],
+				endDate: [arr.employment_to],
+				description: [arr.job_description],
+				employerWebsite: [arr.employer_website],
 
 				formValid: {
 					add: false,
@@ -170,8 +171,8 @@ function AddWorkExperience() {
 				},
 			});
 
-			setStartDate(new Date(dataArr[i].employment_from));
-			setEndDate(new Date(dataArr[i].employment_to));
+			setStartDate(new Date(arr.employment_from));
+			setEndDate(new Date(arr.employment_to));
 		}
 	}, []);
 

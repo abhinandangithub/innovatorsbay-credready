@@ -82,8 +82,6 @@ function AddOtherExperience() {
 			var obj = {
 				// candidate_id: 24,
 				// career_path: "work",
-				// created_by: "Samay Cook",
-				// created_on: "Oct 15, 2020, 12:52:13 PM",
 				description: formData.description[0],
 				employed_from: formatDate(formData.startDate[0]),
 				employed_till: formatDate(formData.startDate[1]),
@@ -121,24 +119,25 @@ function AddOtherExperience() {
 	React.useEffect(() => {
 		if (info) {
 			let i = findIndexOfObjInArr(dataArr, "id", info.id);
-			console.log(dataArr[i]);
+			let arr = dataArr[i];
+			// console.log(arr);
 
 			setFormData({
 				...formData,
-				experienceType: [dataArr[i].experience_type],
-				organizationName: [dataArr[i].organization_name],
-				title: [dataArr[i].title],
-				startDate: [dataArr[i].employed_from],
-				endDate: [dataArr[i].employed_till],
-				location: [dataArr[i].location],
-				description: [dataArr[i].description],
+				experienceType: [arr.experience_type],
+				organizationName: [arr.organization_name],
+				title: [arr.title],
+				startDate: [arr.employed_from],
+				endDate: [arr.employed_till],
+				location: [arr.location],
+				description: [arr.description],
 			});
 
 			/**
 			 * TODO: fetching date in wrong format, that's why using static date, Dropdown error handling also not working
 			 */
-			// setStartDate(new Date(dataArr[i].employment_from));
-			// setEndDate(new Date(dataArr[i].employment_to));
+			// setStartDate(new Date(arr.employment_from));
+			// setEndDate(new Date(arr.employment_to));
 			setStartDate(new Date("Oct 7, 2020, 12:00:00 AM"));
 			setEndDate(new Date("Oct 7, 2020, 12:00:00 AM"));
 		}
@@ -146,7 +145,11 @@ function AddOtherExperience() {
 
 	return (
 		<div className="add-ex-ed-cert">
-			<h1>Add Other Experience</h1>
+			{info && info.purpose === "edit" ? (
+				<h1>Edit Other Experience</h1>
+			) : (
+				<h1>Add Other Experience</h1>
+			)}
 			<ul className="listing">
 				<li>
 					<label htmlFor="experienceType">
