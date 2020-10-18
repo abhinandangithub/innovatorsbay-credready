@@ -7,7 +7,11 @@ import { Link } from "react-router-dom";
 import "./index.scss";
 import Accordion from "../../../../_Elements/Accordion";
 import userData from "../../../../_data/userData.json";
-import { fetchCandidateDetails, fetchAllCertificateTitles, fetchCandidateDegreeTitles } from "../../../../../modals/candidateProfile/thunk";
+import {
+	fetchCandidateDetails,
+	fetchAllCertificateTitles,
+	fetchCandidateDegreeTitles,
+} from "../../../../../modals/candidateProfile/thunk";
 import {
 	toggleOverlay,
 	togglePopup,
@@ -15,20 +19,25 @@ import {
 
 function Education(props) {
 	const dispatch = useDispatch();
-	const certificateTitles = useSelector(state => state.setCandidateCertificateTitlesReducer.data);
-	const degreeTitles = useSelector(state => state.setCandidateDegreeTitlesReducer.data)
+
+	const certificateTitles = useSelector(
+		(state) => state.setCandidateCertificateTitlesReducer.data
+	);
+	const degreeTitles = useSelector(
+		(state) => state.setCandidateDegreeTitlesReducer.data
+	);
+
 	const showCertificate = (certificate) => {
 		dispatch(toggleOverlay(true));
 		dispatch(togglePopup([true, "certificate", { certificate }]));
 	};
 
 	const handleEdit = (id, type) => {
-		// console.log("editing");
 		dispatch(toggleOverlay(true));
-		dispatch(togglePopup([true, type, id]));
+		dispatch(togglePopup([true, type, { id, purpose: "edit" }]));
 	};
+
 	const handleDelete = (type) => {
-		// console.log("deleting");
 		dispatch(toggleOverlay(true));
 		dispatch(togglePopup([true, "delete", { what: type }]));
 	};
@@ -37,7 +46,12 @@ function Education(props) {
 	const renderEducation = props.eduExpData.map((data, i) => {
 		return (
 			<div className="content" key={i}>
-				<h2>{degreeTitles && degreeTitles.map(entity => { if (entity.id === parseInt(data.title)) return entity.title })}</h2>
+				<h2>
+					{degreeTitles &&
+						degreeTitles.map((entity) => {
+							if (entity.id === parseInt(data.title)) return entity.title;
+						})}
+				</h2>
 				<p>
 					{data.education_description} - {"institute"}
 				</p>
@@ -46,11 +60,13 @@ function Education(props) {
 				</p>
 				<p>
 					<span className="heading">Major:</span>
-					{data.education_major.map(entity => (entity.name))}
+					{data.education_major.map((entity) => entity.name)}
 				</p>
 				<p>
 					<span className="heading">Minor: </span>
-					<span className="text">{data.education_minor.map(entity => (entity.name))}</span>
+					<span className="text">
+						{data.education_minor.map((entity) => entity.name)}
+					</span>
 				</p>
 				{/* <p>
 					<span className="heading">Strenghts: </span>
@@ -72,65 +88,69 @@ function Education(props) {
 			</div>
 		);
 	});
-	// const renderOtherExperiences = userData.profile.workExperiences.map(
-	const renderOtherExperiences = props.otherExpData.map(
-		(data, i) => {
-			if (data.career_path === "EDUCATION") {
-				return (
-					<div className="content" key={i}>
-						<h2>{data.title}</h2>
-						<h3>
-							{data.organization_name} - <span>{data.location}</span>
-						</h3>
-						<h4>
-							<span>{data.employed_from}</span> - <span>{data.employed_till}</span>
-						</h4>
-						<p className="description">
-							<span className="heading">Description: </span>
-							<span className="text">{data.description}</span>
-						</p>
-						<FontAwesomeIcon
-							className="action-btn edit"
-							icon={faPen}
-							id={"otherExperienceEdit_" + i}
-							onClick={() => handleEdit(data.id, "addEduOtherExperience")}
-						/>
-						<FontAwesomeIcon
-							className="action-btn delete"
-							icon={faTrash}
-							id={"otherExperienceDelete_" + i}
-							onClick={() => handleDelete("otherExperience")}
-						/>
-					</div>
-				);
-			}
-			return ""
-		}
-	);
 
-	// const renderCertifications = userData.profile.certifications.map(
-	const renderCertifications = props.certificateData.map(
-		(data, i) => {
+	// const renderOtherExperiences = userData.profile.workExperiences.map(
+	const renderOtherExperiences = props.otherExpData.map((data, i) => {
+		if (data.career_path === "EDUCATION") {
 			return (
 				<div className="content" key={i}>
-					<h2>{certificateTitles && certificateTitles.map(entity => { if (entity.id === data.title_id) return entity.title_name })}</h2>
-					<p>
-						<span className="heading">Issuer: </span>
-						{data.issuer}
-					</p>
-					<p>
-						<span className="heading">Issued Date: </span>
-						{data.issued_date}
-					</p>
-					<p>
-						<span className="heading">Certificate Link: </span>
-						{data.certificate_link}
-					</p>
-					<p>
+					<h2>{data.title}</h2>
+					<h3>
+						{data.organization_name} - <span>{data.location}</span>
+					</h3>
+					<h4>
+						<span>{data.employed_from}</span> -{" "}
+						<span>{data.employed_till}</span>
+					</h4>
+					<p className="description">
 						<span className="heading">Description: </span>
 						<span className="text">{data.description}</span>
 					</p>
-					{/* <p className="docs">
+					<FontAwesomeIcon
+						className="action-btn edit"
+						icon={faPen}
+						id={"otherExperienceEdit_" + i}
+						onClick={() => handleEdit(data.id, "addEduOtherExperience")}
+					/>
+					<FontAwesomeIcon
+						className="action-btn delete"
+						icon={faTrash}
+						id={"otherExperienceDelete_" + i}
+						onClick={() => handleDelete("otherExperience")}
+					/>
+				</div>
+			);
+		}
+		return "";
+	});
+
+	// const renderCertifications = userData.profile.certifications.map(
+	const renderCertifications = props.certificateData.map((data, i) => {
+		return (
+			<div className="content" key={i}>
+				<h2>
+					{certificateTitles &&
+						certificateTitles.map((entity) => {
+							if (entity.id === data.title_id) return entity.title_name;
+						})}
+				</h2>
+				<p>
+					<span className="heading">Issuer: </span>
+					{data.issuer}
+				</p>
+				<p>
+					<span className="heading">Issued Date: </span>
+					{data.issued_date}
+				</p>
+				<p>
+					<span className="heading">Certificate Link: </span>
+					{data.certificate_link}
+				</p>
+				<p>
+					<span className="heading">Description: </span>
+					<span className="text">{data.description}</span>
+				</p>
+				{/* <p className="docs">
 						<span className="heading">Certificate image: </span>
 						<span
 							className="doc"
@@ -142,26 +162,25 @@ function Education(props) {
 						</span>
 					</p> */}
 
-					<FontAwesomeIcon
-						className="action-btn edit"
-						icon={faPen}
-						id={"certificateEdit_" + i}
-						onClick={() => handleEdit(data.id, "addCertificate")}
-					/>
-					<FontAwesomeIcon
-						className="action-btn delete"
-						icon={faTrash}
-						id={"certificateDelete_" + i}
-						onClick={() => handleDelete("certificate")}
-					/>
-				</div>
-			);
-		}
-	);
+				<FontAwesomeIcon
+					className="action-btn edit"
+					icon={faPen}
+					id={"certificateEdit_" + i}
+					onClick={() => handleEdit(data.id, "addCertificate")}
+				/>
+				<FontAwesomeIcon
+					className="action-btn delete"
+					icon={faTrash}
+					id={"certificateDelete_" + i}
+					onClick={() => handleDelete("certificate")}
+				/>
+			</div>
+		);
+	});
 	React.useEffect(() => {
 		dispatch(fetchAllCertificateTitles());
 		dispatch(fetchCandidateDegreeTitles());
-	}, [])
+	}, []);
 
 	return (
 		<div className="education">
@@ -178,7 +197,6 @@ function Education(props) {
 				type="addCertificate"
 				id="addCertificate"
 				addButton="Add Certificate"
-				active
 			>
 				{renderCertifications}
 			</Accordion>
@@ -209,14 +227,20 @@ function Education(props) {
 
 function mapStateToProps(state) {
 	return {
-		eduExpData: state.candidateSetDataReducer && state.candidateSetDataReducer.data && state.candidateSetDataReducer.data.education_experience ? state.candidateSetDataReducer.data.education_experience : [],
-		otherExpData: state.candidateSetDataReducer && state.candidateSetDataReducer.data && state.candidateSetDataReducer.data.additional_experiences ? state.candidateSetDataReducer.data.additional_experiences : [],
-		certificateData: state.candidateSetDataReducer && state.candidateSetDataReducer.data && state.candidateSetDataReducer.data.certificate ? state.candidateSetDataReducer.data.certificate : [],
+		eduExpData: state.candidateSetDataReducer.data
+			? state.candidateSetDataReducer.data.education_experience
+			: [],
+		otherExpData: state.candidateSetDataReducer.data
+			? state.candidateSetDataReducer.data.additional_experiences
+			: [],
+		certificateData: state.candidateSetDataReducer.data
+			? state.candidateSetDataReducer.data.certificate
+			: [],
 	};
 }
 
 const mapDispatchToProps = {
-	fetchCandidateDetails: fetchCandidateDetails
+	fetchCandidateDetails: fetchCandidateDetails,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Education);

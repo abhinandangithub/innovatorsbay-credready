@@ -6,7 +6,6 @@ import { useDispatch, useSelector } from "react-redux";
 
 import "./index.scss";
 import Accordion from "../../../../_Elements/Accordion";
-import userData from "../../../../_data/userData.json";
 import {
 	togglePopup,
 	toggleOverlay,
@@ -28,7 +27,6 @@ function WorkExperience(props) {
 		dispatch(togglePopup([true, type, { id, purpose: "edit" }]));
 	};
 	const handleDelete = (type) => {
-		// console.log("deleting");
 		dispatch(toggleOverlay(true));
 		dispatch(togglePopup([true, "delete", { what: type }]));
 	};

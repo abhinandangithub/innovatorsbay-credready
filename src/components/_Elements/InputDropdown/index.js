@@ -4,7 +4,7 @@ import "./index.scss";
 
 function InputDropdown({ id, placeholder, content, selected, onchange }) {
 	const [active, setactive] = useState(false);
-	const [value, setvalue] = useState(selected);
+	const [value, setvalue] = useState(null);
 	const [isChanged, setIsChanged] = useState(false);
 	const dropDownEl = React.useRef();
 
@@ -40,12 +40,13 @@ function InputDropdown({ id, placeholder, content, selected, onchange }) {
 		return () => {
 			document.removeEventListener("mousedown", handleClickOutside);
 		};
-	}, [active]);
+	}, [active, selected]);
 
 	return (
 		<div
-			className={`common-dropdown common-input-dropdown ${active ? "active" : ""
-				}  ${isChanged || selected ? "changed" : ""}`}
+			className={`common-dropdown common-input-dropdown ${
+				active ? "active" : ""
+			}  ${isChanged || selected ? "changed" : ""}`}
 			id={id && id}
 			ref={dropDownEl}
 		>
@@ -53,7 +54,7 @@ function InputDropdown({ id, placeholder, content, selected, onchange }) {
 				<input
 					type="text"
 					placeholder={placeholder}
-					value={value}
+					value={selected ? selected : value ? value : ""}
 					onChange={(e) => {
 						setvalue(e.target.value);
 						onchange && onchange(e.target.value);

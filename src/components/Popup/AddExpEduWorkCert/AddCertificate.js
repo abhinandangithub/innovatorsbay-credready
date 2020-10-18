@@ -17,6 +17,7 @@ import {
 	fetchAllIndustries,
 } from "../../../modals/candidateProfile/thunk";
 import { checkFileSize, checkMimeType } from "../../../assets/js/Utility";
+import { findIndexOfObjInArr } from "../../../assets/js/Utility";
 
 const industry = {
 	heading: "Select Industry",
@@ -43,6 +44,12 @@ function AddCertificate({ addEducationCertificate }) {
 	const [issueDate, setIssueDate] = useState();
 	const [errorMessage, setErrorMessage] = useState(null);
 	const [selectedFile, setSelectedFile] = useState(null);
+
+	const info = useSelector((state) => state.popupOverlayReducer.popup.info);
+	const dataArr = useSelector(
+		(state) => state.candidateSetDataReducer.data.certificate
+	);
+
 	const AllTitles = useSelector(
 		(state) => state.setCandidateCertificateTitlesReducer.data
 	);
@@ -56,7 +63,7 @@ function AddCertificate({ addEducationCertificate }) {
 	const handleUpload = (btnId) => {
 		uploadBtnRef.current.click();
 	};
-	console.log(AllIndustries, AllFunctions);
+	// console.log(AllIndustries, AllFunctions);
 
 	const handleChange = (e) => {
 		const file = e.target.files[0];
@@ -136,17 +143,14 @@ function AddCertificate({ addEducationCertificate }) {
 			title: formData ? formData.title[0] : "",
 		};
 		addEducationCertificate(obj);
-		console.log(formData);
 		dispatch(toggleOverlay(false));
 		dispatch(togglePopup([false, ""]));
 		// }
 
-		console.log(formData);
 		setFormData(oldFormData);
 	};
 
 	const handleFieldChange = (field, value) => {
-		console.log(value);
 		let msg = value === "" || value === null ? "Required" : "";
 
 		let arr = [];
@@ -163,11 +167,42 @@ function AddCertificate({ addEducationCertificate }) {
 		dispatch(fetchAllCertificateTitles());
 		dispatch(fetchAllFunctions());
 		dispatch(fetchAllIndustries());
+
+		if (info) {
+			let i = findIndexOfObjInArr(dataArr, "id", info.id);
+			let arr = dataArr[i];
+			console.log(formData, arr);
+
+			setFormData({
+				...formData,
+
+				industry: [arr.industry_id],
+				title: [arr.title_id],
+				issuer: [arr.issuer],
+				function: [arr.function_id],
+				issueDate: [arr.issued_date],
+				description: [arr.description],
+				certificateLink: [arr.certificate_link],
+			});
+
+			setIssueDate(new Date(arr.issued_date));
+		}
 	}, []);
+
+	const findIndustry = () => {
+		let i = findIndexOfObjInArr(AllIndustries, "id", formData.industry[0]);
+		let name = AllIndustries[i].industry_name;
+		console.log(i, name);
+		return "working on";
+	};
 
 	return (
 		<div className="add-ex-ed-cert">
-			<h1>Add Certificate</h1>
+			{info && info.purpose === "edit" ? (
+				<h1>Edit Certificate</h1>
+			) : (
+				<h1>Add Certificate</h1>
+			)}
 
 			<ul className="listing">
 				<li>
@@ -187,6 +222,17 @@ function AddCertificate({ addEducationCertificate }) {
 								  }))
 								: ""
 						}
+						selected={formData.industry[0]}
+						/**
+						 * TODO: Not working as expected for all cases
+						 */
+						// selected={
+						// 	AllIndustries.length > 0
+						// 		? AllIndustries.filter((val) => {
+						// 				return val.id === formData.industry[0];
+						// 		  })[0].industry_name
+						// 		: undefined
+						// }
 						id="industry"
 						defaultValue={formData.industry[0]}
 						onchange={(value) => handleFieldChange("industry", value)}
@@ -206,8 +252,8 @@ function AddCertificate({ addEducationCertificate }) {
 								? AllTitles.map((val) => ({ val: val.title_name, id: val.id }))
 								: ""
 						}
+						selected={formData.title[0]}
 						id="title"
-						defaultValue={formData.title[0]}
 						onchange={(value) => handleFieldChange("title", value)}
 					/>
 				</li>
@@ -224,7 +270,7 @@ function AddCertificate({ addEducationCertificate }) {
 								: ""
 						}
 						id="function"
-						defaultValue={formData.function[0]}
+						selected={formData.function[0]}
 						onchange={(value) => handleFieldChange("function", value)}
 					/>
 				</li>
@@ -269,7 +315,8 @@ function AddCertificate({ addEducationCertificate }) {
 					<Input
 						type="text"
 						id="certificateLink"
-						onchange={(value) => handleFieldChange("certificateLink", value)}
+						defaultValue={formData.certificateLink[0]}
+						onChange={(value) => handleFieldChange("certificateLink", value)}
 					/>
 				</li>
 				<li>

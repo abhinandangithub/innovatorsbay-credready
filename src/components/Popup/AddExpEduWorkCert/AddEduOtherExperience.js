@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import DatePicker from "react-datepicker";
-import { useDispatch, connect } from "react-redux";
+import { useDispatch, useSelector, connect } from "react-redux";
 
 import "./AddExpEduWorkCert.scss";
 import Input from "../../_Elements/Input";
@@ -17,6 +17,11 @@ import {
 
 function AddEduOtherExperience(props) {
 	const dispatch = useDispatch();
+
+	const info = useSelector((state) => state.popupOverlayReducer.popup.info);
+	const dataArr = useSelector((state) => state.candidateSetDataReducer.data);
+	console.log(info, dataArr);
+
 	const [startDate, setStartDate] = useState();
 	const [endDate, setEndDate] = useState();
 
