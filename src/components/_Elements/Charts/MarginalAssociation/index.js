@@ -2,19 +2,23 @@ import React from "react";
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 
-let _labelsArr = [
-	"Took Biology and Psychology",
-	"Cared for a relative",
-	"Held a previous job for 2+ years",
-	"Current CNA Certification",
-];
 
-let _valuesArr = [900, 700, 635, 203];
 
 /* labelsArr, valuesArr > will be passed as arguments */
-function index({labelsArr, valuesArr}) {
-	// labelsArr = _labelsArr;
-	// valuesArr = _valuesArr;
+// function index({labelsArr, valuesArr}) {
+// labelsArr = _labelsArr;
+// valuesArr = _valuesArr;
+function index(props) {
+	let _valuesArr = [900, 700, 635, 203];
+	let _labelsArr = [
+		"Took Biology and Psychology",
+		"Cared for a relative",
+		"Held a previous job for 2+ years",
+		"Current CNA Certification",
+	];
+	// console.log(labelsArr, valuesArr);
+	let labelsArr = props.titles ? props.titles : [];
+	let valuesArr = props.values ? props.values : [];
 
 	const data = {
 		colors: ["#FF821E"],

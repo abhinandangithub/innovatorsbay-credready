@@ -6,6 +6,7 @@ import ImgWidgetLogo from "../../../../assets/widget-logo.jpg";
 import ImgWidgetMenu from "../../../../assets/widget-menu.jpg";
 
 function AppliedRelatedJobs(props) {
+	console.log('props inside widget', props);
 	const type = props.applied ? props.applied : props.related;
 	const link = props.applied
 		? `/jobs/preview/${type.jobId}`

@@ -15,11 +15,10 @@ function JobView(props) {
 		(state) => state.setCandidateJobViewDataReducer.data
 	);
 	const jobDetails = allData.jobDetails ? allData.jobDetails : [];
-	console.log(jobDetails);
-	var index = jobDetails.readinessIndex;
-	const onSubmitHandler = () => {
-		console.log("applying for job")
-	}
+	console.log(allData.candidateJobApplication && allData.candidateJobApplication.marginal_associations);
+	var index = allData.candidateJobApplication && allData.candidateJobApplication.readiness_index;
+	var titles = allData.candidateJobApplication && allData.candidateJobApplication.marginal_associations.map((entity => entity.metric));
+	var values = allData.candidateJobApplication && allData.candidateJobApplication.marginal_associations.map((entity => entity.score));
 	React.useEffect(() => {
 		dispatch(fetchjobViewData(props.match.params.id));
 	}, []);
@@ -56,17 +55,6 @@ function JobView(props) {
 							{/* <span dangerouslySetInnerHTML={{ __html: job.job_description }}></span> */}
 						</span>
 					</p>
-					{/* <p>
-						<span className="heading">Skills: </span>
-						<span className="text">
-							Lorem Ipsum is simply dummy text of the printing and typesetting
-							industry. Lorem Ipsum has been the industry's standard dummy text
-							ever since the 1500s, when an unknown printer took a galley of
-							type and scrambled it to make a type specimen book. It has
-							survived not only five centuries, but also the leap into
-							electronic typesetting, remaining essentially unchanged.
-						</span>
-					</p> */}
 					<h2>{jobDetails.jobTitle}</h2>
 					<h3>Responsibilities</h3>
 					<span
@@ -101,8 +89,8 @@ function JobView(props) {
 					<CredReadyIndex index={index} />
 				</div>
 				<div className="marginal">
-					<h3>Top 5 Contributors to CredREadiness</h3>
-					<MarginalAssociation />
+					<h3>Top 5 Contributors to CredReadiness</h3>
+					<MarginalAssociation titles={titles} values={values} />
 				</div>
 			</div>
 		</div>

@@ -92,7 +92,7 @@ function JobView() {
 					remaining essentially unchanged.
 				</p>
 				<div className="meter">
-					<CredReadyIndex index={82} />
+					<CredReadyIndex index={31} />
 				</div>
 				<div className="marginal">
 					<h3>Top 5 Contributors to CredREadiness</h3>

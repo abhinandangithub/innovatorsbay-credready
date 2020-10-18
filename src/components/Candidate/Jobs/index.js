@@ -34,7 +34,7 @@ function Jobs() {
 			<div className="search-panel">
 				<div className="common-main-heading">
 					<h2>My Jobs</h2>
-					<button className="btn">Sory by</button>
+					{/* <button className="btn">Sory by</button> */}
 				</div>
 				<div className="searches">
 					<input type="text" placeholder="Search by Job Title" />
@@ -46,7 +46,7 @@ function Jobs() {
 			<div className="applied-jobs">
 				<div className="common-main-heading no-icon">
 					<h2>Applied Jobs</h2>
-					<button className="btn">&lt; 3 / 4 &gt;</button>
+					{/* <button className="btn">&lt; 3 / 4 &gt;</button> */}
 				</div>
 				<div className="widgets">{appliedJobs}</div>
 			</div>
@@ -54,7 +54,7 @@ function Jobs() {
 			<div className="related-jobs">
 				<div className="common-main-heading no-icon">
 					<h2>Related Jobs</h2>
-					<button className="btn">&lt; 3 / 4 &gt;</button>
+					{/* <button className="btn">&lt; 3 / 4 &gt;</button> */}
 				</div>
 				<div className="widgets">{relatedJobs}</div>
 			</div>

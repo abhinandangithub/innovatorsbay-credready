@@ -119,8 +119,8 @@ export const jobApply = (formData, id) => async (dispatch, getState) => {
 			}
 		});
 		if (!data) return;
+		localStorage.clear();
 		dispatch(candidateGetAppliedJobs());
-
 	} catch (err) {
 		console.log(err)
 	}
