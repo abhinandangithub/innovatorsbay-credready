@@ -12,9 +12,9 @@ let _labelsArr = [
 let _valuesArr = [900, 700, 635, 203];
 
 /* labelsArr, valuesArr > will be passed as arguments */
-function index(labelsArr, valuesArr) {
-	labelsArr = _labelsArr;
-	valuesArr = _valuesArr;
+function index({labelsArr, valuesArr}) {
+	// labelsArr = _labelsArr;
+	// valuesArr = _valuesArr;
 
 	const data = {
 		colors: ["#FF821E"],
