@@ -80,7 +80,7 @@ function ChoosePublicQuestions(props) {
 	};
 
 	const handleEdit = (e, question) => {
-		dispatch(togglePopup([true, "createNewQuestion", { type: "private", action: "edit", question: question }]));
+		dispatch(togglePopup([true, "createNewQuestion", { type: "public", action: "edit", question: question }]));
 	};
 	const handleDelete = (e, question) => {
 		alert("Are you sure to delete?");
