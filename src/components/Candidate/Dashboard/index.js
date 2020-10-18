@@ -1,20 +1,26 @@
-import React from "react";
-
+import React, { useEffect } from "react";
+import { useDispatch, connect } from 'react-redux';
 import "./index.scss";
 import userData from "../../_data/userData.json";
 import widgetLogo from "../../../assets/widget-logo.jpg";
 import WidgetCurrentGoal from "../../_Elements/Widgets/CurrentGoal";
 import WidgetLatestOpenings from "../../_Elements/Widgets/LatestOpenings";
 import CredReadyIndex from "../../_Elements/CredReadyIndex";
+import { getCandidateJobApplications } from '../../../store/thunks/candidate';
 
-function Dashboard() {
+function Dashboard(props) {
+	const dispatch = useDispatch();
 	const currentGoals = userData.goals.current.map((goal, i) => {
 		return <WidgetCurrentGoal goal={goal} key={i} />;
 	});
 
-	const latestOpenings = userData.openings.map((opening, i) => {
+	const latestOpenings = props.relatedJobs.map((opening, i) => {
 		return <WidgetLatestOpenings job={opening} key={i} />;
 	});
+
+	useEffect(() => {
+		dispatch(getCandidateJobApplications());
+	},[dispatch]);
 
 	const [activeApplication, setActiveApplication] = React.useState(1);
 
@@ -78,7 +84,7 @@ function Dashboard() {
 				<div className="listing flex">
 					<div className="left">
 						<ul>
-							{applications.map((application, i) => {
+							{props.candidateJobApplications.map((application, i) => {
 								return (
 									<li
 										onClick={() => setActiveApplication(i)}
@@ -89,11 +95,11 @@ function Dashboard() {
 											<img src={widgetLogo} alt="Logo" />
 										</div>
 										<div className="text">
-											<h2>{application.heading}</h2>
-											<p>{application.content}</p>
+											<h2>{application.jobTitle}</h2>
+											<p>{application.jobDescription}</p>
 										</div>
 										<button className="primary-btn outline">
-											{application.status}
+											{application.currentAppStatus}
 										</button>
 									</li>
 								);
@@ -101,7 +107,7 @@ function Dashboard() {
 						</ul>
 					</div>
 					<div className="right flex">
-						<CredReadyIndex index={applications[activeApplication].index} />
+						<CredReadyIndex index={parseInt(props.candidateJobApplications[activeApplication].readinessIndex)} />
 					</div>
 				</div>
 			</div>
@@ -125,4 +131,12 @@ function Dashboard() {
 	);
 }
 
-export default Dashboard;
+function mapStateToProps(state) {
+	return {
+		candidateJobApplications: state.candidateReducer.jobApplications.data.appliedJobs,
+		relatedJobs: state.candidateReducer.jobApplications.data.relatedJobs
+	};
+}
+
+// export default Dashboard;
+export default connect(mapStateToProps)(Dashboard);

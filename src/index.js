@@ -10,6 +10,7 @@ import authReducer from "./store/reducers/auth";
 import commonReducer from "./store/reducers/common";
 import popupOverlayReducer from "./store/reducers/popup_overlay";
 import employerReducer from "./store/reducers/employer";
+import candidateReducer from "./store/reducers/candidate";
 import {
 	candidateSetDataReducer,
 	setAllFunctionsReducer,
@@ -41,7 +42,8 @@ const rootReducer = combineReducers({
 	setCandidateCertificateTitlesReducer,
 	setAllFunctionsReducer,
 	setAllIndustriesReducer,
-	commonReducer
+	commonReducer,
+	candidateReducer
 });
 
 /* Middleware */

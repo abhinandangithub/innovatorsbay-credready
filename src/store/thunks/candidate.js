@@ -1,5 +1,8 @@
 import Axios from "axios";
-import { candidateFetchJobsAppliedUrl, candidateUpdateProfileUrl } from "../api/candidate";
+import { candidateFetchJobsAppliedUrl, candidateUpdateProfileUrl, candidateJobApplicationUrl } from "../api/candidate";
+import {
+	setCandidateJobApplications
+} from "../actions/candidate";
 import { requestConfig } from "./utils";
 
 export const candidateGetAppliedJobs = () => async (dispatch, getState) => {
@@ -10,4 +13,20 @@ export const candidateGetAppliedJobs = () => async (dispatch, getState) => {
     );
     if (!data) return;
   } catch (err) { }
+};
+
+export const getCandidateJobApplications = () => async (dispatch, getState) => {
+  try {
+    const state = getState();
+		const data = await Axios.delete(candidateJobApplicationUrl, {
+			headers: {
+				'Authorization': getState().authReducer.JWT.map.jwt,
+				'Content-Type': 'application/vnd.credready.com+json'
+			}
+		});
+    if (!data) return false;
+    dispatch(setCandidateJobApplications(data));
+  } catch (err) { 
+    if (err.response) console.error(`failed to get candidate job applications ${err}`);
+  }
 };

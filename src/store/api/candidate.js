@@ -151,3 +151,10 @@ export const candidateUploadResumeUrl = constructUrl(
   candidateRouteWithBase,
   "profile/resume/upload"
 );
+/**
+ * Name: Candidate job applications
+ */
+export const candidateJobApplicationUrl = constructUrl(
+  candidateRouteWithBase,
+  "jobs/dashboard/applications"
+);
