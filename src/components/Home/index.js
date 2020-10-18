@@ -42,7 +42,6 @@ function Home(props) {
 	const auth = useSelector((state) => state.authReducer);
 	const profile = useSelector((state) => state.employerReducer.profile.data);
 	const [navOpen, setNavOpen] = useState(false);
-
 	if (navOpen) {
 		scrollBarStyle = {
 			...scrollBarStyle,
@@ -82,8 +81,8 @@ function Home(props) {
 					<div className="content">
 						<Switch>
 							{profile.name === "" ? 
-							<Redirect exact from="/" to="/dashboard" /> :
-							<Redirect exact from="/" to="/profile" /> 
+							<Redirect exact from="/" to="/profile" /> :
+							<Redirect exact from="/" to="/dashboard" /> 
 							}
 
 							{auth.loggedIn.as === "candidate" ? (

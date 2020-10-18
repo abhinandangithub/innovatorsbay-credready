@@ -48,9 +48,9 @@ function ProfileOverview(props) {
 	const [editingEmail, setEditingEmail] = useState(false);
 	const [editingAboutMe, setEditingAboutMe] = useState(false);
 
-	useEffect(() => {
-		dispatch(getProfileThunk());
-	}, [dispatch, phone, email, allData]);
+	// useEffect(() => {
+	// 	dispatch(getProfileThunk());
+	// }, [dispatch, phone, email, allData]);
 
 	useEffect(() => {
 		setEmail(
@@ -250,10 +250,11 @@ function ProfileOverview(props) {
 	);
 }
 
-function mapStateToProps(state) {
-	return {
-		employerProfile: state.employerReducer.profile,
-	}
-}
+// function mapStateToProps(state) {
+// 	return {
+// 		employerProfile: state.employerReducer.profile,
+// 	}
+// }
 
-export default connect(mapStateToProps)(ProfileOverview);
+// export default connect(mapStateToProps)(ProfileOverview);
+export default ProfileOverview;
