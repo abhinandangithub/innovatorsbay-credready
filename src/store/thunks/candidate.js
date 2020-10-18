@@ -18,14 +18,14 @@ export const candidateGetAppliedJobs = () => async (dispatch, getState) => {
 export const getCandidateJobApplications = () => async (dispatch, getState) => {
   try {
     const state = getState();
-		const data = await Axios.delete(candidateJobApplicationUrl, {
+		const data = await Axios.get(candidateJobApplicationUrl, {
 			headers: {
 				'Authorization': getState().authReducer.JWT.map.jwt,
 				'Content-Type': 'application/vnd.credready.com+json'
 			}
 		});
     if (!data) return false;
-    dispatch(setCandidateJobApplications(data));
+    dispatch(setCandidateJobApplications(data.data));
   } catch (err) { 
     if (err.response) console.error(`failed to get candidate job applications ${err}`);
   }
