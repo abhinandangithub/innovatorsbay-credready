@@ -28,7 +28,7 @@ function ChoosePrivateQuestions(props) {
 
 	useEffect(() => {
 		props.questionsSelected.forEach((element) => {
-			if(document.getElementById(element.question_id) !== null){
+			if (document.getElementById(element.question_id) !== null) {
 				document.getElementById(element.question_id).checked = true;
 			}
 		});
@@ -37,6 +37,10 @@ function ChoosePrivateQuestions(props) {
 	useEffect(() => {
 		dispatch(getQuestionBank());
 	}, [dispatch]);
+
+	useEffect(() => {
+		setQuestionBanks(props.questionBank);
+	}, [props.questionBank]);
 
 	const handleCheckEvent = (event, question) => {
 		console.log(event.target.value, question);
@@ -105,7 +109,7 @@ function ChoosePrivateQuestions(props) {
 			<div className="content">
 				<div className="search-panel">
 					<div className="searches">
-						<input type="text" placeholder="Job Title" onChange={(e) => {handleJobTitleSearch(e.target.value)}}/>
+						<input type="text" placeholder="Job Title" onChange={(e) => { handleJobTitleSearch(e.target.value) }} />
 						<input type="text" placeholder="Skills" />
 					</div>
 				</div>
@@ -164,7 +168,7 @@ function ChoosePrivateQuestions(props) {
 																key={i}
 																className={`fancy-toggle blue ${
 																	i === 0 ? "yes" : "no"
-																}`}
+																	}`}
 																id={`${option.id}${option.question_id}`}
 																name={`${option.question_id}`}
 																type="radio"

@@ -32,6 +32,11 @@ function ChoosePublicQuestions(props) {
 		});
 	}, [props.questionsSelected]);
 
+	
+	useEffect(() => {
+		setQuestionBanks(props.questionBank);
+	}, [props.questionBank]);
+
 	const handleCheckEvent = (event, question) => {
 		console.log(event.target.value, question);
 		if (document.getElementById(event.target.id).checked) {
