@@ -87,7 +87,7 @@ function CreateJob(props) {
 					onRemove={(selectedList, selectedItem) =>
 						handleRemove(selectedList, selectedItem)
 					} // Function will trigger on remove event
-					displayValue="name" // Property name to display in the dropdown options
+					displayValue="title_name" // Property name to display in the dropdown options
 				/>
 				{/* </div> */}
 				<h2 className="sub-heading">

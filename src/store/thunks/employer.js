@@ -36,6 +36,7 @@ import {
 	beginApiCall, apiCallError
 } from "../actions/common";
 
+import { candidateFetchAllCertificatesUrl } from '../api/candidate';
 
 // import Cookies from "js-cookie";
 import { setDefaultAuthorizationHeader, setAllowAccessHeader } from "../utility";
@@ -298,7 +299,7 @@ export const getSkills = () => async (dispatch, getState) => {
 	try {
 		// const state = getState();
 		// setDefaultAuthorizationHeader(getState().authReducer.JWT.map.jwt);
-		const data = await Axios.get(entityFetchSkillsUrl);
+		const data = await Axios.get(candidateFetchAllCertificatesUrl);
 		if (!data) return false;
 		dispatch(setSkills(data.data));
 	} catch (err) {
