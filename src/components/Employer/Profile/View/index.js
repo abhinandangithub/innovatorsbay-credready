@@ -22,8 +22,6 @@ function View(props) {
 		dispatch(getCompanySizeThunk());
 	}, [dispatch]);
 
-	// props.loading ?
-	// 	< Spinner /> :
 	return (
 		props.loading ? <Spinner /> : 
 		<div className="profile-view">

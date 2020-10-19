@@ -422,11 +422,8 @@ function CandidateList(props) {
 
 	// console.log(props.candidatesList.length);
 	return (
-
-		// props.loading ? (
-		// 	<Spinner />
-		// ) : 
-		// (
+		props.loading ? 
+			<Spinner /> :
 			<div className="candidate-list">
 				<div className="top-heading">
 					<h1>
@@ -573,8 +570,8 @@ function CandidateList(props) {
 function mapStateToProps(state) {
 	return {
 		candidatesList: state.employerReducer.candidatesList.data,
-		postedJobs: state.employerReducer.postedJobs.data
-		// loading: state.commonReducer.apiCallsInProgress
+		postedJobs: state.employerReducer.postedJobs.data,
+		loading: state.commonReducer.apiCallsInProgress
 	}
 }
 

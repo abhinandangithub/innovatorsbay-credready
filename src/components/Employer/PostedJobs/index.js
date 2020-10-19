@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { connect, useDispatch } from 'react-redux';
 import { getPostedJobs, sendNotification, getCandidatesList } from '../../../store/thunks/employer';
 import { clearSelectedJobs } from "../../../store/actions/employer";
+import Spinner from "../../_Elements/Spinner";
 
 import { Link } from "react-router-dom";
 
@@ -157,6 +158,7 @@ function PostedJobs(props) {
 	);
 
 	return (
+		props.loading ? <Spinner /> : 
 		<div className="posted-jobs-page">
 			{props.postedJobs.length === 0 ? renderEmptyList : renderJobsList}
 		</div>
@@ -165,7 +167,8 @@ function PostedJobs(props) {
 
 function mapStateToProps(state) {
 	return {
-		postedJobs: state.employerReducer.postedJobs.data.reverse()
+		postedJobs: state.employerReducer.postedJobs.data.reverse(),
+		loading: state.commonReducer.apiCallsInProgress
 	}
 }
 

@@ -91,6 +91,7 @@ export const updateProfileThunk = (token, profile) => async (dispatch, getState)
 export const getProfileThunk = (token) => async (dispatch, getState) => {
 	try {
 		const state = getState();
+		dispatch(beginApiCall());
 		const data = await Axios.get(employerUpdateProfileUrl, {
 			headers: {
 				'Authorization': getState().authReducer.JWT.map.jwt,
@@ -99,6 +100,7 @@ export const getProfileThunk = (token) => async (dispatch, getState) => {
 		});
 		if (!data) return false;
 		dispatch(setEmployerProfile(data.data));
+		dispatch(apiCallError());
 		// dispatch(apiCallError())
 	} catch (err) {
 		if (err.response) console.error(`failed to update employer profile ${err}`);
@@ -168,6 +170,7 @@ export const getPostedJobs = (token) => async (dispatch, getState) => {
 		// setDefaultAuthorizationHeader(getState().authReducer.JWT.map.jwt);
 		// setContentTypeDefaultHeader();
 		// setAllowAccessHeader();
+		dispatch(beginApiCall());
 		const data = await Axios.get(employerFetchAllPostedJobsUrl, {
 			headers: {
 				'Authorization': getState().authReducer.JWT.map.jwt,
@@ -176,6 +179,7 @@ export const getPostedJobs = (token) => async (dispatch, getState) => {
 		});
 		if (!data) return false;
 		dispatch(setEmployerJobs(data.data));
+		dispatch(apiCallError());
 	} catch (err) {
 		if (err.response) console.error(`failed to fetch the posted jobs ${err}`);
 	}
@@ -236,6 +240,7 @@ export const getCandidatesList = (jobID) => async (dispatch, getState) => {
 	try {
 		const state = getState();
 		// setDefaultAuthorizationHeader(getState().authReducer.JWT.map.jwt);
+		dispatch(beginApiCall());
 		const URL = employerFetchJobById + "/" + jobID;
 		const data = await Axios.get(URL, {
 			headers: {
@@ -245,6 +250,7 @@ export const getCandidatesList = (jobID) => async (dispatch, getState) => {
 		});
 		if (!data) return false;
 		dispatch(setCandidatesList(data.data));
+		dispatch(apiCallError());
 	} catch (err) {
 		if (err.response) console.error(`failed to set the status candidate ${err}`);
 	}
