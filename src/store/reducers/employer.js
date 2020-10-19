@@ -254,10 +254,19 @@ const initialState = {
 	hiringKeys: [],
 	companySizeKeys: [],
 	employmentKeys: [],
-	functionKeys: [],
-	industryKeys: [],
+	functionKeys: [{
+		id: 0,
+		function_name:"Test"
+	}],
+	industryKeys: [{
+		id: 0,
+		industry_name: "Test"
+	}],
 	isLoggedIn: false,
-	emailTemplate: [],
+	emailTemplate: [{
+		public_template_id: 0,
+		template_name: "test"
+	}],
 	jobURL: "",
 	newJob: {
 		"emailTemplateId": 3,
@@ -461,13 +470,16 @@ const reducer = (state = initialState, action) => {
 				newJobTemp.emailTemplateId = action.value.emailTemplateId;
 			}
 			if (action.value.employmentType !== undefined) {
-				newJobTemp.employmentType = state.employmentKeys.find(x => x.employment_status === action.value.employmentType).id;
+				newJobTemp.employmentType = action.value.employmentType;
+				// newJobTemp.employmentType = state.employmentKeys.find(x => x.employment_status === action.value.employmentType).id;
 			}
 			if (action.value.function !== undefined) {
-				newJobTemp.function = state.functionKeys.find(x => x.function_name === action.value.function).id;
+				newJobTemp.function = action.value.function;
+				// newJobTemp.function = state.functionKeys.find(x => x.function_name === action.value.function).id;
 			}
 			if (action.value.industry !== undefined) {
-				newJobTemp.industry = state.industryKeys.find(x => x.industry_name === action.value.industry).id;
+				newJobTemp.industry = action.value.industry;
+				// newJobTemp.industry = state.industryKeys.find(x => x.industry_name === action.value.industry).id;
 			}
 			if (action.value.jobDescription !== undefined) {
 				newJobTemp.jobDescription = action.value.jobDescription;
@@ -476,8 +488,8 @@ const reducer = (state = initialState, action) => {
 				newJobTemp.jobTitle = action.value.jobTitle;
 			}
 			if (action.value.location !== undefined) {
-				// newJobTemp.location = action.value.location;
-				newJobTemp.location = state.locations.data.find(x => x.street_address + ", " + x.city + ", " + x.state + ", " + x.zip_code === action.value.location).id;
+				newJobTemp.location = action.value.location;
+				// newJobTemp.location = state.locations.data.find(x => x.street_address + ", " + x.city + ", " + x.state + ", " + x.zip_code === action.value.location).id;
 			}
 			if (action.value.openPositions !== undefined) {
 				newJobTemp.openPositions = action.value.openPositions;
