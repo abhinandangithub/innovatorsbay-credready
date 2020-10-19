@@ -1,15 +1,17 @@
 import React from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
 	togglePopup,
 	toggleOverlay,
 } from "../../../store/actions/popup_overlay";
 import { deleteAccount } from "../../../store/thunks/employer";
+import { deleteWorkExperience } from "../../../modals/candidateProfile/thunk";
 
 import "./index.scss";
 
 function Delete(props) {
 	const dispatch = useDispatch();
+	const obj = useSelector(state => state.popupOverlayReducer && state.popupOverlayReducer.popup && state.popupOverlayReducer.popup.info)
 
 	const closePopupOverlay = () => {
 		dispatch(toggleOverlay(false));
@@ -17,6 +19,10 @@ function Delete(props) {
 	};
 
 	const handleDelete = () => {
+		console.log(obj.id)
+		if (props.what === "workExperience") {
+			dispatch(deleteWorkExperience(obj.id))
+		}
 		dispatch(deleteAccount());
 	}
 

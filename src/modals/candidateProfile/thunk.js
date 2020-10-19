@@ -20,7 +20,8 @@ import {
 	fetchAllCertificateTitlesUrl,
 	fetchAllFunctionsUrl,
 	fetchAllIndustriesUrl,
-	jobApplyUrl
+	jobApplyUrl,
+	deleteWorkExperienceUrl
 } from "./api";
 import {
 	candidateSetCurrentStatus,
@@ -387,6 +388,22 @@ export const fetchAllCertificateTitles = () => async (dispatch, getState) => {
 		if (!data) return;
 		dispatch(setCandidateCertificateData(data && data.data ? data.data.data : []));
 
+	} catch (err) {
+		console.log(err)
+	}
+}
+
+
+export const deleteWorkExperience = (id) => async (dispatch, getState) => {
+	try {
+		const data = await Axios.delete(deleteWorkExperienceUrl + '/' + id, {
+			headers: {
+				'Authorization': getState().authReducer.JWT.map.jwt,
+				'content-Type': 'application/vnd.credready.com+json'
+			}
+		});
+		if (!data) return;
+		dispatch(fetchCandidateDetails());
 	} catch (err) {
 		console.log(err)
 	}

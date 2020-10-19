@@ -41,3 +41,5 @@ export const fetchAllCertificateTitlesUrl = `${baseUrl}/candidate/certificate_ti
 export const fetchAllFunctionsUrl = `${baseUrl}/entity/function`;
 
 export const fetchAllIndustriesUrl = `${baseUrl}/entity/industry`;
+
+export const deleteWorkExperienceUrl = `${baseUrl}/candidate/work_experience`;

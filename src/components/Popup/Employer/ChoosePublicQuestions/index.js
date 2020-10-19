@@ -27,12 +27,12 @@ function ChoosePublicQuestions(props) {
 
 	useEffect(() => {
 		props.questionsSelected.forEach((element) => {
-			if(document.getElementById(element.question_id) !== null)
-			document.getElementById(element.question_id).checked = true;
+			if (document.getElementById(element.question_id) !== null)
+				document.getElementById(element.question_id).checked = true;
 		});
 	}, [props.questionsSelected]);
 
-	
+
 	useEffect(() => {
 		setQuestionBanks(props.questionBank);
 	}, [props.questionBank]);
@@ -102,7 +102,7 @@ function ChoosePublicQuestions(props) {
 			<div className="content">
 				<div className="search-panel">
 					<div className="searches">
-						<input type="text" placeholder="Job Title" onChange={(e) => handleJobTitleSearch(e.target.value)}/>
+						<input type="text" placeholder="Job Title" onChange={(e) => handleJobTitleSearch(e.target.value)} />
 						<input type="text" placeholder="Skills" />
 					</div>
 				</div>
@@ -159,7 +159,7 @@ function ChoosePublicQuestions(props) {
 																key={i}
 																className={`fancy-toggle blue ${
 																	i === 0 ? "yes" : "no"
-																}`}
+																	}`}
 																id={`${option.id}${option.question_id}`}
 																name={`${option.question_id}`}
 																type="radio"
@@ -220,7 +220,10 @@ function ChoosePublicQuestions(props) {
 
 function mapStateToProps(state) {
 	return {
-		questionBank: state.employerReducer.questionBank.data.public_question_bank,
+		questionBank: state.employerReducer.questionBank.data.public_question_bank.sort(function (a, b) {
+			const x = a['question_id']; const y = b['question_id'];
+			return ((x < y) ? 1 : ((x > y) ? -1 : 0));
+		}),
 		questionsSelected: state.employerReducer.questionBank.questions,
 	};
 }

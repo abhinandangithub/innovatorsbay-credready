@@ -229,7 +229,10 @@ function ChoosePrivateQuestions(props) {
 
 function mapStateToProps(state) {
 	return {
-		questionBank: state.employerReducer.questionBank.data.private_question_bank,
+		questionBank: state.employerReducer.questionBank.data.private_question_bank.sort(function (a, b) {
+			const x = a['question_id']; const y = b['question_id'];
+			return ((x < y) ? 1 : ((x > y) ? -1 : 0));
+		}),
 		questionsSelected: state.employerReducer.questionBank.questions
 	};
 }

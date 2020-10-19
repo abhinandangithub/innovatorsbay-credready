@@ -26,9 +26,9 @@ function WorkExperience(props) {
 		dispatch(toggleOverlay(true));
 		dispatch(togglePopup([true, type, { id, purpose: "edit" }]));
 	};
-	const handleDelete = (type) => {
+	const handleDelete = (id, type) => {
 		dispatch(toggleOverlay(true));
-		dispatch(togglePopup([true, "delete", { what: type }]));
+		dispatch(togglePopup([true, "delete", { what: type, id: id }]));
 	};
 
 	React.useEffect(() => {
@@ -60,7 +60,7 @@ function WorkExperience(props) {
 					className="action-btn delete"
 					icon={faTrash}
 					id={"workExperienceDelete_" + i}
-					onClick={() => handleDelete("workExperience")}
+					onClick={() => handleDelete(data.work_ex_id, "workExperience")}
 				/>
 			</div>
 		);
