@@ -77,7 +77,10 @@ function Login(props) {
 		} else {
 			setAuthError(false);
 			if (auth.loggedIn.value) {
-				if (auth.loggedIn.as === "candidate") {
+				if (localStorage.getItem("jobId")) {
+					props.history.push("/profile/questions");
+				}
+				else if (auth.loggedIn.as === "candidate") {
 					props.history.push("/profile/resume");
 				} else {
 					props.history.push("/");

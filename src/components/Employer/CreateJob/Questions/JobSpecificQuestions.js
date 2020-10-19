@@ -147,7 +147,7 @@ function JobSpecificQuestions(props) {
 														<input
 															key={i}
 															className={`fancy-toggle blue ${
-																i === 0 ? "yes" : "no"
+																i === 0 ? "yes" : "yes"
 															}`}
 															id={`${option.id}${option.question_id}`}
 															name={`${option.question_id}`}

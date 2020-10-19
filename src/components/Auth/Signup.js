@@ -1,16 +1,18 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { togglePopup, toggleOverlay } from "../../store/actions/popup_overlay";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import { getVerificationCode } from "../../store/thunks/auth";
 
 import { updateLoggedIn, updateSignupDetails } from "../../store/actions/auth";
+import { updateTermsAndConditions } from "../../store/actions/auth";
 
 function Signup(props) {
 	const dispatch = useDispatch();
+	const auth = useSelector((state) => state.authReducer);
 	const { register, handleSubmit, errors } = useForm();
 
 	const [signupType, setSignupType] = useState("candidate");
@@ -18,6 +20,8 @@ function Signup(props) {
 
 	const onSubmit = (data) => {
 		data.user_type = signupType === "candidate" ? "jobseeker" : signupType;
+
+		console.log(auth, data);
 		// data.phone = "+"+ data.phone;
 		dispatch(getVerificationCode(data));
 		dispatch(toggleOverlay(true));
@@ -25,6 +29,14 @@ function Signup(props) {
 		dispatch(togglePopup([true, "phoneOtp"]));
 		dispatch(updateLoggedIn([false, signupType]));
 		dispatch(updateSignupDetails(data));
+
+		let boolValue = data.termsandconditions && data.allowContact;
+
+		if (auth.loggedIn.as === "employer") {
+			boolValue = data.termsandconditions;
+		}
+
+		dispatch(updateTermsAndConditions(boolValue));
 	};
 
 	const togglePasswordVisiblity = () => {
@@ -179,14 +191,14 @@ function Signup(props) {
 					<div className="agree">
 						<input
 							className="fancy-toggle checkbox blue"
-							id="agree"
+							id="termsandconditions"
 							name="agree"
 							type="checkbox"
 							ref={register({
 								required: "Required",
 							})}
 						/>
-						<label htmlFor="agree">
+						<label htmlFor="termsandconditions">
 							<span className="input"></span>I agree to the &nbsp;
 							<Link to="#" onClick={() => props.show_tnc(true)}>
 								Terms and Conditions
@@ -197,6 +209,23 @@ function Signup(props) {
 							</Link>
 						</label>
 					</div>
+					{signupType === "candidate" && (
+						<div className="agree allow">
+							<input
+								className="fancy-toggle checkbox blue"
+								id="allowContact"
+								name="allowContact"
+								type="checkbox"
+								ref={register({
+									required: "Required",
+								})}
+							/>
+							<label htmlFor="allowContact">
+								<span className="input"></span>Allow recruiters to contact you
+								for more details
+							</label>
+						</div>
+					)}
 				</li>
 			</ul>
 

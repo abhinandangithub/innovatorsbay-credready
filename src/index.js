@@ -24,6 +24,7 @@ import {
 	setCandidateDegreeTitlesReducer,
 	setCandidateInstitutionTypeReducer,
 	setCandidateJobViewDataReducer,
+	setJobDescriptionReducer
 } from "./modals/candidateProfile/index";
 
 const rootReducer = combineReducers({
@@ -43,7 +44,8 @@ const rootReducer = combineReducers({
 	setAllFunctionsReducer,
 	setAllIndustriesReducer,
 	commonReducer,
-	candidateReducer
+	candidateReducer,
+	setJobDescriptionReducer
 });
 
 /* Middleware */

@@ -83,8 +83,8 @@ function Home(props) {
 							{profile.name === "" ? (
 								<Redirect exact from="/" to="/profile" />
 							) : (
-								<Redirect exact from="/" to="/dashboard" />
-							)}
+									<Redirect exact from="/" to="/dashboard" />
+								)}
 
 							{auth.loggedIn.as === "candidate" ? (
 								<>
@@ -104,6 +104,11 @@ function Home(props) {
 									<Route
 										exact
 										path="/jobs/application"
+										component={JobApplication}
+									/>
+									<Route
+										exact
+										path="/jobs/application/:id"
 										component={JobApplication}
 									/>
 									<Route
@@ -134,32 +139,32 @@ function Home(props) {
 									<Route exact path="/goals/view/:id" component={GoalView} />
 								</>
 							) : (
-								<>
-									<Route
-										exact
-										path="/dashboard"
-										component={EmployerDashboard}
-									/>
-									<Route exact path="/jobs" component={EmployerPostedJobs} />
-									<Route
-										exact
-										path="/jobs/create-job"
-										component={EmployerCreateJob}
-									/>
-									<Route
-										exact
-										// path="/jobs/candidates-list"
-										path="/jobs/candidates-list/:jobId"
-										component={EmployerCandidateList}
-									/>
-									<Route
-										exact
-										path="/jobs/candidate-view"
-										component={EmployerCandidateView}
-									/>
-									<Route path="/profile" component={EmployerProfile} />
-								</>
-							)}
+									<>
+										<Route
+											exact
+											path="/dashboard"
+											component={EmployerDashboard}
+										/>
+										<Route exact path="/jobs" component={EmployerPostedJobs} />
+										<Route
+											exact
+											path="/jobs/create-job"
+											component={EmployerCreateJob}
+										/>
+										<Route
+											exact
+											// path="/jobs/candidates-list"
+											path="/jobs/candidates-list/:jobId"
+											component={EmployerCandidateList}
+										/>
+										<Route
+											exact
+											path="/jobs/candidate-view"
+											component={EmployerCandidateView}
+										/>
+										<Route path="/profile" component={EmployerProfile} />
+									</>
+								)}
 							<Route
 								path="/term-and-conditions"
 								component={TermsAndConditions}

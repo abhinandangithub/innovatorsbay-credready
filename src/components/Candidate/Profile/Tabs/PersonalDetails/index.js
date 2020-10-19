@@ -48,6 +48,7 @@ const joiningDuration = {
 
 function PersonalDetails(props) {
 	const data = useSelector((state) => state.candidateSetDataReducer.data);
+	console.log(data, props.currentStatus);
 	const [formData, setFormData] = React.useState({
 		/**
 		 * * field: ['value', 'error']
@@ -64,11 +65,7 @@ function PersonalDetails(props) {
 				: "",
 		],
 		interestedIn: ["on"],
-		joiningDuration: [
-			joiningDuration.content.find((val) => val === data.availableWithin)
-				? joiningDuration.content.find((val) => val === data.availableWithin)
-				: "",
-		],
+		joiningDuration: [data.available_within],
 		streetAddress: [data.address && data.address.street_address],
 		city: [data.address && data.address.city],
 		state: [data.address && data.address.state],
@@ -100,7 +97,6 @@ function PersonalDetails(props) {
 			}
 		}
 
-		console.log(formData);
 		if (oldFormData.formValid) {
 			let obj = {
 				firstName: formData ? formData.firstName[0] : "",

@@ -77,6 +77,7 @@ export const fetchjobViewData = (id) => async (dispatch, getState) => {
 
 	} catch (err) {
 		console.log(err)
+		dispatch(candidateSetJobViewData([]));
 	}
 };
 

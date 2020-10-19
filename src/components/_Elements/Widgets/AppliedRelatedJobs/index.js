@@ -11,6 +11,9 @@ function AppliedRelatedJobs(props) {
 		? `/jobs/preview/${type.jobId}`
 		: `/jobs/view/${type.jobId}`;
 
+	const onClickHandler = () => {
+		localStorage.clear();
+	}
 	const content = (
 		<>
 			<div className="top">
@@ -57,7 +60,7 @@ function AppliedRelatedJobs(props) {
 					<div className="widget widget-applied-related-jobs">
 						{content}
 						<div className="cta related">
-							<Link to={link} className="primary-btn blue">
+							<Link to={link} className="primary-btn blue" onClick={onClickHandler}>
 								View
 						</Link>
 						</div>

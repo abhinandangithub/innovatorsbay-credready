@@ -41,7 +41,7 @@ function CreateJob(props) {
 	}, [props]);
 
 	const onRichTextEditorChange = (value) => {
-		// console.log(value.toString("html"));
+		console.log(value.toString("html"));
 		setRichTextEditorvalue(value);
 		dispatch(setNewJob({ jobDescription: value.toString("html") }));
 	};

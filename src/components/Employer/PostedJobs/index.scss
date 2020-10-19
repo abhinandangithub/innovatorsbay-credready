@@ -43,7 +43,15 @@
 				&:last-child {
 					margin-bottom: 0;
 				}
-
+				.description {
+					* {
+						margin: 0 0 10px 0;
+					}
+					ul,
+					ol {
+						padding-left: 40px;
+					}
+				}
 				.heading {
 					margin: 0 0 10px 0;
 					font-weight: 500;

@@ -54,7 +54,8 @@ function CandidateList(props) {
 	const handleSendEmail = (candidate_id, template_id) => {
 		dispatch(sendEmail({
 			"candidateId": candidate_id,
-			"emailTemplateId": template_id
+			"emailTemplateId": template_id,
+			"job_id":jobId
 		}));
 	}
 

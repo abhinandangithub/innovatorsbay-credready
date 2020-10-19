@@ -7,7 +7,10 @@ import {
 	togglePopup,
 	toggleOverlay,
 } from "../../../../store/actions/popup_overlay";
-import { getQuestionBank, deleteQuestion } from "../../../../store/thunks/employer";
+import {
+	getQuestionBank,
+	deleteQuestion,
+} from "../../../../store/thunks/employer";
 import {
 	setQuestionBankQuestion,
 	setNewJob,
@@ -85,18 +88,32 @@ function ChoosePrivateQuestions(props) {
 	};
 
 	const handleEdit = (e, question) => {
-		dispatch(togglePopup([true, "createNewQuestion", { type: "private", action: "edit", question: question }]));
+		dispatch(
+			togglePopup([
+				true,
+				"createNewQuestion",
+				{ type: "private", action: "edit", question: question },
+			])
+		);
 	};
 	const handleDelete = (e, question) => {
 		// console.log(question);
 		alert("Are you sure to delete?");
 		dispatch(deleteQuestion(question.question_id));
-		setQuestionBanks(props.questionBank.filter(val => val.question_id !== question.question_id));
+		setQuestionBanks(
+			props.questionBank.filter(
+				(val) => val.question_id !== question.question_id
+			)
+		);
 	};
 
 	const handleJobTitleSearch = (searchJobTitle) => {
-		setQuestionBanks(props.questionBank.filter(val => val.question_name.includes(searchJobTitle)));
-	}
+		setQuestionBanks(
+			props.questionBank.filter((val) =>
+				val.question_name.includes(searchJobTitle)
+			)
+		);
+	};
 
 	return (
 		<div className="choose-private-question">
@@ -109,7 +126,13 @@ function ChoosePrivateQuestions(props) {
 			<div className="content">
 				<div className="search-panel">
 					<div className="searches">
-						<input type="text" placeholder="Job Title" onChange={(e) => { handleJobTitleSearch(e.target.value) }} />
+						<input
+							type="text"
+							placeholder="Job Title"
+							onChange={(e) => {
+								handleJobTitleSearch(e.target.value);
+							}}
+						/>
 						<input type="text" placeholder="Skills" />
 					</div>
 				</div>
@@ -167,8 +190,8 @@ function ChoosePrivateQuestions(props) {
 															<input
 																key={i}
 																className={`fancy-toggle blue ${
-																	i === 0 ? "yes" : "no"
-																	}`}
+																	i === 0 ? "yes" : "yes"
+																}`}
 																id={`${option.id}${option.question_id}`}
 																name={`${option.question_id}`}
 																type="radio"
@@ -229,11 +252,14 @@ function ChoosePrivateQuestions(props) {
 
 function mapStateToProps(state) {
 	return {
-		questionBank: state.employerReducer.questionBank.data.private_question_bank.sort(function (a, b) {
-			const x = a['question_id']; const y = b['question_id'];
-			return ((x < y) ? 1 : ((x > y) ? -1 : 0));
-		}),
-		questionsSelected: state.employerReducer.questionBank.questions
+		questionBank: state.employerReducer.questionBank.data.private_question_bank.sort(
+			function (a, b) {
+				const x = a["question_id"];
+				const y = b["question_id"];
+				return x < y ? 1 : x > y ? -1 : 0;
+			}
+		),
+		questionsSelected: state.employerReducer.questionBank.questions,
 	};
 }
 

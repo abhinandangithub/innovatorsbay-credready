@@ -20,7 +20,7 @@ function Dashboard(props) {
 
 	useEffect(() => {
 		dispatch(getCandidateJobApplications());
-	},[dispatch]);
+	}, [dispatch]);
 
 	const [activeApplication, setActiveApplication] = React.useState(1);
 
@@ -106,9 +106,12 @@ function Dashboard(props) {
 							})}
 						</ul>
 					</div>
-					<div className="right flex">
-						<CredReadyIndex index={parseInt(props.candidateJobApplications[activeApplication].readinessIndex)} />
-					</div>
+					{
+						parseInt(props.candidateJobApplications[activeApplication] && props.candidateJobApplications[activeApplication].readinessIndex) ?
+							<div className="right flex">
+								<CredReadyIndex index={parseInt(props.candidateJobApplications[activeApplication] && props.candidateJobApplications[activeApplication].readinessIndex)} />
+							</div> : ""
+					}
 				</div>
 			</div>
 
