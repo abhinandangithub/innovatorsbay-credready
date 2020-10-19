@@ -166,7 +166,7 @@ function JobSpecificQuestions(props) {
 										})}
 									</>
 								) : null}
-								<FontAwesomeIcon
+								{/* <FontAwesomeIcon
 									className="action-btn edit"
 									icon={faPen}
 									onClick={handleEdit}
@@ -175,7 +175,7 @@ function JobSpecificQuestions(props) {
 									className="action-btn delete"
 									icon={faTrash}
 									onClick={handleDelete}
-								/>
+								/> */}
 							</div>
 						</li>
 					);

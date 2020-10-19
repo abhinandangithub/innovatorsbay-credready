@@ -21,7 +21,8 @@ function Signup(props) {
 		// data.phone = "+"+ data.phone;
 		dispatch(getVerificationCode(data));
 		dispatch(toggleOverlay(true));
-		dispatch(togglePopup([true, "termsAndConditions"]));
+		//dispatch(togglePopup([true, "termsAndConditions"]));
+		dispatch(togglePopup([true, "phoneOtp"]));
 		dispatch(updateLoggedIn([false, signupType]));
 		dispatch(updateSignupDetails(data));
 	};

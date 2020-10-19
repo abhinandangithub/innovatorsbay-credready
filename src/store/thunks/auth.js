@@ -32,7 +32,7 @@ export const tryLogin = (credentials) => async (dispatch, getState) => {
 					? "candidate"
 					: token.map.user_type
 				: "";
-		fetchCandidateDetails();
+		await fetchCandidateDetails();
 		dispatch(updateLoggedIn([true, type]));
 		dispatch(getProfileThunk());
 		setDefaultAuthorizationHeader(token);

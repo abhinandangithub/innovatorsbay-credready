@@ -22,7 +22,9 @@ export default function reducer(
     action.type === actionTypes.API_CALL_ERROR ||
     actionTypeEndsInSuccess(action.type)
   ) {
-    return state - 1;
+    return updateObject(state, {
+      apiCallsInProgress: state.apiCallsInProgress - 1
+    });
   }
 
   return state;

@@ -178,9 +178,9 @@ export const getPostedJobs = (token) => async (dispatch, getState) => {
 				'Content-Type': 'application/vnd.credready.com+json'
 			}
 		});
+		dispatch(apiCallError());
 		if (!data) return false;
 		dispatch(setEmployerJobs(data.data));
-		dispatch(apiCallError());
 	} catch (err) {
 		if (err.response) console.error(`failed to fetch the posted jobs ${err}`);
 	}
