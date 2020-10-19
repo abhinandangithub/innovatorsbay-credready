@@ -109,17 +109,20 @@ function AddEducation(props) {
 
 		if (oldFormData.formValid) {
 			console.log("submitting form...");
-			/* send data to api */
 
 			var obj = {
-				title: formData.degreeTitle[0],
-				institution: formData.description[0],
-				attended_from: startDate,
-				attended_till: endDate,
-				education_major: major,
-				education_minor: minor,
-				education_description: formData.comments[0],
+				titleOfDegree: formData.degreeTitle[0],
+				institution: formData.institution[0],
+				attendedFrom: formatDate(formData.startDate[0]),
+				attendedTill: formatDate(formData.endDate[0]),
+				majors: major,
+				minors: minor,
+				educationDescription: formData.comments[0],
+				isUnfinished: formData.degreeGranted[0] === "on" ? false : true,
 			};
+			if (info.id) {
+				obj.id = info.id
+			}
 
 			dispatch(addEducationExperience(obj));
 			dispatch(toggleOverlay(false));
@@ -188,8 +191,8 @@ function AddEducation(props) {
 			{info && info.purpose === "edit" ? (
 				<h1>Edit Education</h1>
 			) : (
-				<h1>Add Education</h1>
-			)}
+					<h1>Add Education</h1>
+				)}
 
 			<ul className="listing">
 				<li>
@@ -243,9 +246,8 @@ function AddEducation(props) {
 					<label>
 						Attend <span>*</span>
 						<span
-							className={`error-text ${
-								!formData.startDate[1] && !formData.endDate[1] && "hidden"
-							}`}
+							className={`error-text ${!formData.startDate[1] && !formData.endDate[1] && "hidden"
+								}`}
 						>
 							Required
 						</span>

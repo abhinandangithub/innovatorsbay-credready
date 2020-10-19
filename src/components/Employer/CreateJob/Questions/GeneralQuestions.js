@@ -23,6 +23,7 @@ function GeneralQuestions(props) {
 								selected={appliedDate}
 								onChange={(date) => setAppliedDate(date)}
 								placeholderText="Select Date"
+								disabled
 							/>
 							<span style={{ margin: "0 15px" }}>Or</span>
 							<input
@@ -30,6 +31,7 @@ function GeneralQuestions(props) {
 								name="applied"
 								type="radio"
 								id="appliedBefore"
+								disabled
 							/>
 							<label htmlFor="appliedBefore">
 								<span className="input"></span>No
@@ -44,6 +46,7 @@ function GeneralQuestions(props) {
 								name="over18Years"
 								type="radio"
 								id="over18YearsYes"
+								disabled
 							/>
 							<label htmlFor="over18YearsYes">
 								<span className="input"></span>Yes
@@ -53,6 +56,7 @@ function GeneralQuestions(props) {
 								name="over18Years"
 								type="radio"
 								id="over18YearsNo"
+								disabled
 							/>
 							<label htmlFor="over18YearsNo">
 								<span className="input"></span>No
@@ -67,6 +71,7 @@ function GeneralQuestions(props) {
 								name="eligible"
 								type="radio"
 								id="eligibleYes"
+								disabled
 							/>
 							<label htmlFor="eligibleYes">
 								<span className="input"></span>Yes
@@ -76,6 +81,7 @@ function GeneralQuestions(props) {
 								name="eligible"
 								type="radio"
 								id="eligibleNo"
+								disabled
 							/>
 							<label htmlFor="eligibleNo">
 								<span className="input"></span>No
@@ -92,6 +98,7 @@ function GeneralQuestions(props) {
 								name="requireRelocation"
 								type="radio"
 								id="requireRelocationYes"
+								disabled
 							/>
 							<label htmlFor="requireRelocationYes">
 								<span className="input"></span>Yes
@@ -101,6 +108,7 @@ function GeneralQuestions(props) {
 								name="requireRelocation"
 								type="radio"
 								id="requireRelocationNo"
+								disabled
 							/>
 							<label htmlFor="requireRelocationNo">
 								<span className="input"></span>No
@@ -117,6 +125,7 @@ function GeneralQuestions(props) {
 								name="workAuthorization"
 								type="radio"
 								id="workAuthorizationYes"
+								disabled
 							/>
 							<label htmlFor="workAuthorizationYes">
 								<span className="input"></span>Yes
@@ -126,6 +135,7 @@ function GeneralQuestions(props) {
 								name="workAuthorization"
 								type="radio"
 								id="workAuthorizationNo"
+								disabled
 							/>
 							<label htmlFor="workAuthorizationNo">
 								<span className="input"></span>No
@@ -145,6 +155,7 @@ function GeneralQuestions(props) {
 								name="isVeteran"
 								type="radio"
 								id="isVeteran"
+								disabled
 							/>
 							<label htmlFor="isVeteran">
 								<span className="input"></span>I am not a veteran. (I did not
@@ -155,6 +166,7 @@ function GeneralQuestions(props) {
 								name="isVeteran"
 								type="radio"
 								id="protectedVeteran"
+								disabled
 							/>
 							<label htmlFor="protectedVeteran">
 								<span className="input"></span>I belong to the following
@@ -167,6 +179,7 @@ function GeneralQuestions(props) {
 										name="vetranType"
 										type="radio"
 										id="disabledVeteran"
+										disabled
 									/>
 									<label htmlFor="disabledVeteran">
 										<span className="input"></span>DISABLED VETERAN
@@ -176,6 +189,7 @@ function GeneralQuestions(props) {
 										name="vetranType"
 										type="radio"
 										id="separatedVeteran"
+										disabled
 									/>
 									<label htmlFor="separatedVeteran">
 										<span className="input"></span>
@@ -186,6 +200,7 @@ function GeneralQuestions(props) {
 										name="vetranType"
 										type="radio"
 										id="activeVeteran"
+										disabled
 									/>
 									<label htmlFor="activeVeteran">
 										<span className="input"></span>
@@ -196,6 +211,7 @@ function GeneralQuestions(props) {
 										name="vetranType"
 										type="radio"
 										id="medalVeteran"
+										disabled
 									/>
 									<label htmlFor="medalVeteran">
 										<span className="input"></span>
@@ -208,6 +224,7 @@ function GeneralQuestions(props) {
 								name="isVeteran"
 								type="radio"
 								id="notProtectedVeteran"
+								disabled
 							/>
 							<label htmlFor="notProtectedVeteran">
 								<span className="input"></span>I am NOT a protected veteran. (I
@@ -219,6 +236,7 @@ function GeneralQuestions(props) {
 								name="isVeteran"
 								type="radio"
 								id="noVeteranStatus"
+								disabled
 							/>
 							<label htmlFor="noVeteranStatus">
 								<span className="input"></span>I choose not to identify my

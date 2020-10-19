@@ -8,23 +8,39 @@ import CredReadyIndex from "../../../_Elements/CredReadyIndex";
 import { fetchjobViewData } from "../../../../modals/candidateProfile/thunk";
 import MarginalAssociation from "../../../_Elements/Charts/MarginalAssociation";
 
-function JobView(props) {
+function JobApply(props) {
+	var hide_Graphs = false;
+
 	const dispatch = useDispatch();
 	console.log(props.match.params.id);
 	const allData = useSelector(
 		(state) => state.setCandidateJobViewDataReducer.data
 	);
 	const jobDetails = allData.jobDetails ? allData.jobDetails : [];
-	console.log(allData.candidateJobApplication && allData.candidateJobApplication.marginal_associations);
-	var index = allData.candidateJobApplication && allData.candidateJobApplication.readiness_index;
-	var titles = allData.candidateJobApplication && allData.candidateJobApplication.marginal_associations.map((entity => entity.metric));
-	var values = allData.candidateJobApplication && allData.candidateJobApplication.marginal_associations.map((entity => entity.score));
+	console.log(
+		allData.candidateJobApplication &&
+			allData.candidateJobApplication.marginal_associations
+	);
+	var index =
+		allData.candidateJobApplication &&
+		allData.candidateJobApplication.readiness_index;
+	var titles =
+		allData.candidateJobApplication &&
+		allData.candidateJobApplication.marginal_associations.map(
+			(entity) => entity.metric
+		);
+	var values =
+		allData.candidateJobApplication &&
+		allData.candidateJobApplication.marginal_associations.map(
+			(entity) => entity.score
+		);
 	React.useEffect(() => {
+		console.log(props.match.params.id);
 		dispatch(fetchjobViewData(props.match.params.id));
 	}, []);
 
 	return (
-		<div className="job-view-cmp flex">
+		<div className={`job-view-cmp flex ${hide_Graphs ? "" : "hide_Graphs"}`}>
 			<div className="left">
 				<div className="top">
 					<div className="logo">
@@ -36,8 +52,7 @@ function JobView(props) {
 					</div>
 					<div className="short-info">
 						<p>
-							{jobDetails.minExp}-
-							{jobDetails.maxExp} Years
+							{jobDetails.minExp}-{jobDetails.maxExp} Years
 						</p>
 						<p>{jobDetails.location}</p>
 					</div>
@@ -48,8 +63,7 @@ function JobView(props) {
 						<span className="text">
 							<span
 								dangerouslySetInnerHTML={{
-									__html:
-										jobDetails.jobDescription,
+									__html: jobDetails.jobDescription,
 								}}
 							></span>
 							{/* <span dangerouslySetInnerHTML={{ __html: job.job_description }}></span> */}
@@ -71,10 +85,13 @@ function JobView(props) {
 								<br /> Are you sure you want to apply?
 							</p>
 						) : (
-								<p></p>
-							)}
+							<p></p>
+						)}
 
-						<Link className="primary-btn blue" to="/jobs/application" >
+						<Link
+							className="primary-btn blue"
+							to={`/jobs/questions/${props.match.params.id}`}
+						>
 							Apply
 						</Link>
 					</div>
@@ -87,14 +104,20 @@ function JobView(props) {
 						industry. Lorem Ipsum has.
 					</p>
 					<CredReadyIndex index={index} />
+					<div
+						className={`${props.isLoggedIn ? "hidden" : "graph_overlay"}`}
+					></div>
 				</div>
 				<div className="marginal">
 					<h3>Top 5 Contributors to CredReadiness</h3>
 					<MarginalAssociation titles={titles} values={values} />
+					<div
+						className={`${props.isLoggedIn ? "hidden" : "graph_overlay"}`}
+					></div>
 				</div>
 			</div>
 		</div>
 	);
 }
 
-export default JobView;
+export default JobApply;

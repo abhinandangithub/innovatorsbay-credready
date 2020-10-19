@@ -307,6 +307,12 @@ input[type="number"] {
 			}
 		}
 	}
+	&[disabled] {
+		& + label {
+			opacity: 0.7;
+			cursor: default;
+		}
+	}
 
 	&.blue {
 		& + label {
@@ -348,6 +354,12 @@ input[type="number"] {
 	&:checked + label {
 		background-color: $primary-color;
 		color: white;
+	}
+	&[disabled] {
+		& + label {
+			opacity: 0.7;
+			cursor: default;
+		}
 	}
 
 	&.blue {
@@ -508,6 +520,12 @@ input[type="number"] {
 	}
 	.input-range__track--active {
 		background: $secondary-color;
+	}
+	&.input-range--disabled {
+		opacity: 0.7;
+		* {
+			cursor: default;
+		}
 	}
 }
 

@@ -101,6 +101,10 @@ export const setAllIndustriesInitial = {
 	data: [],
 };
 
+export const setJobDescriptionInitial = {
+	data: [],
+}
+
 export function candidateSetDataReducer(state = initialState, action) {
 	switch (action.type) {
 		case types.CANDIDATE_PROFILE_SET_DATA: {
@@ -254,6 +258,17 @@ export function setAllIndustriesReducer(
 export function setAllFunctionsReducer(state = setAllFunctionsInitial, action) {
 	switch (action.type) {
 		case types.SET_ALL_FUNCTIONS: {
+			const { data } = action;
+			state = { ...state, data };
+		}
+		default:
+			return state;
+	}
+}
+
+export function setJobDescriptionReducer(state = setJobDescriptionInitial, action) {
+	switch (action.type) {
+		case types.SET_JOB_DESCRIPTION: {
 			const { data } = action;
 			state = { ...state, data };
 		}

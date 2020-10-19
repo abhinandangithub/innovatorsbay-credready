@@ -43,3 +43,12 @@ export const fetchAllFunctionsUrl = `${baseUrl}/entity/function`;
 export const fetchAllIndustriesUrl = `${baseUrl}/entity/industry`;
 
 export const deleteWorkExperienceUrl = `${baseUrl}/candidate/work_experience`;
+
+export const deleteEducationExperienceUrl = `${baseUrl}/candidate/education_experience`;
+
+export const deleteOtherExperienceUrl = `${baseUrl}/candidate/additional_experience`;
+
+export const deleteCertificateUrl = `${baseUrl}/candidate/certificate_details`;
+
+export const fetchJobDescriptionUrl = `${baseUrl}/employer/job/fetch`;
+

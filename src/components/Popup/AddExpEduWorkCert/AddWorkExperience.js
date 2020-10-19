@@ -112,21 +112,30 @@ function AddWorkExperience() {
 		}
 
 		if (oldFormData.formValid.add && oldFormData.formValid.verify) {
-			// console.log("Adding work experience to database...");
-			dispatch(toggleOverlay(false));
-			dispatch(togglePopup([false, ""]));
-
+			console.log("submitting form...");
 			let obj = {
 				title: formData.title[0],
 				company: formData.company[0],
 				location: formData.location[0],
-				employment_from: formatDate(formData.startDate[0]),
-				employment_to: formatDate(formData.endDate[0]),
-				job_description: formData.description[0],
-				employer_website: formData.description[0],
+				currentlyEmployed: formData.currentCompany[0] === "on" ? true : false,
+				employmentFrom: formatDate(formData.startDate[0]),
+				employmentTo: formatDate(formData.endDate[0]),
+				jobDescription: formData.description[0],
+				employerWebsite: formData.description[0],
+				workexVerification: {
+					supervisorName: formData.supervisorName[0],
+					title: formData.supervisorTitle[0],
+					phone: formData.phoneNumber[0],
+					email: formData.email[0],
+				},
 			};
+			if (info.id) {
+				obj.id = info.id
+			}
 
 			dispatch(addWorkExperience(obj));
+			dispatch(toggleOverlay(false));
+			dispatch(togglePopup([false, ""]));
 		}
 
 		setFormData(oldFormData);
@@ -153,7 +162,7 @@ function AddWorkExperience() {
 		if (info) {
 			let i = findIndexOfObjInArr(dataArr, "work_ex_id", info.id);
 			let arr = dataArr[i];
-			// console.log(arr)
+			console.log(arr);
 
 			setFormData({
 				...formData,
@@ -165,12 +174,18 @@ function AddWorkExperience() {
 				description: [arr.job_description],
 				employerWebsite: [arr.employer_website],
 
+				supervisorName: [arr.workex_verification.supervisor_name],
+				supervisorTitle: [arr.workex_verification.title],
+				phoneNumber: [arr.workex_verification.phone],
+				email: [arr.workex_verification.email],
+
 				formValid: {
 					add: false,
 					verify: false,
 				},
 			});
 
+			console.log(arr.employment_from, arr.employment_to);
 			setStartDate(new Date(arr.employment_from));
 			setEndDate(new Date(arr.employment_to));
 		}
@@ -181,8 +196,8 @@ function AddWorkExperience() {
 			{info && info.purpose === "edit" ? (
 				<h1>Edit Work Experience</h1>
 			) : (
-				<h1>Add Work Experience</h1>
-			)}
+					<h1>Add Work Experience</h1>
+				)}
 
 			<form onSubmit={(e) => handleSubmit(e)}>
 				<div className="popup-tabs flex">
@@ -254,9 +269,8 @@ function AddWorkExperience() {
 							Is this your current company?
 							<span>*</span>
 							<span
-								className={`error-text ${
-									!formData.currentCompany[1] && "hidden"
-								}`}
+								className={`error-text ${!formData.currentCompany[1] && "hidden"
+									}`}
 							>
 								Required
 							</span>
@@ -294,9 +308,8 @@ function AddWorkExperience() {
 						<label>
 							Employment <span>*</span>
 							<span
-								className={`error-text ${
-									!formData.startDate[1] && !formData.endDate[1] && "hidden"
-								}`}
+								className={`error-text ${!formData.startDate[1] && !formData.endDate[1] && "hidden"
+									}`}
 							>
 								Required
 							</span>
@@ -363,9 +376,8 @@ function AddWorkExperience() {
 						<label htmlFor="supervisorName">
 							Supervisor Name <span>*</span>
 							<span
-								className={`error-text ${
-									!formData.supervisorName[1] && "hidden"
-								}`}
+								className={`error-text ${!formData.supervisorName[1] && "hidden"
+									}`}
 							>
 								Required
 							</span>
@@ -381,9 +393,8 @@ function AddWorkExperience() {
 						<label htmlFor="supervisorTitle">
 							Title <span>*</span>
 							<span
-								className={`error-text ${
-									!formData.supervisorTitle[1] && "hidden"
-								}`}
+								className={`error-text ${!formData.supervisorTitle[1] && "hidden"
+									}`}
 							>
 								Required
 							</span>

@@ -91,7 +91,7 @@ function WorkExperience(props) {
 					className="action-btn delete"
 					icon={faTrash}
 					id={"otherExperienceDelete_" + i}
-					onClick={() => handleDelete("otherExperience")}
+					onClick={() => handleDelete(data.id, "otherExperience")}
 				/>
 			</div>
 		);

@@ -32,6 +32,7 @@ function CommuteQuestions(props) {
 								name="otherJob"
 								type="radio"
 								id="otherJobYes"
+								disabled
 							/>
 							<label htmlFor="otherJobYes">
 								<span className="input"></span>Yes
@@ -41,6 +42,7 @@ function CommuteQuestions(props) {
 								name="otherJob"
 								type="radio"
 								id="otherJobNo"
+								disabled
 							/>
 							<label htmlFor="otherJobNo">
 								<span className="input"></span>No
@@ -53,25 +55,25 @@ function CommuteQuestions(props) {
 									<li>Adress 1</li>
 									<li>
 										<label htmlFor="street">Street Adress</label>
-										<Input type="text" />
+										<Input type="text" disabled />
 									</li>
 									<li>
 										<label htmlFor="street">Zip Code</label>
-										<Input type="text" />
+										<Input type="text" disabled />
 									</li>
 									<li>
 										<label htmlFor="street">City</label>
-										<Input type="text" />
+										<Input type="text" disabled />
 									</li>
 									<li>
 										<label htmlFor="street">State</label>
-										<Input type="text" />
+										<Input type="text" disabled />
 									</li>
 								</ul>
 							</li>
-							<li id="addAddressBtn" className="add-address">
+							{/* <li id="addAddressBtn" className="add-address">
 								Add Another Address
-							</li>
+							</li> */}
 						</ul>
 					</li>
 				</ul>

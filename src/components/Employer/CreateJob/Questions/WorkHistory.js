@@ -27,6 +27,7 @@ function WorkHistory(props) {
 								maxValue={15}
 								value={value1}
 								onChange={(value) => setValue1(value)}
+								disabled
 							/>
 						</div>
 						<ul className="level_2">
@@ -40,6 +41,7 @@ function WorkHistory(props) {
 										maxValue={10}
 										value={value2}
 										onChange={(value) => setValue2(value)}
+										disabled
 									/>
 								</div>
 							</li>
@@ -50,6 +52,7 @@ function WorkHistory(props) {
 										selected={appliedDate}
 										onChange={(date) => setAppliedDate(date)}
 										placeholderText="Select Date"
+										disabled
 									/>
 								</div>
 							</li>
@@ -61,6 +64,7 @@ function WorkHistory(props) {
 										name="cnaBefore"
 										type="radio"
 										id="cnaBeforeYes"
+										disabled
 									/>
 									<label htmlFor="cnaBeforeYes">
 										<span className="input"></span>Yes
@@ -70,6 +74,7 @@ function WorkHistory(props) {
 										name="cnaBefore"
 										type="radio"
 										id="cnaBeforeNo"
+										disabled
 									/>
 									<label htmlFor="cnaBeforeNo">
 										<span className="input"></span>No

@@ -37,6 +37,7 @@ function PersonalityAssessment(props) {
 						className="fancy-toggle blue"
 						id={`radio_${id}${i}`}
 						name={`radio_${id}`}
+						disabled
 					/>
 					<label htmlFor={`radio_${id}${i}`}>
 						<span className="input"></span>

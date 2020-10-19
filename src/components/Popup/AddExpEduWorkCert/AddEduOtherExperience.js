@@ -14,13 +14,15 @@ import {
 	addOtherEducationExperience,
 	fetchCandidateExperienceType,
 } from "../../../modals/candidateProfile/thunk";
+import { findIndexOfObjInArr } from "../../../assets/js/Utility";
 
 function AddEduOtherExperience(props) {
 	const dispatch = useDispatch();
 
 	const info = useSelector((state) => state.popupOverlayReducer.popup.info);
-	const dataArr = useSelector((state) => state.candidateSetDataReducer.data);
-	console.log(info, dataArr);
+	const dataArr = useSelector(
+		(state) => state.candidateSetDataReducer.data.additional_experiences
+	);
 
 	const [startDate, setStartDate] = useState();
 	const [endDate, setEndDate] = useState();
@@ -71,34 +73,26 @@ function AddEduOtherExperience(props) {
 				}
 			}
 		}
-		// {
-		// 	"careerPath": "EDUCATION",
-		// 	"description": "Some description about other experience during education",
-		// 	"experienceType": 2,
-		// 	"from": "2020-10-09T02:00:38.835Z",
-		// 	"location": "Warren, NJ",
-		// 	"organizationName": "Red cross",
-		// 	"title": "Volunteer",
-		// 	"to": "2020-10-09T02:00:38.835Z"
-		//   }
 
 		if (oldFormData.formValid) {
-			console.log(formData);
 			console.log("submitting form...");
-			/* send data to api */
-			let obj = {
+
+			var obj = {
+				id: info.id,
+				experienceType: formData.description[0],
+				organizationName: formData.organizationName[0],
+				title: formData.title[0],
+				from: formatDate(formData.startDate[0]),
+				to: formatDate(formData.endDate[0]),
+				location: formData.location[0],
+				description: formData.description[0],
+				skills: [],
 				careerPath: "EDUCATION",
-				description: formData ? formData.description[0] : "",
-				experienceType: formData ? formData.experienceType[0] : "",
-				location: formData ? formData.location[0] : "",
-				organizationName: formData ? formData.organizationName[0] : "",
-				title: formData ? formData.title[0] : "",
-				from: formData ? formatDate(formData.startDate[0]) : "",
-				to: formData ? formatDate(formData.endDate[0]) : "",
 			};
+
+			dispatch(addOtherEducationExperience(obj));
 			dispatch(toggleOverlay(false));
 			dispatch(togglePopup([false, ""]));
-			props.addOtherEducationExperience(obj);
 		}
 
 		setFormData(oldFormData);
@@ -124,19 +118,41 @@ function AddEduOtherExperience(props) {
 
 	React.useEffect(() => {
 		if (props.experienceType.length === 0) props.fetchCandidateExperienceType();
+
+		if (info) {
+			let i = findIndexOfObjInArr(dataArr, "id", info.id);
+			let arr = dataArr[i];
+
+			setFormData({
+				...formData,
+				experienceType: [arr.experience_type],
+				organizationName: [arr.organization_name],
+				title: [arr.title],
+				startDate: [arr.employed_from],
+				endDate: [arr.employed_till],
+				location: [arr.location],
+				description: [arr.description],
+			});
+
+			setStartDate(new Date(arr.employed_from));
+			setEndDate(new Date(arr.employed_till));
+		}
 	}, []);
 
 	return (
 		<div className="add-ex-ed-cert">
-			<h1>Add Other Experience</h1>
+			{info && info.purpose === "edit" ? (
+				<h1>Edit Other Experience</h1>
+			) : (
+				<h1>Add Other Experience</h1>
+			)}
 			<ul className="listing">
 				<li>
 					<label htmlFor="experienceType">
 						Experience Type <span>*</span>
 						<span
-							className={`error-text ${
-								!formData.experienceType[1] && "hidden"
-							}`}
+							className={`error-text ${!formData.experienceType[1] && "hidden"
+								}`}
 						>
 							Required
 						</span>
@@ -156,9 +172,8 @@ function AddEduOtherExperience(props) {
 					<label htmlFor="organizationName">
 						Organisation Name <span>*</span>
 						<span
-							className={`error-text ${
-								!formData.organizationName[1] && "hidden"
-							}`}
+							className={`error-text ${!formData.organizationName[1] && "hidden"
+								}`}
 						>
 							Required
 						</span>
@@ -188,9 +203,8 @@ function AddEduOtherExperience(props) {
 					<label>
 						Date <span>*</span>
 						<span
-							className={`error-text ${
-								!formData.startDate[1] && !formData.endDate[1] && "hidden"
-							}`}
+							className={`error-text ${!formData.startDate[1] && !formData.endDate[1] && "hidden"
+								}`}
 						>
 							Required
 						</span>

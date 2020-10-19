@@ -59,3 +59,8 @@ export const setAllFunctions = (data) => ({
     type: types.SET_ALL_FUNCTIONS,
     data,
 })
+
+export const setJobDescription = (data) => ({
+    type: types.SET_JOB_DESCRIPTION,
+    data,
+})

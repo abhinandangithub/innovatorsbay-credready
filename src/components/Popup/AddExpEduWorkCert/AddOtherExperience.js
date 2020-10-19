@@ -25,6 +25,8 @@ function AddOtherExperience() {
 	const dataArr = useSelector(
 		(state) => state.candidateSetDataReducer.data.additional_experiences
 	);
+	console.log(dataArr);
+
 	const [startDate, setStartDate] = useState();
 	const [endDate, setEndDate] = useState();
 
@@ -77,23 +79,21 @@ function AddOtherExperience() {
 
 		if (oldFormData.formValid) {
 			console.log("submitting form...");
-			/* send data to api */
 
 			var obj = {
-				// candidate_id: 24,
-				// career_path: "work",
-				description: formData.description[0],
-				employed_from: formatDate(formData.startDate[0]),
-				employed_till: formatDate(formData.startDate[1]),
-				experience_type: formData.description[0],
-				// id: 74,
-				location: formData.location[0],
-				modified_by: "Samay Cook",
-				modified_on: "Oct 15, 2020, 12:52:13 PM",
-				organization_name: formData.organizationName[0],
-				skills: [],
+				experienceType: formData.description[0],
+				organizationName: formData.organizationName[0],
 				title: formData.title[0],
+				from: formatDate(formData.startDate[0]),
+				to: formatDate(formData.endDate[0]),
+				location: formData.location[0],
+				description: formData.description[0],
+				skills: [],
+				careerPath: "work",
 			};
+			if (info.id) {
+				obj.id = info.id
+			}
 
 			dispatch(addOtherWorkExperience(obj));
 			dispatch(toggleOverlay(false));
@@ -120,7 +120,6 @@ function AddOtherExperience() {
 		if (info) {
 			let i = findIndexOfObjInArr(dataArr, "id", info.id);
 			let arr = dataArr[i];
-			// console.log(arr);
 
 			setFormData({
 				...formData,
@@ -133,13 +132,8 @@ function AddOtherExperience() {
 				description: [arr.description],
 			});
 
-			/**
-			 * TODO: fetching date in wrong format, that's why using static date, Dropdown error handling also not working
-			 */
-			// setStartDate(new Date(arr.employment_from));
-			// setEndDate(new Date(arr.employment_to));
-			setStartDate(new Date("Oct 7, 2020, 12:00:00 AM"));
-			setEndDate(new Date("Oct 7, 2020, 12:00:00 AM"));
+			setStartDate(new Date(arr.employed_from));
+			setEndDate(new Date(arr.employed_till));
 		}
 	}, []);
 
@@ -148,16 +142,15 @@ function AddOtherExperience() {
 			{info && info.purpose === "edit" ? (
 				<h1>Edit Other Experience</h1>
 			) : (
-				<h1>Add Other Experience</h1>
-			)}
+					<h1>Add Other Experience</h1>
+				)}
 			<ul className="listing">
 				<li>
 					<label htmlFor="experienceType">
 						Experience Type <span>*</span>
 						<span
-							className={`error-text ${
-								!formData.experienceType[1] && "hidden"
-							}`}
+							className={`error-text ${!formData.experienceType[1] && "hidden"
+								}`}
 						>
 							Required
 						</span>
@@ -174,9 +167,8 @@ function AddOtherExperience() {
 					<label htmlFor="organisationName">
 						Organisation Name <span>*</span>
 						<span
-							className={`error-text ${
-								!formData.organizationName[1] && "hidden"
-							}`}
+							className={`error-text ${!formData.organizationName[1] && "hidden"
+								}`}
 						>
 							Required
 						</span>
@@ -206,9 +198,8 @@ function AddOtherExperience() {
 					<label>
 						Date <span>*</span>
 						<span
-							className={`error-text ${
-								!formData.startDate[1] && !formData.endDate[1] && "hidden"
-							}`}
+							className={`error-text ${!formData.startDate[1] && !formData.endDate[1] && "hidden"
+								}`}
 						>
 							Required
 						</span>

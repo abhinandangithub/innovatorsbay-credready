@@ -37,9 +37,9 @@ function Education(props) {
 		dispatch(togglePopup([true, type, { id, purpose: "edit" }]));
 	};
 
-	const handleDelete = (type) => {
+	const handleDelete = (id, type) => {
 		dispatch(toggleOverlay(true));
-		dispatch(togglePopup([true, "delete", { what: type }]));
+		dispatch(togglePopup([true, "delete", { what: type, id: id }]));
 	};
 
 	// const renderEducation = userData.profile.education.map((data, i) => {
@@ -83,7 +83,7 @@ function Education(props) {
 					className="action-btn delete"
 					icon={faTrash}
 					id={"educationDelete_" + i}
-					onClick={() => handleDelete("education")}
+					onClick={() => handleDelete(data.id, "education")}
 				/>
 			</div>
 		);
@@ -116,7 +116,7 @@ function Education(props) {
 						className="action-btn delete"
 						icon={faTrash}
 						id={"otherExperienceDelete_" + i}
-						onClick={() => handleDelete("otherExperience")}
+						onClick={() => handleDelete(data.id, "otherExperience")}
 					/>
 				</div>
 			);
@@ -172,7 +172,7 @@ function Education(props) {
 					className="action-btn delete"
 					icon={faTrash}
 					id={"certificateDelete_" + i}
-					onClick={() => handleDelete("certificate")}
+					onClick={() => handleDelete(data.id, "certificate")}
 				/>
 			</div>
 		);

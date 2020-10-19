@@ -5,7 +5,7 @@ import {
 	toggleOverlay,
 } from "../../../store/actions/popup_overlay";
 import { deleteAccount } from "../../../store/thunks/employer";
-import { deleteWorkExperience } from "../../../modals/candidateProfile/thunk";
+import { deleteWorkExperience, deleteEducationExperience, deleteOtherExperience, deleteCertificates } from "../../../modals/candidateProfile/thunk";
 
 import "./index.scss";
 
@@ -19,9 +19,18 @@ function Delete(props) {
 	};
 
 	const handleDelete = () => {
-		console.log(obj.id)
+		console.log(obj)
 		if (props.what === "workExperience") {
 			dispatch(deleteWorkExperience(obj.id))
+		}
+		if (props.what === "otherExperience") {
+			dispatch(deleteOtherExperience(obj.id))
+		}
+		if (props.what === "education") {
+			dispatch(deleteEducationExperience(obj.id))
+		}
+		if (props.what === "certificate") {
+			dispatch(deleteCertificates(obj.id))
 		}
 		dispatch(deleteAccount());
 	}

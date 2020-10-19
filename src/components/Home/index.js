@@ -80,10 +80,11 @@ function Home(props) {
 				<div className="scroll-wrapper">
 					<div className="content">
 						<Switch>
-							{profile.name === "" ? 
-							<Redirect exact from="/" to="/profile" /> :
-							<Redirect exact from="/" to="/dashboard" /> 
-							}
+							{profile.name === "" ? (
+								<Redirect exact from="/" to="/profile" />
+							) : (
+								<Redirect exact from="/" to="/dashboard" />
+							)}
 
 							{auth.loggedIn.as === "candidate" ? (
 								<>
@@ -107,6 +108,13 @@ function Home(props) {
 									/>
 									<Route
 										path="/jobs/questions"
+										exact
+										render={(props) => (
+											<Questions showEmployerQuestions={true} {...props} />
+										)}
+									/>
+									<Route
+										path="/jobs/questions/:id"
 										exact
 										render={(props) => (
 											<Questions showEmployerQuestions={true} {...props} />

@@ -16,16 +16,24 @@ import {
 	togglePopup,
 	toggleOverlay,
 } from "../../../../store/actions/popup_overlay";
-import { fetchAllCertificateTitles, fetchCandidateDetails, jobApply, fetchCandidateDegreeTitles } from "../../../../modals/candidateProfile/thunk";
+import {
+	fetchAllCertificateTitles,
+	fetchCandidateDetails,
+	jobApply,
+	fetchCandidateDegreeTitles,
+} from "../../../../modals/candidateProfile/thunk";
 import { findIndex } from "../Questions/index";
 
 function Application({ onchange }) {
 	const dispatch = useDispatch();
 
 	const userData = useSelector((state) => state.candidateSetDataReducer.data);
-	const allCertificates = useSelector((state) => state.setCandidateCertificateTitlesReducer.data);
-	const allDegress = useSelector((state) => state.setCandidateDegreeTitlesReducer.data);
-
+	const allCertificates = useSelector(
+		(state) => state.setCandidateCertificateTitlesReducer.data
+	);
+	const allDegress = useSelector(
+		(state) => state.setCandidateDegreeTitlesReducer.data
+	);
 
 	const handleFieldChange = (type, q, a) => {
 		let i = findIndex(formData[type], q);
@@ -67,7 +75,9 @@ function Application({ onchange }) {
 	};
 
 	const _formData = {
-		job_id: localStorage.getItem("jobItem") ? localStorage.getItem("jobItem") : 84,
+		job_id: localStorage.getItem("jobItem")
+			? localStorage.getItem("jobItem")
+			: 84,
 		general_questions: [
 			{
 				question_id: 1,
@@ -251,7 +261,7 @@ function Application({ onchange }) {
 		commute: [
 			{
 				question_id: 1,
-				answer: "Warren, NJ",
+				answer: "",
 			},
 			{
 				question_id: 2,
@@ -260,10 +270,10 @@ function Application({ onchange }) {
 			{
 				question_id: 3,
 				answer: {
-					street_0: "street",
-					city_0: "city",
-					state_0: "state",
-					zipCode_0: "zipcode",
+					street_0: "",
+					city_0: "",
+					state_0: "",
+					zipCode_0: "",
 				},
 			},
 		],
@@ -289,6 +299,11 @@ function Application({ onchange }) {
 	};
 
 	const [formData, setFormData] = React.useState(_formData);
+
+	const calHeight = (height) => {
+		console.log(height);
+	};
+
 	const handleClick = () => {
 		dispatch(toggleOverlay(true));
 		dispatch(togglePopup([true, "jobApplied"]));
@@ -301,7 +316,7 @@ function Application({ onchange }) {
 		dispatch(fetchAllCertificateTitles());
 		dispatch(fetchCandidateDegreeTitles());
 	}, []);
-	console.log(userData);
+
 	return (
 		<div className="application_page">
 			<div className="heading">
@@ -395,33 +410,33 @@ function Application({ onchange }) {
 						</div>
 						<div className="bottom">
 							{userData &&
-								userData.work_experience &&
-								userData.work_experience.length > 1
+							userData.work_experience &&
+							userData.work_experience.length > 1
 								? userData.work_experience.map((exp, index) => {
-									return (
-										<div className="details" key={index}>
-											<h2>{exp.title}</h2>
-											<p>
-												<span className="text">{exp.location}</span>
-											</p>
-											<p>
-												<span className="heading">{exp.employment_from}</span>
-												{" to "}
-												<span className="text">{exp.employment_to}</span>
-											</p>
-											<p>
-												<span className="heading">
-													Current employment status:{" "}
-												</span>
-												<span className="text">Employed</span>
-											</p>
-											<p>
-												<span className="heading">Skills: </span>
-												<span className="text">{exp.job_description}</span>
-											</p>
-										</div>
-									);
-								})
+										return (
+											<div className="details" key={index}>
+												<h2>{exp.title}</h2>
+												<p>
+													<span className="text">{exp.location}</span>
+												</p>
+												<p>
+													<span className="heading">{exp.employment_from}</span>
+													{" to "}
+													<span className="text">{exp.employment_to}</span>
+												</p>
+												<p>
+													<span className="heading">
+														Current employment status:{" "}
+													</span>
+													<span className="text">Employed</span>
+												</p>
+												<p>
+													<span className="heading">Skills: </span>
+													<span className="text">{exp.job_description}</span>
+												</p>
+											</div>
+										);
+								  })
 								: ""}
 						</div>
 					</div>
@@ -448,32 +463,33 @@ function Application({ onchange }) {
 						</div>
 
 						{userData &&
-							userData.education_experience &&
-							userData.education_experience.length > 0
+						userData.education_experience &&
+						userData.education_experience.length > 0
 							? userData.education_experience.map((exp, index) => {
-								return (
-									<div className="bottom">
-										<div className="details">
-											<h2>{allDegress.map((cert) => {
-												if (cert.id === parseInt(exp.title_id))
-													return cert.title
-											})}</h2>
-											<p>
-												<span className="heading">{exp.title}</span>
-												{" - "}
-												<span className="text">ABC University</span>
-											</p>
-											<p>
-												<span className="text">{exp.attended_from}</span>
-												{" to "}
-												<span className="text">{exp.attended_till}</span>
-											</p>
+									return (
+										<div className="bottom">
+											<div className="details">
+												<h2>
+													{allDegress.map((cert) => {
+														if (cert.id === parseInt(exp.title_id))
+															return cert.title;
+													})}
+												</h2>
+												<p>
+													<span className="heading">{exp.title}</span>
+													{" - "}
+													<span className="text">ABC University</span>
+												</p>
+												<p>
+													<span className="text">{exp.attended_from}</span>
+													{" to "}
+													<span className="text">{exp.attended_till}</span>
+												</p>
+											</div>
 										</div>
-									</div>
-								);
-							})
+									);
+							  })
 							: ""}
-
 					</div>
 					<div className="group ">
 						<div className="top">
@@ -496,45 +512,44 @@ function Application({ onchange }) {
 								onClick={() => alert(`Deleting`)}
 							/>
 						</div>
-						{userData &&
-							userData.certificate &&
-							userData.certificate.length > 1
+						{userData && userData.certificate && userData.certificate.length > 1
 							? userData.certificate.map((entity) => {
-								return (
-									<div className="bottom">
-										<div className="details">
-											<h2>{allCertificates.map((cert) => {
-												if (cert.id === entity.title_id)
-													return cert.title_name
-											})}</h2>
-											<p>
-												<span className="heading">Description: </span>
-												{" - "}
-												<span className="text">
-													{entity.description}
-												</span>
-											</p>
-											<p>
-												<span className="heading">Issued Date: </span>
-												{" to "}
-												<span className="text">{entity.issued_date}</span>
-											</p>
-											<p>
-												<span className="heading">Certificate link: </span>
-												<span className="text">
-													<Link to="/">
-														https://www.certificatelink.com/certi.pdf
-												</Link>
-												</span>
-											</p>
-											{/* <p>
+									return (
+										<div className="bottom">
+											<div className="details">
+												<h2>
+													{allCertificates.map((cert) => {
+														if (cert.id === entity.title_id)
+															return cert.title_name;
+													})}
+												</h2>
+												<p>
+													<span className="heading">Description: </span>
+													{" - "}
+													<span className="text">{entity.description}</span>
+												</p>
+												<p>
+													<span className="heading">Issued Date: </span>
+													{" to "}
+													<span className="text">{entity.issued_date}</span>
+												</p>
+												<p>
+													<span className="heading">Certificate link: </span>
+													<span className="text">
+														<Link to="/">
+															https://www.certificatelink.com/certi.pdf
+														</Link>
+													</span>
+												</p>
+												{/* <p>
 												<span className="heading">Certificate Image: </span>
 												<span className="text">Image here</span>
 											</p> */}
+											</div>
 										</div>
-									</div>
-								)
-							}) : ""}
+									);
+							  })
+							: ""}
 					</div>
 					{/* <div className="group ">
 						<div className="top">
@@ -582,6 +597,7 @@ function Application({ onchange }) {
 
 			<Accordion title="General Questions">
 				<GeneralQuestions
+					calHeight={calHeight}
 					noHeading
 					data={formData.general_questions}
 					onchange={(q, a) => handleFieldChange("general_questions", q, a)}
@@ -589,6 +605,7 @@ function Application({ onchange }) {
 			</Accordion>
 			<Accordion title="Personality Assessment">
 				<PersonalityAssessment
+					calHeight={calHeight}
 					noHeading
 					data={formData.personality_assessment}
 					onchange={(q, a) => handleFieldChange("personality_assessment", q, a)}
@@ -596,6 +613,7 @@ function Application({ onchange }) {
 			</Accordion>
 			<Accordion title="Coursework">
 				<CourseWork
+					calHeight={calHeight}
 					noHeading
 					data={formData.coursework}
 					onchange={(q, a) => handleFieldChange("coursework", q, a)}
@@ -603,6 +621,7 @@ function Application({ onchange }) {
 			</Accordion>
 			<Accordion title="Work History" type="addEducation">
 				<WorkHistory
+					calHeight={calHeight}
 					noHeading
 					data={formData.work_history}
 					onchange={(q, a) => handleFieldChange("work_history", q, a)}
@@ -610,6 +629,7 @@ function Application({ onchange }) {
 			</Accordion>
 			<Accordion title="Commute" type="addEducation">
 				<CommuteQuestions
+					calHeight={calHeight}
 					noHeading
 					data={formData.commute}
 					onchange={(q, a) => handleFieldChange("commute", q, a)}
@@ -617,6 +637,7 @@ function Application({ onchange }) {
 			</Accordion>
 			<Accordion title="Employer Questions" type="addEducation">
 				<EmployerQuestions
+					calHeight={calHeight}
 					noHeading
 					data={formData.employer_questions}
 					onchange={(q, a) => handleFieldChange("employer_questions", q, a)}

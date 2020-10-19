@@ -17,7 +17,7 @@ function CommuteQuestions({ data, onchange, calHeight, noHeading, ...props }) {
 		let _addressCount = [...addressCount];
 		_addressCount.push("");
 		setAddressCount(_addressCount);
-		props.newAddress(_addressCount);
+		// props.newAddress(_addressCount);
 	};
 
 	return (

@@ -130,22 +130,26 @@ function AddCertificate({ addEducationCertificate }) {
 			}
 		}
 
-		// if (oldFormData.formValid) {
-		console.log(oldFormData, "submitting form...");
-		/* send data to api */
-		let obj = {
-			certificateLink: "http://localhost:3000/profile/education",
-			description: formData ? formData.description[0] : "",
-			functionId: formData ? formData.function[0] : "",
-			industryId: formData ? formData.industry[0] : "",
-			issuedDate: formData ? formatDate(formData.issueDate[0]) : "",
-			issuer: formData ? formData.issuer[0] : "",
-			title: formData ? formData.title[0] : "",
-		};
-		addEducationCertificate(obj);
-		dispatch(toggleOverlay(false));
-		dispatch(togglePopup([false, ""]));
-		// }
+		if (oldFormData.formValid) {
+			console.log("submitting form...");
+
+			let obj = {
+				certificateLink: "http://localhost:3000/profile/education",
+				description: formData.description[0],
+				functionId: formData.function[0],
+				industryId: formData.industry[0],
+				issuedDate: formatDate(formData.issueDate[0]),
+				issuer: formData.issuer[0],
+				title: formData.title[0],
+			};
+			if (info.id) {
+				obj.id = info.id
+			}
+
+			dispatch(addEducationCertificate(obj));
+			dispatch(toggleOverlay(false));
+			dispatch(togglePopup([false, ""]));
+		}
 
 		setFormData(oldFormData);
 	};
@@ -201,8 +205,8 @@ function AddCertificate({ addEducationCertificate }) {
 			{info && info.purpose === "edit" ? (
 				<h1>Edit Certificate</h1>
 			) : (
-				<h1>Add Certificate</h1>
-			)}
+					<h1>Add Certificate</h1>
+				)}
 
 			<ul className="listing">
 				<li>
@@ -217,9 +221,9 @@ function AddCertificate({ addEducationCertificate }) {
 						content={
 							AllIndustries.length > 0
 								? AllIndustries.map((val) => ({
-										val: val.industry_name,
-										id: val.id,
-								  }))
+									val: val.industry_name,
+									id: val.id,
+								}))
 								: ""
 						}
 						selected={formData.industry[0]}
@@ -264,9 +268,9 @@ function AddCertificate({ addEducationCertificate }) {
 						content={
 							AllFunctions.length > 0
 								? AllFunctions.map((val) => ({
-										val: val.function_name,
-										id: val.id,
-								  }))
+									val: val.function_name,
+									id: val.id,
+								}))
 								: ""
 						}
 						id="function"
@@ -380,8 +384,5 @@ function mapStateToProps(state) {
 			: "",
 	};
 }
-const mapDispatchToProps = {
-	addEducationCertificate: addEducationCertificate,
-};
 
-export default connect(mapStateToProps, mapDispatchToProps)(AddCertificate);
+export default connect(mapStateToProps)(AddCertificate);

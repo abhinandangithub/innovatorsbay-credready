@@ -22,6 +22,7 @@ function CourseWork(props) {
 								name="highSchoolGraduate"
 								type="radio"
 								id="highSchoolGraduateYes"
+								disabled
 							/>
 							<label htmlFor="highSchoolGraduateYes">
 								<span className="input"></span>Yes
@@ -31,6 +32,7 @@ function CourseWork(props) {
 								name="highSchoolGraduate"
 								type="radio"
 								id="highSchoolGraduateNo"
+								disabled
 							/>
 							<label htmlFor="highSchoolGraduateNo">
 								<span className="input"></span>No
@@ -46,26 +48,28 @@ function CourseWork(props) {
 								id="course_1"
 								type="checkbox"
 								className="block-toggle blue"
-								defaultChecked
+								disabled
 							/>
 							<label htmlFor="course_1">Biology I</label>
 							<input
 								id="course_2"
 								type="checkbox"
 								className="block-toggle blue"
+								disabled
 							/>
 							<label htmlFor="course_2">Chemistry I</label>
 							<input
 								id="course_3"
 								type="checkbox"
 								className="block-toggle blue"
-								defaultChecked
+								disabled
 							/>
 							<label htmlFor="course_3">Geometry</label>
 							<input
 								id="course_4"
 								type="checkbox"
 								className="block-toggle blue"
+								disabled
 							/>
 							<label htmlFor="course_4">Algebra II</label>
 						</div>
@@ -80,6 +84,7 @@ function CourseWork(props) {
 										name="year1"
 										type="radio"
 										id="year1"
+										disabled
 									/>
 									<label htmlFor="year1">
 										<span className="input"></span>1st year
@@ -89,6 +94,7 @@ function CourseWork(props) {
 										name="year1"
 										type="radio"
 										id="year2"
+										disabled
 									/>
 									<label htmlFor="year2">
 										<span className="input"></span>2nd year
@@ -98,6 +104,7 @@ function CourseWork(props) {
 										name="year1"
 										type="radio"
 										id="year3"
+										disabled
 									/>
 									<label htmlFor="year3">
 										<span className="input"></span>3rd year
@@ -107,6 +114,7 @@ function CourseWork(props) {
 										name="year1"
 										type="radio"
 										id="year4"
+										disabled
 									/>
 									<label htmlFor="year4">
 										<span className="input"></span>4th year
@@ -123,6 +131,7 @@ function CourseWork(props) {
 										name="year2"
 										type="radio"
 										id="year5"
+										disabled
 									/>
 									<label htmlFor="year5">
 										<span className="input"></span>1st year
@@ -132,6 +141,7 @@ function CourseWork(props) {
 										name="year2"
 										type="radio"
 										id="year6"
+										disabled
 									/>
 									<label htmlFor="year6">
 										<span className="input"></span>2nd year
@@ -141,6 +151,7 @@ function CourseWork(props) {
 										name="year2"
 										type="radio"
 										id="year7"
+										disabled
 									/>
 									<label htmlFor="year7">
 										<span className="input"></span>3rd year
@@ -150,6 +161,7 @@ function CourseWork(props) {
 										name="year2"
 										type="radio"
 										id="year8"
+										disabled
 									/>
 									<label htmlFor="year8">
 										<span className="input"></span>4th year
@@ -166,6 +178,7 @@ function CourseWork(props) {
 								name="foreignLanguage"
 								type="radio"
 								id="foreignLanguageYes"
+								disabled
 							/>
 							<label htmlFor="foreignLanguageYes">
 								<span className="input"></span>Yes
@@ -175,6 +188,7 @@ function CourseWork(props) {
 								name="foreignLanguage"
 								type="radio"
 								id="foreignLanguageNo"
+								disabled
 							/>
 							<label htmlFor="foreignLanguageNo">
 								<span className="input"></span>No
@@ -188,32 +202,35 @@ function CourseWork(props) {
 										id="lanuguage_1"
 										type="checkbox"
 										className="block-toggle blue"
-										defaultChecked
+										disabled
 									/>
 									<label htmlFor="lanuguage_1">French</label>
 									<input
 										id="lanuguage_2"
 										type="checkbox"
 										className="block-toggle blue"
+										disabled
 									/>
 									<label htmlFor="lanuguage_2">Spanish</label>
 									<input
 										id="lanuguage_3"
 										type="checkbox"
 										className="block-toggle blue"
-										defaultChecked
+										disabled
 									/>
 									<label htmlFor="lanuguage_3">German</label>
 									<input
 										id="lanuguage_4"
 										type="checkbox"
 										className="block-toggle blue"
+										disabled
 									/>
 									<label htmlFor="lanuguage_4">Latin</label>
 									<input
 										id="lanuguage_4"
 										type="checkbox"
 										className="block-toggle blue"
+										disabled
 									/>
 									<label htmlFor="lanuguage_4">Other</label>
 								</div>
@@ -230,6 +247,7 @@ function CourseWork(props) {
 										name="foreign1"
 										type="radio"
 										id="foreign1"
+										disabled
 									/>
 									<label htmlFor="foreign1">
 										<span className="input"></span>1 year
@@ -239,6 +257,7 @@ function CourseWork(props) {
 										name="foreign1"
 										type="radio"
 										id="foreign2"
+										disabled
 									/>
 									<label htmlFor="foreign2">
 										<span className="input"></span>2 year
@@ -248,6 +267,7 @@ function CourseWork(props) {
 										name="foreign1"
 										type="radio"
 										id="foreign3"
+										disabled
 									/>
 									<label htmlFor="foreign3">
 										<span className="input"></span>3 year
@@ -257,6 +277,7 @@ function CourseWork(props) {
 										name="foreign1"
 										type="radio"
 										id="foreign4"
+										disabled
 									/>
 									<label htmlFor="foreign4">
 										<span className="input"></span>4 year
@@ -266,6 +287,7 @@ function CourseWork(props) {
 										name="foreign1"
 										type="radio"
 										id="foreign4"
+										disabled
 									/>
 									<label htmlFor="foreign4">
 										<span className="input"></span>5 year
@@ -275,6 +297,7 @@ function CourseWork(props) {
 										name="foreign1"
 										type="radio"
 										id="foreign4"
+										disabled
 									/>
 									<label htmlFor="foreign4">
 										<span className="input"></span>6 year
@@ -289,6 +312,7 @@ function CourseWork(props) {
 										name="french2"
 										type="radio"
 										id="french5"
+										disabled
 									/>
 									<label htmlFor="french5">
 										<span className="input"></span>1st year
@@ -298,6 +322,7 @@ function CourseWork(props) {
 										name="french2"
 										type="radio"
 										id="french6"
+										disabled
 									/>
 									<label htmlFor="french6">
 										<span className="input"></span>2nd year
@@ -307,6 +332,7 @@ function CourseWork(props) {
 										name="french2"
 										type="radio"
 										id="french7"
+										disabled
 									/>
 									<label htmlFor="french7">
 										<span className="input"></span>3rd year
@@ -316,6 +342,7 @@ function CourseWork(props) {
 										name="french2"
 										type="radio"
 										id="french8"
+										disabled
 									/>
 									<label htmlFor="french8">
 										<span className="input"></span>4th year
@@ -330,6 +357,7 @@ function CourseWork(props) {
 										name="german2"
 										type="radio"
 										id="german5"
+										disabled
 									/>
 									<label htmlFor="german5">
 										<span className="input"></span>1st year
@@ -339,6 +367,7 @@ function CourseWork(props) {
 										name="german2"
 										type="radio"
 										id="german6"
+										disabled
 									/>
 									<label htmlFor="german6">
 										<span className="input"></span>2nd year
@@ -348,6 +377,7 @@ function CourseWork(props) {
 										name="german2"
 										type="radio"
 										id="german7"
+										disabled
 									/>
 									<label htmlFor="german7">
 										<span className="input"></span>3rd year
@@ -357,6 +387,7 @@ function CourseWork(props) {
 										name="german2"
 										type="radio"
 										id="german8"
+										disabled
 									/>
 									<label htmlFor="german8">
 										<span className="input"></span>4th year
@@ -375,6 +406,7 @@ function CourseWork(props) {
 								name="afterHighSchoolDegree"
 								type="radio"
 								id="afterHighSchoolDegreeYes"
+								disabled
 							/>
 							<label htmlFor="afterHighSchoolDegreeYes">
 								<span className="input"></span>Yes
@@ -384,6 +416,7 @@ function CourseWork(props) {
 								name="afterHighSchoolDegree"
 								type="radio"
 								id="afterHighSchoolDegreeNo"
+								disabled
 							/>
 							<label htmlFor="afterHighSchoolDegreeNo">
 								<span className="input"></span>No

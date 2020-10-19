@@ -407,10 +407,11 @@ function Questions(props) {
 		let lastHeight = heights[heights.length - 1];
 		heights.push(lastHeight + height);
 	};
+
 	React.useEffect(() => {
-		console.log(formData);
+		console.log(props.match.params.id);
 		// dispatch(fetchAllAnswers());
-	}, [formData]);
+	}, []);
 
 	const handleAddress = (_addressCount) => {
 		console.log(_addressCount);

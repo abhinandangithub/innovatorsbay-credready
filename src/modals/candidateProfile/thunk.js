@@ -21,7 +21,12 @@ import {
 	fetchAllFunctionsUrl,
 	fetchAllIndustriesUrl,
 	jobApplyUrl,
-	deleteWorkExperienceUrl
+	deleteWorkExperienceUrl,
+	deleteEducationExperienceUrl,
+	deleteOtherExperienceUrl,
+	deleteCertificateUrl,
+	fetchJobDescriptionUrl
+
 } from "./api";
 import {
 	candidateSetCurrentStatus,
@@ -35,10 +40,28 @@ import {
 	setCandidateJobs,
 	setCandidateCertificateData,
 	setAllFunctions,
-	setAllIndustries
+	setAllIndustries,
+	setJobDescription,
 } from "./actions";
 import { updateJwtToken } from "../../store/actions/auth";
 
+
+export const fetchJobDescription = (id) => async (dispatch, getState) => {
+	try {
+		const { data } = await Axios.get(
+			fetchJobDescriptionUrl + "/" + id, {
+			headers: {
+				'Authorization': getState().authReducer.JWT.map.jwt,
+				'Content-Type': 'application/vnd.credready.com+json'
+			}
+		});
+		if (!data) return;
+		dispatch(setJobDescription(data ? data.data : []));
+
+	} catch (err) {
+		console.log(err)
+	}
+};
 
 export const fetchjobViewData = (id) => async (dispatch, getState) => {
 	try {
@@ -93,20 +116,41 @@ export const fetchCandidateDetails = () => async (dispatch, getState) => {
 	}
 };
 export const addWorkExperience = (formData) => async (dispatch, getState) => {
-	try {
-		const { data } = await Axios.post(
-			addWorkExperienceUrl,
-			formData, {
-			headers: {
-				'Authorization': getState().authReducer.JWT.map.jwt,
-				'Content-Type': 'application/vnd.credready.com+json'
-			}
-		});
-		if (!data) return;
-		dispatch(fetchCandidateDetails());
+	let id = formData.id
+	delete formData.id;
+	if (id) {
+		try {
+			const { data } = await Axios.post(
+				addWorkExperienceUrl + '/' + id,
+				formData, {
+				headers: {
+					'Authorization': getState().authReducer.JWT.map.jwt,
+					'Content-Type': 'application/vnd.credready.com+json'
+				}
+			});
+			if (!data) return;
+			dispatch(fetchCandidateDetails());
 
-	} catch (err) {
-		console.log(err)
+		} catch (err) {
+			console.log(err)
+		}
+	}
+	else {
+		try {
+			const { data } = await Axios.post(
+				addWorkExperienceUrl,
+				formData, {
+				headers: {
+					'Authorization': getState().authReducer.JWT.map.jwt,
+					'Content-Type': 'application/vnd.credready.com+json'
+				}
+			});
+			if (!data) return;
+			dispatch(fetchCandidateDetails());
+
+		} catch (err) {
+			console.log(err)
+		}
 	}
 }
 export const jobApply = (formData, id) => async (dispatch, getState) => {
@@ -147,56 +191,119 @@ export const submitCandidateAnswers = (formData) => async (dispatch, getState) =
 
 
 export const addOtherWorkExperience = (formData) => async (dispatch, getState) => {
-	try {
-		const { data } = await Axios.post(
-			addOtherWorkExperienceUrl,
-			formData, {
-			headers: {
-				'Authorization': getState().authReducer.JWT.map.jwt,
-				'Content-Type': 'application/vnd.credready.com+json'
-			}
-		});
-		if (!data) return;
-		dispatch(fetchCandidateDetails());
+	let id = formData.id
+	delete formData.id;
+	if (id) {
+		try {
+			const { data } = await Axios.post(
+				addOtherWorkExperienceUrl + '/' + id,
+				formData, {
+				headers: {
+					'Authorization': getState().authReducer.JWT.map.jwt,
+					'Content-Type': 'application/vnd.credready.com+json'
+				}
+			});
+			if (!data) return;
+			dispatch(fetchCandidateDetails());
 
-	} catch (err) {
-		console.log(err)
+		} catch (err) {
+			console.log(err)
+		}
+	}
+	else {
+		try {
+			const { data } = await Axios.post(
+				addOtherWorkExperienceUrl,
+				formData, {
+				headers: {
+					'Authorization': getState().authReducer.JWT.map.jwt,
+					'Content-Type': 'application/vnd.credready.com+json'
+				}
+			});
+			if (!data) return;
+			dispatch(fetchCandidateDetails());
+
+		} catch (err) {
+			console.log(err)
+		}
 	}
 }
 
 export const addEducationExperience = (formData) => async (dispatch, getState) => {
-	try {
-		const { data } = await Axios.post(
-			addEducationExperienceUrl,
-			formData, {
-			headers: {
-				'Authorization': getState().authReducer.JWT.map.jwt,
-				'Content-Type': 'application/vnd.credready.com+json'
-			}
-		});
-		if (!data) return;
-		dispatch(fetchCandidateDetails());
+	let id = formData.id
+	delete formData.id;
+	if (id) {
+		try {
+			const { data } = await Axios.post(
+				addEducationExperienceUrl + '/' + id,
+				formData, {
+				headers: {
+					'Authorization': getState().authReducer.JWT.map.jwt,
+					'Content-Type': 'application/vnd.credready.com+json'
+				}
+			});
+			if (!data) return;
+			dispatch(fetchCandidateDetails());
 
-	} catch (err) {
-		console.log(err)
+		} catch (err) {
+			console.log(err)
+		}
+	}
+	else {
+		try {
+			const { data } = await Axios.post(
+				addEducationExperienceUrl,
+				formData, {
+				headers: {
+					'Authorization': getState().authReducer.JWT.map.jwt,
+					'Content-Type': 'application/vnd.credready.com+json'
+				}
+			});
+			if (!data) return;
+			dispatch(fetchCandidateDetails());
+
+		} catch (err) {
+			console.log(err)
+		}
 	}
 }
 
 export const addOtherEducationExperience = (formData) => async (dispatch, getState) => {
-	try {
-		const { data } = await Axios.post(
-			addOtherEducationExperienceUrl,
-			formData, {
-			headers: {
-				'Authorization': getState().authReducer.JWT.map.jwt,
-				'Content-Type': 'application/vnd.credready.com+json'
-			}
-		});
-		if (!data) return;
-		dispatch(fetchCandidateDetails());
+	let id = formData.id
+	delete formData.id;
+	if (id) {
+		try {
+			const { data } = await Axios.post(
+				addOtherEducationExperienceUrl + '/' + id,
+				formData, {
+				headers: {
+					'Authorization': getState().authReducer.JWT.map.jwt,
+					'Content-Type': 'application/vnd.credready.com+json'
+				}
+			});
+			if (!data) return;
+			dispatch(fetchCandidateDetails());
 
-	} catch (err) {
-		console.log(err)
+		} catch (err) {
+			console.log(err)
+		}
+	}
+	else {
+		try {
+			const { data } = await Axios.post(
+				addOtherEducationExperienceUrl,
+				formData, {
+				headers: {
+					'Authorization': getState().authReducer.JWT.map.jwt,
+					'Content-Type': 'application/vnd.credready.com+json'
+				}
+			});
+			if (!data) return;
+			dispatch(fetchCandidateDetails());
+
+		} catch (err) {
+			console.log(err)
+		}
 	}
 }
 
@@ -223,23 +330,48 @@ export const updateCandidateDetails = (formData) => async (dispatch, getState) =
 }
 
 export const addEducationCertificate = (formData) => async (dispatch, getState) => {
-	try {
+	let id = formData.id
+	delete formData.id;
+	if (id) {
+		try {
 
-		const { data } = await Axios.post(
-			addEducationCertificateUrl,
-			formData, {
-			headers: {
-				'Authorization': getState().authReducer.JWT.map.jwt,
-				'Content-Type': 'application/vnd.credready.com+json'
+			const { data } = await Axios.post(
+				addEducationCertificateUrl + '/' + id,
+				formData, {
+				headers: {
+					'Authorization': getState().authReducer.JWT.map.jwt,
+					'Content-Type': 'application/vnd.credready.com+json'
+				}
 			}
-		}
-		);
-		if (!data) return;
+			);
+			if (!data) return;
 
-		fetchCandidateDetails();
+			fetchCandidateDetails();
+		}
+		catch (err) {
+			console.log(err);
+		}
+
 	}
-	catch (err) {
-		console.log(err);
+	else {
+		try {
+
+			const { data } = await Axios.post(
+				addEducationCertificateUrl,
+				formData, {
+				headers: {
+					'Authorization': getState().authReducer.JWT.map.jwt,
+					'Content-Type': 'application/vnd.credready.com+json'
+				}
+			}
+			);
+			if (!data) return;
+
+			fetchCandidateDetails();
+		}
+		catch (err) {
+			console.log(err);
+		}
 	}
 }
 
@@ -397,6 +529,51 @@ export const fetchAllCertificateTitles = () => async (dispatch, getState) => {
 export const deleteWorkExperience = (id) => async (dispatch, getState) => {
 	try {
 		const data = await Axios.delete(deleteWorkExperienceUrl + '/' + id, {
+			headers: {
+				'Authorization': getState().authReducer.JWT.map.jwt,
+				'content-Type': 'application/vnd.credready.com+json'
+			}
+		});
+		if (!data) return;
+		dispatch(fetchCandidateDetails());
+	} catch (err) {
+		console.log(err)
+	}
+}
+
+export const deleteEducationExperience = (id) => async (dispatch, getState) => {
+	try {
+		const data = await Axios.delete(deleteEducationExperienceUrl + '/' + id, {
+			headers: {
+				'Authorization': getState().authReducer.JWT.map.jwt,
+				'content-Type': 'application/vnd.credready.com+json'
+			}
+		});
+		if (!data) return;
+		dispatch(fetchCandidateDetails());
+	} catch (err) {
+		console.log(err)
+	}
+}
+
+export const deleteOtherExperience = (id) => async (dispatch, getState) => {
+	try {
+		const data = await Axios.delete(deleteOtherExperienceUrl + '/' + id, {
+			headers: {
+				'Authorization': getState().authReducer.JWT.map.jwt,
+				'content-Type': 'application/vnd.credready.com+json'
+			}
+		});
+		if (!data) return;
+		dispatch(fetchCandidateDetails());
+	} catch (err) {
+		console.log(err)
+	}
+}
+
+export const deleteCertificates = (id) => async (dispatch, getState) => {
+	try {
+		const data = await Axios.delete(deleteCertificateUrl + '/' + id, {
 			headers: {
 				'Authorization': getState().authReducer.JWT.map.jwt,
 				'content-Type': 'application/vnd.credready.com+json'
