@@ -48,7 +48,7 @@ function ProfileOverview(props) {
 	const [editingPhone, setEditingPhone] = useState(false);
 	const [editingEmail, setEditingEmail] = useState(false);
 	const [editingAboutMe, setEditingAboutMe] = useState(false);
-	const [image, setImage] = useState({ preview: ImgUserPlaceholder, raw: "" });
+	const [image, setImage] = useState({  preview: employerProfile.data.org.logo_path !== "" ? employerProfile.data.org.logo_path : ImgUserPlaceholder, raw: "" });
 
 	// useEffect(() => {
 	// 	dispatch(getProfileThunk());
@@ -76,6 +76,10 @@ function ProfileOverview(props) {
 						.contact
 					: ""
 		);
+		setImage({
+			preview: employerProfile.data.org.logo_path,
+			raw: ""
+		});
 	}, [employerProfile, allData]);
 
 
@@ -118,7 +122,7 @@ function ProfileOverview(props) {
 				raw: e.target.files[0]
 			});
 		}
-		formData.set("image",e.target.files[0]);
+		formData.set("logo",e.target.files[0]);
 		console.log(formData);
 		dispatch(uploadProfileImage(formData));
 	}
