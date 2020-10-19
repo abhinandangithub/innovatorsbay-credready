@@ -5,6 +5,7 @@ import { setNewJob } from '../../../store/actions/employer';
 
 import Input from "../../_Elements/Input";
 import Dropdown from "../../_Elements/Dropdown";
+import InputDropdown from '../../_Elements/InputDropdown';
 
 const employmentType = {
 	heading: "Employment Type",
@@ -38,6 +39,7 @@ function CreateJob(props) {
 
 	const handleChangeEmpType = (item) => {
 		dispatch(setNewJob({ "employmentType": item }));
+		console.log(props.industryData);
 	}
 	const handleChangeIndustry = (item) => {
 		dispatch(setNewJob({ "industry": item }));
@@ -75,40 +77,88 @@ function CreateJob(props) {
 							Job Location <span>*</span>
 						</label>
 						{/* <Input type="text" placeholder="Zip or city, state" onChange={handleChangeLocation}/> */}
-						<Dropdown
+						{/* <Dropdown
 							placeholder="Zip or city, state"
 							content={props.locations}
 							onchange={(item) => handleChangeLocation(item)}
-						/>
+						/> */}
+						<InputDropdown
+						placeholder="Zip or city, state"
+						content={props.locationData.map((val) => ({
+							val: val.street_address + ", " + val.city + ", " + val.state + ", " + val.zip_code,
+							id: val.id,
+						}))}
+						id="location"
+						// selected={institution.content[formData.institution[0]]}
+						onchange={(value) => {
+							handleChangeLocation(value);
+						}}
+					/>
 					</li>
 					<li>
 						<label>
 							Employment Type <span>*</span>
 						</label>
-						<Dropdown
+						{/* <Dropdown
 							placeholder={employmentType.heading}
 							content={props.employmentType}
 							onchange={(item) => handleChangeEmpType(item)}
-						/>
+						/> */}
+						<InputDropdown
+						placeholder={employmentType.heading}
+						content={props.employmentTypeData.map((val) => ({
+							val: val.employment_status,
+							id: val.id,
+						}))}
+						id="employment"
+						// selected={institution.content[formData.institution[0]]}
+						onchange={(value) => {
+							handleChangeEmpType(value);
+						}}
+					/>
 					</li>
 					<li>
 						<label>
 							Industry <span>*</span>
 						</label>
-						<Dropdown
+						{/* <Dropdown
 							placeholder={industry.heading}
 							content={props.industry}
 							onchange={(item) => handleChangeIndustry(item)}
+						/> */}
+						<InputDropdown
+							placeholder={industry.heading}
+							content={props.industryData.map((val) => ({
+										val: val.industry_name,
+										id: val.id,
+									}))}
+							id="industry"
+							// selected={institution.content[formData.institution[0]]}
+							onchange={(value) => {
+										handleChangeIndustry(value);
+									}}
 						/>
 					</li>
 					<li>
 						<label>
 							Function <span>*</span>
 						</label>
-						<Dropdown
+						{/* <Dropdown
 							placeholder={_function.heading}
 							content={props.functionType}
 							onchange={(item) => handleChangeFunction(item)}
+						/> */}
+						<InputDropdown
+							placeholder={_function.heading}
+							content={props.functionData.map((val) => ({
+										val: val.function_name,
+										id: val.id,
+									}))}
+							id="function"
+							// selected={institution.content[formData.institution[0]]}
+							onchange={(value) => {
+										handleChangeFunction(value);
+									}}
 						/>
 					</li>
 					<li>
@@ -126,7 +176,11 @@ function mapStateToProps(state) {
 		employmentType: state.employerReducer.employmentType.data,
 		functionType: state.employerReducer.functionType.data,
 		industry: state.employerReducer.industry.data,
-		locations: state.employerReducer.locationNames
+		locations: state.employerReducer.locationNames,
+		locationData: state.employerReducer.locations.data,
+		employmentTypeData: state.employerReducer.employmentKeys,
+		industryData: state.employerReducer.industryKeys,
+		functionData: state.employerReducer.functionKeys
 	}
 }
 

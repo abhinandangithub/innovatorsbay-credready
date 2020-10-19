@@ -4,6 +4,7 @@ import Dropdown from "../../_Elements/Dropdown";
 import { getEmailTemplate } from "../../../store/thunks/employer";
 import { connect, useDispatch } from "react-redux";
 import { setNewJob } from "../../../store/actions/employer";
+import InputDropdown from '../../_Elements/InputDropdown';
 
 const employmentStatus = {
 	heading: "Select Employment Type",
@@ -31,21 +32,22 @@ function EmailTemplate(props) {
 
 	const handleTemplateChange = (item) => {
 		setEmailBody(
-			props.emailTemplate.find((x) => x.template_name === item).email_body
+			props.emailTemplate.find((x) => x.public_template_id === item).email_body
 		);
-		if (
-			props.emailTemplate.find((x) => x.template_name === item).template_id ===
-			undefined
-		) {
-			setTemplateID(
-				props.emailTemplate.find((x) => x.template_name === item)
-					.public_template_id
-			);
-		} else {
-			setTemplateID(
-				props.emailTemplate.find((x) => x.template_name === item).template_id
-			);
-		}
+		// if (
+		// 	props.emailTemplate.find((x) => x.template_name === item).template_id ===
+		// 	undefined
+		// ) {
+		// 	setTemplateID(
+		// 		props.emailTemplate.find((x) => x.template_name === item)
+		// 			.public_template_id
+		// 	);
+		// } else {
+		// 	setTemplateID(
+		// 		props.emailTemplate.find((x) => x.template_name === item).template_id
+		// 	);
+		// }
+		setTemplateID(item);
 	};
 
 	return (
@@ -58,11 +60,23 @@ function EmailTemplate(props) {
 			<div className="content">
 				<h2 className="sub-heading">Attach Email</h2>
 				<p>Select / Modify Introduction Email Template</p>
-				<Dropdown
+				{/* <Dropdown
 					placeholder={employmentStatus.heading}
 					// content={employmentStatus.content}
 					content={props.emailTemplateNames}
 					onchange={(item) => handleTemplateChange(item)}
+				/> */}
+				<InputDropdown
+					placeholder={employmentStatus.heading}
+					content={props.emailTemplate.map((val) => ({
+								val: val.template_name,
+								id: val.public_template_id,
+							}))}
+					id="emailtemplate"
+					// selected={institution.content[formData.institution[0]]}
+					onchange={(value) => {
+								handleTemplateChange(value);
+							}}
 				/>
 				<h2 className="sub-heading">Email</h2>
 				<textarea
