@@ -16,6 +16,7 @@ function EmailTemplate(props) {
 	const dispatch = useDispatch();
 	const [emailBody, setEmailBody] = useState("");
 	const [templateID, setTemplateID] = useState(0);
+	const [emailTemplates, setEmailTemplates] = useState(props.emailTemplate);
 
 	React.useEffect(() => {
 		props.calHeight(parent.current.clientHeight);
@@ -26,11 +27,16 @@ function EmailTemplate(props) {
 	}, [dispatch]);
 
 	React.useEffect(() => {
+		setEmailTemplates(props.emailTemplate);
+	}, [props.emailTemplate]);
+
+	React.useEffect(() => {
 		dispatch(setNewJob({ emailTemplateId: templateID }));
 		// setEmailBody(props.emailTemplate[0].email_body);
 	}, [dispatch, templateID]);
 
 	const handleTemplateChange = (item) => {
+		if (typeof item !== "number") return;
 		setEmailBody(
 			props.emailTemplate.find((x) => x.public_template_id === item).email_body
 		);
@@ -50,6 +56,21 @@ function EmailTemplate(props) {
 		setTemplateID(item);
 	};
 
+	const handleTemplateSearch = (value) => {
+		if (typeof value === "number") return;
+		const filteredData = props.emailTemplate.filter(
+			(val) => {
+				if(val.template_name.includes(value)) {
+					return {
+						id: val.public_template_id,
+						val: val.template_name
+					}
+				}
+			}
+		);
+		setEmailTemplates([...filteredData]);
+	}
+
 	return (
 		<div className="email-templates" ref={parent}>
 			<div className="heading">
@@ -68,7 +89,7 @@ function EmailTemplate(props) {
 				/> */}
 				<InputDropdown
 					placeholder={employmentStatus.heading}
-					content={props.emailTemplate.map((val) => ({
+					content={emailTemplates.map((val) => ({
 								val: val.template_name,
 								id: val.public_template_id,
 							}))}
@@ -76,6 +97,7 @@ function EmailTemplate(props) {
 					// selected={institution.content[formData.institution[0]]}
 					onchange={(value) => {
 								handleTemplateChange(value);
+								handleTemplateSearch(value);
 							}}
 				/>
 				<h2 className="sub-heading">Email</h2>

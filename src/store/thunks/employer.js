@@ -21,7 +21,8 @@ import {
 	employeFecthJobPreviewDetails,
 	employerDeleteQuestionsFromJobUrl,
 	employerDeleteQuestionFromJobUrl,
-	employerUpdateQuestion
+	employerUpdateQuestion,
+	employerUpdateCompanyLogoUrl
 } from "../api/employer";
 
 import {
@@ -467,6 +468,24 @@ export const deleteQuestion = (id) => async (dispatch, getState) => {
 		if (!data) return false;
 		dispatch(getQuestionBank());
 	} catch (err) {
+		if (err.response) console.error(`failed to post the question ${err}`);
+	}
+};
+
+export const uploadProfileImage = (image) => async (dispatch, getState) => {
+	try {
+		// setDefaultAuthorizationHeader(getState().authReducer.JWT.map.jwt);
+		// dispatch(beginApiCall());
+		const data = await Axios.patch(employerUpdateCompanyLogoUrl, image, {
+			headers: {
+				'Authorization': getState().authReducer.JWT.map.jwt,
+				'Content-Type': 'multipart/form-data'
+			}
+		});
+		// dispatch(apiCallError());
+		if (!data) return false;
+	} catch (err) {
+		dispatch(apiCallError());
 		if (err.response) console.error(`failed to post the question ${err}`);
 	}
 };

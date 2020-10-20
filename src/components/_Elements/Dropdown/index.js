@@ -18,7 +18,6 @@ function Dropdown({
 	const [isChanged, setIsChanged] = useState(false);
 	const [sliderValue, setSliderValue] = useState(40);
 	const dropDownEl = React.useRef();
-	console.log("Selected: ", selected);
 
 	const handleItemClick = (item) => {
 		onchange && onchange(item.id ? item.id : item);
