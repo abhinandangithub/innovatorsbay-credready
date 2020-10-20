@@ -64,6 +64,14 @@ export const employeFetchHireRequiredRangesUrl = constructUrl(
 );
 
 /**
+ * Name: fetch all org names
+ */
+export const orgNamesUrl = constructUrl(
+  employerRouteWithBase,
+  "organization"
+);
+
+/**
  * Name: Post a job
  */
 export const employerPostJob = constructUrl(employerRouteWithBase, "job");

@@ -24,6 +24,7 @@ import {
 	updateEmailThunk,
 	updatePhoneThunk,
 	getProfileThunk,
+	uploadProfileImage,
 } from "../../../store/thunks/employer";
 
 function ProfileOverview(props) {
@@ -47,6 +48,7 @@ function ProfileOverview(props) {
 	const [editingPhone, setEditingPhone] = useState(false);
 	const [editingEmail, setEditingEmail] = useState(false);
 	const [editingAboutMe, setEditingAboutMe] = useState(false);
+	const [image, setImage] = useState({  preview: employerProfile.data.org.logo_path !== "" ? employerProfile.data.org.logo_path : ImgUserPlaceholder, raw: "" });
 
 	// useEffect(() => {
 	// 	dispatch(getProfileThunk());
@@ -74,6 +76,10 @@ function ProfileOverview(props) {
 						.contact
 					: ""
 		);
+		setImage({
+			preview: employerProfile.data.org.logo_path,
+			raw: ""
+		});
 	}, [employerProfile, allData]);
 
 
@@ -107,17 +113,39 @@ function ProfileOverview(props) {
 		}
 	};
 
+	const handleChange = (e) => {
+		console.log(e.target.files[0]);
+		const formData = new FormData();
+		if (e.target.files.length) {
+			setImage({
+				preview: URL.createObjectURL(e.target.files[0]),
+				raw: e.target.files[0]
+			});
+		}
+		formData.set("logo",e.target.files[0]);
+		console.log(formData);
+		dispatch(uploadProfileImage(formData));
+	}
+
 	return (
 		<div className="profile-overview">
 			<div className="primary">
 				<div className="avatar">
 					{props.type === "candidate" ? (
-						<img src={ImgUserPlaceholder} alt="Guest" />
+						<img src={image.preview} alt="Guest" />
 					) : (
-							<img src={ImgUserPlaceholder} alt="NYP" />
+							<img src={image.preview} alt="NYP" />
 						)}
 					<div className="edit" id="editPicBtn">
-						<FontAwesomeIcon className="btn" icon={faPen} />
+						<label htmlFor="upload-button">
+							<FontAwesomeIcon className="btn" icon={faPen} />
+						</label>
+						<input
+        					type="file"
+        					id="upload-button"
+        					style={{ display: "none" }}
+        					onChange={(e) => handleChange(e)}
+      					/>
 					</div>
 				</div>
 

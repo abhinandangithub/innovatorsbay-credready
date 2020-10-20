@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { connect, useDispatch } from "react-redux";
 import { bindActionCreators } from "redux";
 import { getHiringNeeds } from "../../../../store/actions/employer";
@@ -6,12 +6,14 @@ import {
 	getHiringNeedsThunk,
 	getCompanySizeThunk,
 	updateProfileThunk,
+	getGeograpgyThunk
 } from "../../../../store/thunks/employer";
 
 import "./index.scss";
 import Input from "../../../_Elements/Input";
 import Dropdown from "../../../_Elements/Dropdown";
 import Spinner from "../../../_Elements/Spinner";
+import InputDropdown from '../../../_Elements/InputDropdown';
 
 const hiringNeed = {
 	heading: "Hires needed in the next 6 monts",
@@ -49,14 +51,14 @@ function Details(props) {
 		initialState.hiringNeeds = [props.profile.org.hires_required && props.hiringKeys.length > 0 && props.hiringKeys.find(val => val.id === props.profile.org.hires_required).range_display_value];
 		initialState.companySize = [props.profile.org.company_size && props.companySizeKeys.length > 0 && props.companySizeKeys.find(val => val.id === props.profile.org.company_size).range_display_value];
 		initialState.reference = [props.profile.org.reference_source];
-		for(let i = 0; i<props.profile.org.address.length;i++) {
-			initialState["id_"+i] = [props.profile.org.address[i].id];
-			initialState["street_"+i] = [props.profile.org.address[i].street_address];
-			initialState["city_"+i] = [props.profile.org.address[i].city];
-			initialState["state_"+i] = [props.profile.org.address[i].state];
-			initialState["zipCode_"+i] = [props.profile.org.address[i].zip_code];
+		for (let i = 0; i < props.profile.org.address.length; i++) {
+			initialState["id_" + i] = [props.profile.org.address[i].id];
+			initialState["street_" + i] = [props.profile.org.address[i].street_address];
+			initialState["city_" + i] = [props.profile.org.address[i].city];
+			initialState["state_" + i] = [props.profile.org.address[i].state];
+			initialState["zipCode_" + i] = [props.profile.org.address[i].zip_code];
 		}
-		if(props.profile.org.address.length === 0) {
+		if (props.profile.org.address.length === 0) {
 			initialState["street_0"] = [""];
 			initialState["city_0"] = [""];
 			initialState["state_0"] = [""];
@@ -64,7 +66,7 @@ function Details(props) {
 		}
 		console.log(initialState);
 		return initialState;
-		
+
 	});
 
 	useEffect(() => {
@@ -75,6 +77,7 @@ function Details(props) {
 			addCnt.push(i);
 		}
 		setAddressCount(addCnt);
+		dispatch(getGeograpgyThunk());
 	}, [dispatch]);
 
 	const handleSubmit = () => {
@@ -118,8 +121,8 @@ function Details(props) {
 		for (let i = 0; i < addressCount.length; i++) {
 			let address = {};
 			// address.id = i;
-			if(_formData["id_"+i]) {
-				address.id = _formData["id_"+i][0];
+			if (_formData["id_" + i]) {
+				address.id = _formData["id_" + i][0];
 			}
 			address.streetAddress = _formData["street_" + i][0];
 			address.city = _formData["city_" + i][0];
@@ -153,6 +156,38 @@ function Details(props) {
 		});
 	};
 
+	const [geography, setGeography] = useState(props.geographyData);
+	const [gId, setGId] = useState();
+
+	useEffect(() => {
+		console.log('abhi geography ', props.geographyData);
+		setGeography(props.geographyData);
+	}, [props.geographyData]);
+
+	// useEffect(() => {
+	// 	console.log('abhi geography ', props.geographyData)
+	// 	setGeography(props.geographyData);
+	// }, [props.geographyData])
+
+	// const handleChangeGeograpgy = (id) => {
+	// 	setOrgId(id);
+	// }
+
+	// const handleGeographySearch = (value) => {
+	// 	if (typeof value === "number") return;
+	// 	const geography = props.geographyData.filter(
+	// 		(val) => {
+	// 			if (val.city.includes(value)) {
+	// 				return {
+	// 					id: val.id,
+	// 					val: val.city
+	// 				}
+	// 			}
+	// 		}
+	// 	);
+	// 	setGeography([...geography]);
+	// }
+	
 	const renderAddresses = () => {
 		return addressCount.map((address, index) => {
 			let i = index;
@@ -196,6 +231,17 @@ function Details(props) {
 							// value={address.city}
 							onChange={(e) => handleFieldChange(e.target.id, e.target.value)}
 						/>
+						{/* {geography && geography.length &&
+						<InputDropdown
+							id={`city_${i}`}
+							placeholder="Enter city"
+							content={geography.map((val) => ({
+								val: val.city,
+								id: val.id,
+							}))}
+							onChange={(e) => handleFieldChange(e.target.id, e.target.value)}
+						/>} */}
+
 					</li>
 					<li>
 						<label htmlFor={`state_${i}`}>
@@ -368,7 +414,9 @@ function mapStateToProps(state) {
 		companySize: state.employerReducer.companySize.data,
 		profile: state.employerReducer.profile.data,
 		companySizeKeys: state.employerReducer.companySizeKeys,
-		hiringKeys: state.employerReducer.hiringKeys
+		hiringKeys: state.employerReducer.hiringKeys,
+		geographyData: state.employerReducer.geographyKeys,
+		geography: state.employerReducer.geography
 	};
 }
 

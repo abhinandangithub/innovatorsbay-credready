@@ -256,7 +256,7 @@ const initialState = {
 	employmentKeys: [],
 	functionKeys: [{
 		id: 0,
-		function_name:"Test"
+		function_name: "Test"
 	}],
 	industryKeys: [{
 		id: 0,
@@ -275,7 +275,7 @@ const initialState = {
 		"industry": 1,
 		"jobDescription": "Some nice job description",
 		"jobQuestionnaireMap": [1, 2, 3],
-		"jobCertificateMap": [15,16,17],
+		"jobCertificateMap": [15, 16, 17],
 		"jobTitle": "Senior Nursing Assistant",
 		"location": 1,
 		"maxExp": 7,
@@ -309,6 +309,35 @@ const initialState = {
 	},
 	redirectURL: "",
 	JWT: null,
+	orgNames: {
+		message: "",
+		data: [{
+			"orgId": 1,
+			"org_name": "one"
+		}, {
+			"orgId": 2,
+			"org_name": "two"
+		}],
+		error: "",
+		status: ""
+	},
+	geograpgy: {
+		error: "",
+		status: "",
+		message: "Geography fetched successfully",
+		data: [
+			{
+				id: 1,
+				city: "New York",
+				state: "New York"
+			},
+			{
+				id: 2,
+				city: "Los Angeles",
+				state: "California"
+			},
+		]
+	}
 };
 
 const reducer = (state = initialState, action) => {
@@ -342,6 +371,26 @@ const reducer = (state = initialState, action) => {
 			return updateObject(state, {
 				companySize: companySizeTemp,
 				companySizeKeys: action.value.data
+			});
+
+		case actionTypes.SET_ORG_NAMES:
+			const orgTemp = state.orgNames;
+			orgTemp.message = action.value.message;
+			orgTemp.error = action.value.error;
+			orgTemp.status = action.value.status;
+			orgTemp.data = action.value.data.map((value) => value.org_name);
+			return updateObject(state, {
+				orgNames: orgTemp,
+				orgNamesKeys: action.value.data
+			});
+
+		case actionTypes.SET_GEOGRAPHY:
+			const orgGeography = state.geography;
+			// orgGeography.data = action.value.data.map((value) => value.city);
+			console.log('orgGeography ', orgGeography);
+			return updateObject(state, {
+				geography: orgGeography,
+				geographyKeys: action.value.data
 			});
 
 		case actionTypes.SET_PHONE_NUMBER:

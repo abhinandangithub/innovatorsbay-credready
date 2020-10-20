@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch, useSelector, connect } from "react-redux";
 import { togglePopup, toggleOverlay } from "../../store/actions/popup_overlay";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
@@ -9,6 +9,10 @@ import { getVerificationCode } from "../../store/thunks/auth";
 
 import { updateLoggedIn, updateSignupDetails } from "../../store/actions/auth";
 import { updateTermsAndConditions } from "../../store/actions/auth";
+import {
+	getOrgNamesThunk
+} from "../../store/thunks/employer";
+import InputDropdown from '../_Elements/InputDropdown';
 
 function Signup(props) {
 	const dispatch = useDispatch();
@@ -17,10 +21,44 @@ function Signup(props) {
 
 	const [signupType, setSignupType] = useState("candidate");
 	const [passwordShown, setPasswordShown] = useState(false);
+	const [orgNames, setOrgNames] = useState(props.orgNames);
+	const [orgId, setOrgId] = useState();
+
+	useEffect(() => {
+		dispatch(getOrgNamesThunk());
+	}, [dispatch]);
+
+	useEffect(() => {
+		console.log('abhi org names ', props.orgNamesData)
+		setOrgNames(props.orgNamesData);
+	}, [props.orgNamesData])
+
+	const handleChangeOrgName = (id) => {
+		setOrgId(id);
+	}
+
+	const handleOrgNameSearch = (value) => {
+		if (typeof value === "number") return;
+		const orgNames = props.orgNamesData.filter(
+			(val) => {
+				if (val.org_name.includes(value)) {
+					return {
+						id: val.orgId,
+						val: val.org_name
+					}
+				}
+			}
+		);
+		setOrgNames([...orgNames]);
+	}
 
 	const onSubmit = (data) => {
 		data.user_type = signupType === "candidate" ? "jobseeker" : signupType;
-
+		if (typeof orgId !== "number") {
+			data.organisation = orgId;
+		} else {
+			data.orgId = orgId;
+		}
 		console.log(auth, data);
 		// data.phone = "+"+ data.phone;
 		dispatch(getVerificationCode(data));
@@ -103,7 +141,7 @@ function Signup(props) {
 					</div>
 				</li>
 
-				{signupType === "employer" ? (
+				{/* {signupType === "employer" ? (
 					<li>
 						<label htmlFor="organisation">
 							Organisation Name <span>*</span>
@@ -120,7 +158,28 @@ function Signup(props) {
 							})}
 						/>
 					</li>
+				) : null} */}
+				{signupType === "employer" ? (
+					<li>
+						<label htmlFor="organisation">
+							Organisation Name <span>*</span>
+						</label>
+						<InputDropdown
+							placeholder="Enter Organisation Name"
+							content={orgNames.map((val) => ({
+								val: val.org_name,
+								id: val.orgId,
+							}))}
+							id="function"
+							// selected={institution.content[formData.institution[0]]}
+							onchange={(value) => {
+								handleChangeOrgName(value);
+								handleOrgNameSearch(value);
+							}}
+						/>
+					</li>
 				) : null}
+
 				<li>
 					<label htmlFor="email">
 						E-mail<span>*</span>
@@ -241,4 +300,13 @@ function Signup(props) {
 	);
 }
 
-export default Signup;
+// export default Signup;
+
+function mapStateToProps(state) {
+	return {
+		orgNames: state.employerReducer.orgNames.data,
+		orgNamesData: state.employerReducer.orgNamesKeys
+	};
+}
+
+export default connect(mapStateToProps)(Signup);

@@ -22,15 +22,18 @@ import {
 	employerDeleteQuestionsFromJobUrl,
 	employerDeleteQuestionFromJobUrl,
 	employerUpdateQuestion,
-	employerUpdateCompanyLogoUrl
+	employerUpdateCompanyLogoUrl,
+	orgNamesUrl
 } from "../api/employer";
+
+import { geographyUrl } from '../api/entity';
 
 import {
 	setHiringNeeds, setCompanySize, setPhoneNumber,
 	setEmail, setEmployerProfile, setEmployerJobs,
 	setCandidatesList, setEmploymentType, setIndustry,
 	setFunction, setSkills, setQuestionBank, setEmailTemplate, setPostedJobURL,
-	setAppliedCandidateDetails, setLocations, setJobDetails, setLogin
+	setAppliedCandidateDetails, setLocations, setJobDetails, setLogin, setOrgNames, setGeography
 } from "../actions/employer";
 
 import {
@@ -54,6 +57,26 @@ export const getHiringNeedsThunk = (token) => async (dispatch, getState) => {
 		dispatch(setHiringNeeds(data.data));
 	} catch (err) {
 		if (err.response) console.error(`failed to fetch hiring needs ${err}`);
+	}
+};
+
+export const getOrgNamesThunk = (token) => async (dispatch, getState) => {
+	try {
+		const data = await Axios.get(orgNamesUrl);
+		if (!data) return false;
+		dispatch(setOrgNames(data.data));
+	} catch (err) {
+		if (err.response) console.error(`failed to fetch orh names ${err}`);
+	}
+};
+
+export const getGeograpgyThunk = (token) => async (dispatch, getState) => {
+	try {
+		const data = await Axios.get(geographyUrl);
+		if (!data) return false;
+		dispatch(setGeography(data.data));
+	} catch (err) {
+		if (err.response) console.error(`failed to fetch geography names ${err}`);
 	}
 };
 
