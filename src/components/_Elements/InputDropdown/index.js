@@ -59,7 +59,6 @@ function InputDropdown({ id, placeholder, content, selected, onchange }) {
 						setvalue(e.target.value);
 						onchange && onchange(e.target.value);
 					}}
-					autocomplete="off"
 				/>
 			</div>
 

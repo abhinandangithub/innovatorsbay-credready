@@ -165,19 +165,3 @@ export const clearSelectedJobs = (val) => {
 		value: val,
 	};
 };
-
-export const setOrgNames = (val) => {
-	return {
-		type: actionTypes.SET_ORG_NAMES,
-		value: val,
-	};
-};
-
-export const setGeography = (val) => {
-	console.log('geo ', val);
-	return {
-		type: actionTypes.SET_GEOGRAPHY,
-		value: val,
-	};
-};
-
