@@ -247,3 +247,9 @@ export const employeFecthJobPreviewDetails = constructUrl(
   employerRouteWithBase,
   "job/preview"
 );
+
+
+export const orgNameUrl = constructUrl(
+  employerRouteWithBase,
+  "organization"
+);

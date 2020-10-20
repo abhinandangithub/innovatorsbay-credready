@@ -165,3 +165,11 @@ export const clearSelectedJobs = (val) => {
 		value: val,
 	};
 };
+
+export const setOrgNames = (val) => {
+	return {
+		type: actionTypes.SET_ORG_NAMES,
+		value: val,
+	};
+};
+

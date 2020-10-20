@@ -61,7 +61,7 @@ function CreateJob(props) {
 		if (typeof value === "number") return;
 		const filteredData = props.locationData.filter(
 			(val) => {
-				if((val.street_address + ", " + val.city + ", " + val.state + ", " + val.zip_code).includes(value)) {
+				if((val.street_address + ", " + val.city + ", " + val.state + ", " + val.zip_code).toLowerCase().includes(value.toLowerCase())) {
 					return {
 						id: val.id,
 						val: val.street_address + ", " + val.city + ", " + val.state + ", " + val.zip_code
@@ -76,7 +76,7 @@ function CreateJob(props) {
 		if (typeof value === "number") return;
 		const filteredData = props.employmentTypeData.filter(
 			(val) => {
-				if(val.employment_status.includes(value)) {
+				if(val.employment_status.toLowerCase().includes(value.toLowerCase())) {
 					return {
 						id: val.id,
 						val: val.employment_status
@@ -91,7 +91,7 @@ function CreateJob(props) {
 		if (typeof value === "number") return;
 		const filteredData = props.industryData.filter(
 			(val) => {
-				if(val.industry_name.includes(value)) {
+				if(val.industry_name.toLowerCase().includes(value.toLowerCase())) {
 					return {
 						id: val.id,
 						val: val.industry_name
@@ -106,7 +106,7 @@ function CreateJob(props) {
 		if (typeof value === "number") return;
 		const filteredData = props.functionData.filter(
 			(val) => {
-				if(val.function_name.includes(value)) {
+				if(val.function_name.toLowerCase().includes(value.toLowerCase())) {
 					return {
 						id: val.id,
 						val: val.function_name

@@ -22,7 +22,8 @@ import {
 	employerDeleteQuestionsFromJobUrl,
 	employerDeleteQuestionFromJobUrl,
 	employerUpdateQuestion,
-	employerUpdateCompanyLogoUrl
+	employerUpdateCompanyLogoUrl,
+	orgNameUrl
 } from "../api/employer";
 
 import {
@@ -30,7 +31,8 @@ import {
 	setEmail, setEmployerProfile, setEmployerJobs,
 	setCandidatesList, setEmploymentType, setIndustry,
 	setFunction, setSkills, setQuestionBank, setEmailTemplate, setPostedJobURL,
-	setAppliedCandidateDetails, setLocations, setJobDetails, setLogin
+	setAppliedCandidateDetails, setLocations, setJobDetails, setLogin,
+	setOrgNames
 } from "../actions/employer";
 
 import {
@@ -291,6 +293,17 @@ export const getFunction = () => async (dispatch, getState) => {
 		const data = await Axios.get(entityFetchEntitityFunctionUrl);
 		if (!data) return false;
 		dispatch(setFunction(data.data));
+	} catch (err) {
+		if (err.response) console.error(`failed to get the function ${err}`);
+	}
+};
+
+
+export const getOrgNames = () => async (dispatch, getState) => {
+	try {
+		const data = await Axios.get(orgNameUrl);
+		if (!data) return false;
+		dispatch(setOrgNames(data.data));
 	} catch (err) {
 		if (err.response) console.error(`failed to get the function ${err}`);
 	}

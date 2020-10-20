@@ -388,7 +388,8 @@ function CandidateList(props) {
 				</li>
 				<li>
 					<Link to="/jobs/candidate-view">
-						<img src={faker.image.avatar()} alt="User" />
+						{/* <img src={faker.image.avatar()} alt="User" /> */}
+						<img src={ImgUser} alt="User" />
 						{candidate.candidate_name}
 					</Link>
 				</li>
@@ -433,7 +434,7 @@ function CandidateList(props) {
 				</h1>
 					<h3>CredReadiness Index for this job is 75</h3>
 				</div>
-				<div className="search-panel">
+				{/* <div className="search-panel">
 					<div className="searches">
 						<input type="text" placeholder="Candidate Name" />
 						<Dropdown placeholder={crRange.heading} content="slider" />
@@ -447,7 +448,7 @@ function CandidateList(props) {
 							content={currentOrganisation.content}
 						/>
 					</div>
-				</div>
+				</div> */}
 				<div className="lists-outer">
 					<div className="heading flex">
 						<h2>List of Candidate</h2>
@@ -506,7 +507,7 @@ function CandidateList(props) {
 					</div>
 					{props.candidatesList.length > 0 ?
 					<>
-					 <div className="actions">
+					 {/* <div className="actions">
 						<div className="left">
 							<Link onClick={handleSendEmail} >Send Email</Link>
 								&nbsp;&nbsp;{" |  "}&nbsp;&nbsp;
@@ -522,7 +523,7 @@ function CandidateList(props) {
 								<span className="input"></span>View Rejected Candidates
 						</label>
 						</div>
-					</div>
+					</div> */}
 					<ul className="lists">
 						<li className="list">
 							<ul className="head">
@@ -561,7 +562,7 @@ function CandidateList(props) {
 					</ul>
 					</>  : <p>No candidates found for this job </p>}
 				</div>
-				<Pagination />
+				{/* <Pagination /> */}
 			</div>
 		// )
 

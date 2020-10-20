@@ -124,6 +124,12 @@ const initialState = {
 		error: "",
 		status: ""
 	},
+	orgType: {
+		message: "",
+		data: ["Option 1", "Option 2", "Option 3", "Option 4"],
+		error: "",
+		status: ""
+	},
 	skills: {
 		"message": null,
 		"data": [
@@ -401,6 +407,17 @@ const reducer = (state = initialState, action) => {
 			return updateObject(state, {
 				functionType: functionTemp,
 				functionKeys: action.value.data
+			});
+		
+		case actionTypes.SET_ORG_NAMES:
+			const functionTemp1 = state.orgType;
+			functionTemp1.message = action.value.message;
+			functionTemp1.error = action.value.error;
+			functionTemp1.status = action.value.status;
+			functionTemp1.data = action.value.data.map((value) => value.org_name);
+			return updateObject(state, {
+				orgType: functionTemp1,
+				orgKeys: action.value.data
 			});
 
 		case actionTypes.SET_SKILLS:

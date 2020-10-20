@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch, useSelector, connect } from "react-redux";
 import { togglePopup, toggleOverlay } from "../../store/actions/popup_overlay";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import { getVerificationCode } from "../../store/thunks/auth";
-
+import { getOrgNames } from '../../store/thunks/employer';
 import { updateLoggedIn, updateSignupDetails } from "../../store/actions/auth";
 import { updateTermsAndConditions } from "../../store/actions/auth";
+import InputDropdown from '../_Elements/InputDropdown';
 
 function Signup(props) {
 	const dispatch = useDispatch();
@@ -17,10 +18,45 @@ function Signup(props) {
 
 	const [signupType, setSignupType] = useState("candidate");
 	const [passwordShown, setPasswordShown] = useState(false);
+	const [functions, setFunctions] = useState(props.functionData);
+	const [orgId, setOrgId] = useState();
+
+
+	useEffect(() => {
+		dispatch(getOrgNames());
+	}, [dispatch]);
+
+	useEffect(() => {
+		setFunctions(props.functionData);
+	}, [props.functionData]);
+
+
+	const handleFunctionSearch = (value) => {
+		if (typeof value === "number") return;
+		const filteredData = props.functionData.filter(
+			(val) => {
+				if (val.org_name.toLowerCase().includes(value.toLowerCase())) {
+					return {
+						id: val.orgId,
+						val: val.org_name
+					}
+				}
+			}
+		);
+		setFunctions([...filteredData]);
+	}
+
+	const handleChangeFunction = (id) => {
+		setOrgId(id);
+	}
 
 	const onSubmit = (data) => {
 		data.user_type = signupType === "candidate" ? "jobseeker" : signupType;
-
+		if (typeof orgId !== "number") {
+			data.organisation = orgId;
+		} else {
+			data.orgId = orgId;
+		}
 		console.log(auth, data);
 		// data.phone = "+"+ data.phone;
 		dispatch(getVerificationCode(data));
@@ -108,7 +144,7 @@ function Signup(props) {
 						<label htmlFor="organisation">
 							Organisation Name <span>*</span>
 						</label>
-						<input
+						{/* <input
 							id="organisation"
 							name="organisation"
 							type="text"
@@ -118,6 +154,18 @@ function Signup(props) {
 							ref={register({
 								required: "Required",
 							})}
+						/> */}
+						<InputDropdown
+							placeholder="Enter Organisation Name"
+							content={functions.map((val) => ({
+								val: val.org_name,
+								id: val.orgId,
+							}))}
+							id="function"
+							onchange={(value) => {
+								handleChangeFunction(value);
+								handleFunctionSearch(value);
+							}}
 						/>
 					</li>
 				) : null}
@@ -241,4 +289,14 @@ function Signup(props) {
 	);
 }
 
-export default Signup;
+// export default Signup;
+
+function mapStateToProps(state) {
+	return {
+		functionType: state.employerReducer.orgType.data,
+		functionData: state.employerReducer.orgKeys
+	}
+}
+
+// export default CreateJob;
+export default connect(mapStateToProps)(Signup);
