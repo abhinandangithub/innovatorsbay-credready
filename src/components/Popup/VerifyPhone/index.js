@@ -10,7 +10,8 @@ import VerifyCode from "../../_Elements/VerifyCode";
 import { calculateTimeLeft } from "../../../assets/js/Utility";
 import { signUpUser, verifyUserCode } from "../../../store/thunks/auth";
 
-let timerDuration = 10 * 60; // in seconds
+let duration = 10 * 60;
+let timerDuration = duration; // in seconds
 
 function VerifyPhone(props) {
 	const dispatch = useDispatch();
@@ -22,7 +23,7 @@ function VerifyPhone(props) {
 	const [isOtpVerifying, setIsOtpVerifying] = useState(false);
 
 	const handleClick = async () => {
-		console.log('otp ', otp);
+		console.log("otp ", otp);
 		if (
 			// otp.filter((i) => i.length > 0).length === 4
 			otp.filter((i) => i !== "").length === 4
@@ -55,6 +56,13 @@ function VerifyPhone(props) {
 	}, [otp]);
 
 	useEffect(() => {
+		return () => {
+			// console.log("Reseting OTP");
+			timerDuration = duration;
+		};
+	}, []);
+
+	useEffect(() => {
 		setTimeout(() => {
 			timerDuration--;
 			setTimeLeft(calculateTimeLeft(timerDuration));
@@ -68,13 +76,16 @@ function VerifyPhone(props) {
 		timerDisplay = `${timeLeft["m"]} : ${timeLeft["s"]}`;
 	});
 
+	const resendCode = () => {
+		timerDuration = duration;
+	};
+
 	return (
 		<div className="verify-email-phone-code">
 			<h1>Verify your account</h1>
 			<div className="content">
 				<p className="info">
-					We have sent a verification code on your phone{" "}
-					{auth.loggedIn.as === "employer" && "and email"}.
+					We have sent a verification code on your phone and email
 					<br />
 					To proceed, enter the verification code
 				</p>
@@ -87,24 +98,33 @@ function VerifyPhone(props) {
 						<VerifyCode setOtp={(otp) => setOtp(otp)} type="Phone" />
 					</div>
 				</div>
-				<button className="primary-btn" disabled={isOtpVerifying} onClick={handleClick} id="submitBtn">
+				<button
+					className="primary-btn"
+					disabled={isOtpVerifying}
+					onClick={handleClick}
+					id="submitBtn"
+				>
 					{!isOtpVerifying ? "Validate" : "Validating..."}
 				</button>
 				{isCodeError && timerDisplay !== "" ? (
 					<p className="error-code">Code is incorrect, try again!</p>
 				) : (
-						""
-					)}
+					""
+				)}
 				{timerDisplay !== "" ? (
 					<p className="status">
 						Verification Code Expires in
 						<span className="time"> {timerDisplay} minutes</span>
 					</p>
 				) : (
-						<p className="status resend" id="resendVerificationCodeLink">
-							Resend Verification Code
-						</p>
-					)}
+					<p
+						className="status resend"
+						id="resendVerificationCodeLink"
+						onClick={resendCode}
+					>
+						Resend Verification Code
+					</p>
+				)}
 			</div>
 		</div>
 	);
@@ -114,7 +134,7 @@ function VerifyPhone(props) {
 
 function mapStateToProps(state) {
 	return {
-		isVerified: state.authReducer.isVerified
+		isVerified: state.authReducer.isVerified,
 	};
 }
 

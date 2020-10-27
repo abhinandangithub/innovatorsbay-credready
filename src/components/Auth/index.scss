@@ -48,6 +48,7 @@
 		width: 60%;
 		/* width: calc(100% - 800px); */
 		height: 100%;
+		// overflow: auto;
 		background-color: #f8fafb;
 		text-align: center;
 		.terms_n_conditions {
@@ -90,6 +91,8 @@
 		}
 		.content {
 			width: 450px;
+			// padding: 100px 0;
+			// font-size: 300%;
 			h3 {
 				color: $secondary-color;
 				font-size: 30px;
@@ -260,5 +263,65 @@
 	:-moz-placeholder {
 		/* Firefox 18- */
 		color: #cdcdcd;
+	}
+
+	.common-input-dropdown {
+		input {
+			background-image: url(../../assets/employee-name.jpg);
+			background-size: 27px;
+		}
+		.heading {
+			background-color: transparent !important;
+		}
+		.content {
+			li {
+				margin-bottom: 0 !important;
+				&:first-child {
+					border-top: none;
+				}
+			}
+		}
+		&.active {
+			.heading {
+				input {
+					// border-radius: 23px 23px 0 0 !important;
+				}
+			}
+		}
+	}
+}
+
+@media only screen and (max-height: 750px) {
+	.auth-page {
+		.left {
+			.logo {
+				left: 30px;
+				top: 30px;
+				img {
+					width: 150px;
+				}
+			}
+			.content {
+				min-width: 410px;
+				margin-top: 50px;
+				h2 {
+					font-size: 33px;
+				}
+				h1 {
+					margin: 0 0 10px 0;
+					font-size: 50px;
+				}
+			}
+		}
+		&.sign_up {
+			.right {
+				overflow: auto;
+				align-items: unset;
+				.content {
+					padding: 40px 0;
+					height: fit-content;
+				}
+			}
+		}
 	}
 }

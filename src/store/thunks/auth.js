@@ -13,12 +13,15 @@ import Cookies from "js-cookie";
 import { setDefaultAuthorizationHeader } from "../utility";
 import { requestConfig } from "./utils";
 import { getProfileThunk } from "./employer";
+import { beginApiCall, apiCallError } from "../actions/common";
 
 export const tryLogin = (credentials) => async (dispatch, getState) => {
 	try {
+		dispatch(beginApiCall());
 		const {
 			data: { data: token },
 		} = await Axios.post(loginUrl, credentials, requestConfig);
+		console.log(await Axios.post(loginUrl, credentials, requestConfig));
 		if (!token) return false;
 		Cookies.set("JWT", token);
 		/**
@@ -33,12 +36,19 @@ export const tryLogin = (credentials) => async (dispatch, getState) => {
 					: token.map.user_type
 				: "";
 		await fetchCandidateDetails();
-		dispatch(updateLoggedIn([true, type]));
-		dispatch(getProfileThunk());
+		if (type === 'employer') {
+			dispatch(getProfileThunk(type));
+		} else {
+			dispatch(updateLoggedIn([true, type]));
+		}
 		setDefaultAuthorizationHeader(token);
+		dispatch(apiCallError());
 	} catch (err) {
-		// dispatch(updateLoggedIn([null, ""]));
-		if (err.response) console.error(`failed to log-in with error ${err}`);
+		dispatch(apiCallError());
+		if (err.response) {
+			dispatch(updateLoggedIn([err.response.data.message, "error"]));
+			console.error(`failed to log-in with error ${err}`);
+		}
 	}
 };
 
@@ -84,9 +94,13 @@ export const verifyUserCode = (type = "phone", otp) => async (
 export const signUpUser = (userData) => async (dispatch, getState) => {
 	try {
 		const { message } = await Axios.post(signUpUrl, userData, requestConfig);
-		if (!message) return;
+		if (!message) {
+			dispatch(updatePhoneOtp(false));
+			return;
+		}
 		dispatch();
 	} catch (err) {
+		dispatch(updatePhoneOtp(false));
 		console.error(`failed to sign-up user with error ${err}`);
 	}
 };

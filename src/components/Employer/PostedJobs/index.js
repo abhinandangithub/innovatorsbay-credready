@@ -27,6 +27,13 @@ function PostedJobs(props) {
 
 	const handleSendEmail = (e, job_id) => {
 		// if(e.target.checked) {
+		let jobs = props.postedJobs.map(j => {
+			if (j.job_id === job_id) {
+				j.is_following_on_email = e.target.checked;
+			};
+			return j;
+		})
+		setJobs(jobs);
 		dispatch(
 			sendNotification({
 				jobId: job_id,
@@ -39,6 +46,13 @@ function PostedJobs(props) {
 
 	const handleSendSMS = (e, job_id) => {
 		// if(e.target.checked) {
+		let jobs = props.postedJobs.map(j => {
+			if (j.job_id === job_id) {
+				j.is_following_on_sms = e.target.checked;
+			};
+			return j;
+		})
+		setJobs(jobs);
 		dispatch(
 			sendNotification({
 				jobId: job_id,
@@ -55,7 +69,7 @@ function PostedJobs(props) {
 
 	const handleSearch = (searchSting) => {
 		setJobs(
-			props.postedJobs.filter((val) => val.job_title.includes(searchSting))
+			props.postedJobs.filter((val) => val.job_title.toLowerCase().includes(searchSting.toLowerCase()))
 		);
 	};
 
@@ -108,21 +122,23 @@ function PostedJobs(props) {
 				</div>
 				<div className="checkboxes">
 					<input
-						id={"SMS" + job.job_id}
-						type="checkbox"
-						className="fancy-toggle blue"
-						onChange={(e) => handleSendEmail(e, job.job_id)}
-					/>
-					<label htmlFor={"SMS" + job.job_id}>
-						<span className="input"></span>Receive Email Notification
-					</label>
-					<input
 						id={"EMAIL" + job.job_id}
 						type="checkbox"
 						className="fancy-toggle blue"
-						onChange={(e) => handleSendSMS(e, job.job_id)}
+						onChange={(e) => handleSendEmail(e, job.job_id)}
+						checked={job.is_following_on_email}
 					/>
 					<label htmlFor={"EMAIL" + job.job_id}>
+						<span className="input"></span>Receive Email Notification
+					</label>
+					<input
+						id={"SMS" + job.job_id}
+						type="checkbox"
+						className="fancy-toggle blue"
+						onChange={(e) => handleSendSMS(e, job.job_id)}
+						checked={job.is_following_on_sms}
+					/>
+					<label htmlFor={"SMS" + job.job_id}>
 						<span className="input"></span>Receive SMS Notification
 					</label>
 				</div>
@@ -135,7 +151,7 @@ function PostedJobs(props) {
 			<div className="common-heading-button">
 				<h1 className="heading">My Posted Jobs</h1>
 				<Link to="/jobs/create-job" className="btn">
-					<span></span>Post a Job
+					<span></span>Post the Job
 				</Link>
 			</div>
 			<div className="search-panel">
@@ -145,7 +161,7 @@ function PostedJobs(props) {
 						placeholder="Search by Job Title"
 						onChange={(e) => handleSearch(e.target.value)}
 					/>
-					<input type="text" placeholder="Search by Skills" />
+					{/* <input type="text" placeholder="Search by Skills" /> */}
 				</div>
 			</div>
 
@@ -176,11 +192,11 @@ function PostedJobs(props) {
 				<p>
 					No jobs have been created yet.
 					<br />
-					Why don't you post a job by clicking on the button below
+					Why don't you post the job by clicking on the button below
 				</p>
 				<div className="common-heading-button">
 					<Link to="/jobs/create-job" className="btn">
-						<span></span>Post a Job
+						<span></span>Post the Job
 					</Link>
 				</div>
 			</div>
@@ -190,10 +206,10 @@ function PostedJobs(props) {
 	return props.loading ? (
 		<Spinner />
 	) : (
-		<div className="posted-jobs-page">
-			{props.postedJobs.length === 0 ? renderEmptyList : renderJobsList}
-		</div>
-	);
+			<div className="posted-jobs-page">
+				{props.postedJobs.length === 0 ? renderEmptyList : renderJobsList}
+			</div>
+		);
 }
 
 function mapStateToProps(state) {

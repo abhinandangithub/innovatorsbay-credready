@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import "./index.scss";
 import ImgWidgetLogo from "../../../../assets/widget-logo.jpg";
 import CredReadyIndex from "../../../_Elements/CredReadyIndex";
-import { fetchJobDescription, fetchjobViewData } from "../../../../modals/candidateProfile/thunk";
+import { fetchJobDescription, fetchjobViewData, fetchAllAnswers } from "../../../../modals/candidateProfile/thunk";
 import MarginalAssociation from "../../../_Elements/Charts/MarginalAssociation";
 
 function JobApply(props) {
@@ -36,8 +36,11 @@ function JobApply(props) {
 		);
 	React.useEffect(() => {
 		console.log(props.match.params.id);
+		dispatch(fetchAllAnswers());
+		setTimeout(function () {
+			dispatch(fetchjobViewData(props.match.params.id));
+		}, 5000)
 		dispatch(fetchJobDescription(props.match.params.id));
-		dispatch(fetchjobViewData(props.match.params.id));
 
 	}, []);
 	const show_Graphs = allJobData.jobDetails ? true : false;
@@ -62,7 +65,6 @@ function JobApply(props) {
 				</div>
 				<div className="bottom">
 					<p>
-						<span className="heading">Job Description: </span>
 						<span className="text">
 							<span
 								dangerouslySetInnerHTML={{
@@ -72,13 +74,6 @@ function JobApply(props) {
 							<span dangerouslySetInnerHTML={{ __html: allData.job_description }}></span>
 						</span>
 					</p>
-					<h2>{jobDetails.job_title}</h2>
-					<h3>Responsibilities</h3>
-					<span
-						dangerouslySetInnerHTML={{
-							__html: allData.job_description
-						}}
-					></span>
 					<div className="cta flex">
 						<p>Are you interested to apply for this possition?</p>
 						{index < 75 ? (

@@ -6,10 +6,10 @@ import { togglePopup, toggleOverlay } from "../../store/actions/popup_overlay";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import { getVerificationCode } from "../../store/thunks/auth";
-import { getOrgNames } from '../../store/thunks/employer';
+import { getOrgNames } from "../../store/thunks/employer";
 import { updateLoggedIn, updateSignupDetails } from "../../store/actions/auth";
 import { updateTermsAndConditions } from "../../store/actions/auth";
-import InputDropdown from '../_Elements/InputDropdown';
+import InputDropdown from "../_Elements/InputDropdown";
 
 function Signup(props) {
 	const dispatch = useDispatch();
@@ -21,7 +21,6 @@ function Signup(props) {
 	const [functions, setFunctions] = useState(props.functionData);
 	const [orgId, setOrgId] = useState();
 
-
 	useEffect(() => {
 		dispatch(getOrgNames());
 	}, [dispatch]);
@@ -30,33 +29,35 @@ function Signup(props) {
 		setFunctions(props.functionData);
 	}, [props.functionData]);
 
-
 	const handleFunctionSearch = (value) => {
 		if (typeof value === "number") return;
-		const filteredData = props.functionData.filter(
-			(val) => {
-				if (val.org_name.toLowerCase().includes(value.toLowerCase())) {
-					return {
-						id: val.orgId,
-						val: val.org_name
-					}
-				}
+		const filteredData = props.functionData.filter((val) => {
+			if (val.org_name.toLowerCase().includes(value.toLowerCase())) {
+				return {
+					id: val.orgId,
+					val: val.org_name,
+				};
 			}
-		);
+		});
 		setFunctions([...filteredData]);
-	}
+	};
 
 	const handleChangeFunction = (id) => {
 		setOrgId(id);
-	}
+	};
 
 	const onSubmit = (data) => {
+		console.log(data);
 		data.user_type = signupType === "candidate" ? "jobseeker" : signupType;
-		if (typeof orgId !== "number") {
-			data.organisation = orgId;
-		} else {
-			data.orgId = orgId;
+
+		if (signupType === "employer") {
+			if (typeof orgId !== "number") {
+				data.organisation = orgId;
+			} else {
+				data.orgId = orgId;
+			}
 		}
+
 		console.log(auth, data);
 		// data.phone = "+"+ data.phone;
 		dispatch(getVerificationCode(data));
@@ -68,9 +69,9 @@ function Signup(props) {
 
 		let boolValue = data.termsandconditions && data.allowContact;
 
-		if (auth.loggedIn.as === "employer") {
-			boolValue = data.termsandconditions;
-		}
+		boolValue = data.termsandconditions;
+		// if (auth.loggedIn.as === "employer") {
+		// }
 
 		dispatch(updateTermsAndConditions(boolValue));
 	};
@@ -82,12 +83,6 @@ function Signup(props) {
 	const handleSignupTypeToggle = (id) => {
 		setSignupType(id);
 	};
-
-	useEffect(() => {
-		return () => {
-			// cleanup
-		};
-	}, [signupType]);
 
 	const showErrorMessage = () => {
 		if (errors.organisation) {
@@ -109,7 +104,7 @@ function Signup(props) {
 	};
 
 	return (
-		<form onSubmit={handleSubmit(onSubmit)} className="content">
+		<form onSubmit={handleSubmit(onSubmit)} className="content sign_up">
 			<h3>Create your account</h3>
 
 			{showErrorMessage()}
@@ -142,29 +137,25 @@ function Signup(props) {
 				{signupType === "employer" ? (
 					<li>
 						<label htmlFor="organisation">
-							Organisation Name <span>*</span>
+							Organization Name <span>*</span>
 						</label>
-						{/* <input
-							id="organisation"
-							name="organisation"
-							type="text"
-							autoComplete="nothing"
-							placeholder="Enter Organisation Name"
-							autoFocus
-							ref={register({
-								required: "Required",
-							})}
-						/> */}
 						<InputDropdown
-							placeholder="Enter Organisation Name"
-							content={functions.map((val) => ({
-								val: val.org_name,
-								id: val.orgId,
-							}))}
+							placeholder="Enter Organization Name"
+							content={
+								functions &&
+								functions.map((val) => ({
+									val: val.org_name,
+									id: val.orgId,
+								}))
+							}
+							allow_random
+							search_term
+							intellisense
 							id="function"
+							// selected="company"
 							onchange={(value) => {
 								handleChangeFunction(value);
-								handleFunctionSearch(value);
+								// handleFunctionSearch(value);
 							}}
 						/>
 					</li>
@@ -179,6 +170,7 @@ function Signup(props) {
 						type="emai"
 						autoComplete="off"
 						placeholder="Enter your active Email ID"
+						// defaultValue="a@gmail.com"
 						ref={register({
 							required: "Required",
 							pattern: {
@@ -242,6 +234,7 @@ function Signup(props) {
 							id="termsandconditions"
 							name="agree"
 							type="checkbox"
+							// defaultChecked
 							ref={register({
 								required: "Required",
 							})}
@@ -264,9 +257,6 @@ function Signup(props) {
 								id="allowContact"
 								name="allowContact"
 								type="checkbox"
-								ref={register({
-									required: "Required",
-								})}
 							/>
 							<label htmlFor="allowContact">
 								<span className="input"></span>Allow recruiters to contact you
@@ -294,8 +284,8 @@ function Signup(props) {
 function mapStateToProps(state) {
 	return {
 		functionType: state.employerReducer.orgType.data,
-		functionData: state.employerReducer.orgKeys
-	}
+		functionData: state.employerReducer.orgKeys,
+	};
 }
 
 // export default CreateJob;

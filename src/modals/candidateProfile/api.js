@@ -52,3 +52,14 @@ export const deleteCertificateUrl = `${baseUrl}/candidate/certificate_details`;
 
 export const fetchJobDescriptionUrl = `${baseUrl}/employer/job/fetch`;
 
+export const updateCandidateAboutUrl = `${baseUrl}/candidate/aboutme`;
+
+export const updateCandidatePhoneUrl = `${baseUrl}/candidate/phone`;
+
+export const updateCandidateEmailUrl = `${baseUrl}/candidate/email`;
+
+export const uploadCandidateImageUrl = `${baseUrl}/candidate/profile/displaypicture/upload`;
+
+export const uploadCandidateResumeUrl = `${baseUrl}/candidate/profile/resume/upload`;
+
+export const deleteCandidateAccountUrl = `${baseUrl}/candidate/account/delete`;

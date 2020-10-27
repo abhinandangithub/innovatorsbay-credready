@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useDispatch, useSelector, connect } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
 	faPen,
@@ -26,83 +26,126 @@ import {
 	getProfileThunk,
 	uploadProfileImage,
 } from "../../../store/thunks/employer";
+import {
+	updateCandidatePhone,
+	updateCandidateAbout,
+	updateCandidateEmail,
+	uploadCandidateImage,
+	fetchAllAnswers,
+} from "../../../modals/candidateProfile/thunk";
 
 function ProfileOverview(props) {
 	const dispatch = useDispatch();
 	const allData = useSelector((state) => state.candidateSetDataReducer.data);
 	const employerProfile = useSelector((state) => state.employerReducer.profile);
-	console.log('employerProfile ', props.type, employerProfile);
 	const [email, setEmail] = useState(
-		props.type === "candidate"
-			&& allData.contacts && allData.contacts.length > 0
+		props.type === "candidate" &&
+			allData.contacts &&
+			allData.contacts.length > 0
 			? allData.contacts.find((el) => el.contact_type === "email").contact
 			: ""
 	);
-
+	const [about, setAbout] = useState(
+		props.type === "candidate" && allData.about_me ? allData.about_me : ""
+	);
 	const [phone, setPhone] = useState(
-		props.type === "candidate"
-			&& allData.contacts && allData.contacts.length > 0
+		props.type === "candidate" &&
+			allData.contacts &&
+			allData.contacts.length > 0
 			? allData.contacts.find((el) => el.contact_type === "phone").contact
 			: ""
 	);
 	const [editingPhone, setEditingPhone] = useState(false);
 	const [editingEmail, setEditingEmail] = useState(false);
 	const [editingAboutMe, setEditingAboutMe] = useState(false);
-	const [image, setImage] = useState({  preview: employerProfile.data.org.logo_path !== "" ? employerProfile.data.org.logo_path : ImgUserPlaceholder, raw: "" });
-
-	// useEffect(() => {
-	// 	dispatch(getProfileThunk());
-	// }, [dispatch, phone, email, allData]);
+	const [image, setImage] = useState({
+		preview:
+			employerProfile.data.org.logo_path !== ""
+				? employerProfile.data.org.logo_path
+				: ImgUserPlaceholder,
+		raw: "",
+	});
+	const [candidateImage, setCandidateImage] = useState({
+		preview:
+			allData.profile_image_path && allData.profile_image_path !== ""
+				? allData.profile_image_path
+				: ImgUserPlaceholder,
+		raw: "",
+	});
 
 	useEffect(() => {
+		console.log(
+			props.type === "candidate" && allData.about_me ? allData.about_me : ""
+		);
 		setEmail(
 			props.type === "candidate"
 				? allData.username
 					? allData.username
 					: ""
 				: employerProfile.data.contacts.length > 0
-					? employerProfile.data.contacts.find((el) => el.contact_type === "email")
-						.contact
-					: ""
+				? employerProfile.data.contacts.find(
+						(el) => el.contact_type === "email"
+				  ).contact
+				: ""
+		);
+		setAbout(
+			props.type === "candidate" && allData.about_me ? allData.about_me : ""
 		);
 		setPhone(
 			props.type === "candidate"
 				? allData.contacts
-					? allData.contacts.find((el) => el.contact_type === "phone")
-						.contact
+					? allData.contacts.find((el) => el.contact_type === "phone").contact
 					: ""
 				: employerProfile.data.contacts.length > 0
-					? employerProfile.data.contacts.find((el) => el.contact_type === "phone")
-						.contact
-					: ""
+				? employerProfile.data.contacts.find(
+						(el) => el.contact_type === "phone"
+				  ).contact
+				: ""
 		);
+		setCandidateImage({
+			preview: allData.profile_image_path,
+			raw: "",
+		});
 		setImage({
 			preview: employerProfile.data.org.logo_path,
-			raw: ""
+			raw: "",
 		});
+		dispatch(fetchAllAnswers());
 	}, [employerProfile, allData]);
-
 
 	const handleDelete = () => {
 		// console.log("deleting");
 		dispatch(toggleOverlay(true));
-		dispatch(togglePopup([true, "delete", { what: "profile" }]));
-		dispatch(deleteAccount());
+		if (props.type === "candidate") {
+			dispatch(togglePopup([true, "delete", { what: "profileCandidate" }]));
+		} else {
+			dispatch(togglePopup([true, "delete", { what: "profileEmployer" }]));
+		}
+		// if (props.type !== "candidate") dispatch(deleteAccount());
 	};
 
 	const handleClick = (id) => {
-		console.log(id);
 		if (id === "checkPhoneBtn" || id === "closePhoneBtn") {
 			setEditingPhone(false);
 			if (id === "checkPhoneBtn") {
-				dispatch(updatePhoneThunk(phone));
+				if (props.type !== "candidate") {
+					dispatch(updatePhoneThunk(phone));
+				} else {
+					dispatch(updateCandidatePhone(phone));
+				}
 			}
 		} else if (id === "editPhoneBtn") {
 			setEditingPhone(true);
+		} else if (id === "checkAboutMeBtn" || id === "closeAboutMeBtn") {
+			setEditingAboutMe(false);
+			if (id === "checkAboutMeBtn") {
+				if (props.type === "candidate") dispatch(updateCandidateAbout(about));
+			}
 		} else if (id === "checkEmailBtn" || id === "closeEmailBtn") {
 			setEditingEmail(false);
 			if (id === "checkEmailBtn") {
-				dispatch(updateEmailThunk(email));
+				if (props.type !== "candidate") dispatch(updateEmailThunk(email));
+				dispatch(updateCandidateEmail(email));
 			}
 		} else if (id === "editEmailBtn") {
 			setEditingEmail(true);
@@ -116,40 +159,56 @@ function ProfileOverview(props) {
 	const handleChange = (e) => {
 		console.log(e.target.files[0]);
 		const formData = new FormData();
-		if (e.target.files.length) {
-			setImage({
-				preview: URL.createObjectURL(e.target.files[0]),
-				raw: e.target.files[0]
-			});
+		if (props.type === "candidate") {
+			if (e.target.files.length) {
+				setCandidateImage({
+					preview: URL.createObjectURL(e.target.files[0]),
+					raw: e.target.files[0],
+				});
+			}
+			formData.set("dp", e.target.files[0]);
+			console.log(formData);
+			dispatch(uploadCandidateImage(formData));
+		} else {
+			if (e.target.files.length) {
+				setImage({
+					preview: URL.createObjectURL(e.target.files[0]),
+					raw: e.target.files[0],
+				});
+			}
+			formData.set("logo", e.target.files[0]);
+			console.log(formData);
+			dispatch(uploadProfileImage(formData));
 		}
-		formData.set("logo",e.target.files[0]);
-		console.log(formData);
-		dispatch(uploadProfileImage(formData));
-	}
+	};
 
 	return (
 		<div className="profile-overview">
 			<div className="primary">
 				<div className="avatar">
 					{props.type === "candidate" ? (
-						<img src={image.preview} alt="Guest" />
+						<img src={candidateImage.preview} alt="Guest" />
 					) : (
-							<img src={image.preview} alt="NYP" />
-						)}
+						<img src={image.preview} alt="NYP" />
+					)}
 					<div className="edit" id="editPicBtn">
 						<label htmlFor="upload-button">
 							<FontAwesomeIcon className="btn" icon={faPen} />
 						</label>
 						<input
-        					type="file"
-        					id="upload-button"
-        					style={{ display: "none" }}
-        					onChange={(e) => handleChange(e)}
-      					/>
+							type="file"
+							id="upload-button"
+							style={{ display: "none" }}
+							onChange={(e) => handleChange(e)}
+						/>
 					</div>
 				</div>
-
-				<h1>{allData.first_name ? allData.first_name : ""}</h1>
+				{props.type === "candidate" && (
+					<h1>
+						{allData.first_name ? allData.first_name : ""}{" "}
+						{allData.last_name ? allData.last_name : ""}
+					</h1>
+				)}
 				{props.type === "employer" && (
 					<>
 						<h2>{employerProfile.data.name}</h2>
@@ -231,9 +290,10 @@ function ProfileOverview(props) {
 							></textarea> */}
 							<input
 								type="text"
-								defaultValue="About me"
+								value={about}
 								className={`${editingAboutMe ? "edit" : ""}`}
 								readOnly={editingAboutMe ? false : true}
+								onChange={(e) => setAbout(e.target.value)}
 							/>
 							<FontAwesomeIcon
 								id="editAboutMeBtn"

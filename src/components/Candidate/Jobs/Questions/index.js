@@ -12,8 +12,10 @@ import EmployerQuestions from "./EmployerQuestions";
 import { useDispatch, useSelector } from "react-redux";
 import {
 	fetchAllAnswers,
+	fetchJobDescription,
 	submitCandidateAnswers,
 } from "../../../../modals/candidateProfile/thunk";
+import { findIndexOfObjInArr } from "../../../../assets/js/Utility";
 
 let scrollBarStyle = {
 	height: "calc(100vh - 280px)",
@@ -67,10 +69,17 @@ export const findIndex = (arr, q) => {
 
 function Questions(props) {
 	const dispatch = useDispatch();
-	const allAnswersData = useSelector(
-		(state) => state.setCandidateAllAnswersReducer.data
+	const jobData = useSelector((state) =>
+		state.setJobDescriptionReducer.data
+			? state.setJobDescriptionReducer.data
+			: []
 	);
-	// console.log(allAnswersData);
+	// const allAnswersData = useSelector(
+	// 	(state) => state.setCandidateAllAnswersReducer.data
+	// );
+	const [allAnswersData, setAllAnswersData] = React.useState(useSelector(
+		(state) => state.setCandidateAllAnswersReducer.data
+	))
 	let heights = [0];
 	const [activeTab, setActiveTab] = React.useState(0);
 
@@ -85,227 +94,285 @@ function Questions(props) {
 		});
 	};
 
-	const _formData = {
-		job_id: localStorage.getItem("jobId"),
-		general_questions: [
-			{
-				question_id: 1,
-				answer: "10/20/90",
-			},
+	// console.log("allAnswersData...", allAnswersData);
 
-			{
-				question_id: 2,
-				answer: 1,
-			},
+	const empQuestions = jobData.questions ? jobData.questions : [];
 
-			{
-				question_id: 3,
-				answer: 1,
-			},
+	const empQuestionFormat =
+		empQuestions &&
+		empQuestions.map((entity) => {
+			console.log("enityt.question_type", entity.question_type)
+			if (entity.question_type === "text-input") {
+				return {
+					question_id: entity.question_id,
+					answer: "",
+				};
+			}
+			else {
+				return {
+					question_id: entity.question_id,
+					answer: []
+				};
+			}
+		});
 
-			{
-				question_id: 4,
-				answer: 2,
-			},
-
-			{
-				question_id: 5,
-				answer: 2,
-			},
-
-			{
-				question_id: 6,
-				answer: 2,
-				sub_answer: 2,
-				followup_sub_answer: "10/20/90",
-			},
-		],
-
-		personality_assessment: [
-			{
-				question_id: 1,
-				answer: 1,
-			},
-
-			{
-				question_id: 2,
-				answer: 3,
-			},
-
-			{
-				question_id: 3,
-				answer: 5,
-			},
-
-			{
-				question_id: 4,
-				answer: 2,
-			},
-
-			{
-				question_id: 5,
-				answer: 3,
-			},
-
-			{
-				question_id: 6,
-				answer: 1,
-			},
-
-			{
-				question_id: 7,
-				answer: 4,
-			},
-
-			{
-				question_id: 8,
-				answer: 1,
-			},
-
-			{
-				question_id: 9,
-				answer: 3,
-			},
-
-			{
-				question_id: 10,
-				answer: 2,
-			},
-
-			{
-				question_id: 11,
-				answer: 1,
-			},
-
-			{
-				question_id: 12,
-				answer: 4,
-			},
-
-			{
-				question_id: 13,
-				answer: 5,
-			},
-
-			{
-				question_id: 14,
-				answer: 2,
-			},
-
-			{
-				question_id: 15,
-				answer: 3,
-			},
-
-			{
-				question_id: 16,
-				answer: 4,
-			},
-		],
-
-		coursework: [
-			{
-				question_id: 1,
-				answer: 1,
-			},
-
-			{
-				question_id: 2,
-				answer: [
-					{
-						sub_question_id: 1,
-						sub_answer: 2,
-					},
-					{
-						sub_question_id: 3,
-						sub_answer: 2,
-					},
-				],
-			},
-
-			{
-				question_id: 3,
-				answer: 1,
-			},
-
-			{
-				question_id: 4,
-				answer: [
-					{
-						sub_question_id: 1,
-						sub_answer: 4,
-					},
-					{
-						sub_question_id: 3,
-						sub_answer: 4,
-					},
-				],
-			},
-
-			{
-				question_id: 5,
-				answer: 1,
-			},
-		],
-
-		work_history: [
-			{
-				question_id: 1,
-				answer: 3,
-			},
-			{
-				question_id: 2,
-				answer: 7,
-			},
-			{
-				question_id: 3,
-				answer: "09/10/18",
-			},
-			{
-				question_id: 4,
-				answer: 1,
-			},
-		],
-
-		commute: [
-			{
-				question_id: 1,
-				answer: "",
-			},
-			{
-				question_id: 2,
-				answer: 1,
-			},
-			{
-				question_id: 3,
-				answer: {
-					street_0: "",
-					city_0: "",
-					state_0: "",
-					zipCode_0: "",
-				},
-			},
-		],
-
-		employer_questions: [
-			{
-				question_id: 1,
-				answer: [1],
-			},
-			{
-				question_id: 2,
-				answer: [],
-			},
-			{
-				question_id: 3,
-				answer: [1, 4],
-			},
-			{
-				question_id: 4,
-				answer: [],
-			},
-		],
+	const fetchAnswers = (type) => {
+		return JSON.parse(
+			allAnswersData &&
+			allAnswersData.length > 0 &&
+			allAnswersData[findIndexOfObjInArr(allAnswersData, "category", type)]
+				.answer
+		);
 	};
+
+	const formDataFetched = {
+		general_questions: fetchAnswers("general_questions"),
+		personality_assessment: fetchAnswers("personality_assessment"),
+		coursework: fetchAnswers("coursework"),
+		workHistory: fetchAnswers("jWorkHistory"),
+		commute: fetchAnswers("commute"),
+		employer_questions: empQuestionFormat,
+	};
+
+	const _formData = {
+		general_questions:
+			formDataFetched.general_questions.length > 0
+				? formDataFetched.general_questions
+				: [
+					{
+						question_id: 1,
+						answer: "10/20/90",
+					},
+
+					{
+						question_id: 2,
+						answer: "",
+					},
+
+					{
+						question_id: 3,
+						answer: "",
+					},
+
+					{
+						question_id: 4,
+						answer: "",
+					},
+
+					{
+						question_id: 5,
+						answer: "",
+					},
+
+					{
+						question_id: 6,
+						answer: "",
+						sub_answer: "",
+						followup_sub_answer: "10/20/90",
+					},
+				],
+
+		personality_assessment:
+			formDataFetched.personality_assessment.length > 0
+				? formDataFetched.personality_assessment
+				: [
+					{
+						question_id: 1,
+						answer: "",
+					},
+
+					{
+						question_id: 2,
+						answer: "",
+					},
+
+					{
+						question_id: 3,
+						answer: "",
+					},
+
+					{
+						question_id: 4,
+						answer: "",
+					},
+
+					{
+						question_id: 5,
+						answer: "",
+					},
+
+					{
+						question_id: 6,
+						answer: "",
+					},
+
+					{
+						question_id: 7,
+						answer: "",
+					},
+
+					{
+						question_id: 8,
+						answer: "",
+					},
+
+					{
+						question_id: 9,
+						answer: "",
+					},
+
+					{
+						question_id: 10,
+						answer: "",
+					},
+
+					{
+						question_id: 11,
+						answer: "",
+					},
+
+					{
+						question_id: 12,
+						answer: "",
+					},
+
+					{
+						question_id: 13,
+						answer: "",
+					},
+
+					{
+						question_id: 14,
+						answer: "",
+					},
+
+					{
+						question_id: 15,
+						answer: "",
+					},
+
+					{
+						question_id: 16,
+						answer: "",
+					},
+				],
+
+		coursework:
+			formDataFetched.coursework.length > 0
+				? formDataFetched.coursework
+				: [
+					{
+						question_id: 1,
+						answer: "",
+					},
+
+					{
+						question_id: 2,
+						answer: [
+							{
+								sub_question_id: 1,
+								sub_answer: "",
+							},
+							{
+								sub_question_id: 3,
+								sub_answer: "",
+							},
+						],
+					},
+
+					{
+						question_id: 3,
+						answer: 1,
+					},
+
+					{
+						question_id: 4,
+						answer: [
+							{
+								sub_question_id: 1,
+								sub_answer: "",
+							},
+							{
+								sub_question_id: 3,
+								sub_answer: "",
+							},
+						],
+					},
+
+					{
+						question_id: 5,
+						answer: "",
+					},
+				],
+
+		work_history:
+			formDataFetched.workHistory.length > 0
+				? formDataFetched.workHistory
+				: [
+					{
+						question_id: 1,
+						answer: "",
+					},
+					{
+						question_id: 2,
+						answer: "",
+					},
+					{
+						question_id: 3,
+						answer: "09/10/18",
+					},
+					{
+						question_id: 4,
+						answer: "",
+					},
+				],
+
+		commute:
+			formDataFetched.commute.length > 0
+				? formDataFetched.commute
+				: [
+					{
+						question_id: 1,
+						answer: "",
+					},
+					{
+						question_id: 2,
+						answer: 1,
+					},
+					{
+						question_id: 3,
+						answer: {
+							street_0: "",
+							city_0: "",
+							state_0: "",
+							zipCode_0: "",
+						},
+					},
+				],
+
+		employer_questions:
+			formDataFetched.employer_questions.length > 0
+				? formDataFetched.employer_questions
+				: [],
+	};
+
+	console.log("_formData....", _formData);
+
+	/* Add address obj if not present */
+	if (
+		formDataFetched.commute.length > 0 &&
+		findIndex(formDataFetched.commute, 3) < 0
+	) {
+		_formData.commute[2] = {
+			question_id: 3,
+			answer: {
+				street_0: "",
+				city_0: "",
+				state_0: "",
+				zipCode_0: "",
+			},
+		};
+	}
 
 	const [formData, setFormData] = React.useState(_formData);
 
@@ -316,10 +383,15 @@ function Questions(props) {
 
 		if (Array.isArray(a)) {
 			let index = _formData[type][i]["answer"].indexOf(a[0]);
-			if (index > -1) {
-				_formData[type][i]["answer"].splice(index, 1);
-			} else {
-				_formData[type][i]["answer"].push(a[0]);
+			if (type === "employer_questions") {
+				_formData[type][i]["answer"][0] = a[0];
+			}
+			else {
+				if (index > -1) {
+					_formData[type][i]["answer"].splice(index, 1);
+				} else {
+					_formData[type][i]["answer"].push(a[0]);
+				}
 			}
 		} else if (typeof a === "object") {
 			if (a.sub_question_id_2) {
@@ -349,59 +421,12 @@ function Questions(props) {
 		setFormData(_formData);
 	};
 
-	const generalAnswers =
-		allAnswersData.length > 0 &&
-			allAnswersData.map((entity) => {
-				if (entity.category === "general_questions")
-					return JSON.parse(entity.answer);
-			})
-			? JSON.parse(allAnswersData[0].answer)
-			: [];
-	const personalityAassessment =
-		allAnswersData.length > 0 &&
-			allAnswersData.map((entity) => {
-				if (entity.category === "personality_assessment")
-					return JSON.parse(entity.answer);
-			})
-			? JSON.parse(allAnswersData[0].answer)
-			: [];
-	const coursework =
-		allAnswersData.length > 0 &&
-			allAnswersData.map((entity) => {
-				if (entity.category === "coursework") return JSON.parse(entity.answer);
-			})
-			? JSON.parse(allAnswersData[0].answer)
-			: [];
-	const workHistory =
-		allAnswersData.length > 0 &&
-			allAnswersData.map((entity) => {
-				if (entity.category === "work_history") return JSON.parse(entity.answer);
-			})
-			? JSON.parse(allAnswersData[0].answer)
-			: [];
-	const commute =
-		allAnswersData.length > 0 &&
-			allAnswersData.map((entity) => {
-				if (entity.category === "commute") return JSON.parse(entity.answer);
-			})
-			? JSON.parse(allAnswersData[0].answer)
-			: [];
-
-	const formDataFetched = {
-		general_questions: generalAnswers,
-		personality_assessment: personalityAassessment,
-		coursework: coursework,
-		workHistory: workHistory,
-		commute: commute,
-	};
-
 	const onSubmitHandler = () => {
 		console.log(JSON.stringify(formData));
 		const localStorageId = localStorage.getItem("jobId");
-		if (localStorageId)
-			formData.job_id = localStorage.getItem("jobId");
-		else
-			formData.job_id = props.match.params.id
+		if (!localStorageId && !props.match.params.id) return;
+		if (localStorageId) formData.job_id = localStorage.getItem("jobId");
+		else formData.job_id = props.match.params.id;
 		dispatch(submitCandidateAnswers(formData));
 	};
 
@@ -411,12 +436,17 @@ function Questions(props) {
 	};
 
 	React.useEffect(() => {
-		console.log(props.match.params.id);
-		// dispatch(fetchAllAnswers());
-	}, []);
+		if (props.match.params.id) {
+			dispatch(fetchJobDescription(props.match.params.id));
+		}
+		if (localStorage.getItem("jobId")) {
+			dispatch(fetchJobDescription(localStorage.getItem("jobId")));
+		}
+		dispatch(fetchAllAnswers());
+	}, [formData]);
 
 	const handleAddress = (_addressCount) => {
-		console.log(_addressCount);
+		// console.log(_addressCount);
 
 		/* update form values as well */
 		let i = _addressCount.length - 1;
@@ -532,6 +562,7 @@ function Questions(props) {
 							<EmployerQuestions
 								calHeight={calHeight}
 								data={formData.employer_questions}
+								empQuestions={empQuestions}
 								onchange={(q, a) =>
 									handleFieldChange("employer_questions", q, a)
 								}
@@ -542,7 +573,9 @@ function Questions(props) {
 								to={
 									localStorage.getItem("jobId")
 										? `/jobs/view/${localStorage.getItem("jobId")}`
-										: props.match.params.id ? `/jobs/view/${props.match.params.id}` : '/goals'
+										: props.match.params.id
+											? `/jobs/view/${props.match.params.id}`
+											: "/goals"
 								}
 								className="primary-btn"
 								onClick={onSubmitHandler}

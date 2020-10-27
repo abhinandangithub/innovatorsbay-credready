@@ -14,6 +14,12 @@ const initialState = {
 		error: "",
 		status: ""
 	},
+	geography: {
+		message: "",
+		data: ["Option 1", "Option 2", "Option 3", "Option 4"],
+		error: "",
+		status: ""
+	},
 	phoneNumber: "",
 	email: "",
 	profile: {
@@ -259,10 +265,11 @@ const initialState = {
 	emailTemplateNames: [],
 	hiringKeys: [],
 	companySizeKeys: [],
+	geographyKeys: [],
 	employmentKeys: [],
 	functionKeys: [{
 		id: 0,
-		function_name:"Test"
+		function_name: "Test"
 	}],
 	industryKeys: [{
 		id: 0,
@@ -281,7 +288,7 @@ const initialState = {
 		"industry": 1,
 		"jobDescription": "Some nice job description",
 		"jobQuestionnaireMap": [1, 2, 3],
-		"jobCertificateMap": [15,16,17],
+		"jobCertificateMap": [15, 16, 17],
 		"jobTitle": "Senior Nursing Assistant",
 		"location": 1,
 		"maxExp": 7,
@@ -317,6 +324,8 @@ const initialState = {
 	JWT: null,
 };
 
+let stateCopy = JSON.parse(JSON.stringify(initialState));;
+
 const reducer = (state = initialState, action) => {
 	switch (action.type) {
 		case actionTypes.GET_HIRING_NEEDS:
@@ -348,6 +357,17 @@ const reducer = (state = initialState, action) => {
 			return updateObject(state, {
 				companySize: companySizeTemp,
 				companySizeKeys: action.value.data
+			});
+
+		case actionTypes.SET_GEOGRAPHY:
+			const geographyTemp = state.geography;
+			geographyTemp.message = action.value.message;
+			geographyTemp.error = action.value.error;
+			geographyTemp.status = action.value.status;
+			geographyTemp.data = action.value.data.map((value) => value.city);
+			return updateObject(state, {
+				geography: geographyTemp,
+				geographyKeys: action.value.data
 			});
 
 		case actionTypes.SET_PHONE_NUMBER:
@@ -408,7 +428,7 @@ const reducer = (state = initialState, action) => {
 				functionType: functionTemp,
 				functionKeys: action.value.data
 			});
-		
+
 		case actionTypes.SET_ORG_NAMES:
 			const functionTemp1 = state.orgType;
 			functionTemp1.message = action.value.message;
@@ -599,6 +619,9 @@ const reducer = (state = initialState, action) => {
 			return updateObject(state, {
 				redirectURL: action.value
 			});
+
+		case actionTypes.CLEAR_EMPLOYER_STATE:
+			return stateCopy;
 
 		default:
 			return state;

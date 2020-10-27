@@ -64,3 +64,11 @@ export const enityFetchStartDateUrl = constructUrl(
   entityRouteWithBase,
   "start_date"
 );
+
+/**
+ * Name: fetch geography
+ */
+export const geographyUrl = constructUrl(
+  entityRouteWithBase,
+  "geography"
+);

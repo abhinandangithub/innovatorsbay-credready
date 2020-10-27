@@ -22,7 +22,7 @@ function AppliedRelatedJobs(props) {
 				</div>
 				<div className="info">
 					<h3>{type.jobTitle}</h3>
-					<p><span dangerouslySetInnerHTML={{ __html: type.jobDescription }}></span></p>
+					{/* <p><span dangerouslySetInnerHTML={{ __html: type.jobDescription }}></span></p> */}
 				</div>
 				<button className="menu">
 					<img src={ImgWidgetMenu} alt="Widget Menu" />

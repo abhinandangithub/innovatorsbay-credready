@@ -21,6 +21,7 @@ function CustomDatePicker(props) {
 			showMonthDropdown
 			showYearDropdown
 			dropdownMode="select"
+			autoComplete="off"
 			renderCustomHeader={({
 				date,
 				changeYear,

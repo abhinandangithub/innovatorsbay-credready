@@ -6,12 +6,16 @@ import {
 	getHiringNeedsThunk,
 	getCompanySizeThunk,
 	updateProfileThunk,
+	getGeographyThunk
 } from "../../../../store/thunks/employer";
 
 import "./index.scss";
 import Input from "../../../_Elements/Input";
 import Dropdown from "../../../_Elements/Dropdown";
+import InputDropdown from "../../../_Elements/InputDropdown";
 import Spinner from "../../../_Elements/Spinner";
+import { findIndexOfObjInArr } from "../../../../assets/js/Utility";
+
 
 const hiringNeed = {
 	heading: "Hires needed in the next 6 monts",
@@ -40,23 +44,41 @@ function Details(props) {
 	const dispatch = useDispatch();
 
 	const [addressCount, setAddressCount] = React.useState([""]);
-
+	const [city, setCity] = React.useState([]);
+	const [state, setState] = React.useState([]);
+	const [isAddAddressClicked, setIsAddAddressClicked] = React.useState(false)
+ 
 	const [formData, setFormData] = React.useState(() => {
 		let initialState = {};
 		initialState.name = [props.profile.name];
 		initialState.title = [props.profile.title];
 		initialState.website = [props.profile.org.website];
-		initialState.hiringNeeds = [props.profile.org.hires_required && props.hiringKeys.length > 0 && props.hiringKeys.find(val => val.id === props.profile.org.hires_required).range_display_value];
-		initialState.companySize = [props.profile.org.company_size && props.companySizeKeys.length > 0 && props.companySizeKeys.find(val => val.id === props.profile.org.company_size).range_display_value];
+		initialState.hiringNeeds = [
+			props.profile.org.hires_required &&
+			props.hiringKeys.length > 0 &&
+			props.hiringKeys.find(
+				(val) => val.id === props.profile.org.hires_required
+			).range_display_value,
+		];
+		initialState.companySize = [
+			props.profile.org.company_size &&
+			props.companySizeKeys.length > 0 &&
+			props.companySizeKeys.find(
+				(val) => val.id === props.profile.org.company_size
+			).range_display_value,
+		];
 		initialState.reference = [props.profile.org.reference_source];
-		for(let i = 0; i<props.profile.org.address.length;i++) {
-			initialState["id_"+i] = [props.profile.org.address[i].id];
-			initialState["street_"+i] = [props.profile.org.address[i].street_address];
-			initialState["city_"+i] = [props.profile.org.address[i].city];
-			initialState["state_"+i] = [props.profile.org.address[i].state];
-			initialState["zipCode_"+i] = [props.profile.org.address[i].zip_code];
+		for (let i = 0; i < props.profile.org.address.length; i++) {
+			initialState["id_" + i] = [props.profile.org.address[i].id];
+			initialState["street_" + i] = [
+				props.profile.org.address[i].street_address,
+			];
+			// initialState["city_" + i] = [props.geographyKeys.find(c => c.city === props.profile.org.address[i].city).id];
+			initialState["city_" + i] = [props.profile.org.address[i].city];			
+			initialState["state_" + i] = [props.profile.org.address[i].state];
+			initialState["zipCode_" + i] = [props.profile.org.address[i].zip_code];
 		}
-		if(props.profile.org.address.length === 0) {
+		if (props.profile.org.address.length === 0) {
 			initialState["street_0"] = [""];
 			initialState["city_0"] = [""];
 			initialState["state_0"] = [""];
@@ -64,18 +86,25 @@ function Details(props) {
 		}
 		console.log(initialState);
 		return initialState;
-		
 	});
 
 	useEffect(() => {
 		let addCnt = [];
 		dispatch(getHiringNeedsThunk());
 		dispatch(getCompanySizeThunk());
+		dispatch(getGeographyThunk());
 		for (let i = 0; i < props.profile.org.address.length; i++) {
 			addCnt.push(i);
 		}
 		setAddressCount(addCnt);
 	}, [dispatch]);
+
+	useEffect(() => {
+		console.log('props.geography ', props.geographyKeys);
+		let city = props.geographyKeys.map((c) => {
+			return c.city;
+		})
+	}, [props.geography, props.geographyKeys]);
 
 	const handleSubmit = () => {
 		let _formData = { ...formData };
@@ -118,13 +147,14 @@ function Details(props) {
 		for (let i = 0; i < addressCount.length; i++) {
 			let address = {};
 			// address.id = i;
-			if(_formData["id_"+i]) {
-				address.id = _formData["id_"+i][0];
+			if (_formData["id_" + i]) {
+				address.id = _formData["id_" + i][0];
 			}
 			address.streetAddress = _formData["street_" + i][0];
 			address.city = _formData["city_" + i][0];
+			// address.city = props.geographyKeys.find((c) => c.id === _formData["city_" + i][0]).city;
 			address.state = _formData["state_" + i][0];
-			address.zip = _formData["zipCode_" + i][0];
+			address.zip = _formData["zipCode_" + i][0].toString();
 			profileData.addresses.push(address);
 		}
 
@@ -137,10 +167,11 @@ function Details(props) {
 		setFormData(_formData);
 
 		dispatch(updateProfileThunk(null, profileData));
-		props.history.push('/profile/view');
+		props.history.push("/profile/view");
 	};
 
 	const handleFieldChange = (field, value) => {
+		console.log('address ', field, value);
 		let msg = value === "" || value === null ? "Required" : "";
 
 		let arr = [];
@@ -152,6 +183,37 @@ function Details(props) {
 			[field]: arr,
 		});
 	};
+
+	// const handleFieldChangeCity = (field, value, stateField) => {
+	// 	console.log('address ', field, value);
+	// 	let msg = value === "" || value === null ? "Required" : "";
+	// 	let obj = props.geographyKeys.find((c) => {
+	// 		return c.id === value;
+	// 	});
+
+	// 	if(!obj) {
+	// 		msg = "Required";
+	// 	}
+
+	// 	console.log('obj ', obj);
+	// 	let city = [];
+	// 	city[0] = value;
+	// 	city[1] = msg;
+
+	// 	// let state = [];
+	// 	// state[0] = obj.state;
+	// 	// state[1] = msg;
+
+	// 	setFormData({
+	// 		...formData,
+	// 		[field]: city,
+	// 	});
+
+	// 	// setFormData({
+	// 	// 	...formData,
+	// 	// 	[stateField]: state,
+	// 	// });
+	// };
 
 	const renderAddresses = () => {
 		return addressCount.map((address, index) => {
@@ -165,7 +227,8 @@ function Details(props) {
 						<label htmlFor={`street_${i}`}>
 							Street Address <span>*</span>
 							<span
-								className={`error-text ${!formData[`street_${i}`][1] && "hidden"
+								className={`error-text ${
+									!formData[`street_${i}`][1] && "hidden"
 									}`}
 							>
 								Required
@@ -175,6 +238,7 @@ function Details(props) {
 							id={`street_${i}`}
 							type="text"
 							value={formData[`street_${i}`][0]}
+							autoFocus={isAddAddressClicked}
 							// value={address.street_address}
 							onChange={(e) => handleFieldChange(e.target.id, e.target.value)}
 						/>
@@ -183,7 +247,8 @@ function Details(props) {
 						<label htmlFor={`city_${i}`}>
 							City <span>*</span>
 							<span
-								className={`error-text ${!formData[`city_${i}`][1] && "hidden"
+								className={`error-text ${
+									!formData[`city_${i}`][1] && "hidden"
 									}`}
 							>
 								Required
@@ -196,12 +261,33 @@ function Details(props) {
 							// value={address.city}
 							onChange={(e) => handleFieldChange(e.target.id, e.target.value)}
 						/>
+						{/* <InputDropdown
+							id={`city_${i}`}
+							placeholder="city"
+							content={props.geographyKeys.map((val) => ({
+								val: val.city,
+								id: val.id,
+							}))}
+							search_term="city"
+							// selected={formData[`city_${i}`][0]}
+							selected={
+								props.geographyKeys &&
+								props.geographyKeys[
+								findIndexOfObjInArr(props.geographyKeys, "id", formData[`city_${i}`][0])
+								] &&
+								props.geographyKeys[
+									findIndexOfObjInArr(props.geographyKeys, "id", formData[`city_${i}`][0])
+								].city
+							}
+							onchange={(value) => handleFieldChangeCity(`city_${i}`, value, `state_${i}`)}
+						/> */}
 					</li>
 					<li>
 						<label htmlFor={`state_${i}`}>
 							State <span>*</span>
 							<span
-								className={`error-text ${!formData[`state_${i}`][1] && "hidden"
+								className={`error-text ${
+									!formData[`state_${i}`][1] && "hidden"
 									}`}
 							>
 								Required
@@ -219,7 +305,8 @@ function Details(props) {
 						<label htmlFor={`zipCode_${i}`}>
 							Zip Code <span>*</span>
 							<span
-								className={`error-text ${!formData[`zipCode_${i}`][1] && "hidden"
+								className={`error-text ${
+									!formData[`zipCode_${i}`][1] && "hidden"
 									}`}
 							>
 								Required
@@ -239,6 +326,7 @@ function Details(props) {
 	};
 
 	const addAdress = () => {
+		setIsAddAddressClicked(true)
 		let _addressCount = [...addressCount];
 		_addressCount.push("");
 		setAddressCount(_addressCount);
@@ -266,99 +354,98 @@ function Details(props) {
 	return (
 		// !props.loading ?
 		// 	< Spinner /> :
-		(
-			< div className="profile-details" >
-				Welcome Aboard! Please fill in the details below about your company to get
-				started.
-				< div className="content" >
-					<ul className="listing">
-						<li>
-							<label htmlFor="name">
-								Full Name <span>*</span>
-								<span className={`error-text ${!formData.name[1] && "hidden"}`}>
-									Required
+		<div className="profile-details">
+			Welcome Aboard! Please fill in the details below about your company to get
+			started.
+			<div className="content">
+				<ul className="listing">
+					<li>
+						<label htmlFor="name">
+							Full Name <span>*</span>
+							<span className={`error-text ${!formData.name[1] && "hidden"}`}>
+								Required
 							</span>
-							</label>
-							<Input
-								id="name"
-								type="text"
-								value={formData.name[0]}
-								// defaultValue={formData.name[0]}
-								onChange={(e) => handleFieldChange(e.target.id, e.target.value)}
-							/>
-						</li>
-						<li>
-							<label htmlFor="title">
-								Title <span>*</span>
-								<span className={`error-text ${!formData.title[1] && "hidden"}`}>
-									Required
+						</label>
+						<Input
+							id="name"
+							type="text"
+							autoFocus
+							value={formData.name[0]}
+							// defaultValue={formData.name[0]}
+							onChange={(e) => handleFieldChange(e.target.id, e.target.value)}
+						/>
+					</li>
+					<li>
+						<label htmlFor="title">
+							Title <span>*</span>
+							<span className={`error-text ${!formData.title[1] && "hidden"}`}>
+								Required
 							</span>
-							</label>
-							<Input
-								id="title"
-								type="text"
-								value={formData.title[0]}
-								// defaultValue={formData.title[0]}
-								onChange={(e) => handleFieldChange(e.target.id, e.target.value)}
-							/>
-						</li>
-						<li>
-							<label htmlFor="company">
-								Company Website <span>*</span>
-								<span
-									className={`error-text ${!formData.website[1] && "hidden"}`}
-								>
-									Required
+						</label>
+						<Input
+							id="title"
+							type="text"
+							value={formData.title[0]}
+							// defaultValue={formData.title[0]}
+							onChange={(e) => handleFieldChange(e.target.id, e.target.value)}
+						/>
+					</li>
+					<li>
+						<label htmlFor="company">
+							Company Website <span>*</span>
+							<span
+								className={`error-text ${!formData.website[1] && "hidden"}`}
+							>
+								Required
 							</span>
-							</label>
-							<Input
-								id="website"
-								type="text"
-								defaultValue={formData.website[0]}
-								onChange={(e) => handleFieldChange(e.target.id, e.target.value)}
-							/>
-						</li>
-						<li>
-							<label>Hiring Needs</label>
-							<Dropdown
-								placeholder={hiringNeed.heading}
-								content={props.hiringNeeds}
-								selected={formData.hiringNeeds[0]}
-								onchange={(value) => handleFieldChange("hiringNeeds", value)}
-							/>
-						</li>
-						<li>
-							<label>Company Size</label>
-							<Dropdown
-								placeholder={companySize.heading}
-								content={props.companySize}
-								selected={formData.companySize[0]}
-								onchange={(value) => handleFieldChange("companySize", value)}
-							/>
-						</li>
-						<li>
-							<label>How did you hear about us?</label>
-							<Dropdown
-								placeholder={socialMedia.heading}
-								content={socialMedia.content}
-								selected={formData.reference[0]}
-								onchange={(value) => handleFieldChange("reference", value)}
-							/>
-						</li>
-						{renderAddresses()}
-						<li className="addresses"></li>
-					</ul>
-					<button className="add-address" id="addAdressBtn" onClick={addAdress}>
-						<span className="text">Add Address</span>
-					</button>
-				</div >
-				<div className="cta">
-					<button className="primary-btn" id="onSubmit" onClick={handleSubmit}>
-						Submit
+						</label>
+						<Input
+							id="website"
+							type="text"
+							defaultValue={formData.website[0]}
+							onChange={(e) => handleFieldChange(e.target.id, e.target.value)}
+						/>
+					</li>
+					<li>
+						<label>Hiring Needs</label>
+						<InputDropdown
+							placeholder={hiringNeed.heading}
+							content={props.hiringNeeds}
+							selected={formData.hiringNeeds[0]}
+							onchange={(value) => handleFieldChange("hiringNeeds", value)}
+						/>
+					</li>
+					<li>
+						<label>Company Size</label>
+						<InputDropdown
+							placeholder={companySize.heading}
+							content={props.companySize}
+							selected={formData.companySize[0]}
+							onchange={(value) => handleFieldChange("companySize", value)}
+						/>
+					</li>
+					<li>
+						<label>How did you hear about us?</label>
+						<InputDropdown
+							placeholder={socialMedia.heading}
+							content={socialMedia.content}
+							selected={formData.reference[0]}
+							onchange={(value) => handleFieldChange("reference", value)}
+						/>
+					</li>
+					{renderAddresses()}
+					<li className="addresses"></li>
+				</ul>
+				<button className="add-address" id="addAdressBtn" onClick={addAdress}>
+					<span className="text">Add Address</span>
 				</button>
-				</div>
-			</div >
-		)
+			</div>
+			<div className="cta">
+				<button className="primary-btn" id="onSubmit" onClick={handleSubmit}>
+					Submit
+				</button>
+			</div>
+		</div>
 	);
 }
 
@@ -368,7 +455,9 @@ function mapStateToProps(state) {
 		companySize: state.employerReducer.companySize.data,
 		profile: state.employerReducer.profile.data,
 		companySizeKeys: state.employerReducer.companySizeKeys,
-		hiringKeys: state.employerReducer.hiringKeys
+		hiringKeys: state.employerReducer.hiringKeys,
+		geographyKeys: state.employerReducer.geographyKeys,
+		geography: state.employerReducer.geography.data
 	};
 }
 

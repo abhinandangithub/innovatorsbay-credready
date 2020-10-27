@@ -3,27 +3,23 @@ import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
-import { connect, useDispatch } from "react-redux";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector, connect } from "react-redux";
+import { useToasts } from "react-toast-notifications";
 
-import { updateLoggedIn } from "../../store/actions/auth";
 import { tryLogin } from "../../store/thunks/auth";
 import { setLogin } from "../../store/actions/employer";
+import { updateLoggedIn } from "../../store/actions/auth";
+import Spinner from "../_Elements/Spinner";
 
 function Login(props) {
 	const auth = useSelector((state) => state.authReducer);
 	const redirectURL = useSelector((state) => state.employerReducer.redirectURL);
 	const { register, handleSubmit, errors } = useForm();
 	const dispatch = useDispatch();
+	const { addToast } = useToasts();
 
 	const [loginRemeber, setLoginRemeber] = useState(false);
-	const [loginType, setLoginType] = useState("candidate");
 	const [passwordShown, setPasswordShown] = useState(false);
-	const [pwError, setPwError] = useState(false);
-	const [authError, setAuthError] = useState(null);
-
-	// const pw = "123";
-	// console.log(auth.loggedIn);
 
 	const onSubmit = (data) => {
 		dispatch(
@@ -34,35 +30,16 @@ function Login(props) {
 			})
 		);
 
-		console.log(auth);
 		if (redirectURL !== "") {
 			dispatch(setLogin(true));
 			props.history.push(redirectURL);
 		} else {
 			props.history.push("/dashboard");
 		}
-
-		// console.log(data);
-		// if (data.password !== pw) {
-		//   setPwError(true);
-		// } else {
-		//   if (data.email === "candidate@gmail.com") {
-		//     console.log("c");
-		//     dispatch(updateLoggedIn([true, "candidate"]));
-		//   } else if (data.email === "employer@gmail.com") {
-		//     console.log("e");
-		//     dispatch(updateLoggedIn([true, "employer"]));
-		//   }
-		// }
-		// dispatch(updateLoggedIn([true, loginType]));
 	};
 
 	const togglePasswordVisiblity = () => {
 		setPasswordShown(passwordShown ? false : true);
-	};
-
-	const handleLoginTypeToggle = (id) => {
-		setLoginType(id);
 	};
 
 	const toggleLoginRemeberme = (event) => {
@@ -71,73 +48,39 @@ function Login(props) {
 	};
 
 	useEffect(() => {
-		// console.log("auth ", auth.loggedIn);
-		if (auth.loggedIn.value === null) {
-			// setAuthError(true);
-		} else {
-			setAuthError(false);
-			if (auth.loggedIn.value) {
-				if (localStorage.getItem("jobId")) {
-					props.history.push("/profile/questions");
-				}
-				else if (auth.loggedIn.as === "candidate") {
-					props.history.push("/profile/resume");
-				} else {
-					props.history.push("/");
-				}
+		console.log("auth ", auth.loggedIn);
+
+		if (auth.loggedIn.as === "error") {
+			addToast(auth.loggedIn.value, {
+				appearance: "error", //error, success, warning, info
+				autoDismiss: true,
+			});
+			dispatch(updateLoggedIn(["", ""]));
+		} else if (auth.loggedIn.value && auth.loggedIn.value !== "") {
+			if (localStorage.getItem("jobId")) {
+				props.history.push("/profile/questions");
+			} else if (auth.loggedIn.as === "candidate") {
+				props.history.push("/profile/resume");
+			} else {
+				props.history.push("/");
 			}
 		}
 		return () => {
 			// cleanup
 		};
-	}, [auth, props]);
+	}, [auth]);
 
-	// useEffect(() => {
-	// 	console.log("auth ", auth.loggedIn);
-	// 	if (auth.loggedIn.value === null) {
-	// 		setAuthError(true);
-	// 	} else {
-	// 		setAuthError(false);
-	// 	}
-	// 	return () => {
-	// 		// cleanup
-	// 	};
-	// }, [auth]);
-
-	return (
+	return props.loading ? (
+		<Spinner />
+	) : (
 		<form onSubmit={handleSubmit(onSubmit)} className="content">
 			<h3 style={{ marginBottom: "40px" }}>Login to your account</h3>
-			<ul className="user-type flex hidden">
-				<li>
-					<input
-						className="fancy-toggle"
-						id="candidate"
-						name="userType"
-						type="radio"
-						defaultChecked
-						onChange={(e) => handleLoginTypeToggle(e.target.id)}
-					/>
-					<label htmlFor="candidate">Candidate</label>
-				</li>
-				<li>
-					<input
-						className="fancy-toggle"
-						id="employer"
-						name="userType"
-						type="radio"
-						onChange={(e) => handleLoginTypeToggle(e.target.id)}
-					/>
-					<label htmlFor="employer">Employer</label>
-				</li>
-			</ul>
-			{authError && <p className="error">Wrong credentials</p>}
 			{errors.email && errors.email && (
 				<p className="error">Enter an valid email-id</p>
 			)}
 			{!errors.email && errors.password && (
 				<p className="error">Please enter a valid password</p>
 			)}
-			{pwError && <p className="error">Enter valid password</p>}
 
 			<ul className="fields">
 				<li>
@@ -156,7 +99,6 @@ function Login(props) {
 								value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
 							},
 						})}
-						onChange={() => setAuthError(false)}
 					/>
 				</li>
 				<li>
@@ -176,7 +118,6 @@ function Login(props) {
 									value: /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/,
 								},
 							})}
-							onChange={() => setAuthError(false)}
 						/>
 						<span
 							className="toggle"
@@ -224,4 +165,13 @@ function Login(props) {
 	);
 }
 
-export default Login;
+// export default Login;
+
+function mapStateToProps(state) {
+	return {
+		loading: state.commonReducer.apiCallsInProgress,
+	};
+}
+
+// export default CreateJob;
+export default connect(mapStateToProps)(Login);

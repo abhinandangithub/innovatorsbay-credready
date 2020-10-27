@@ -1,5 +1,6 @@
 import React from "react";
 import DatePicker from "react-datepicker";
+import CustomDatePicker from "../../../_Elements/CustomDatePicker";
 import InputRange from "react-input-range";
 
 import { findIndex, isAnswer } from "./index";
@@ -34,8 +35,8 @@ function WorkHistory({ data, onchange, calHeight, noHeading, ...props }) {
 					<h2>Work History</h2>
 				</div>
 			) : (
-				""
-			)}
+					""
+				)}
 			<div className="content">
 				<ul className="general-questions">
 					<li className="general-question">
@@ -74,7 +75,7 @@ function WorkHistory({ data, onchange, calHeight, noHeading, ...props }) {
 										When did you start your first job?
 									</h2>
 									<div className="options">
-										<DatePicker
+										<CustomDatePicker
 											selected={appliedDate}
 											placeholderText="Select Date"
 											onChange={(date) => {

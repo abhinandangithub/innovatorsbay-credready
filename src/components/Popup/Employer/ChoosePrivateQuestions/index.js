@@ -98,7 +98,12 @@ function ChoosePrivateQuestions(props) {
 	};
 	const handleDelete = (e, question) => {
 		// console.log(question);
+
+		// dispatch(toggleOverlay(true));
+		// dispatch(togglePopup([true, "delete", { what: "deleteQuestion" }]));
+
 		alert("Are you sure to delete?");
+
 		dispatch(deleteQuestion(question.question_id));
 		setQuestionBanks(
 			props.questionBank.filter(
@@ -110,7 +115,7 @@ function ChoosePrivateQuestions(props) {
 	const handleJobTitleSearch = (searchJobTitle) => {
 		setQuestionBanks(
 			props.questionBank.filter((val) =>
-				val.question_name.includes(searchJobTitle)
+				val.question_name.toLowerCase().includes(searchJobTitle.toLowerCase())
 			)
 		);
 	};
@@ -128,12 +133,12 @@ function ChoosePrivateQuestions(props) {
 					<div className="searches">
 						<input
 							type="text"
-							placeholder="Job Title"
+							placeholder="Question Name"
 							onChange={(e) => {
 								handleJobTitleSearch(e.target.value);
 							}}
 						/>
-						<input type="text" placeholder="Skills" />
+						{/* <input type="text" placeholder="Skills" /> */}
 					</div>
 				</div>
 
@@ -265,175 +270,3 @@ function mapStateToProps(state) {
 
 // export default JobSpecificQuestions;
 export default connect(mapStateToProps)(ChoosePrivateQuestions);
-
-/*
-return (
-	<div className="choose-private-question">
-		<h1>
-			Choose from Private Questions
-			<button className="common-heading-btn" onClick={createNewQuestion}>
-				<span></span>Create New Question
-			</button>
-		</h1>
-		<div className="content">
-			<div className="search-panel">
-				<div className="searches">
-					<input type="text" placeholder="Job Title" />
-					<input type="text" placeholder="Skills" />
-				</div>
-			</div>
-
-			<ul className="general-questions">
-				<li className="general-question">
-					<h2 className="question">
-						Education <span>*</span>
-					</h2>
-
-					<div className="options">
-						<input
-							className="block-toggle blue"
-							name="education"
-							type="checkbox"
-							id="highSchool"
-						/>
-						<label htmlFor="highSchool">
-							<span className="input"></span>High School Diploma
-						</label>
-						<input
-							className="block-toggle blue"
-							name="education"
-							type="checkbox"
-							id="collegeDegree"
-						/>
-						<label htmlFor="collegeDegree">
-							<span className="input"></span>College Degree
-						</label>
-					</div>
-					<input
-						className="fancy-toggle"
-						name="question"
-						type="checkbox"
-						id="question3"
-					/>
-					<label htmlFor="question3">
-						<span className="input"></span>
-					</label>
-
-					<FontAwesomeIcon
-						className="action-btn edit"
-						icon={faPen}
-						// id={"workExperienceEdit_" + i}
-						// onClick={handleEdit}
-					/>
-					<FontAwesomeIcon
-						className="action-btn delete"
-						icon={faTrash}
-						// id={"workExperienceDelete_" + i}
-						// onClick={() => handleDelete("workExperience")}
-					/>
-				</li>
-				<li className="general-question">
-					<h2 className="question">
-						Do you understand that these are some of the tasks you will
-						perform as a CNA?
-					</h2>
-					<ul className="question_info">
-						<li>Cleaning beds</li>
-						<li>Mealtime cleanup</li>
-						<li>Helping patients get dressed</li>
-					</ul>
-					<div className="options">
-						<input
-							className="fancy-toggle yes"
-							name="taskUnderstood"
-							type="radio"
-							id="taskUnderstoodYes"
-						/>
-						<label htmlFor="taskUnderstoodYes">
-							<span className="input"></span>Yes
-						</label>
-						<input
-							className="fancy-toggle no"
-							name="taskUnderstood"
-							type="radio"
-							id="taskUnderstoodNo"
-						/>
-						<label htmlFor="taskUnderstoodNo">
-							<span className="input"></span>No
-						</label>
-					</div>
-					<input
-						className="fancy-toggle"
-						name="question"
-						type="checkbox"
-						id="question1"
-					/>
-					<label htmlFor="question1">
-						<span className="input"></span>
-					</label>
-					<FontAwesomeIcon
-						className="action-btn edit"
-						icon={faPen}
-						// id={"workExperienceEdit_" + i}
-						// onClick={handleEdit}
-					/>
-					<FontAwesomeIcon
-						className="action-btn delete"
-						icon={faTrash}
-						// id={"workExperienceDelete_" + i}
-						// onClick={() => handleDelete("workExperience")}
-					/>
-				</li>
-				<li className="general-question">
-					<h2 className="question">
-						Are you comfortable with the posted wage?
-					</h2>
-					<div className="options">
-						<input
-							className="fancy-toggle yes"
-							name="comfortable"
-							type="radio"
-							id="comfortableYes"
-						/>
-						<label htmlFor="comfortableYes">
-							<span className="input"></span>Yes
-						</label>
-						<input
-							className="fancy-toggle no"
-							name="comfortable"
-							type="radio"
-							id="comfortableNo"
-						/>
-						<label htmlFor="comfortableNo">
-							<span className="input"></span>No
-						</label>
-					</div>
-					<input
-						className="fancy-toggle"
-						name="question"
-						type="checkbox"
-						id="question2"
-					/>
-					<label htmlFor="question2">
-						<span className="input"></span>
-					</label>
-					<FontAwesomeIcon
-						className="action-btn edit"
-						icon={faPen}
-						// id={"workExperienceEdit_" + i}
-						// onClick={handleEdit}
-					/>
-					<FontAwesomeIcon
-						className="action-btn delete"
-						icon={faTrash}
-						// id={"workExperienceDelete_" + i}
-						// onClick={() => handleDelete("workExperience")}
-					/>
-				</li>
-			</ul>
-			<div className="cta">
-				<button className="primary-btn" onClick={() => handleQuestionAdd()}>Add</button>
-			</div>
-		</div>
-	</div>
-); */

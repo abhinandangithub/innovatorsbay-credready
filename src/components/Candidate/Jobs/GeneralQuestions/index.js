@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import DatePicker from "react-datepicker";
+import CustomDatePicker from "../../../_Elements/CustomDatePicker";
 import { Link } from "react-router-dom";
 
 import "./index.scss";
@@ -39,7 +40,7 @@ function GeneralQuestions() {
 					</div>
 					<div className="info">
 						<label>When you applied?</label>
-						<DatePicker
+						<CustomDatePicker
 							selected={appliedDate}
 							onChange={(date) => setAppliedDate(date)}
 							placeholderText="Select Date"

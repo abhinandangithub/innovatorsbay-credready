@@ -7,59 +7,168 @@ import "./index.scss";
 
 function CreateNewQuestion(props) {
 	const [jobTitle, setJobTitle] = useState(() => {
-		if(props.action === "edit") {
+		if (props.action === "edit") {
 			return props.data.job_title;
 		} else {
 			return "";
 		}
 	});
 	const [questionName, setQuestionName] = useState(() => {
-		if(props.action === "edit") {
+		if (props.action === "edit") {
 			return props.data.question_name;
 		} else {
 			return "";
 		}
 	});
 	const [questionType, setQuestionType] = useState(() => {
-		if(props.action === "edit") {
+		if (props.action === "edit") {
 			return props.data.question_type;
 		} else {
 			return "text-input";
 		}
 	});
+
+	const [publicReview, setPublicReview] = useState(() => {
+		if (props.action === "edit") {
+			return true;
+		} else {
+			return true;
+		}
+	});
+
 	const [optionChoiceName, setOptionChoiceName] = useState(() => {
-		if(props.action === "edit") {
+		if (props.action === "edit") {
 			return props.data.option_choices;
 		} else {
-			return [{
-				option_choice_name : "",
-				question_type: "boolean"
-			}];
+			return [
+				{
+					option_choice_name: "",
+					question_type: "boolean",
+				},
+				{
+					option_choice_name: "",
+					question_type: "boolean",
+				},
+			];
 		}
 	});
 	const [optionInput, setOptionInput] = useState([""]);
 	const dispatch = useDispatch();
 
+	let choices = () => {
+		if (props.action === "edit") {
+			return props.data.option_choices;
+		} else {
+			return [
+				{
+					option_choice_name: "",
+					question_type: "boolean",
+				},
+				{
+					option_choice_name: "",
+					question_type: "boolean",
+				},
+			];
+		}
+	};
+
+	const [formData, setFormData] = React.useState({
+		/**
+		 * * field: ['value', 'error']
+		 */
+		_questionName: [],
+		// _answers: [choices],
+		_answers: [["", ""]],
+
+		formValid: false,
+	});
+
+	const handleFieldChange = (field, value) => {
+		let msg = value === "" || value === null ? "Required" : "";
+
+		let arr = [];
+
+		if (typeof field === "object") {
+			arr[0] = [...formData._answers[0]];
+			arr[0][field.id] = value;
+			msg = "";
+			if (value === "" || value === undefined) {
+				msg = "Required";
+			}
+			arr[1] = msg;
+			field = "_answers";
+		} else {
+			arr[0] = value;
+			arr[1] = msg;
+		}
+
+		setFormData({
+			...formData,
+			[field]: arr,
+		});
+	};
+
 	const handleQuestionAdd = () => {
-		console.log("create");
+		let _formData = { ...formData };
+		_formData.formValid = true;
+
+		for (var field in _formData) {
+			if (Array.isArray(_formData[field][0]) && questionType === "mcq") {
+				for (let i = 0; i < _formData[field][0].length; i++) {
+					if (
+						_formData[field][0][i] === "" ||
+						_formData[field][0][i] === undefined ||
+						_formData[field][0][i] === null
+					) {
+						_formData.formValid = false;
+						if (_formData[field][1] !== "Required") {
+							_formData[field][1] = "Required";
+						}
+					}
+				}
+			} else if (
+				_formData.hasOwnProperty(field) &&
+				field !== "formValid" &&
+				(_formData[field][0] === "" ||
+					_formData[field][0] === undefined ||
+					_formData[field][0] === null)
+			) {
+				_formData[field][0] = "";
+				_formData.formValid = false;
+				if (_formData[field][1] !== "Required") {
+					_formData[field].push("Required");
+				}
+			}
+		}
+
+		setFormData(_formData);
+
+		if (!_formData.formValid) {
+			return null;
+		}
+
 		let addQuestion = {};
 		let optionChoiceMap = [];
 		if (questionType === "mcq") {
 			optionChoiceMap = optionChoiceName.map((val) => {
 				if (val.option_choice_name !== "") {
-					if(props.action === "edit") {
+					if (props.action === "edit") {
 						return {
 							optionChoiceName: val.option_choice_name,
 							questionType: val.question_type ? val.question_type : "boolean",
 							id: val.id,
-							questionId: val.question_id
-					}
+							questionId: val.question_id,
+						};
 					} else {
 						return {
 							optionChoiceName: val.option_choice_name,
-							questionType: props.data ? ( props.data.option_choices.length !== 0 ? props.data.option_choices[0].question_type : "boolean") : "boolean"
+							questionType: props.data
+								? props.data.option_choices.length !== 0
+									? props.data.option_choices[0].question_type
+									: "boolean"
+								: "boolean",
+						};
 					}
-					};
 				} else {
 					return null;
 				}
@@ -68,7 +177,7 @@ function CreateNewQuestion(props) {
 				let optionChoiceMapTemp = optionChoiceMap.filter((val) => val !== null);
 				addQuestion = {
 					category: "Employer Questions",
-					forPublicReview: true,
+					forPublicReview: props.type === "private" ? false : true,
 					jobTitle: jobTitle,
 					questionName: questionName,
 					questionType: questionType,
@@ -77,7 +186,7 @@ function CreateNewQuestion(props) {
 			} else {
 				addQuestion = {
 					category: "Employer Questions",
-					forPublicReview: true,
+					forPublicReview: props.type === "private" ? false : true,
 					jobTitle: jobTitle,
 					questionName: questionName,
 					questionType: questionType,
@@ -86,13 +195,13 @@ function CreateNewQuestion(props) {
 		} else {
 			addQuestion = {
 				category: "Employer Questions",
-				forPublicReview: true,
+				forPublicReview: props.type === "private" ? false : true,
 				jobTitle: jobTitle,
 				questionName: questionName,
 				questionType: questionType,
 			};
 		}
-		if(props.action === "edit"){
+		if (props.action === "edit") {
 			addQuestion.questionId = props.data.question_id;
 			addQuestion.orgId = props.data.org_id;
 			dispatch(createQuestion(addQuestion, "edit"));
@@ -115,12 +224,22 @@ function CreateNewQuestion(props) {
 	};
 
 	const handleAddOption = () => {
+		// let __answers = [...formData._answers[0]];
+		// __answers.push("");
+		// console.log("__answers...", __answers);
+
 		let _optionChoiceName = [...optionChoiceName];
 		_optionChoiceName.push({
-			option_choice_name : "",
-			question_type: "boolean"
+			option_choice_name: "",
+			question_type: "boolean",
 		});
 		setOptionChoiceName(_optionChoiceName);
+
+		// /* update form values as well */
+		// setFormData({
+		// 	...formData,
+		// 	_answers: __answers,
+		// });
 	};
 
 	const handleOptionDelete = (i) => {
@@ -130,23 +249,63 @@ function CreateNewQuestion(props) {
 	};
 
 	useEffect(() => {
-		// console.log(optionChoiceName);
-
-		// return () => {
-			// cleanup
-		// };
-		if(props.data && props.data.question_type === "mcq") {
+		if (props.data && props.data.question_type === "mcq") {
 			document.getElementById("multipleChoice").checked = true;
 		}
-	}, [props.data]);
+	}, [props.data, formData]);
+
+	useEffect(() => {
+		let __answers = [...formData._answers];
+		let inputs = document.querySelectorAll(".choices input");
+
+		let a = [];
+		for (let i = 0; i < optionChoiceName.length; i++) {
+			if (__answers[0][i] !== "") {
+				a[i] = inputs[i].value;
+			} else {
+				a[i] = "";
+			}
+		}
+		__answers[0] = a;
+		__answers[1] = "";
+
+		setFormData({
+			...formData,
+			_answers: __answers,
+		});
+	}, [optionChoiceName.length]);
+
+	const handleCheckEvent = (event, question) => {
+		if (document.getElementById(event.target.id).checked) {
+		}
+	};
 
 	return (
 		<div className="create-new-question">
-			<h1>Create New Question</h1>
+			<h1>
+				{props.action === "edit" ? "Update Question" : "Create New Question"}
+			</h1>
 			<div className="content">
+				{/* {props.type === "private" &&
+					<div className="answer-block mb-20">
+						<div className="answer-type">
+							<input
+								name="publicReview"
+								className="fancy-toggle"
+								type="checkbox"
+								id="publicReview"
+								defaultChecked
+								onClick={(event) => handleCheckEvent(event)}
+							/>
+							<label htmlFor="publicReview">
+								<span className="input"></span>Request for public review
+							</label>
+						</div>
+					</div>
+				} */}
 				<ul>
 					<li>
-						<label htmlFor="questionForJobTitle">Question for Job Title</label>
+						<label htmlFor="questionForJobTitle">Job Title</label>
 						<input
 							type="text"
 							id="questionForJobTitle"
@@ -156,21 +315,47 @@ function CreateNewQuestion(props) {
 					</li>
 					<li>
 						<label htmlFor="question">
-							Question <span>*</span>
+							Question <span style={{ color: "red" }}>*</span>
+							<span
+								className={`error-text ${
+									!formData._questionName[1] && "hidden"
+								}`}
+							>
+								Required
+							</span>
 						</label>
 						<input
 							type="text"
-							id="question"
+							id="_questionName"
 							value={questionName}
-							onChange={(e) => setQuestionName(e.target.value)}
+							onChange={(e) => {
+								handleFieldChange("_questionName", e.target.value);
+								setQuestionName(e.target.value);
+							}}
 						/>
 					</li>
 					<li>
 						<div className="answer-block">
 							<h3>
-								Answers <span>*</span>
+								Answers
+								{questionType === "mcq" && (
+									<>
+										<span style={{ color: "red" }}> *</span>
+										<span
+											className={`error-text ${
+												!formData._answers[1] && "hidden"
+											}`}
+										>
+											Required
+										</span>
+									</>
+								)}
 							</h3>
-							<div className="answer-type">
+							<div
+								className={`answer-type ${
+									props.action === "edit" ? "hidden" : ""
+								}`}
+							>
 								<input
 									name="answerType"
 									className="fancy-toggle"
@@ -200,7 +385,7 @@ function CreateNewQuestion(props) {
 								<button className="add" onClick={handleAddOption}>
 									Add Option
 								</button>
-								<ul>
+								<ul className="brdr-none choices">
 									{optionChoiceName.map((choice, i) => {
 										return (
 											<li key={i}>
@@ -208,12 +393,20 @@ function CreateNewQuestion(props) {
 													type="text"
 													value={choice.option_choice_name}
 													id={i}
-													onChange={(e) =>
-														handleOptionChange(i, e.target.value)
-													}
+													onChange={(e) => {
+														handleFieldChange(
+															// `_answers[0][${i}]`,
+															{ id: i },
+															e.target.value
+														);
+														handleOptionChange(i, e.target.value);
+													}}
 												/>
 												<button
-													className="delete"
+													tabIndex="-1"
+													className={`delete ${
+														optionChoiceName.length <= 2 ? "hidden" : ""
+													}`}
 													onClick={() => handleOptionDelete(i)}
 												></button>
 											</li>
@@ -226,6 +419,8 @@ function CreateNewQuestion(props) {
 								<input
 									type="text"
 									value={optionInput}
+									placeholder="Candidate's answer"
+									disabled
 									onChange={(e) => setOptionInput(e.target.value)}
 								/>
 							</ul>
@@ -237,7 +432,7 @@ function CreateNewQuestion(props) {
 						className="primary-btn blue"
 						onClick={() => handleQuestionAdd()}
 					>
-						Add
+						{props.action === "edit" ? "Save" : "Add"}
 					</button>
 				</div>
 			</div>

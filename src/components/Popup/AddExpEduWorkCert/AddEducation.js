@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import DatePicker from "react-datepicker";
+import CustomDatePicker from "../../_Elements/CustomDatePicker";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { useDispatch, useSelector, connect } from "react-redux";
@@ -115,13 +116,16 @@ function AddEducation(props) {
 				institution: formData.institution[0],
 				attendedFrom: formatDate(formData.startDate[0]),
 				attendedTill: formatDate(formData.endDate[0]),
-				majors: major,
-				minors: minor,
+				// majors: major,
+				// minors: minor,
+				majors: [731, 732],
+				minors: [741, 742],
 				educationDescription: formData.comments[0],
 				isUnfinished: formData.degreeGranted[0] === "on" ? false : true,
 			};
-			if (info.id) {
-				obj.id = info.id
+
+			if (info) {
+				obj.id = info.id;
 			}
 
 			dispatch(addEducationExperience(obj));
@@ -165,7 +169,7 @@ function AddEducation(props) {
 		if (info) {
 			let i = findIndexOfObjInArr(dataArr, "id", info.id);
 			let arr = dataArr[i];
-
+			console.log(arr.institution);
 			setFormData({
 				...formData,
 				degreeTitle: [arr.title],
@@ -204,7 +208,7 @@ function AddEducation(props) {
 							Required
 						</span>
 					</label>
-					<Dropdown
+					<InputDropdown
 						placeholder={degreeTitle.heading}
 						content={props.candidateDegreeTitles.map((val) => ({
 							val: val.title,
@@ -215,6 +219,7 @@ function AddEducation(props) {
 								return val.title;
 							}
 						})}
+						search_term="title"
 						id="degreeTitle"
 						onchange={(value) => handleFieldChange("degreeTitle", value)}
 					/>
@@ -230,15 +235,16 @@ function AddEducation(props) {
 					</label>
 					<InputDropdown
 						placeholder={institution.heading}
-						content={institutions.map((val) => ({
+						content={props.candidateInstiType.map((val) => ({
 							val: val.institute_name,
 							id: val.id,
 						}))}
+						search_term="institute_name"
 						id="institution"
 						selected={institution.content[formData.institution[0]]}
 						onchange={(value) => {
 							handleFieldChange("institution", value);
-							handleInstitutionSearch(value);
+							// handleInstitutionSearch(value);
 						}}
 					/>
 				</li>
@@ -254,7 +260,7 @@ function AddEducation(props) {
 					</label>
 					<div className="date-outer">
 						<div className="date">
-							<DatePicker
+							<CustomDatePicker
 								selected={startDate}
 								placeholderText="Start Date"
 								id="startDate"
@@ -266,8 +272,9 @@ function AddEducation(props) {
 						</div>
 						<span>to</span>
 						<div className="date">
-							<DatePicker
+							<CustomDatePicker
 								selected={endDate}
+								minDate={startDate}
 								placeholderText="End Date"
 								id="endDate"
 								onChange={(date) => {

@@ -60,11 +60,11 @@ function PersonalDetails(props) {
 				(val) => val.id === data.current_employment_status
 			)
 				? props.currentStatus.find(
-						(val) => val.id === data.current_employment_status
-				  )
+					(val) => val.id === data.current_employment_status
+				)
 				: "",
 		],
-		interestedIn: ["on"],
+		interestedIn: [],
 		joiningDuration: [data.available_within],
 		streetAddress: [data.address && data.address.street_address],
 		city: [data.address && data.address.city],
@@ -182,20 +182,20 @@ function PersonalDetails(props) {
 							<label htmlFor="employmentStatus">
 								Current employment status <span>*</span>
 								<span
-									className={`error-text ${
-										!formData.employmentStatus[1] && "hidden"
-									}`}
+									className={`error-text ${!formData.employmentStatus[1] && "hidden"
+										}`}
 								>
 									Required
 								</span>
 							</label>
-							<Dropdown
+							<InputDropdown
 								placeholder={employmentStatus.heading}
 								selected={formData.employmentStatus[0].employment_status}
 								content={props.currentStatus.map((val) => ({
 									val: val.employment_status,
 									id: val.id,
 								}))}
+								search_term="employment_status"
 								id="employmentStatus"
 								onchange={(value) =>
 									handleFieldChange("employmentStatus", value)
@@ -207,9 +207,8 @@ function PersonalDetails(props) {
 								Are you interested in a different function and industry?{" "}
 								<span>*</span>
 								<span
-									className={`error-text ${
-										!formData.interestedIn[1] && "hidden"
-									}`}
+									className={`error-text ${!formData.interestedIn[1] && "hidden"
+										}`}
 								>
 									Required
 								</span>
@@ -220,10 +219,8 @@ function PersonalDetails(props) {
 									id="interestedInYes"
 									name="interestedIn"
 									type="radio"
-									defaultValue={formData.interestedIn[0]}
-									onChange={(e) =>
-										handleFieldChange("interestedIn", e.target.value)
-									}
+									defaultChecked={formData.interestedIn[0] === true}
+									onChange={(e) => handleFieldChange("interestedIn", true)}
 								/>
 								<label htmlFor="interestedInYes">
 									<span className="input"></span>Yes
@@ -233,9 +230,8 @@ function PersonalDetails(props) {
 									id="interestedInNo"
 									name="interestedIn"
 									type="radio"
-									onChange={(e) =>
-										handleFieldChange("interestedIn", e.target.value)
-									}
+									defaultChecked={formData.interestedIn[0] === false}
+									onChange={(e) => handleFieldChange("interestedIn", false)}
 								/>
 								<label htmlFor="interestedInNo">
 									<span className="input"></span>No
@@ -246,14 +242,13 @@ function PersonalDetails(props) {
 							<label htmlFor="joiningDuration">
 								How long until you can begin a new role? <span>*</span>
 								<span
-									className={`error-text ${
-										!formData.joiningDuration[1] && "hidden"
-									}`}
+									className={`error-text ${!formData.joiningDuration[1] && "hidden"
+										}`}
 								>
 									Required
 								</span>
 							</label>
-							<Dropdown
+							<InputDropdown
 								placeholder={joiningDuration.heading}
 								content={joiningDuration.content}
 								id="joiningDuration"
@@ -267,9 +262,8 @@ function PersonalDetails(props) {
 							<label htmlFor="streetAddress">
 								Street address <span>*</span>
 								<span
-									className={`error-text ${
-										!formData.streetAddress[1] && "hidden"
-									}`}
+									className={`error-text ${!formData.streetAddress[1] && "hidden"
+										}`}
 								>
 									Required
 								</span>

@@ -20,6 +20,8 @@ const initialState = {
 	JWT: null,
 };
 
+const stateCopy = JSON.parse(JSON.stringify(initialState));
+
 const reducer = (state = initialState, action) => {
 	switch (action.type) {
 		case actionTypes.UPDATE_TERMSANDCONDITIONS:
@@ -65,7 +67,11 @@ const reducer = (state = initialState, action) => {
 				user_type: action.details.user_type,
 			};
 			if (action.details.user_type === "employer") {
-				data.organisation = action.details.organisation;
+				if (action.details.organisation) {
+					data.organisation = action.details.organisation;
+				} else {
+					data.orgId = action.details.orgId;
+				}
 			}
 			return updateObject(state, {
 				signUp: data,
@@ -75,6 +81,10 @@ const reducer = (state = initialState, action) => {
 			return updateObject(state, {
 				JWT: action.JWT,
 			});
+
+		case actionTypes.CLEAR_AUTH_STATE:
+			return stateCopy
+
 		default:
 			return state;
 	}

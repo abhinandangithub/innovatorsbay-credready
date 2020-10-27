@@ -1,18 +1,25 @@
 import React, { useState } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPencilAlt } from "@fortawesome/free-solid-svg-icons";
 
 import Dropdown from "../../_Elements/Dropdown";
 import { getEmailTemplate } from "../../../store/thunks/employer";
 import { connect, useDispatch } from "react-redux";
 import { setNewJob } from "../../../store/actions/employer";
-import InputDropdown from '../../_Elements/InputDropdown';
+import InputDropdown from "../../_Elements/InputDropdown";
+import {
+	togglePopup,
+	toggleOverlay,
+} from "../../../store/actions/popup_overlay";
 
 const employmentStatus = {
-	heading: "Select Employment Type",
+	heading: "Select Email Template",
 	content: ["Employed", "Self Employed", "Available", "On Break"],
 };
 
 function EmailTemplate(props) {
 	const parent = React.useRef();
+	const emailBodyEl = React.useRef();
 	const dispatch = useDispatch();
 	const [emailBody, setEmailBody] = useState("");
 	const [templateID, setTemplateID] = useState(0);
@@ -27,6 +34,13 @@ function EmailTemplate(props) {
 	}, [dispatch]);
 
 	React.useEffect(() => {
+		console.log('props.emailTemplate ', props.emailTemplate);
+		if (!!templateID) {
+			document.getElementById('emailtemplate').value = props.emailTemplate.find(
+				(x) => x.public_template_id === templateID || x.template_id === templateID
+			).template_name;
+			handleTemplateChange(templateID);
+		}
 		setEmailTemplates(props.emailTemplate);
 	}, [props.emailTemplate]);
 
@@ -36,10 +50,19 @@ function EmailTemplate(props) {
 	}, [dispatch, templateID]);
 
 	const handleTemplateChange = (item) => {
+		console.log('item ', item);
 		if (typeof item !== "number") return;
 		setEmailBody(
-			props.emailTemplate.find((x) => x.public_template_id === item).email_body
+			// props.emailTemplate.find((x) => x.public_template_id === item).email_body
+			(emailBodyEl.current.innerHTML = props.emailTemplate.find(
+				(x) => x.public_template_id === item || x.template_id === item
+			).email_body)
 		);
+		console.log('item ', item);
+
+		// props.emailTemplate
+		// 	.find((x) => x.public_template_id === item)
+		// 	.email_body.replace(/(<([^>]+)>)/gi, "")
 		// if (
 		// 	props.emailTemplate.find((x) => x.template_name === item).template_id ===
 		// 	undefined
@@ -58,18 +81,26 @@ function EmailTemplate(props) {
 
 	const handleTemplateSearch = (value) => {
 		if (typeof value === "number") return;
-		const filteredData = props.emailTemplate.filter(
-			(val) => {
-				if(val.template_name.includes(value)) {
-					return {
-						id: val.public_template_id,
-						val: val.template_name
-					}
-				}
+		const filteredData = props.emailTemplate.filter((val) => {
+			if (val.template_name.includes(value)) {
+				return {
+					id: val.public_template_id,
+					val: val.template_name,
+				};
 			}
-		);
+		});
 		setEmailTemplates([...filteredData]);
-	}
+	};
+
+	const createEmailTemplate = () => {
+		dispatch(toggleOverlay(true));
+		dispatch(togglePopup([true, "createEmailTemplate", {
+			type: "edit",
+			data: props.emailTemplate.find(
+				(x) => x.public_template_id === templateID || x.template_id === templateID
+			)
+		}]));
+	};
 
 	return (
 		<div className="email-templates" ref={parent}>
@@ -81,36 +112,37 @@ function EmailTemplate(props) {
 			<div className="content">
 				<h2 className="sub-heading">Attach Email</h2>
 				<p>Select / Modify Introduction Email Template</p>
-				{/* <Dropdown
-					placeholder={employmentStatus.heading}
-					// content={employmentStatus.content}
-					content={props.emailTemplateNames}
-					onchange={(item) => handleTemplateChange(item)}
-				/> */}
-				<InputDropdown
-					placeholder={employmentStatus.heading}
-					content={emailTemplates.map((val) => ({
-								val: val.template_name,
-								id: val.public_template_id,
-							}))}
-					id="emailtemplate"
-					// selected={institution.content[formData.institution[0]]}
-					onchange={(value) => {
-								handleTemplateChange(value);
-								handleTemplateSearch(value);
-							}}
-				/>
+				<div className="input_button">
+					<InputDropdown
+						placeholder={employmentStatus.heading}
+						content={emailTemplates.map((val) => ({
+							val: val.template_name,
+							id: val.public_template_id || val.template_id,
+						}))}
+						id="emailtemplate"
+						search_term
+						// selected={institution.content[formData.institution[0]]}
+						onchange={(value) => {
+							handleTemplateChange(value);
+							// handleTemplateSearch(value);
+						}}
+					/>
+					<button onClick={createEmailTemplate}>
+						<FontAwesomeIcon className="icon" icon={faPencilAlt} />
+					</button>
+				</div>
+
 				<h2 className="sub-heading">Email</h2>
-				<textarea
+
+				<div className="email_body" ref={emailBodyEl}></div>
+				{/* <textarea
 					name="email"
 					id="email"
-					// 					defaultValue="Hi {candidate_name},
-					// Thanks for applying for the position of {job_title}, we will review your profile and share an update on the next steps soon."
-					// defaultValue={props.emailTemplate.email_body}
-					// defaultValue={emailBody}
 					onChange={(e) => setEmailBody(e.target.value)}
 					value={emailBody}
+					disabled
 				></textarea>
+				></textarea> */}
 			</div>
 		</div>
 	);

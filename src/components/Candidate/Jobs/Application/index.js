@@ -20,13 +20,20 @@ import {
 	fetchAllCertificateTitles,
 	fetchCandidateDetails,
 	jobApply,
+	fetchJobDescription,
+	fetchAllAnswers,
 	fetchCandidateDegreeTitles,
 } from "../../../../modals/candidateProfile/thunk";
 import { findIndex } from "../Questions/index";
+import { findIndexOfObjInArr } from "../../../../assets/js/Utility";
 
 function Application(props) {
 	const dispatch = useDispatch();
-
+	const jobData = useSelector((state) =>
+		state.setJobDescriptionReducer.data
+			? state.setJobDescriptionReducer.data
+			: []
+	);
 	const userData = useSelector((state) => state.candidateSetDataReducer.data);
 	const allCertificates = useSelector(
 		(state) => state.setCandidateCertificateTitlesReducer.data
@@ -34,6 +41,24 @@ function Application(props) {
 	const allDegress = useSelector(
 		(state) => state.setCandidateDegreeTitlesReducer.data
 	);
+
+
+	const [allAnswersData, setAllAnswersData] = React.useState(useSelector(
+		(state) => state.setCandidateAllAnswersReducer.data
+	))
+	let heights = [0];
+	const [activeTab, setActiveTab] = React.useState(0);
+
+	const scrollBar = React.useRef();
+
+	const handleScroll = (i) => {
+		setActiveTab(i);
+		let scrollTo = heights[i] + i * 30;
+		scrollBar.current.view.scroll({
+			top: scrollTo,
+			behavior: "smooth",
+		});
+	};
 
 	const handleFieldChange = (type, q, a) => {
 		let i = findIndex(formData[type], q);
@@ -74,230 +99,283 @@ function Application(props) {
 		setFormData(_formData);
 	};
 
-	const _formData = {
-		job_id: localStorage.getItem("jobItem")
-			? localStorage.getItem("jobItem")
-			: 84,
-		general_questions: [
-			{
-				question_id: 1,
-				answer: "10/20/90",
-			},
+	const empQuestions = jobData.questions ? jobData.questions : [];
 
-			{
-				question_id: 2,
-				answer: 1,
-			},
+	const empQuestionFormat =
+		empQuestions &&
+		empQuestions.map((entity) => {
+			console.log("enityt.question_type", entity.question_type)
+			if (entity.question_type === "text-input") {
+				return {
+					question_id: entity.question_id,
+					answer: "",
+				};
+			}
+			if (entity.question_type === "mcq") {
+				return {
+					question_id: entity.question_id,
+					answer: ""
+				};
+			}
+		});
 
-			{
-				question_id: 3,
-				answer: 1,
-			},
-
-			{
-				question_id: 4,
-				answer: 2,
-			},
-
-			{
-				question_id: 5,
-				answer: 2,
-			},
-
-			{
-				question_id: 6,
-				answer: 2,
-				sub_answer: 2,
-				followup_sub_answer: "10/20/90",
-			},
-		],
-
-		personality_assessment: [
-			{
-				question_id: 1,
-				answer: 1,
-			},
-
-			{
-				question_id: 2,
-				answer: 3,
-			},
-
-			{
-				question_id: 3,
-				answer: 5,
-			},
-
-			{
-				question_id: 4,
-				answer: 2,
-			},
-
-			{
-				question_id: 5,
-				answer: 3,
-			},
-
-			{
-				question_id: 6,
-				answer: 1,
-			},
-
-			{
-				question_id: 7,
-				answer: 4,
-			},
-
-			{
-				question_id: 8,
-				answer: 1,
-			},
-
-			{
-				question_id: 9,
-				answer: 3,
-			},
-
-			{
-				question_id: 10,
-				answer: 2,
-			},
-
-			{
-				question_id: 11,
-				answer: 1,
-			},
-
-			{
-				question_id: 12,
-				answer: 4,
-			},
-
-			{
-				question_id: 13,
-				answer: 5,
-			},
-
-			{
-				question_id: 14,
-				answer: 2,
-			},
-
-			{
-				question_id: 15,
-				answer: 3,
-			},
-
-			{
-				question_id: 16,
-				answer: 4,
-			},
-		],
-
-		coursework: [
-			{
-				question_id: 1,
-				answer: 1,
-			},
-
-			{
-				question_id: 2,
-				answer: [
-					{
-						sub_question_id: 1,
-						sub_answer: 2,
-					},
-					{
-						sub_question_id: 3,
-						sub_answer: 2,
-					},
-				],
-			},
-
-			{
-				question_id: 3,
-				answer: 1,
-			},
-
-			{
-				question_id: 4,
-				answer: [
-					{
-						sub_question_id: 1,
-						sub_answer: 4,
-					},
-					{
-						sub_question_id: 3,
-						sub_answer: 4,
-					},
-				],
-			},
-
-			{
-				question_id: 5,
-				answer: 1,
-			},
-		],
-
-		work_history: [
-			{
-				question_id: 1,
-				answer: 3,
-			},
-			{
-				question_id: 2,
-				answer: 7,
-			},
-			{
-				question_id: 3,
-				answer: "09/10/18",
-			},
-			{
-				question_id: 4,
-				answer: 1,
-			},
-		],
-
-		commute: [
-			{
-				question_id: 1,
-				answer: "",
-			},
-			{
-				question_id: 2,
-				answer: 1,
-			},
-			{
-				question_id: 3,
-				answer: {
-					street_0: "",
-					city_0: "",
-					state_0: "",
-					zipCode_0: "",
-				},
-			},
-		],
-
-		employer_questions: [
-			{
-				question_id: 1,
-				answer: [1],
-			},
-			{
-				question_id: 2,
-				answer: [2],
-			},
-			{
-				question_id: 3,
-				answer: [1, 4],
-			},
-			{
-				question_id: 4,
-				answer: [2],
-			},
-		],
+	const fetchAnswers = (type) => {
+		console.log(type, allAnswersData);
+		return JSON.parse(
+			allAnswersData &&
+			allAnswersData.length > 0 &&
+			allAnswersData[findIndexOfObjInArr(allAnswersData, "category", type)]
+				.answer
+		);
 	};
 
+	const formDataFetched = {
+		general_questions: fetchAnswers("general_questions"),
+		personality_assessment: fetchAnswers("personality_assessment"),
+		coursework: fetchAnswers("coursework"),
+		workHistory: fetchAnswers("jWorkHistory"),
+		commute: fetchAnswers("commute"),
+		employer_questions: empQuestionFormat,
+	};
+
+	const _formData = {
+		general_questions:
+			formDataFetched.general_questions.length > 0
+				? formDataFetched.general_questions
+				: [
+					{
+						question_id: 1,
+						answer: "10/20/90",
+					},
+
+					{
+						question_id: 2,
+						answer: "",
+					},
+
+					{
+						question_id: 3,
+						answer: "",
+					},
+
+					{
+						question_id: 4,
+						answer: "",
+					},
+
+					{
+						question_id: 5,
+						answer: "",
+					},
+
+					{
+						question_id: 6,
+						answer: "",
+						sub_answer: "",
+						followup_sub_answer: "10/20/90",
+					},
+				],
+
+		personality_assessment:
+			formDataFetched.personality_assessment.length > 0
+				? formDataFetched.personality_assessment
+				: [
+					{
+						question_id: 1,
+						answer: "",
+					},
+
+					{
+						question_id: 2,
+						answer: "",
+					},
+
+					{
+						question_id: 3,
+						answer: "",
+					},
+
+					{
+						question_id: 4,
+						answer: "",
+					},
+
+					{
+						question_id: 5,
+						answer: "",
+					},
+
+					{
+						question_id: 6,
+						answer: "",
+					},
+
+					{
+						question_id: 7,
+						answer: "",
+					},
+
+					{
+						question_id: 8,
+						answer: "",
+					},
+
+					{
+						question_id: 9,
+						answer: "",
+					},
+
+					{
+						question_id: 10,
+						answer: "",
+					},
+
+					{
+						question_id: 11,
+						answer: "",
+					},
+
+					{
+						question_id: 12,
+						answer: "",
+					},
+
+					{
+						question_id: 13,
+						answer: "",
+					},
+
+					{
+						question_id: 14,
+						answer: "",
+					},
+
+					{
+						question_id: 15,
+						answer: "",
+					},
+
+					{
+						question_id: 16,
+						answer: "",
+					},
+				],
+
+		coursework:
+			formDataFetched.coursework.length > 0
+				? formDataFetched.coursework
+				: [
+					{
+						question_id: 1,
+						answer: "",
+					},
+
+					{
+						question_id: 2,
+						answer: [
+							{
+								sub_question_id: 1,
+								sub_answer: "",
+							},
+							{
+								sub_question_id: 3,
+								sub_answer: "",
+							},
+						],
+					},
+
+					{
+						question_id: 3,
+						answer: 1,
+					},
+
+					{
+						question_id: 4,
+						answer: [
+							{
+								sub_question_id: 1,
+								sub_answer: "",
+							},
+							{
+								sub_question_id: 3,
+								sub_answer: "",
+							},
+						],
+					},
+
+					{
+						question_id: 5,
+						answer: "",
+					},
+				],
+
+		work_history:
+			formDataFetched.workHistory.length > 0
+				? formDataFetched.workHistory
+				: [
+					{
+						question_id: 1,
+						answer: "",
+					},
+					{
+						question_id: 2,
+						answer: "",
+					},
+					{
+						question_id: 3,
+						answer: "09/10/18",
+					},
+					{
+						question_id: 4,
+						answer: "",
+					},
+				],
+
+		commute:
+			formDataFetched.commute.length > 0
+				? formDataFetched.commute
+				: [
+					{
+						question_id: 1,
+						answer: "",
+					},
+					{
+						question_id: 2,
+						answer: 1,
+					},
+					{
+						question_id: 3,
+						answer: {
+							street_0: "",
+							city_0: "",
+							state_0: "",
+							zipCode_0: "",
+						},
+					},
+				],
+
+		employer_questions:
+			formDataFetched.employer_questions.length > 0
+				? formDataFetched.employer_questions
+				: [],
+	};
+
+	/* Add address obj if not present */
+
+	if (
+		formDataFetched.commute.length > 0 &&
+		findIndex(formDataFetched.commute, 3) < 0
+	) {
+		_formData.commute[2] = {
+			question_id: 3,
+			answer: {
+				street_0: "",
+				city_0: "",
+				state_0: "",
+				zipCode_0: "",
+			},
+		};
+	}
 	const [formData, setFormData] = React.useState(_formData);
 
 	const calHeight = (height) => {
@@ -305,8 +383,8 @@ function Application(props) {
 	};
 
 	const handleClick = () => {
-		dispatch(toggleOverlay(true));
-		dispatch(togglePopup([true, "jobApplied"]));
+		// dispatch(toggleOverlay(true));
+		// dispatch(togglePopup([true, "jobApplied"]));
 		if (localStorage.getItem("jobId"))
 			dispatch(jobApply(formData, localStorage.getItem("jobId")));
 		else
@@ -315,9 +393,16 @@ function Application(props) {
 	};
 
 	React.useEffect(() => {
+		if (props.match.params.id) {
+			dispatch(fetchJobDescription(props.match.params.id));
+		}
+		if (localStorage.getItem("jobId")) {
+			dispatch(fetchJobDescription(localStorage.getItem("jobId")));
+		}
 		dispatch(fetchCandidateDetails());
 		dispatch(fetchAllCertificateTitles());
 		dispatch(fetchCandidateDegreeTitles());
+		dispatch(fetchAllAnswers());
 	}, []);
 
 	return (
@@ -554,47 +639,6 @@ function Application(props) {
 							})
 							: ""}
 					</div>
-					{/* <div className="group ">
-						<div className="top">
-							<h1>
-								Strengths
-								<FontAwesomeIcon
-									className="edit edit-2"
-									icon={faPen}
-									onClick={() => alert(`Editing`)}
-								/>
-							</h1>
-							<FontAwesomeIcon
-								className="action-btn edit"
-								icon={faPen}
-								onClick={() => alert(`Editing`)}
-							/>
-							<FontAwesomeIcon
-								className="action-btn delete"
-								icon={faTrash}
-								onClick={() => alert(`Deleting`)}
-							/>
-						</div>
-						<div className="bottom">
-							<div className="details">
-								<h2>Communication</h2>
-								<p>
-									<span className="heading">Typing: </span>
-									{" - "}
-									<span className="text">80% Mastery, 7 Years</span>
-								</p>
-								<p>
-									<span className="heading">Customer Support: </span>
-									{" to "}
-									<span className="text">70% Mastery, 4 Years</span>
-								</p>
-								<p>
-									<span className="heading">Patient: </span>
-									<span className="text">40% Patience, 2 Years</span>
-								</p>
-							</div>
-						</div>
-					</div> */}
 				</div>
 			</div>
 
@@ -642,6 +686,7 @@ function Application(props) {
 				<EmployerQuestions
 					calHeight={calHeight}
 					noHeading
+					empQuestions={empQuestions}
 					data={formData.employer_questions}
 					onchange={(q, a) => handleFieldChange("employer_questions", q, a)}
 				/>

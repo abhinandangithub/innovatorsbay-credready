@@ -36,9 +36,13 @@ function JobView(props) {
 				</div>
 				<div className="bottom">
 					<p>
-						<span className="heading">Job Description: </span>
+						<h3 >Job Description: </h3>
 						<span className="text">
-							{props.jobDetails.job_description}
+							<span
+								dangerouslySetInnerHTML={{
+									__html: props.jobDetails.job_description,
+								}}
+							></span>
 						</span>
 					</p>
 					<p>
@@ -47,11 +51,6 @@ function JobView(props) {
 							{/* {props.jobDetails.strengths.map((value) => value.name + ', ')} */}
 						</span>
 					</p>
-					<h2>{'A ' + props.jobDetails.job_title + '\'s Job'}</h2>
-					<h3>Responsibilities</h3>
-					<ul>
-						{props.jobDetails.job_description}
-					</ul>
 					<div className="cta flex">
 						{props.isLoggedIn ? (
 							<>

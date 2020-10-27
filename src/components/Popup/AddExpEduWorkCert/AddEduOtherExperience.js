@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import DatePicker from "react-datepicker";
+import CustomDatePicker from "../../_Elements/CustomDatePicker";
 import { useDispatch, useSelector, connect } from "react-redux";
 
 import "./AddExpEduWorkCert.scss";
@@ -78,8 +79,7 @@ function AddEduOtherExperience(props) {
 			console.log("submitting form...");
 
 			var obj = {
-				id: info.id,
-				experienceType: formData.description[0],
+				experienceType: formData.experienceType[0],
 				organizationName: formData.organizationName[0],
 				title: formData.title[0],
 				from: formatDate(formData.startDate[0]),
@@ -89,6 +89,10 @@ function AddEduOtherExperience(props) {
 				skills: [],
 				careerPath: "EDUCATION",
 			};
+
+			if (info) {
+				obj.id = info.id;
+			}
 
 			dispatch(addOtherEducationExperience(obj));
 			dispatch(toggleOverlay(false));
@@ -144,8 +148,8 @@ function AddEduOtherExperience(props) {
 			{info && info.purpose === "edit" ? (
 				<h1>Edit Other Experience</h1>
 			) : (
-				<h1>Add Other Experience</h1>
-			)}
+					<h1>Add Other Experience</h1>
+				)}
 			<ul className="listing">
 				<li>
 					<label htmlFor="experienceType">
@@ -170,7 +174,7 @@ function AddEduOtherExperience(props) {
 				</li>
 				<li>
 					<label htmlFor="organizationName">
-						Organisation Name <span>*</span>
+						Organization Name <span>*</span>
 						<span
 							className={`error-text ${!formData.organizationName[1] && "hidden"
 								}`}
@@ -211,7 +215,7 @@ function AddEduOtherExperience(props) {
 					</label>
 					<div className="date-outer">
 						<div className="date">
-							<DatePicker
+							<CustomDatePicker
 								selected={startDate}
 								placeholderText="Start Date"
 								id="startDate"
@@ -223,8 +227,9 @@ function AddEduOtherExperience(props) {
 						</div>
 						<span>to</span>
 						<div className="date">
-							<DatePicker
+							<CustomDatePicker
 								selected={endDate}
+								minDate={startDate}
 								placeholderText="End Date"
 								id="endDate"
 								onChange={(date) => {

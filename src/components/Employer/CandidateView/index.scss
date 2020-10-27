@@ -71,11 +71,12 @@
 		justify-content: space-between;
 		margin-bottom: 40px;
 		.widget {
-			width: calc(50% - 20px);
+			width: calc(50% - 10px);
+			margin-right: 0;
 			box-shadow: 0 2px 30px 1px rgba(176, 192, 237, 0.45);
 			background-color: #ffffff;
 			.heading {
-				border-bottom: 1px solid grey;
+				border-bottom: 1px solid #e4e4e4;
 				margin: 0;
 				padding: 20px;
 				font-size: 22px;

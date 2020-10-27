@@ -25,7 +25,11 @@ function LoginSignupPage(props) {
 	}, [auth.isVerified.phoneOtp, props.history]);
 
 	return (
-		<div className="auth-page flex">
+		<div
+			className={`auth-page flex ${
+				props.match.path === "/signup" ? "sign_up" : ""
+			}`}
+		>
 			<div className="left flex">
 				<a href="/" className="logo">
 					<img src={ImgLogo} alt="Cred Ready" />

@@ -10,13 +10,17 @@
 		padding: 40px 20px;
 		.avatar {
 			width: 250px;
+			height: 250px;
 			margin: 0 auto;
 			overflow: hidden;
 			border-radius: 50%;
 			position: relative;
+			border: 1px solid #dcdcdc;
+			color: grey;
 			img {
 				width: 100%;
 				display: block;
+				height: auto;
 			}
 			.edit {
 				position: absolute;

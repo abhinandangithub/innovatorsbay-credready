@@ -1,18 +1,25 @@
 import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { connect, useDispatch } from 'react-redux';
-import { sendEmail, updateStatus, getAppliedCandidateDetails, getCandidatesList, getPostedJobs } from '../../../store/thunks/employer';
+import { connect, useDispatch } from "react-redux";
+import {
+	sendEmail,
+	updateStatus,
+	getAppliedCandidateDetails,
+	getCandidatesList,
+	getPostedJobs,
+} from "../../../store/thunks/employer";
 
 import "./index.scss";
 import Dropdown from "../../_Elements/Dropdown";
 import SortIcon from "../../_Elements/SortIcon";
 import Pagination from "../../_Elements/Pagination";
 import ImgUser from "../../../assets/user-placeholder.jpg";
-import ImgMail from "../../../assets/mail.jpg";
-import ImgDownload from "../../../assets/download.jpg";
+import ImgMail from "../../../assets/email.svg";
+import ImgDownload from "../../../assets/download.svg";
 import Input from "../../_Elements/Input";
 import Spinner from "../../_Elements/Spinner";
 import { dateFormats } from "highcharts";
+import { useToasts } from "react-toast-notifications";
 
 const faker = require("faker");
 
@@ -22,11 +29,13 @@ function CandidateList(props) {
 	const [selectedExperience, setSelectedExperience] = useState([]);
 	const [selectedLastUpdate, setSelectedLastUpdate] = useState([]);
 	const [selectedRedinessIndex, setSelectedRedinessIndex] = useState([]);
+	const { addToast } = useToasts();
+
 	// let selectedStatus = [];
 	const dispatch = useDispatch();
 	const [jobTitle, setJobTitle] = useState(() => {
-		let job = props.postedJobs.map(val => {
-			if(val.job_id == jobId) {
+		let job = props.postedJobs.map((val) => {
+			if (val.job_id == jobId) {
 				return val.job_title;
 			} else {
 				return "";
@@ -38,54 +47,63 @@ function CandidateList(props) {
 	const [candidateList, setCandidateList] = useState(props.candidatesList);
 
 	const handleUpdateStatus = (e, job_app_id) => {
-		dispatch(updateStatus({
-			"jobAppId": job_app_id,
-			"status": e
-		}));
+		dispatch(
+			updateStatus({
+				jobAppId: job_app_id,
+				status: e,
+			})
+		);
 		let candidateListTemp = candidateList.map((val) => {
-			if(val.job_app_id == job_app_id) {
+			if (val.job_app_id == job_app_id) {
 				val.status = e;
 			}
 			return val;
 		});
 		setCandidateList(candidateListTemp);
-	}
+	};
 
 	const handleSendEmail = (candidate_id, template_id) => {
-		dispatch(sendEmail({
-			"candidateId": candidate_id,
-			"emailTemplateId": template_id,
-			"job_id":jobId
-		}));
-	}
+		dispatch(
+			sendEmail({
+				candidateId: candidate_id,
+				emailTemplateId: template_id,
+				job_id: jobId,
+			})
+		);
+	};
 
 	const handleDownloadClick = (candidate) => {
-		console.log('url ', candidate.resume_path);
-		fetch(candidate.resume_path)
-			.then(response => {
-				response.blob().then(blob => {
+		console.log("url ", candidate.resume_path);
+		if (candidate.resume_path) {
+			fetch(candidate.resume_path).then((response) => {
+				response.blob().then((blob) => {
 					let url = window.URL.createObjectURL(blob);
-					let a = document.createElement('a');
+					let a = document.createElement("a");
 					a.href = url;
-					a.download = 'resume';
+					a.download = "resume.pdf";
 					a.click();
 				});
-				// window.location.href = response.url;
 			});
-	}
+		} else {
+			addToast("Could not find resume", {
+				appearance: "warning",
+				autoDismiss: true,
+			});
+		}
+	};
 
 	const handleRowClick = (e) => {
 		dispatch(getAppliedCandidateDetails(e.candidate_id, e.job_id));
-	}
+	};
 
 	useEffect(() => {
-			dispatch(getCandidatesList(jobId));
-			dispatch(getPostedJobs());
+		dispatch(getCandidatesList(jobId));
+		dispatch(getPostedJobs());
 	}, [dispatch]);
-	
+
 	useEffect(() => {
-		const jobTitleTemp = props.postedJobs.map(val => {
-			if(val.job_id == jobId) {
+		const jobTitleTemp = props.postedJobs.map((val) => {
+			if (val.job_id == jobId) {
 				return val.job_title;
 			} else {
 				return "";
@@ -93,143 +111,198 @@ function CandidateList(props) {
 		});
 		setJobTitle(jobTitleTemp);
 	}, [props.postedJobs]);
-	
+
 	useEffect(() => {
 		setCandidateList(props.candidatesList);
 	}, [props.candidatesList]);
 
 	const handleFilterSelect = (option, id, title) => {
-		if(document.getElementById(id).checked) {
-			if(title === "Status") {
-				setSelectedStatus([...selectedStatus,option]);
+		if (document.getElementById(id).checked) {
+			if (title === "Status") {
+				setSelectedStatus([...selectedStatus, option]);
 			}
-			if(title === "Experience") {
-				setSelectedExperience([...selectedExperience,option]);
+			if (title === "Experience") {
+				setSelectedExperience([...selectedExperience, option]);
 			}
-			if(title === "Last Update") {
-				setSelectedLastUpdate([...selectedLastUpdate,option]);
+			if (title === "Last Update") {
+				setSelectedLastUpdate([...selectedLastUpdate, option]);
 			}
-			if(title === "CredReadiness Range") {
-				setSelectedRedinessIndex([...selectedRedinessIndex,option]);
-			}
-		} if(!document.getElementById(id).checked) {
-			if(title === "Status") {
-				setSelectedStatus(selectedStatus.filter(val => val !== option));
-			}
-			if(title === "Experience") {
-				setSelectedExperience(selectedExperience.filter(val => val !== option));
-			}
-			if(title === "Last Update") {
-				setSelectedLastUpdate([selectedLastUpdate.filter(val => val !== option)]);
-			}
-			if(title === "CredReadiness Range") {
-				setSelectedRedinessIndex([selectedRedinessIndex.filter(val => val !== option)]);
+			if (title === "CredReadiness Range") {
+				setSelectedRedinessIndex([...selectedRedinessIndex, option]);
 			}
 		}
-	}
+		if (!document.getElementById(id).checked) {
+			if (title === "Status") {
+				setSelectedStatus(selectedStatus.filter((val) => val !== option));
+			}
+			if (title === "Experience") {
+				setSelectedExperience(
+					selectedExperience.filter((val) => val !== option)
+				);
+			}
+			if (title === "Last Update") {
+				setSelectedLastUpdate(
+					selectedLastUpdate.filter((val) => val !== option)
+				);
+			}
+			if (title === "CredReadiness Range") {
+				setSelectedRedinessIndex(
+					selectedRedinessIndex.filter((val) => val !== option)
+				);
+			}
+		}
+	};
 
 	const handleApplyFilters = () => {
 		setFilterOptions(false);
-		let candidatesListStatusFiltered = selectedStatus.length !== 0 ? props.candidatesList.filter((val) => {
-			for(let i = 0; i < selectedStatus.length; i++) {
-				if(val.status == selectedStatus[i]) {
-					return val;
-				}
-			}
-		}): props.candidatesList;
+		let candidatesListStatusFiltered =
+			selectedStatus.length !== 0
+				? props.candidatesList.filter((val) => {
+						for (let i = 0; i < selectedStatus.length; i++) {
+							if (val.status == selectedStatus[i]) {
+								return val;
+							}
+						}
+				  })
+				: props.candidatesList;
 
-		let candidatesListExpFiltered = selectedExperience.length !== 0 ? candidatesListStatusFiltered.filter((val) => {
-			for(let i = 0; i < selectedExperience.length; i++) {
-				if(selectedExperience[i] == "10+ years") {
-					let exp = val.candidate_experience.substring(0, 2);
-					if(parseInt(exp) >= 10) {
-						return val;
-					}
-				}
-				if(selectedExperience[i] == "6 to 9 years") {
-					let exp = val.candidate_experience.substring(0, 2);
-					if(parseInt(exp) >= 6 && parseInt(exp) <= 9) {
-						return val;
-					}
-				}
-				if(selectedExperience[i] == "3 to 5 years") {
-					let exp = val.candidate_experience.substring(0, 2);
-					if(parseInt(exp) >= 3 && parseInt(exp) <= 5) {
-						return val;
-					}
-				}
-				if(selectedExperience[i] == "0 to 2 years") {
-					let exp = val.candidate_experience.substring(0, 2);
-					if(parseInt(exp) >= 0 && parseInt(exp) <= 2) {
-						return val;
-					}
-				}
-			}
-		}) : candidatesListStatusFiltered;
+		let candidatesListExpFiltered =
+			selectedExperience.length !== 0
+				? candidatesListStatusFiltered.filter((val) => {
+						for (let i = 0; i < selectedExperience.length; i++) {
+							if (selectedExperience[i] == "10+ years") {
+								let exp = val.candidate_experience.substring(0, 2);
+								if (parseInt(exp) >= 10) {
+									return val;
+								}
+							}
+							if (selectedExperience[i] == "6 to 9 years") {
+								let exp = val.candidate_experience.substring(0, 2);
+								if (parseInt(exp) >= 6 && parseInt(exp) <= 9) {
+									return val;
+								}
+							}
+							if (selectedExperience[i] == "3 to 5 years") {
+								let exp = val.candidate_experience.substring(0, 2);
+								if (parseInt(exp) >= 3 && parseInt(exp) <= 5) {
+									return val;
+								}
+							}
+							if (selectedExperience[i] == "0 to 2 years") {
+								let exp = val.candidate_experience.substring(0, 2);
+								if (parseInt(exp) >= 0 && parseInt(exp) <= 2) {
+									return val;
+								}
+							}
+						}
+				  })
+				: candidatesListStatusFiltered;
 
-		let candidatesListLastUpdateFiltered = selectedLastUpdate.length !== 0 ? candidatesListExpFiltered.filter((val) => {
-			for(let i = 0; i < selectedLastUpdate.length; i++) {
-				const today = new Date();
-				if(selectedLastUpdate[i] == "1 Week") {
-					let date = new Date(val.modified_on);
-  					let lastWeek = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 7);
-					if(date >= lastWeek && date <= today)
-					{
-						return val;
-					}
-				}
-				if(selectedLastUpdate[i] == "2 Weeks") {
-					let date = new Date(val.modified_on);
-					let lastWeek = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 7);
-  					let lastTwoWeeks = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 14);
-					if(date >= lastTwoWeeks && date <= lastWeek) {
-						return val;
-					}
-				}
-				if(selectedLastUpdate[i] == "3 Weeks") {
-					let date = new Date(val.modified_on);
-					let lastTwoWeeks = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 14);
-					let lastThreeWeeks = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 21);
-					if(date >= lastThreeWeeks && date <= lastTwoWeeks) {
-						return val;
-					}
-				}
-				if(selectedLastUpdate[i] == "4 Weeks +") {
-					let date = new Date(val.modified_on);
-					let lastFourWeeks = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 28);
-					if(date >= lastFourWeeks) {
-						return val;
-					}
-				}
-			}
-		}) : candidatesListExpFiltered;
+		let candidatesListLastUpdateFiltered =
+			selectedLastUpdate.length !== 0
+				? candidatesListExpFiltered.filter((val) => {
+						for (let i = 0; i < selectedLastUpdate.length; i++) {
+							const today = new Date();
+							if (selectedLastUpdate[i] == "1 Week") {
+								let date = new Date(val.modified_on);
+								let lastWeek = new Date(
+									today.getFullYear(),
+									today.getMonth(),
+									today.getDate() - 7
+								);
+								if (date >= lastWeek && date <= today) {
+									return val;
+								}
+							}
+							if (selectedLastUpdate[i] == "2 Weeks") {
+								let date = new Date(val.modified_on);
+								let lastWeek = new Date(
+									today.getFullYear(),
+									today.getMonth(),
+									today.getDate() - 7
+								);
+								let lastTwoWeeks = new Date(
+									today.getFullYear(),
+									today.getMonth(),
+									today.getDate() - 14
+								);
+								if (date >= lastTwoWeeks && date <= lastWeek) {
+									return val;
+								}
+							}
+							if (selectedLastUpdate[i] == "3 Weeks") {
+								let date = new Date(val.modified_on);
+								let lastTwoWeeks = new Date(
+									today.getFullYear(),
+									today.getMonth(),
+									today.getDate() - 14
+								);
+								let lastThreeWeeks = new Date(
+									today.getFullYear(),
+									today.getMonth(),
+									today.getDate() - 21
+								);
+								if (date >= lastThreeWeeks && date <= lastTwoWeeks) {
+									return val;
+								}
+							}
+							if (selectedLastUpdate[i] == "4 Weeks +") {
+								let date = new Date(val.modified_on);
+								let lastFourWeeks = new Date(
+									today.getFullYear(),
+									today.getMonth(),
+									today.getDate() - 28
+								);
+								if (date >= lastFourWeeks) {
+									return val;
+								}
+							}
+						}
+				  })
+				: candidatesListExpFiltered;
 
-		let candidatesListRedIndexFiltered = selectedRedinessIndex.length !== 0 ? candidatesListLastUpdateFiltered.filter((val) => {
-			for(let i = 0; i < selectedRedinessIndex.length; i++) {
-				if(selectedRedinessIndex[i] == "70 to 100 (Ready)") {
-					if(parseInt(val.readiness_index) >= 71 && parseInt(val.readiness_index) <= 100) {
-						return val;
-					}
-				}
-				if(selectedRedinessIndex[i] == "41 to 70 (Almost Ready)") {
-					if(parseInt(val.readiness_index) >= 41 && parseInt(val.readiness_index) <= 70) {
-						return val;
-					}
-				}
-				if(selectedRedinessIndex[i] == "0 to 40 (Getting Started)") {
-					if(parseInt(val.readiness_index) >= 0 && parseInt(val.readiness_index) <= 40) {
-						return val;
-					}
-				}
-			}
-		}) : candidatesListLastUpdateFiltered;
+		let candidatesListRedIndexFiltered =
+			selectedRedinessIndex.length !== 0
+				? candidatesListLastUpdateFiltered.filter((val) => {
+						for (let i = 0; i < selectedRedinessIndex.length; i++) {
+							if (selectedRedinessIndex[i] == "70 to 100 (Ready)") {
+								if (
+									parseInt(val.readiness_index) >= 71 &&
+									parseInt(val.readiness_index) <= 100
+								) {
+									return val;
+								}
+							}
+							if (selectedRedinessIndex[i] == "41 to 70 (Almost Ready)") {
+								if (
+									parseInt(val.readiness_index) >= 41 &&
+									parseInt(val.readiness_index) <= 70
+								) {
+									return val;
+								}
+							}
+							if (selectedRedinessIndex[i] == "0 to 40 (Getting Started)") {
+								if (
+									parseInt(val.readiness_index) >= 0 &&
+									parseInt(val.readiness_index) <= 40
+								) {
+									return val;
+								}
+							}
+						}
+				  })
+				: candidatesListLastUpdateFiltered;
 
 		setCandidateList(candidatesListRedIndexFiltered);
-	}
+	};
 
 	const handleFreeSearch = (searchString) => {
-		setCandidateList(props.candidatesList.filter(val => val.candidate_name.includes(searchString)));
-	}
+		setCandidateList(
+			props.candidatesList.filter((val) =>
+				val.candidate_name.includes(searchString)
+			)
+		);
+	};
 
 	const [filterOptions, setFilterOptions] = React.useState(false);
 
@@ -374,20 +447,28 @@ function CandidateList(props) {
 		},
 	];
 
-
 	const renderCandidateList = candidateList.map((candidate, i) => {
 		let index = candidate.readiness_index;
 		let crColor = index < 40 ? "red" : index > 70 ? "green" : "yellow";
 		return (
-			<ul key={i} onClick={() => handleRowClick(candidate)}>
+			<ul key={i}>
 				<li>
-					<input className="fancy-toggle" id={`row_${i}`} type="checkbox" />
+					{/* <input className="fancy-toggle" id={`row_${i}`} type="checkbox" /> */}
 					<label htmlFor={`row_${i}`}>
 						<span className="input"></span>
 					</label>
 				</li>
 				<li>
-					<Link to="/jobs/candidate-view">
+					{/* <Link to="/jobs/candidate-view"> */}
+					<Link
+						onClick={() => handleRowClick(candidate)}
+						to={
+							"/jobs/candidate-view/" +
+							candidate.job_id +
+							"/" +
+							candidate.candidate_id
+						}
+					>
 						{/* <img src={faker.image.avatar()} alt="User" /> */}
 						<img src={ImgUser} alt="User" />
 						{candidate.candidate_name}
@@ -411,10 +492,21 @@ function CandidateList(props) {
 					/>
 				</li>
 				<li>
-					<Link className="mail" onClick={() => handleSendEmail(candidate.candidate_id, candidate.email_template_id)}>
+					<Link
+						className="mail"
+						onClick={() =>
+							handleSendEmail(
+								candidate.candidate_id,
+								candidate.email_template_id
+							)
+						}
+					>
 						<img src={ImgMail} alt="Email" />
 					</Link>
-					<Link className="download" onClick={() => handleDownloadClick(candidate)}>
+					<Link
+						className="download"
+						onClick={() => handleDownloadClick(candidate)}
+					>
 						<img src={ImgDownload} alt="Download" />
 					</Link>
 				</li>
@@ -423,18 +515,18 @@ function CandidateList(props) {
 	});
 
 	// console.log(props.candidatesList.length);
-	return (
-		props.loading ? 
-			<Spinner /> :
-			<div className="candidate-list">
-				<div className="top-heading">
-					<h1>
-						{/* Candidates for “Certified Nursing Assistant - in Warren New Jersey” */}
-						{jobTitle}
+	return props.loading ? (
+		<Spinner />
+	) : (
+		<div className="candidate-list">
+			<div className="top-heading">
+				<h1>
+					{/* Candidates for “Certified Nursing Assistant - in Warren New Jersey” */}
+					{jobTitle}
 				</h1>
-					<h3>CredReadiness Index for this job is 75</h3>
-				</div>
-				{/* <div className="search-panel">
+				<h3>CredReadiness Index for this job is 75</h3>
+			</div>
+			{/* <div className="search-panel">
 					<div className="searches">
 						<input type="text" placeholder="Candidate Name" />
 						<Dropdown placeholder={crRange.heading} content="slider" />
@@ -449,65 +541,75 @@ function CandidateList(props) {
 						/>
 					</div>
 				</div> */}
-				<div className="lists-outer">
-					<div className="heading flex">
-						<h2>List of Candidate</h2>
-						{/* <p>Showing Result 1-10 of 200</p> */}
-						<div className="search_filter flex">
-							<Input type="text" placeholder="Search by name/position..." onChange={(e) => handleFreeSearch(e.target.value)}/>
-							<button
-								className="primary-btn blue"
-								onClick={() => setFilterOptions(!filterOptions)}
-							>
-								Filter
+			<div className="lists-outer">
+				<div className="heading flex">
+					<h2>List of Candidate</h2>
+					{/* <p>Showing Result 1-10 of 200</p> */}
+					<div className="search_filter flex">
+						<Input
+							type="text"
+							placeholder="Search by Name"
+							onChange={(e) => handleFreeSearch(e.target.value)}
+						/>
+						<button
+							className="primary-btn blue"
+							onClick={() => setFilterOptions(!filterOptions)}
+						>
+							Filter
 						</button>
-							<div className={`options ${filterOptions ? "on" : "off"}`}>
-								<div className="listing">
-									{filtersList.map((filter, i) => {
-										let trimTitle = filter.title.replace(/ /g, "");
-										return (
-											<ul key={i}>
-												<li>{filter.title}</li>
-												{filter.options.map((option, i) => {
-													return (
-														<li key={i}>
-															<input
-																id={`${trimTitle}_${i}`}
-																type="checkbox"
-																className="fancy-toggle blue"
-																onChange={() => handleFilterSelect(option, `${trimTitle}_${i}`, filter.title)}
-															/>
-															<label htmlFor={`${trimTitle}_${i}`}>
-																<span className="input"></span>
-																{option}
-															</label>
-														</li>
-													);
-												})}
-											</ul>
-										);
-									})}
-								</div>
-								<div className="cta">
-									<button
-										className="primary-btn blue outline"
-										onClick={() => setFilterOptions(false)}
-									>
-										Cancel
+						<div className={`options ${filterOptions ? "on" : "off"}`}>
+							<div className="listing">
+								{filtersList.map((filter, i) => {
+									let trimTitle = filter.title.replace(/ /g, "");
+									return (
+										<ul key={i}>
+											<li>{filter.title}</li>
+											{filter.options.map((option, i) => {
+												return (
+													<li key={i}>
+														<input
+															id={`${trimTitle}_${i}`}
+															type="checkbox"
+															className="fancy-toggle blue"
+															onChange={() =>
+																handleFilterSelect(
+																	option,
+																	`${trimTitle}_${i}`,
+																	filter.title
+																)
+															}
+														/>
+														<label htmlFor={`${trimTitle}_${i}`}>
+															<span className="input"></span>
+															{option}
+														</label>
+													</li>
+												);
+											})}
+										</ul>
+									);
+								})}
+							</div>
+							<div className="cta">
+								<button
+									className="primary-btn blue outline"
+									onClick={() => setFilterOptions(false)}
+								>
+									Cancel
 								</button>
-									<button
-										className="primary-btn blue"
-										onClick={() => handleApplyFilters()}
-									>
-										Done
+								<button
+									className="primary-btn blue"
+									onClick={() => handleApplyFilters()}
+								>
+									Done
 								</button>
-								</div>
 							</div>
 						</div>
 					</div>
-					{props.candidatesList.length > 0 ?
+				</div>
+				{props.candidatesList.length > 0 ? (
 					<>
-					 {/* <div className="actions">
+						{/* <div className="actions">
 						<div className="left">
 							<Link onClick={handleSendEmail} >Send Email</Link>
 								&nbsp;&nbsp;{" |  "}&nbsp;&nbsp;
@@ -524,57 +626,51 @@ function CandidateList(props) {
 						</label>
 						</div>
 					</div> */}
-					<ul className="lists">
-						<li className="list">
-							<ul className="head">
-								<li>
-									<input className="fancy-toggle" id="1" type="checkbox" />
-									<label htmlFor="1">
-										<span className="input"></span>
-									</label>
-								</li>
-								<li>
-									<img src={ImgUser} alt="User" />
-										Name <SortIcon active="up" />
-								</li>
-								<li>
-									Current Position <SortIcon />
-								</li>
-								<li>
-									Exp (in years) <SortIcon />
-								</li>
-								<li>
-									CredReadiness <SortIcon />
-								</li>
-								<li>
-									Current Organization <SortIcon />
-								</li>
-								<li>
-									Last Update <SortIcon />
-								</li>
-								<li>
-									Status <SortIcon />
-								</li>
-								<li>Action</li>
-							</ul>
-							{renderCandidateList}
-						</li>
-					</ul>
-					</>  : <p>No candidates found for this job </p>}
-				</div>
-				{/* <Pagination /> */}
+						<ul className="lists">
+							<li className="list">
+								<ul className="head">
+									<li>
+										{/* <input className="fancy-toggle" id="1" type="checkbox" /> */}
+										<label htmlFor="1">
+											<span className="input"></span>
+										</label>
+									</li>
+									<li>
+										<img src={ImgUser} alt="User" />
+										Name
+										{/* <SortIcon active="up" /> */}
+									</li>
+									<li>
+										Current Position
+										{/* <SortIcon /> */}
+									</li>
+									<li>Exp (in years)</li>
+									<li>CredReadiness</li>
+									<li>Current Organization</li>
+									<li>Last Update</li>
+									<li>Status</li>
+									<li>Action</li>
+								</ul>
+								{renderCandidateList}
+							</li>
+						</ul>
+					</>
+				) : (
+					<p>No candidates found for this job </p>
+				)}
 			</div>
-		// )
-
+			{/* <Pagination /> */}
+		</div>
 	);
+	// )
 }
 
 function mapStateToProps(state) {
 	return {
 		candidatesList: state.employerReducer.candidatesList.data,
 		postedJobs: state.employerReducer.postedJobs.data,
-		loading: state.commonReducer.apiCallsInProgress
-	}
+		loading: state.commonReducer.apiCallsInProgress,
+	};
 }
 
 // export default CandidateList;

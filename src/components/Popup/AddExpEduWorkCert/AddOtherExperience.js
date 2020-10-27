@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import DatePicker from "react-datepicker";
+import CustomDatePicker from "../../_Elements/CustomDatePicker";
 import { useDispatch, useSelector } from "react-redux";
 
 import "./AddExpEduWorkCert.scss";
 import Input from "../../_Elements/Input";
 import Dropdown from "../../_Elements/Dropdown";
+import InputDropdown from "../../_Elements/InputDropdown";
 import Textarea from "../../_Elements/Textarea";
 import {
 	toggleOverlay,
@@ -81,18 +83,20 @@ function AddOtherExperience() {
 			console.log("submitting form...");
 
 			var obj = {
-				experienceType: formData.description[0],
+				// experienceType: formData.experienceType[0],
+				experienceType: 1,
 				organizationName: formData.organizationName[0],
 				title: formData.title[0],
 				from: formatDate(formData.startDate[0]),
 				to: formatDate(formData.endDate[0]),
 				location: formData.location[0],
 				description: formData.description[0],
-				skills: [],
+				// skills: [],
 				careerPath: "work",
 			};
-			if (info.id) {
-				obj.id = info.id
+
+			if (info) {
+				obj.id = info.id;
 			}
 
 			dispatch(addOtherWorkExperience(obj));
@@ -105,6 +109,8 @@ function AddOtherExperience() {
 
 	const handleFieldChange = (field, value) => {
 		let msg = value === "" || value === null ? "Required" : "";
+
+		console.log(field, value);
 
 		let arr = [];
 		arr[0] = value;
@@ -155,7 +161,7 @@ function AddOtherExperience() {
 							Required
 						</span>
 					</label>
-					<Dropdown
+					<InputDropdown
 						id="experienceType"
 						placeholder={experienceType.heading}
 						selected={experienceType.content[formData.experienceType[0]]}
@@ -165,7 +171,7 @@ function AddOtherExperience() {
 				</li>
 				<li>
 					<label htmlFor="organisationName">
-						Organisation Name <span>*</span>
+						Organization Name <span>*</span>
 						<span
 							className={`error-text ${!formData.organizationName[1] && "hidden"
 								}`}
@@ -206,7 +212,7 @@ function AddOtherExperience() {
 					</label>
 					<div className="date-outer">
 						<div className="date">
-							<DatePicker
+							<CustomDatePicker
 								selected={startDate}
 								placeholderText="Start Date"
 								id="startDate"
@@ -218,8 +224,9 @@ function AddOtherExperience() {
 						</div>
 						<span>to</span>
 						<div className="date">
-							<DatePicker
+							<CustomDatePicker
 								selected={endDate}
+								minDate={startDate}
 								placeholderText="End Date"
 								id="endDate"
 								onChange={(date) => {

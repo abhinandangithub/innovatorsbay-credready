@@ -1,5 +1,6 @@
 import React from "react";
 import DatePicker from "react-datepicker";
+import CustomDatePicker from "../../../_Elements/CustomDatePicker";
 
 import { isAnswer } from "./index";
 import { findIndex } from "./index";
@@ -56,7 +57,7 @@ function GeneralQuestions({ data, onchange, calHeight, noHeading }) {
 						</h2>
 						<div className="info">
 							<label>When you applied?</label>
-							<DatePicker
+							<CustomDatePicker
 								selected={appliedDate}
 								placeholderText="Select Date"
 								onChange={(date) => {

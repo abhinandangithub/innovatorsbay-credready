@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
-import { useDispatch } from 'react-redux';
+import { useDispatch } from "react-redux";
 
 import "./index.scss";
-import Dropdown from "../../_Elements/Dropdown";
+import InputDropdown from "../../_Elements/InputDropdown";
 import CustomDatePicker from "../../_Elements/CustomDatePicker";
 import { clearSelectedJobs } from "../../../store/actions/employer";
 
@@ -21,9 +21,12 @@ function Dashboard() {
 
 	useEffect(() => {
 		dispatch(clearSelectedJobs());
-	},[dispatch]);
+	}, [dispatch]);
 
 	const recruitmentFunnel = {
+		credits: {
+			enabled: false,
+		},
 		chart: {
 			type: "bar",
 		},
@@ -83,37 +86,38 @@ function Dashboard() {
 
 		tooltip: {
 			formatter: function () {
-				return (
-					"<b>" +
-					this.series.name +
-					", age " +
-					this.point.category +
-					"</b><br/>" +
-					"Population: " +
-					Highcharts.numberFormat(Math.abs(this.point.y), 1) +
-					"%"
-				);
+				return "<b>" + this.series.name + ", age " + this.point.category;
 			},
 		},
 
 		series: [
 			{
-				name: "Male",
+				name: "Get Started",
 				data: [-2.2, -2.1, -2.2, -2.4, -2.7],
+				color: "#ebf5ec",
 			},
 			{
-				name: "Female",
+				name: "Ready",
 				data: [2.1, 2.0, 2.1, 2.3, 2.6],
+				color: "#469a34",
+			},
+			{
+				name: "Almost Ready",
+				data: [2.1, 2.0, 2.1, 2.3, 2.6],
+				color: "#afd5ad",
 			},
 		],
 	};
 	const applicationsRecieved = {
+		credits: {
+			enabled: false,
+		},
 		title: {
 			text: "",
 		},
 		yAxis: {
 			title: {
-				text: "Number of Employees",
+				text: "",
 			},
 		},
 
@@ -172,7 +176,7 @@ function Dashboard() {
 		},
 		yAxis: {
 			title: {
-				text: "Number of Employees",
+				text: "Conversion Rate (in %)",
 			},
 		},
 
@@ -230,6 +234,9 @@ function Dashboard() {
 		},
 	};
 	const applicationsBySource = {
+		credits: {
+			enabled: false,
+		},
 		chart: {
 			type: "column",
 		},
@@ -237,12 +244,19 @@ function Dashboard() {
 			text: "",
 		},
 		xAxis: {
-			categories: ["Apples", "Oranges", "Pears", "Grapes", "Bananas"],
+			categories: ["May", "Jun", "Jul", "Aug", "Sep"],
+			// categories: [
+			// 	"Social Media",
+			// 	"Word of Mouth",
+			// 	"Job Board",
+			// 	"Website",
+			// 	"Others",
+			// ],
 		},
 		yAxis: {
 			min: 0,
 			title: {
-				text: "Total fruit consumption",
+				text: "Number of Applications",
 			},
 			stackLabels: {
 				enabled: true,
@@ -256,18 +270,19 @@ function Dashboard() {
 				},
 			},
 		},
-		legend: {
-			align: "right",
-			x: -30,
-			verticalAlign: "top",
-			y: 25,
-			floating: true,
-			backgroundColor:
-				Highcharts.defaultOptions.legend.backgroundColor || "white",
-			borderColor: "#CCC",
-			borderWidth: 1,
-			shadow: false,
-		},
+		// legend: {
+		// 	align: "right",
+		// 	x: -30,
+		// 	verticalAlign: "top",
+		// 	y: 25,
+		// 	floating: true,
+		// 	backgroundColor:
+		// 		Highcharts.defaultOptions.legend.backgroundColor || "white",
+		// 	borderColor: "#CCC",
+		// 	borderWidth: 1,
+		// 	shadow: false,
+		// 	enabled: true,
+		// },
 		tooltip: {
 			headerFormat: "<b>{point.x}</b><br/>",
 			pointFormat: "{series.name}: {point.y}<br/>Total: {point.stackTotal}",
@@ -276,26 +291,37 @@ function Dashboard() {
 			column: {
 				stacking: "normal",
 				dataLabels: {
-					enabled: true,
+					enabled: false,
 				},
 			},
 		},
 		series: [
 			{
-				name: "John",
+				name: "Social Media",
 				data: [5, 3, 4, 7, 2],
 			},
 			{
-				name: "Jane",
+				name: "WOM",
 				data: [2, 2, 3, 2, 1],
 			},
 			{
-				name: "Joe",
+				name: "Job Board",
 				data: [3, 4, 4, 2, 5],
+			},
+			{
+				name: "Website",
+				data: [5, 3, 4, 7, 2],
+			},
+			{
+				name: "Others",
+				data: [2, 2, 3, 2, 1],
 			},
 		],
 	};
 	const applicantsAverage = {
+		credits: {
+			enabled: false,
+		},
 		chart: {
 			type: "column",
 		},
@@ -305,14 +331,14 @@ function Dashboard() {
 		},
 
 		xAxis: {
-			categories: ["Apples", "Oranges", "Pears", "Grapes", "Bananas"],
+			categories: ["Certified Nursing Assistant", "Personal Care Aid"],
 		},
 
 		yAxis: {
 			allowDecimals: false,
 			min: 0,
 			title: {
-				text: "Number of fruits",
+				text: "Number of Applications",
 			},
 		},
 
@@ -340,28 +366,31 @@ function Dashboard() {
 
 		series: [
 			{
-				name: "John",
-				data: [5, 3, 4, 7, 2],
+				name: "Immediate",
+				data: [5, 3],
 				stack: "male",
 			},
 			{
-				name: "Joe",
-				data: [3, 4, 4, 2, 5],
+				name: "<15 Days",
+				data: [3, 4],
 				stack: "male",
 			},
 			{
-				name: "Jane",
-				data: [2, 5, 6, 2, 1],
+				name: "<30 Days",
+				data: [2, 5],
 				stack: "female",
 			},
 			{
-				name: "Janet",
-				data: [3, 0, 4, 4, 3],
+				name: ">30 Days",
+				data: [3, 0],
 				stack: "female",
 			},
 		],
 	};
 	const jobPosts1 = {
+		credits: {
+			enabled: false,
+		},
 		chart: {
 			type: "areaspline",
 		},
@@ -378,6 +407,7 @@ function Dashboard() {
 			borderWidth: 1,
 			backgroundColor:
 				Highcharts.defaultOptions.legend.backgroundColor || "#FFFFFF",
+			enabled: false,
 		},
 		xAxis: {
 			categories: [
@@ -400,15 +430,12 @@ function Dashboard() {
 		},
 		yAxis: {
 			title: {
-				text: "Fruit units",
+				text: "Number of Applications",
 			},
 		},
 		tooltip: {
 			shared: true,
 			valueSuffix: " units",
-		},
-		credits: {
-			enabled: false,
 		},
 		plotOptions: {
 			areaspline: {
@@ -417,16 +444,19 @@ function Dashboard() {
 		},
 		series: [
 			{
-				name: "John",
+				name: "Email",
 				data: [3, 4, 3, 5, 4, 10, 12],
 			},
 			{
-				name: "Jane",
+				name: "Hired",
 				data: [1, 3, 4, 3, 3, 5, 4],
 			},
 		],
 	};
 	const jobPosts2 = {
+		credits: {
+			enabled: false,
+		},
 		chart: {
 			type: "area",
 		},
@@ -438,10 +468,7 @@ function Dashboard() {
 			text: "",
 		},
 		subtitle: {
-			text:
-				'Sources: <a href="https://thebulletin.org/2006/july/global-nuclear-stockpiles-1945-2006">' +
-				'thebulletin.org</a> &amp; <a href="https://www.armscontrol.org/factsheets/Nuclearweaponswhohaswhat">' +
-				"armscontrol.org</a>",
+			text: "",
 		},
 		xAxis: {
 			allowDecimals: false,
@@ -456,7 +483,7 @@ function Dashboard() {
 		},
 		yAxis: {
 			title: {
-				text: "Nuclear weapon states",
+				text: "Number of Applications",
 			},
 			labels: {
 				formatter: function () {
@@ -467,6 +494,7 @@ function Dashboard() {
 		tooltip: {
 			pointFormat:
 				"{series.name} had stockpiled <b>{point.y:,.0f}</b><br/>warheads in {point.x}",
+			enabled: false,
 		},
 		plotOptions: {
 			area: {
@@ -485,7 +513,7 @@ function Dashboard() {
 		},
 		series: [
 			{
-				name: "USA",
+				name: "Old",
 				data: [
 					null,
 					null,
@@ -568,7 +596,7 @@ function Dashboard() {
 				],
 			},
 			{
-				name: "USSR/Russia",
+				name: "New",
 				data: [
 					null,
 					null,
@@ -689,7 +717,19 @@ function Dashboard() {
 			<div className="filters flex">
 				<div className="left flex">
 					<h3>Show Metrics For</h3>
-					<Dropdown placeholder={metrics.heading} content={metrics.content} />
+					<InputDropdown
+						placeholder={metrics.heading}
+						content={metrics.content}
+						id="metrics"
+					/>
+					{/* <InputDropdown
+								placeholder={joiningDuration.heading}
+								content={joiningDuration.content}
+								selected={formData.joiningDuration[0]}
+								onchange={(value) =>
+									handleFieldChange("joiningDuration", value)
+								}
+							/> */}
 				</div>
 				<div className="right flex">
 					<h3>Duration</h3>

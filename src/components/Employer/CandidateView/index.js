@@ -1,5 +1,5 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Link, useParams } from "react-router-dom";
 
 import "./index.scss";
 import ImgUserPlaceholder from "../../../assets/user-placeholder.jpg";
@@ -7,119 +7,191 @@ import CredReadyIndex from "../../_Elements/CredReadyIndex";
 import ImgWidget2 from "../../../assets/widget-2.jpg";
 import JobSpecificQuestions from "../../Candidate/Jobs/JobSpecificQuestions";
 import Accordion from "../../_Elements/Accordion";
+import { connect, useDispatch } from 'react-redux';
+import { getAppliedCandidateDetails } from '../../../store/thunks/employer';
+import { useToasts } from "react-toast-notifications";
+import Spinner from "../../_Elements/Spinner";
+import MarginalAssociation from "../../_Elements/Charts/MarginalAssociation";
+import { sendEmail } from '../../../store/thunks/employer';
 
-function CandidateView() {
+
+function CandidateView(props) {
+	const dispatch = useDispatch();
+	const [job, setJob] = useState(undefined);
+	let { jobId, candidateId } = useParams();
+
+	const { addToast } = useToasts();
+
+	useEffect(() => {
+		dispatch(getAppliedCandidateDetails(candidateId, jobId));
+	}, [dispatch]);
+
+	useEffect(() => {
+		console.log('appliedCandidateDetails ', jobId, candidateId, props.job);
+		setJob(props.job);
+	}, [dispatch, props.job]);
+
+	const handleSendEmail = () => {
+		dispatch(sendEmail({
+			"candidateId": candidateId,
+			"emailTemplateId": job.jobDetails.emailTemplateId,
+			"job_id": jobId
+		}));
+	}
+
+	const handleDownloadClick = () => {
+		console.log('url ', job.candidate.resume_path);
+		if (job.candidate.resume_path) {
+			fetch(job.candidate.resume_path)
+				.then(response => {
+					response.blob().then(blob => {
+						let url = window.URL.createObjectURL(blob);
+						let a = document.createElement('a');
+						a.href = url;
+						a.download = job.candidate.resume_name || 'resume.pdf';
+						a.click();
+					});
+				});
+		} else {
+			addToast("Could not find resume", {
+				appearance: "warning",
+				autoDismiss: true,
+			});
+		}
+	}
+
 	return (
-		<div className="candidate-view">
-			<div className="common-heading-button flex">
-				<h1 className="heading">Candidate View</h1>
-				<Link to="/" className="btn">
-					Download Resume
+		props.loading || job === undefined ?
+			<Spinner /> :
+			<div className="candidate-view">
+				<div className="common-heading-button flex">
+					<h1 className="heading">Candidate View</h1>
+					<Link className="btn" onClick={() => handleDownloadClick()}>
+						Download Resume
 				</Link>
-			</div>
-			<div className="main-info">
-				<div className="top flex">
-					<div className="left">
-						<img src={ImgUserPlaceholder} alt="UserName" />
+				</div>
+				<div className="main-info">
+					<div className="top flex">
+						<div className="left">
+							<img src={ImgUserPlaceholder} alt="UserName" />
+						</div>
+						<div className="right">
+							<h2>{job.candidate.first_name} {job.candidate.last_name}</h2>
+							<h3>Certified Nursing Assistant</h3>
+							<ul className="flex">
+								<li>{job.candidate.contacts[1].contact}</li>
+								<li>{job.candidate.contacts[0].contact}</li>
+								<li>{job.candidate.address.city}</li>
+
+								<li>{job.candidate.exp_in_years}</li>
+								<li>{job.candidate.job_distance || "**" } </li>
+								<li>{job.candidate.address.street_address}</li>
+							</ul>
+						</div>
 					</div>
-					<div className="right">
-						<h2>Your Name</h2>
-						<h3>Certified Nursing Assistant</h3>
-						<ul className="flex">
-							<li>212-639-9675</li>
-							<li>marryjane123@gmail.com</li>
-							<li>New York</li>
-							<li>2 years</li>
-							<li>5 miles </li>
-							<li>ABC STAFFING COMPANY</li>
+					<div className="bottom">
+						{/* <ul className="common-skills-list">
+							<li>Skills: </li>
+							<li>Helping with meals</li>
+							<li>Transferring using assistive devices</li>
+							<li>Grooming</li>
+							<li>Bathing</li>
+							<li>Changing diapers</li>
+							<li>Dressing</li>
+						</ul> */}
+						<ul className="common-skills-list">
+							<li>Certificates: </li>
+							{!!job.candidate.certificate &&
+								job.candidate.certificate.length &&
+								job.candidate.certificate.map((val, i) => {
+									return <li key={i}>{val.certificate_title.title_name}</li>;
+								})}
 						</ul>
 					</div>
 				</div>
-				<div className="bottom">
-					<ul className="common-skills-list">
-						<li>Skills: </li>
-						<li>Helping with meals</li>
-						<li>Transferring using assistive devices</li>
-						<li>Grooming</li>
-						<li>Bathing</li>
-						<li>Changing diapers</li>
-						<li>Dressing</li>
-					</ul>
-				</div>
-			</div>
-			<div className="widgets flex">
-				<div className="widget">
-					<div className="heading">CreadReadiness Index</div>
-					<div className="content">
-						<CredReadyIndex index="80" noHeading noSubHeading />
-						{/* <img src={ImgWidget1} alt="" /> */}
+				<div className="widgets flex">
+					<div className="widget">
+						<div className="heading">CreadReadiness Index</div>
+						<div className="content">
+							<CredReadyIndex index={job.candidateJobApplication.readiness_index} noHeading noSubHeading />
+							{/* <img src={ImgWidget1} alt="" /> */}
+						</div>
+					</div>
+					<div className="widget">
+						<div className="heading">
+							Top 5 contributors to the CredReadiness Index
+					</div>
+						{job.candidateJobApplication.marginal_associations && job.candidateJobApplication.marginal_associations.length &&
+							<div className="content">
+								{/* <CredReadyIndex index="80" /> */}
+								{/* <img src={ImgWidget2} alt="" /> */}
+								<MarginalAssociation
+									titles={job.candidateJobApplication.marginal_associations.map((j) => {
+										return j.metric;
+									})}
+									values={job.candidateJobApplication.marginal_associations.map((j) => {
+										return j.score;
+									})} />
+							</div>
+						}
 					</div>
 				</div>
-				<div className="widget">
-					<div className="heading">
-						Top 5 contributors to the CredReadiness Index
-					</div>
-					<div className="content">
-						{/* <CredReadyIndex index="80" /> */}
-						<img src={ImgWidget2} alt="" />
-					</div>
+				<Accordion className="blank" type="blank">
+					{job.candidate.work_experience.map((j) => {
+						return (
+							<div>
+								<ul className="info flex for-click">
+									<li>
+										Title : <span>{j.title}</span>
+									</li>
+									<li>
+										Duration : <span>{new Date(j.employment_from).toDateString()} - {new Date(j.employment_to).toDateString()}</span>
+									</li>
+									<li>
+										Organizatioin : <span>{j.company}</span>
+									</li>
+								</ul>
+								<ul className="info flex">
+									{/* <li>
+										Industry : <span>Homecare / hospitality</span>
+									</li>
+									<li>
+										Function : <span>Certified Nursing Assistant / Nursing Staff</span>
+									</li> */}
+									<li className="full">
+										Description :{" "}
+										<span>
+											{j.job_description}
+										</span>
+									</li>
+									<li>
+										Supervisor Name : <span>{j.workex_verification.supervisor_name}</span>
+									</li>
+									<li>
+										Supervisor Phone Number : <span>{j.workex_verification.phone}</span>
+									</li>
+								</ul>
+							</div>
+						)
+					})}
+				</Accordion>
+				<JobSpecificQuestions questions={job.submittedAnswer.employerQuestions} />
+				<div className="cta flex">
+					<p>
+						Applied on : <span>{new Date(job.candidate.created_on).toDateString()}</span>
+					</p>
+					<button className="primary-btn" onClick={() => handleSendEmail()}>Send Email</button>
 				</div>
 			</div>
-			<Accordion className="blank" type="blank">
-				<ul className="info flex for-click">
-					<li>
-						Title : <span>Certified Nursing Assistant</span>
-					</li>
-					<li>
-						Duration : <span>Jan 2019 - Present</span>
-					</li>
-					<li>
-						Organizatioin : <span>Trumbull Regional Medical Center</span>
-					</li>
-				</ul>
-				<ul className="info flex">
-					<li>
-						Industry : <span>Homecare / hospitality</span>
-					</li>
-					<li>
-						Function : <span>Certified Nursing Assistant / Nursing Staff</span>
-					</li>
-					<li className="full">
-						Description :{" "}
-						<span>
-							Reliable, service-focused nursing professional with excellent
-							patient-care and charting skills gained through five years of
-							experience as a CNA. Compassionate and technically skilled in
-							attending to patients in diverse healthcare settings. BLS and CPR
-							certified (current). We strongly recommend that your first
-							paragraph be a short, 2-3 sentence introduction to your company.
-							Tell your prospective CNA job candidate about your unique company
-							and what you have to offer new hires. You want to talk about your
-							value proposition to employees that sets you apart from other
-							companies.Reliable, service-focused nursing professional with
-							excellent patient-care and charting skills gained through five
-							years of experience as a CNA. Compassionate and technically
-							skilled in attending to patients in diverse healthcare settings.
-							BLS and CPR certified (current).
-						</span>
-					</li>
-					<li>
-						Supervisor Name : <span>John Robert</span>
-					</li>
-					<li>
-						Supervisor Phone Number : <span>212-645-6754</span>
-					</li>
-				</ul>
-			</Accordion>
-			<JobSpecificQuestions />
-			<div className="cta flex">
-				<p>
-					Applied on : <span>20 June 2020</span>
-				</p>
-				<button className="primary-btn">Send Email</button>
-			</div>
-		</div>
 	);
 }
 
-export default CandidateView;
+function mapStateToProps(state) {
+	return {
+		loading: state.commonReducer.apiCallsInProgress,
+		job: state.employerReducer.appliedCandidateDetails.data
+	}
+}
+
+// export default CandidateList;
+export default connect(mapStateToProps)(CandidateView);

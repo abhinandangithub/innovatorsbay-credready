@@ -49,7 +49,7 @@ function Popup(props) {
 			case "phoneOtp":
 				return <VerifyPhone />;
 			case "delete":
-				return <Delete what={info.what} />;
+				return <Delete />;
 			case "certificate":
 				return <Certificate certificate={info.certificate} />;
 			case "addWorkExperience":
@@ -65,9 +65,17 @@ function Popup(props) {
 			case "addStrength":
 				return <AddStrength heading={info.heading} />;
 			case "createEmailTemplate":
-				return <CreateEmailTemplate />;
+				return <CreateEmailTemplate
+					info={info}
+				/>;
 			case "createNewQuestion":
-				return <CreateNewQuestion type={info.type} action={info.action} data={info.question} />;
+				return (
+					<CreateNewQuestion
+						type={info.type}
+						action={info.action}
+						data={info.question}
+					/>
+				);
 			case "choosePrivateQuestions":
 				return <ChoosePrivateQuestions />;
 			case "choosePublicQuestions":

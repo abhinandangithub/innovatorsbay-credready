@@ -11,7 +11,7 @@ function CommuteQuestions({ data, onchange, calHeight, noHeading, ...props }) {
 		if (calHeight) {
 			calHeight(parent.current.clientHeight);
 		}
-	}, [props]);
+	}, []);
 
 	const addAdress = () => {
 		let _addressCount = [...addressCount];
@@ -27,8 +27,8 @@ function CommuteQuestions({ data, onchange, calHeight, noHeading, ...props }) {
 					<h2>Commute Questions</h2>
 				</div>
 			) : (
-				""
-			)}
+					""
+				)}
 			<div className="content">
 				<ul className="general-questions">
 					<li className="general-question">
@@ -76,7 +76,7 @@ function CommuteQuestions({ data, onchange, calHeight, noHeading, ...props }) {
 								<span className="input"></span>No
 							</label>
 						</div>
-						{isAnswer(data, 2, 1) && (
+						{isAnswer(data, 2, 1) && findIndex(data, 3) >= 0 && (
 							<ul className="level_2">
 								<li>Please enter the addresses of your other Jobs.</li>
 								{addressCount.map((address, i) => {

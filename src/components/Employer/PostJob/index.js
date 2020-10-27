@@ -94,7 +94,7 @@ Maintains patient stability by checking vital signs and weight; testing urine an
 Provides patient comfort by utilizing resources and materials; transporting patients; answering patients’ call lights and requests; and reporting observations of the patient to nursing supervisor.
 Documents actions by completing forms, reports, logs, and records.
 Maintains work operations by following policies and procedures.
-Protects organisation’s value by keeping patient information confidential.
+Protects organization’s value by keeping patient information confidential.
 Serves and protects the hospital community by adhering to professional standards, hospital policies and procedures; federal, state, and local requirements; and jcaho standards.
 Updates job knowledge by participating in educational opportunities, reading professional publications, participating in professional organisations, and maintaining licensure.
 Enhances nursing department and hospital reputation by accepting ownership for accomplishing new and different requests; and exploring opportunities to add value to job accomplishments."

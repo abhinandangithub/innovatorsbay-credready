@@ -1,11 +1,12 @@
 import React, { useState, useRef } from "react";
 import DatePicker from "react-datepicker";
+import CustomDatePicker from "../../_Elements/CustomDatePicker";
 import { useDispatch, connect, useSelector } from "react-redux";
 
 import "./AddExpEduWorkCert.scss";
 import Input from "../../_Elements/Input";
 import Textarea from "../../_Elements/Textarea";
-import Dropdown from "../../_Elements/Dropdown";
+import InputDropdown from "../../_Elements/InputDropdown";
 import {
 	toggleOverlay,
 	togglePopup,
@@ -39,7 +40,7 @@ const issuer = {
 	content: ["Issuer 1", "Issuer 2", "Issuer 3", "No Issuer"],
 };
 
-function AddCertificate({ addEducationCertificate }) {
+function AddCertificate() {
 	const dispatch = useDispatch();
 	const [issueDate, setIssueDate] = useState();
 	const [errorMessage, setErrorMessage] = useState(null);
@@ -142,8 +143,8 @@ function AddCertificate({ addEducationCertificate }) {
 				issuer: formData.issuer[0],
 				title: formData.title[0],
 			};
-			if (info.id) {
-				obj.id = info.id
+			if (info) {
+				obj.id = info.id;
 			}
 
 			dispatch(addEducationCertificate(obj));
@@ -165,6 +166,7 @@ function AddCertificate({ addEducationCertificate }) {
 			...formData,
 			[field]: arr,
 		});
+		console.log("AllIndustries.........", AllIndustries);
 	};
 
 	React.useEffect(() => {
@@ -200,6 +202,7 @@ function AddCertificate({ addEducationCertificate }) {
 		return "working on";
 	};
 
+	console.log();
 	return (
 		<div className="add-ex-ed-cert">
 			{info && info.purpose === "edit" ? (
@@ -216,7 +219,7 @@ function AddCertificate({ addEducationCertificate }) {
 							Required
 						</span>
 					</label>
-					<Dropdown
+					<InputDropdown
 						placeholder={industry.heading}
 						content={
 							AllIndustries.length > 0
@@ -226,7 +229,16 @@ function AddCertificate({ addEducationCertificate }) {
 								}))
 								: ""
 						}
-						selected={formData.industry[0]}
+						search_term="industry_name"
+						selected={
+							AllIndustries &&
+							AllIndustries[
+							findIndexOfObjInArr(AllIndustries, "id", formData.industry[0])
+							] &&
+							AllIndustries[
+								findIndexOfObjInArr(AllIndustries, "id", formData.industry[0])
+							].industry_name
+						}
 						/**
 						 * TODO: Not working as expected for all cases
 						 */
@@ -249,21 +261,29 @@ function AddCertificate({ addEducationCertificate }) {
 							Required
 						</span>
 					</label>
-					<Dropdown
+					<InputDropdown
 						placeholder={title.heading}
 						content={
 							AllTitles.length > 0
 								? AllTitles.map((val) => ({ val: val.title_name, id: val.id }))
 								: ""
 						}
-						selected={formData.title[0]}
+						search_term="title_name"
+						selected={
+							AllTitles &&
+							AllTitles[
+							findIndexOfObjInArr(AllTitles, "id", formData.title[0])
+							] &&
+							AllTitles[findIndexOfObjInArr(AllTitles, "id", formData.title[0])]
+								.industry_name
+						}
 						id="title"
 						onchange={(value) => handleFieldChange("title", value)}
 					/>
 				</li>
 				<li>
 					<label>Function</label>
-					<Dropdown
+					<InputDropdown
 						placeholder={functions.heading}
 						content={
 							AllFunctions.length > 0
@@ -273,8 +293,17 @@ function AddCertificate({ addEducationCertificate }) {
 								}))
 								: ""
 						}
+						search_term="function_name"
 						id="function"
-						selected={formData.function[0]}
+						selected={
+							AllFunctions &&
+							AllFunctions[
+							findIndexOfObjInArr(AllFunctions, "id", formData.function[0])
+							] &&
+							AllFunctions[
+								findIndexOfObjInArr(AllFunctions, "id", formData.function[0])
+							].industry_name
+						}
 						onchange={(value) => handleFieldChange("function", value)}
 					/>
 				</li>
@@ -302,7 +331,7 @@ function AddCertificate({ addEducationCertificate }) {
 					</label>
 					<div className="date-outer">
 						<div className="date">
-							<DatePicker
+							<CustomDatePicker
 								selected={issueDate}
 								placeholderText="Issue Date"
 								id="issueDate"
@@ -315,7 +344,12 @@ function AddCertificate({ addEducationCertificate }) {
 					</div>
 				</li>
 				<li>
-					<label>Certificate Link</label>
+					<label>Certificate Link<span>*</span>
+						<span
+							className={`error-text ${!formData.certificateLink[1] && "hidden"}`}
+						>
+							Required
+						</span></label>
 					<Input
 						type="text"
 						id="certificateLink"

@@ -7,6 +7,7 @@ import {
 	getProfileThunk,
 	getHiringNeedsThunk,
 	getCompanySizeThunk,
+	getGeographyThunk
 } from "../../../../store/thunks/employer";
 import Spinner from "../../../_Elements/Spinner";
 
@@ -20,6 +21,7 @@ function View(props) {
 		dispatch(getProfileThunk());
 		dispatch(getHiringNeedsThunk());
 		dispatch(getCompanySizeThunk());
+		dispatch(getGeographyThunk());
 	}, [dispatch]);
 
 	return (

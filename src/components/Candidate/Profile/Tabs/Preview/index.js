@@ -1,19 +1,45 @@
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPen, faTrash } from "@fortawesome/free-solid-svg-icons";
-import { connect } from "react-redux";
+import { connect, useSelector, useDispatch } from "react-redux";
 
 import "./index.scss";
 import { Link } from "react-router-dom";
-import { fetchCandidateDetails, fetchCandidateCurrentStatus, fetchCandidateInstituteType } from "../../../../../modals/candidateProfile/thunk";
-import { setCandidateInstitutionType } from "../../../../../modals/candidateProfile/actions";
+import {
+	fetchCandidateDetails,
+	fetchCandidateCurrentStatus,
+	fetchAllCertificateTitles,
+	fetchCandidateInstituteType,
+	fetchCandidateDegreeTitles,
+} from "../../../../../modals/candidateProfile/thunk";
 
 function Preview(props) {
-	const [personelDetailsData, setpersonelDetailsData] = React.useState(props.candidateData)
+	const dispatch = useDispatch();
+	const [personelDetailsData, setpersonelDetailsData] = React.useState(
+		props.candidateData
+	);
+
+	const institutions = useSelector((state) =>
+		state.setCandidateInstitutionTypeReducer
+			? state.setCandidateInstitutionTypeReducer.data
+			: []
+	);
+	const degrees = useSelector((state) =>
+		state.setCandidateDegreeTitlesReducer
+			? state.setCandidateDegreeTitlesReducer.data
+			: []
+	);
+	const certificates = useSelector((state) =>
+		state.setCandidateCertificateTitlesReducer
+			? state.setCandidateCertificateTitlesReducer.data
+			: []
+	);
 	React.useEffect(() => {
-		if (props.institutionsData === 0)
-			props.fetchCandidateInstituteType();
-	}, [])
+		props.fetchCandidateInstituteType();
+		dispatch(fetchCandidateDegreeTitles());
+		dispatch(fetchAllCertificateTitles());
+		setpersonelDetailsData(props.candidateData);
+	}, [personelDetailsData]);
 	return (
 		<div className="preview_info">
 			<div className="content">
@@ -33,7 +59,7 @@ function Preview(props) {
 					</div>
 					<div className="bottom">
 						<p>
-							<Link to="/">marryjane_cv.pdf</Link>
+							<Link to="/profile/resume">{personelDetailsData.resume_name}</Link>
 						</p>
 					</div>
 				</div>
@@ -55,12 +81,15 @@ function Preview(props) {
 						<p>First Name : {personelDetailsData.first_name}</p>
 						<p>Last Name : {personelDetailsData.last_name}</p>
 						<p>Current employment status : Employed</p>
-						<p>How long would you begin a new role? : {personelDetailsData.available_within}</p>
+						<p>
+							How long would you begin a new role? :{" "}
+							{personelDetailsData.available_within}
+						</p>
 						<p>
 							Are you interested in a different function and industry? : Yes
 						</p>
-						<p>Empathy : 35</p>
-						<p>Patient : 80 </p>
+						{/* <p>Empathy : 35</p>
+						<p>Patient : 80 </p> */}
 					</div>
 				</div>
 				<div className="group">
@@ -78,31 +107,48 @@ function Preview(props) {
 						/>
 					</div>
 					<div className="bottom">
-						{personelDetailsData && personelDetailsData.work_experience && personelDetailsData.work_experience.length > 1 ? personelDetailsData.work_experience.map((exp, index) => {
-							return (
-								<div className="details" key={index}>
-									<h2>{exp.title}</h2>
-									<p>
-										<span className="text">{exp.location}</span>
-									</p>
-									<p>
-										<span className="heading">{exp.employment_from}</span>
-										{" to "}
-										<span className="text">{exp.employment_to}</span>
-									</p>
-									<p>
-										<span className="heading">Current employment status: </span>
-										<span className="text">Employed</span>
-									</p>
-									<p>
-										<span className="heading">Skills: </span>
-										<span className="text">
+						{personelDetailsData &&
+							personelDetailsData.work_experience &&
+							personelDetailsData.work_experience.length >= 1
+							? personelDetailsData.work_experience.map((exp, index) => {
+								return (
+									<div className="details" key={index}>
+										<h2>{exp.title}</h2>
+										<p>
+											<span className="heading">Description : </span>
 											{exp.job_description}
-										</span>
-									</p>
-								</div>
-							)
-						}) : ""}
+										</p>
+										<p>
+											<span className="heading">Organization : </span>
+											{exp.company}
+										</p>
+										<p>
+											<span className="heading">Location : </span>
+											{exp.location}
+										</p>
+										<p>
+											<span className="heading">Employer Website : </span>
+											{exp.employer_website}
+										</p>
+										<p>
+											<span className="text">{exp.employment_from}</span>
+											{" to "}
+											<span className="text">{exp.employment_to}</span>
+										</p>
+										{/* <p>
+											<span className="heading">
+												Current employment status:{" "}
+											</span>
+											<span className="text">Employed</span>
+										</p> */}
+										{/* <p>
+											<span className="heading">Skills: </span>
+											<span className="text">{exp.job_description}</span>
+										</p> */}
+									</div>
+								);
+							})
+							: ""}
 					</div>
 				</div>
 				<div className="group ">
@@ -120,19 +166,58 @@ function Preview(props) {
 						/>
 					</div>
 					<div className="bottom">
-						<div className="details">
-							<h2>ABC School, Sometown, CT</h2>
-							<p>
-								<span className="heading">Nurse’s Aide Program:</span>
-								{" - "}
-								<span className="text">ABC University</span>
-							</p>
-							<p>
-								<span className="text">FROM 2010</span>
-								{" to "}
-								<span className="text">1012</span>
-							</p>
-						</div>
+						{personelDetailsData &&
+							personelDetailsData.education_experience &&
+							personelDetailsData.education_experience.length >= 1
+							? personelDetailsData.education_experience.map((exp, index) => {
+								return (
+									<div className="details" key={index}>
+										<h2>
+											{degrees.length > 0 &&
+												degrees.map((entity) => {
+													if (entity.id === parseInt(exp.title))
+														return entity.title;
+												})}
+										</h2>
+										<p>
+											<span className="heading">
+												{degrees.length > 0 &&
+													degrees.map((entity) => {
+														if (entity.id === exp.title) return entity.title;
+													})}
+											</span>
+											<span className="heading">Description : </span>
+											{exp.education_description}
+											<p>
+												<span className="heading">Institution : </span>
+												{institutions.length > 0 &&
+													institutions.map((entity) => {
+														if (entity.id === exp.institution)
+															return entity.institute_name;
+													})}
+											</p>
+											<p>
+												<span className="heading">Major : </span>
+												{exp.education_major && exp.education_major.map((major) => {
+													return major.name;
+												})}
+											</p>
+											<p>
+												<span className="heading">Minor : </span>
+												{exp.education_minor && exp.education_minor.map((minor) => {
+													return minor.name;
+												})}
+											</p>
+										</p>
+										<p>
+											<span className="text">FROM {exp.attended_from}</span>
+											{" to "}
+											<span className="text">{exp.attended_till}</span>
+										</p>
+									</div>
+								);
+							})
+							: ""}
 					</div>
 				</div>
 				<div className="group ">
@@ -149,62 +234,73 @@ function Preview(props) {
 							onClick={() => alert(`Deleting`)}
 						/>
 					</div>
-					<div className="bottom">
-						<div className="details">
-							<h2>GHI Nursing Certificate</h2>
-							<p>
-								<span className="heading">Description: </span>
-								{" - "}
-								<span className="text">
-									Patient Care & Safety, Medical Terminology, Electronic Medical
-									Records, Diagnostic Testing, Vital Signs & Patient Monitoring,
-									Medication Administration, Patient Advocacy and Support.
+					{personelDetailsData &&
+						personelDetailsData.certificate &&
+						personelDetailsData.certificate.length >= 1
+						? personelDetailsData.certificate.map((entity, index) => {
+							return (
+								<div className="bottom" key={index}>
+									<div className="details">
+										<h2>
+											{certificates.length > 0 &&
+												certificates.map((cert) => {
+													if (cert.id === entity.title_id)
+														return cert.title_name;
+												})}
+										</h2>
+										<p>
+											<span className="heading">Description: </span>
+											{" - "}
+											<span className="text">{entity.description}</span>
+										</p>
+										<p>
+											<span className="heading">Issued Date: </span>
+											<span className="text">{entity.issued_date}</span>
+										</p>
+										<p>
+											<span className="heading">Certificate link: </span>
+											<span className="text">
+												<Link to="/">
+													https://www.certificatelink.com/certi.pdf
+													</Link>
+											</span>
+										</p>
+										{/* <p>
+												<span className="heading">Certificate Image: </span>
+												<span className="text">Image here</span>
+											</p> */}
+									</div>
+								</div>
+							);
+						})
+						: ""}
+					{/* <div className="details">
+						<h2>GHI Nursing Certificate</h2>
+						<p>
+							<span className="heading">Description: </span>
+							{" - "}
+							<span className="text">
+								Patient Care & Safety, Medical Terminology, Electronic Medical
+								Records, Diagnostic Testing, Vital Signs & Patient Monitoring,
+								Medication Administration, Patient Advocacy and Support.
 								</span>
-							</p>
-							<p>
-								<span className="heading">Issued Date: </span>
-								{" to "}
-								<span className="text">2014</span>
-							</p>
-							<p>
-								<span className="heading">Certificate link: </span>
-								<span className="text">
-									<Link to="/">https://www.certificatelink.com/certi.pdf</Link>
-								</span>
-							</p>
-							<p>
-								<span className="heading">Certificate Image: </span>
-								<span className="text">Image here</span>
-							</p>
-						</div>
-						<div className="details">
-							<h2>GHI Nursing Certificate</h2>
-							<p>
-								<span className="heading">Description: </span>
-								{" - "}
-								<span className="text">
-									Patient Care & Safety, Medical Terminology, Electronic Medical
-									Records, Diagnostic Testing, Vital Signs & Patient Monitoring,
-									Medication Administration, Patient Advocacy and Support.
-								</span>
-							</p>
-							<p>
-								<span className="heading">Issued Date: </span>
-								{" to "}
-								<span className="text">2014</span>
-							</p>
-							<p>
-								<span className="heading">Certificate link: </span>
-								<span className="text">
-									<Link to="/">https://www.certificatelink.com/certi.pdf</Link>
-								</span>
-							</p>
-							<p>
-								<span className="heading">Certificate Image: </span>
-								<span className="text">Image here</span>
-							</p>
-						</div>
-					</div>
+						</p>
+						<p>
+							<span className="heading">Issued Date: </span>
+							{" to "}
+							<span className="text">2014</span>
+						</p>
+						<p>
+							<span className="heading">Certificate link: </span>
+							<span className="text">
+								<Link to="/">https://www.certificatelink.com/certi.pdf</Link>
+							</span>
+						</p>
+						<p>
+							<span className="heading">Certificate Image: </span>
+							<span className="text">Image here</span>
+						</p>
+					</div> */}
 				</div>
 				{/* <div className="group ">
 					<div className="top">
@@ -287,14 +383,14 @@ function Preview(props) {
 function mapStateToProps(state) {
 	return {
 		candidateData: state.candidateSetDataReducer.data,
-		institutionsData: state.setCandidateInstitutionTypeReducer.data
+		institutionsData: state.setCandidateInstitutionTypeReducer.data,
 	};
 }
 
 const mapDispatchToProps = {
 	fetchCandidateDetails: fetchCandidateDetails,
 	fetchCandidateCurrentStatus: fetchCandidateCurrentStatus,
-	fetchCandidateInstituteType: fetchCandidateInstituteType
+	fetchCandidateInstituteType: fetchCandidateInstituteType,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Preview);

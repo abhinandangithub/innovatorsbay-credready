@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
 	faAngleLeft,
@@ -15,17 +15,21 @@ import Cookies from "js-cookie";
 
 import ImgLogo from "../../assets/logo-blue.png";
 import ImgUserPlaceholder from "../../assets/user-placeholder.jpg";
-import { updateLoggedIn } from "../../store/actions/auth";
+import { updateLoggedIn, clearAuthState } from "../../store/actions/auth";
+import { clearEmployerState } from "../../store/actions/employer";
 
 import "./index.scss";
 
 function Header(props) {
 	const dispatch = useDispatch();
+	const auth = useSelector((state) => state.authReducer);
 
 	const onLogout = () => {
 		Cookies.remove("JWT");
 		localStorage.clear();
-		dispatch(updateLoggedIn([false, ""]));
+		// dispatch(updateLoggedIn([false, ""]));
+		dispatch(clearEmployerState(null));
+		dispatch(clearAuthState(null));
 	};
 
 	return (
@@ -60,7 +64,13 @@ function Header(props) {
 					</div>
 					<ul className="user-nav">
 						<li>
-							<Link to="/profile/edit">
+							<Link
+								to={
+									auth.loggedIn.as === "candidate"
+										? "/profile/personal-details"
+										: "/profile/edit"
+								}
+							>
 								<FontAwesomeIcon icon={faUser} /> Edit Profile
 							</Link>
 						</li>

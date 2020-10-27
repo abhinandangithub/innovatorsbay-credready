@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Route, Switch, Redirect, NavLink } from "react-router-dom";
 import { Scrollbars } from "react-custom-scrollbars";
 import { useSelector } from "react-redux";
@@ -56,6 +56,10 @@ function Home(props) {
 		};
 	}
 
+	useEffect(() => {
+		// console.log('profile ', profile.name);
+	});
+
 	return (
 		<div className={`home ${navOpen ? "open" : ""}`}>
 			<Header onMenuClick={() => setNavOpen(!navOpen)} />
@@ -80,11 +84,11 @@ function Home(props) {
 				<div className="scroll-wrapper">
 					<div className="content">
 						<Switch>
-							{profile.name === "" ? (
+							{profile.name === "" || profile.name === undefined ? (
 								<Redirect exact from="/" to="/profile" />
 							) : (
-									<Redirect exact from="/" to="/dashboard" />
-								)}
+								<Redirect exact from="/" to="/dashboard" />
+							)}
 
 							{auth.loggedIn.as === "candidate" ? (
 								<>
@@ -139,32 +143,37 @@ function Home(props) {
 									<Route exact path="/goals/view/:id" component={GoalView} />
 								</>
 							) : (
-									<>
-										<Route
-											exact
-											path="/dashboard"
-											component={EmployerDashboard}
-										/>
-										<Route exact path="/jobs" component={EmployerPostedJobs} />
-										<Route
-											exact
-											path="/jobs/create-job"
-											component={EmployerCreateJob}
-										/>
-										<Route
-											exact
-											// path="/jobs/candidates-list"
-											path="/jobs/candidates-list/:jobId"
-											component={EmployerCandidateList}
-										/>
-										<Route
+								<>
+									<Route
+										exact
+										path="/dashboard"
+										component={EmployerDashboard}
+									/>
+									<Route exact path="/jobs" component={EmployerPostedJobs} />
+									<Route
+										exact
+										path="/jobs/create-job"
+										component={EmployerCreateJob}
+									/>
+									<Route
+										exact
+										// path="/jobs/candidates-list"
+										path="/jobs/candidates-list/:jobId"
+										component={EmployerCandidateList}
+									/>
+									{/* <Route
 											exact
 											path="/jobs/candidate-view"
 											component={EmployerCandidateView}
-										/>
-										<Route path="/profile" component={EmployerProfile} />
-									</>
-								)}
+										/> */}
+									<Route
+										exact
+										path="/jobs/candidate-view/:jobId/:candidateId"
+										component={EmployerCandidateView}
+									/>
+									<Route path="/profile" component={EmployerProfile} />
+								</>
+							)}
 							<Route
 								path="/term-and-conditions"
 								component={TermsAndConditions}

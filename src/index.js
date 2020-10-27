@@ -3,6 +3,7 @@ import ReactDOM from "react-dom";
 import { createStore, combineReducers, applyMiddleware, compose } from "redux";
 import { Provider } from "react-redux";
 import thunk from "redux-thunk";
+import { ToastProvider } from "react-toast-notifications";
 
 import "./index.scss";
 import App from "./App";
@@ -11,6 +12,8 @@ import commonReducer from "./store/reducers/common";
 import popupOverlayReducer from "./store/reducers/popup_overlay";
 import employerReducer from "./store/reducers/employer";
 import candidateReducer from "./store/reducers/candidate";
+import toastReducer from "./store/reducers/toast";
+
 import {
 	candidateSetDataReducer,
 	setAllFunctionsReducer,
@@ -24,7 +27,7 @@ import {
 	setCandidateDegreeTitlesReducer,
 	setCandidateInstitutionTypeReducer,
 	setCandidateJobViewDataReducer,
-	setJobDescriptionReducer
+	setJobDescriptionReducer,
 } from "./modals/candidateProfile/index";
 
 const rootReducer = combineReducers({
@@ -45,7 +48,8 @@ const rootReducer = combineReducers({
 	setAllIndustriesReducer,
 	commonReducer,
 	candidateReducer,
-	setJobDescriptionReducer
+	setJobDescriptionReducer,
+	toastReducer
 });
 
 /* Middleware */
@@ -74,7 +78,9 @@ store.subscribe(() => {
 ReactDOM.render(
 	<Provider store={store}>
 		<StrictMode>
-			<App />
+			<ToastProvider>
+				<App />
+			</ToastProvider>
 		</StrictMode>
 	</Provider>,
 	document.getElementById("root")

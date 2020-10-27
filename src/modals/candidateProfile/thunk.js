@@ -25,8 +25,13 @@ import {
 	deleteEducationExperienceUrl,
 	deleteOtherExperienceUrl,
 	deleteCertificateUrl,
-	fetchJobDescriptionUrl
-
+	fetchJobDescriptionUrl,
+	updateCandidatePhoneUrl,
+	updateCandidateAboutUrl,
+	updateCandidateEmailUrl,
+	uploadCandidateImageUrl,
+	uploadCandidateResumeUrl,
+	deleteCandidateAccountUrl,
 } from "./api";
 import {
 	candidateSetCurrentStatus,
@@ -43,7 +48,62 @@ import {
 	setAllIndustries,
 	setJobDescription,
 } from "./actions";
+import { showToast } from "../../store/actions/toast";
 import { updateJwtToken } from "../../store/actions/auth";
+import {
+	togglePopup,
+	toggleOverlay,
+} from "../../store/actions/popup_overlay";
+
+export const uploadCandidateImage = (image) => async (dispatch, getState) => {
+	try {
+		const data = await Axios.patch(uploadCandidateImageUrl, image, {
+			headers: {
+				'Authorization': getState().authReducer.JWT.map.jwt,
+				'Content-Type': 'multipart/form-data'
+			}
+		});
+		if (!data) return false;
+		dispatch(showToast({
+			message: "Image uploaded successfully",
+			type: "success",
+			isShow: true
+		}));
+	} catch (err) {
+		if (err.response) {
+			dispatch(showToast({
+				message: "Failed to upload image please try again",
+				type: "error",
+				isShow: true
+			}));
+			console.error(`failed to post the question ${err}`);
+		}
+	}
+};
+
+export const uploadCandidateResume = (image) => async (dispatch, getState) => {
+	try {
+		const data = await Axios.patch(uploadCandidateResumeUrl, image, {
+			headers: {
+				'Authorization': getState().authReducer.JWT.map.jwt,
+				'Content-Type': 'multipart/form-data'
+			}
+		});
+		if (!data) return false;
+		dispatch(showToast({
+			message: "Resume uploaded successfully",
+			type: "success",
+			isShow: true
+		}));
+	} catch (err) {
+		dispatch(showToast({
+			message: "Failed to upload resume please try again",
+			type: "error",
+			isShow: true
+		}));
+		if (err.response) console.error(`Failed to upload resume please try again ${err}`);
+	}
+};
 
 
 export const fetchJobDescription = (id) => async (dispatch, getState) => {
@@ -120,9 +180,10 @@ export const addWorkExperience = (formData) => async (dispatch, getState) => {
 	let id = formData.id
 	delete formData.id;
 	if (id) {
+		formData.work_ex_id = id;
 		try {
 			const { data } = await Axios.post(
-				addWorkExperienceUrl + '/' + id,
+				addWorkExperienceUrl,
 				formData, {
 				headers: {
 					'Authorization': getState().authReducer.JWT.map.jwt,
@@ -130,9 +191,19 @@ export const addWorkExperience = (formData) => async (dispatch, getState) => {
 				}
 			});
 			if (!data) return;
+			dispatch(showToast({
+				message: "Work Experience updated successfully",
+				type: "success",
+				isShow: true
+			}));
 			dispatch(fetchCandidateDetails());
 
 		} catch (err) {
+			dispatch(showToast({
+				message: "Failed to update work experience please try again",
+				type: "error",
+				isShow: true
+			}));
 			console.log(err)
 		}
 	}
@@ -147,9 +218,19 @@ export const addWorkExperience = (formData) => async (dispatch, getState) => {
 				}
 			});
 			if (!data) return;
+			dispatch(showToast({
+				message: "Work Experience added successfully",
+				type: "success",
+				isShow: true
+			}));
 			dispatch(fetchCandidateDetails());
 
 		} catch (err) {
+			dispatch(showToast({
+				message: "Failed to add work experience please try again",
+				type: "error",
+				isShow: true
+			}));
 			console.log(err)
 		}
 	}
@@ -166,9 +247,15 @@ export const jobApply = (formData, id) => async (dispatch, getState) => {
 		});
 		if (!data) return;
 		localStorage.clear();
+		dispatch(toggleOverlay(true));
+		dispatch(togglePopup([true, "jobApplied"]));
 		dispatch(candidateGetAppliedJobs());
 	} catch (err) {
-		console.log(err)
+		dispatch(showToast({
+			message: err.response.data.message,
+			type: "error",
+			isShow: true
+		}));
 	}
 }
 
@@ -183,9 +270,19 @@ export const submitCandidateAnswers = (formData) => async (dispatch, getState) =
 			}
 		});
 		if (!data) return;
+		dispatch(showToast({
+			message: "Answers Submitted Successfully",
+			type: "success",
+			isShow: true
+		}));
 		dispatch(fetchCandidateDetails());
 	} catch (err) {
-		console.log(err)
+		dispatch(showToast({
+			message: err.response.data.message,
+			type: "error",
+			isShow: true
+		}));
+		console.log(err.response.data);
 	}
 }
 
@@ -195,9 +292,10 @@ export const addOtherWorkExperience = (formData) => async (dispatch, getState) =
 	let id = formData.id
 	delete formData.id;
 	if (id) {
+		formData.id = id;
 		try {
 			const { data } = await Axios.post(
-				addOtherWorkExperienceUrl + '/' + id,
+				addOtherWorkExperienceUrl,
 				formData, {
 				headers: {
 					'Authorization': getState().authReducer.JWT.map.jwt,
@@ -205,9 +303,19 @@ export const addOtherWorkExperience = (formData) => async (dispatch, getState) =
 				}
 			});
 			if (!data) return;
+			dispatch(showToast({
+				message: "Other Work Experience edited successfully",
+				type: "success",
+				isShow: true
+			}));
 			dispatch(fetchCandidateDetails());
 
 		} catch (err) {
+			dispatch(showToast({
+				message: "Failed to edit other Work Experience please try again",
+				type: "success",
+				isShow: true
+			}));
 			console.log(err)
 		}
 	}
@@ -222,9 +330,19 @@ export const addOtherWorkExperience = (formData) => async (dispatch, getState) =
 				}
 			});
 			if (!data) return;
+			dispatch(showToast({
+				message: "Other Work Experience added successfully",
+				type: "success",
+				isShow: true
+			}));
 			dispatch(fetchCandidateDetails());
 
 		} catch (err) {
+			dispatch(showToast({
+				message: "Failed to add other Work Experience please try again",
+				type: "error",
+				isShow: true
+			}));
 			console.log(err)
 		}
 	}
@@ -234,9 +352,10 @@ export const addEducationExperience = (formData) => async (dispatch, getState) =
 	let id = formData.id
 	delete formData.id;
 	if (id) {
+		formData.id = id;
 		try {
 			const { data } = await Axios.post(
-				addEducationExperienceUrl + '/' + id,
+				addEducationExperienceUrl,
 				formData, {
 				headers: {
 					'Authorization': getState().authReducer.JWT.map.jwt,
@@ -244,9 +363,19 @@ export const addEducationExperience = (formData) => async (dispatch, getState) =
 				}
 			});
 			if (!data) return;
+			dispatch(showToast({
+				message: "Education Experience edited successfully",
+				type: "success",
+				isShow: true
+			}));
 			dispatch(fetchCandidateDetails());
 
 		} catch (err) {
+			dispatch(showToast({
+				message: "Failed to edit Education Experience please try again",
+				type: "error",
+				isShow: true
+			}));
 			console.log(err)
 		}
 	}
@@ -261,9 +390,19 @@ export const addEducationExperience = (formData) => async (dispatch, getState) =
 				}
 			});
 			if (!data) return;
+			dispatch(showToast({
+				message: "Education Experience added successfully",
+				type: "success",
+				isShow: true
+			}));
 			dispatch(fetchCandidateDetails());
 
 		} catch (err) {
+			dispatch(showToast({
+				message: "Failed to add Education Experience please try again",
+				type: "error",
+				isShow: true
+			}));
 			console.log(err)
 		}
 	}
@@ -273,9 +412,10 @@ export const addOtherEducationExperience = (formData) => async (dispatch, getSta
 	let id = formData.id
 	delete formData.id;
 	if (id) {
+		formData.id = id;
 		try {
 			const { data } = await Axios.post(
-				addOtherEducationExperienceUrl + '/' + id,
+				addOtherEducationExperienceUrl,
 				formData, {
 				headers: {
 					'Authorization': getState().authReducer.JWT.map.jwt,
@@ -283,9 +423,19 @@ export const addOtherEducationExperience = (formData) => async (dispatch, getSta
 				}
 			});
 			if (!data) return;
+			dispatch(showToast({
+				message: "Other Educational Experience edited successfully",
+				type: "success",
+				isShow: true
+			}));
 			dispatch(fetchCandidateDetails());
 
 		} catch (err) {
+			dispatch(showToast({
+				message: "Failed to edit Other Educational Experience please try again",
+				type: "error",
+				isShow: true
+			}));
 			console.log(err)
 		}
 	}
@@ -300,9 +450,19 @@ export const addOtherEducationExperience = (formData) => async (dispatch, getSta
 				}
 			});
 			if (!data) return;
+			dispatch(showToast({
+				message: "Other Educational Experience added successfully",
+				type: "success",
+				isShow: true
+			}));
 			dispatch(fetchCandidateDetails());
 
 		} catch (err) {
+			dispatch(showToast({
+				message: "Failed to add Other Educational Experience please try again",
+				type: "error",
+				isShow: true
+			}));
 			console.log(err)
 		}
 	}
@@ -323,6 +483,11 @@ export const updateCandidateDetails = (formData) => async (dispatch, getState) =
 		if (!data) return;
 
 		updateJwtToken(data ? data.data : "");
+		dispatch(showToast({
+			message: "Personnel Details updated successfully",
+			type: "success",
+			isShow: true
+		}));
 		fetchCandidateDetails();
 	}
 	catch (err) {
@@ -335,9 +500,9 @@ export const addEducationCertificate = (formData) => async (dispatch, getState) 
 	delete formData.id;
 	if (id) {
 		try {
-
+			formData.id = id;
 			const { data } = await Axios.post(
-				addEducationCertificateUrl + '/' + id,
+				addEducationCertificateUrl,
 				formData, {
 				headers: {
 					'Authorization': getState().authReducer.JWT.map.jwt,
@@ -346,10 +511,19 @@ export const addEducationCertificate = (formData) => async (dispatch, getState) 
 			}
 			);
 			if (!data) return;
-
+			dispatch(showToast({
+				message: "Certificate Details Edited successfully",
+				type: "success",
+				isShow: true
+			}));
 			fetchCandidateDetails();
 		}
 		catch (err) {
+			dispatch(showToast({
+				message: "Failed to Edit Certificate Details please try again",
+				type: "error",
+				isShow: true
+			}));
 			console.log(err);
 		}
 
@@ -367,10 +541,19 @@ export const addEducationCertificate = (formData) => async (dispatch, getState) 
 			}
 			);
 			if (!data) return;
-
+			dispatch(showToast({
+				message: "Certificate Details Added successfully",
+				type: "success",
+				isShow: true
+			}));
 			fetchCandidateDetails();
 		}
 		catch (err) {
+			dispatch(showToast({
+				message: "Failed to Add Certificate Details please try again",
+				type: "error",
+				isShow: true
+			}));
 			console.log(err);
 		}
 	}
@@ -532,7 +715,7 @@ export const deleteWorkExperience = (id) => async (dispatch, getState) => {
 		const data = await Axios.delete(deleteWorkExperienceUrl + '/' + id, {
 			headers: {
 				'Authorization': getState().authReducer.JWT.map.jwt,
-				'content-Type': 'application/vnd.credready.com+json'
+				'Content-Type': 'application/vnd.credready.com+json'
 			}
 		});
 		if (!data) return;
@@ -547,7 +730,7 @@ export const deleteEducationExperience = (id) => async (dispatch, getState) => {
 		const data = await Axios.delete(deleteEducationExperienceUrl + '/' + id, {
 			headers: {
 				'Authorization': getState().authReducer.JWT.map.jwt,
-				'content-Type': 'application/vnd.credready.com+json'
+				'Content-Type': 'application/vnd.credready.com+json'
 			}
 		});
 		if (!data) return;
@@ -562,7 +745,7 @@ export const deleteOtherExperience = (id) => async (dispatch, getState) => {
 		const data = await Axios.delete(deleteOtherExperienceUrl + '/' + id, {
 			headers: {
 				'Authorization': getState().authReducer.JWT.map.jwt,
-				'content-Type': 'application/vnd.credready.com+json'
+				'Content-Type': 'application/vnd.credready.com+json'
 			}
 		});
 		if (!data) return;
@@ -577,12 +760,100 @@ export const deleteCertificates = (id) => async (dispatch, getState) => {
 		const data = await Axios.delete(deleteCertificateUrl + '/' + id, {
 			headers: {
 				'Authorization': getState().authReducer.JWT.map.jwt,
-				'content-Type': 'application/vnd.credready.com+json'
+				'Content-Type': 'application/vnd.credready.com+json'
 			}
 		});
 		if (!data) return;
 		dispatch(fetchCandidateDetails());
 	} catch (err) {
 		console.log(err)
+	}
+}
+
+export const updateCandidatePhone = (phone) => async (dispatch, getState) => {
+	try {
+		const data = await Axios.put(updateCandidatePhoneUrl, { "phone": phone }, {
+			headers: {
+				'Authorization': getState().authReducer.JWT.map.jwt,
+				'Content-Type': 'application/vnd.credready.com+json'
+			}
+		});
+		if (!data) return false;
+		dispatch(showToast({
+			message: "Candidate's Phone No updated successfully",
+			type: "success",
+			isShow: true
+		}));
+		dispatch(fetchCandidateDetails());
+	} catch (err) {
+		dispatch(showToast({
+			message: "Failed to update Candidate's Phone no please try again ",
+			type: "error",
+			isShow: true
+		}));
+		if (err.response) console.error(`failed to update  email ${err}`);
+	}
+};
+
+export const updateCandidateAbout = (about) => async (dispatch, getState) => {
+	try {
+		const data = await Axios.put(updateCandidateAboutUrl, { "about_me": about }, {
+			headers: {
+				'Authorization': getState().authReducer.JWT.map.jwt,
+				'Content-Type': 'application/vnd.credready.com+json'
+			}
+		});
+		if (!data) return false;
+		dispatch(showToast({
+			message: "Candidate's About updated successfully",
+			type: "success",
+			isShow: true
+		}));
+		dispatch(fetchCandidateDetails());
+	} catch (err) {
+		dispatch(showToast({
+			message: "Failed to update Candidate's About please try again ",
+			type: "error",
+			isShow: true
+		}));
+		if (err.response) console.error(`failed to update  email ${err}`);
+	}
+};
+
+export const updateCandidateEmail = (email) => async (dispatch, getState) => {
+	try {
+		const data = await Axios.put(updateCandidateEmailUrl, { "email": email }, {
+			headers: {
+				'Authorization': getState().authReducer.JWT.map.jwt,
+				'Content-Type': 'application/vnd.credready.com+json'
+			}
+		});
+		if (!data) return false;
+		dispatch(showToast({
+			message: "Candidate's Email updated successfully",
+			type: "success",
+			isShow: true
+		}));
+		dispatch(fetchCandidateDetails());
+	} catch (err) {
+		dispatch(showToast({
+			message: "Failed to update Candidate's Email please try again ",
+			type: "error",
+			isShow: true
+		}));
+		if (err.response) console.error(`failed to update  email ${err}`);
+	}
+};
+
+export const deleteCandidateAccount = () => async (dispatch, getState) => {
+	try {
+		await Axios.delete(deleteCandidateAccountUrl, {
+			headers: {
+				'Authorization': getState().authReducer.JWT.map.jwt,
+				'Content-Type': 'application/vnd.credready.com+json'
+			}
+		})
+	} catch (err) {
+		if (err.response) console.error(`failed to update  email ${err}`);
 	}
 }

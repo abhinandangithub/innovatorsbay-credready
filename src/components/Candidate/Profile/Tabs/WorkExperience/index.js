@@ -67,34 +67,36 @@ function WorkExperience(props) {
 	});
 
 	const renderOtherExperiences = additional_experiences.map((data, i) => {
-		return (
-			<div className="content" key={i}>
-				<h2>{data.title}</h2>
-				<h3>
-					{data.organization_name} - <span>{data.description}</span>
-				</h3>
-				<h4>
-					<span>{data.employment_from}</span> -{" "}
-					<span>{data.employed_till}</span>
-				</h4>
-				<p className="description">
-					<span className="heading">Description: </span>
-					<span className="text">{data.description}</span>
-				</p>
-				<FontAwesomeIcon
-					className="action-btn edit"
-					icon={faPen}
-					id={"otherExperienceEdit_" + i}
-					onClick={() => handleEdit(data.id, "addOtherExperience")}
-				/>
-				<FontAwesomeIcon
-					className="action-btn delete"
-					icon={faTrash}
-					id={"otherExperienceDelete_" + i}
-					onClick={() => handleDelete(data.id, "otherExperience")}
-				/>
-			</div>
-		);
+		if (data.career_path === "work") {
+			return (
+				<div className="content" key={i}>
+					<h2>{data.title}</h2>
+					<h3>
+						{data.organization_name} - <span>{data.description}</span>
+					</h3>
+					<h4>
+						<span>{data.employed_from}</span> -{" "}
+						<span>{data.employed_till}</span>
+					</h4>
+					<p className="description">
+						<span className="heading">Description: </span>
+						<span className="text">{data.description}</span>
+					</p>
+					<FontAwesomeIcon
+						className="action-btn edit"
+						icon={faPen}
+						id={"otherExperienceEdit_" + i}
+						onClick={() => handleEdit(data.id, "addOtherExperience")}
+					/>
+					<FontAwesomeIcon
+						className="action-btn delete"
+						icon={faTrash}
+						id={"otherExperienceDelete_" + i}
+						onClick={() => handleDelete(data.id, "otherExperience")}
+					/>
+				</div>
+			);
+		}
 	});
 
 	return (

@@ -23,11 +23,16 @@ function Accordion(props) {
 	}, [props.active]);
 
 	useEffect(() => {
-		contentRef.current.style.maxHeight = active
-			? `${contentRef.current.scrollHeight}px`
+		contentRef.current.style.height = active
+			? "auto"
 			: props.type === "blank"
 			? "60px"
 			: "0px";
+		// contentRef.current.style.height = active
+		// 	? `${contentRef.current.scrollHeight}px`
+		// 	: props.type === "blank"
+		// 	? "60px"
+		// 	: "0px";
 	}, [contentRef, active, props.type]);
 
 	const addExperience = (type) => {

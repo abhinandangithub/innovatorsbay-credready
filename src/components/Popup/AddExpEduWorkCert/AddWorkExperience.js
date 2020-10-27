@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import DatePicker from "react-datepicker";
 import { useDispatch, useSelector } from "react-redux";
 
 import "./AddExpEduWorkCert.scss";
@@ -11,6 +10,7 @@ import {
 } from "../../../store/actions/popup_overlay";
 import { addWorkExperience } from "../../../modals/candidateProfile/thunk";
 import { findIndexOfObjInArr } from "../../../assets/js/Utility";
+import CustomDatePicker from "../../_Elements/CustomDatePicker";
 
 function AddWorkExperience() {
 	const dispatch = useDispatch();
@@ -129,8 +129,9 @@ function AddWorkExperience() {
 					email: formData.email[0],
 				},
 			};
-			if (info.id) {
-				obj.id = info.id
+
+			if (info) {
+				obj.id = info.id;
 			}
 
 			dispatch(addWorkExperience(obj));
@@ -316,7 +317,7 @@ function AddWorkExperience() {
 						</label>
 						<div className="date-outer">
 							<div className="date">
-								<DatePicker
+								<CustomDatePicker
 									id="startDate"
 									selected={startDate}
 									placeholderText="Start Date"
@@ -328,10 +329,11 @@ function AddWorkExperience() {
 							</div>
 							<span>to</span>
 							<div className="date">
-								<DatePicker
+								<CustomDatePicker
 									id="endDate"
 									selected={endDate}
 									placeholderText="End Date"
+									minDate={startDate}
 									onChange={(date) => {
 										setEndDate(date);
 										handleFieldChange("endDate", date);
@@ -416,7 +418,7 @@ function AddWorkExperience() {
 							</span>
 						</label>
 						<Input
-							type="text"
+							type="number"
 							id="phoneNumber"
 							defaultValue={formData.phoneNumber[0]}
 							onChange={(e) => handleFieldChange(e.target.id, e.target.value)}
@@ -430,7 +432,7 @@ function AddWorkExperience() {
 							</span>
 						</label>
 						<Input
-							type="text"
+							type="email"
 							id="email"
 							defaultValue={formData.email[0]}
 							onChange={(e) => handleFieldChange(e.target.id, e.target.value)}

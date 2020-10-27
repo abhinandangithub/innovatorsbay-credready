@@ -26,7 +26,6 @@ export const updatePhoneOtp = (val) => {
 
 /* val: true or false */
 export const updateLoggedIn = (val) => {
-	console.log(val);
 	return {
 		type: actionTypes.UPDATE_LOGGEDIN,
 		value: val,
@@ -44,3 +43,9 @@ export const updateJwtToken = (JWT) => ({
 	type: actionTypes.UPDATE_JWT_TOKEN,
 	JWT,
 });
+
+export const clearAuthState = (val) => ({
+	type: actionTypes.CLEAR_AUTH_STATE,
+	val,
+});
+

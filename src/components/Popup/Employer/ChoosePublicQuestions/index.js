@@ -7,7 +7,10 @@ import {
 	togglePopup,
 	toggleOverlay,
 } from "../../../../store/actions/popup_overlay";
-import { createQuestion, deleteQuestion } from "../../../../store/thunks/employer";
+import {
+	createQuestion,
+	deleteQuestion,
+} from "../../../../store/thunks/employer";
 import Input from "../../../_Elements/Input";
 import {
 	setQuestionBankQuestion,
@@ -31,7 +34,6 @@ function ChoosePublicQuestions(props) {
 				document.getElementById(element.question_id).checked = true;
 		});
 	}, [props.questionsSelected]);
-
 
 	useEffect(() => {
 		setQuestionBanks(props.questionBank);
@@ -80,19 +82,29 @@ function ChoosePublicQuestions(props) {
 	};
 
 	const handleEdit = (e, question) => {
-		dispatch(togglePopup([true, "createNewQuestion", { type: "public", action: "edit", question: question }]));
+		dispatch(
+			togglePopup([
+				true,
+				"createNewQuestion",
+				{ type: "public", action: "edit", question: question },
+			])
+		);
 	};
 	const handleDelete = (e, question) => {
 		alert("Are you sure to delete?");
 		dispatch(deleteQuestion(question.question_id));
-		setQuestionBanks(props.questionBank.filter(val => val.question_id !== question.question_id));
+		setQuestionBanks(
+			props.questionBank.filter(
+				(val) => val.question_id !== question.question_id
+			)
+		);
 	};
 	const handleJobTitleSearch = (searchString) => {
-		setQuestionBanks(props.questionBank.filter(val => val.question_name.includes(searchString)));
+		setQuestionBanks(props.questionBank.filter(val => val.question_name.toLowerCase().includes(searchString.toLowerCase())));
 	}
 
 	return (
-		<div className="choose-private-question">
+		<div className="choose-public-question">
 			<h1>
 				Choose from Public Questions
 				<button className="common-heading-btn" onClick={createNewQuestion}>
@@ -102,8 +114,12 @@ function ChoosePublicQuestions(props) {
 			<div className="content">
 				<div className="search-panel">
 					<div className="searches">
-						<input type="text" placeholder="Job Title" onChange={(e) => handleJobTitleSearch(e.target.value)} />
-						<input type="text" placeholder="Skills" />
+						<input
+							type="text"
+							placeholder="Job Title"
+							onChange={(e) => handleJobTitleSearch(e.target.value)}
+						/>
+						{/* <input type="text" placeholder="Skills" /> */}
 					</div>
 				</div>
 
@@ -120,7 +136,7 @@ function ChoosePublicQuestions(props) {
 												<span className="input"></span>
 											</label>
 
-											<FontAwesomeIcon
+											{/* <FontAwesomeIcon
 												className="action-btn edit"
 												icon={faPen}
 												onClick={(e) => handleEdit(e, question)}
@@ -129,7 +145,7 @@ function ChoosePublicQuestions(props) {
 												className="action-btn delete"
 												icon={faTrash}
 												onClick={(e) => handleDelete(e, question)}
-											/>
+											/> */}
 										</>
 									) : question.question_type === "mcq" ? (
 										<>
@@ -159,7 +175,7 @@ function ChoosePublicQuestions(props) {
 																key={i}
 																className={`fancy-toggle blue ${
 																	i === 0 ? "yes" : "no"
-																	}`}
+																}`}
 																id={`${option.id}${option.question_id}`}
 																name={`${option.question_id}`}
 																type="radio"
@@ -189,7 +205,7 @@ function ChoosePublicQuestions(props) {
 									<span className="input"></span>
 								</label>
 
-								<FontAwesomeIcon
+								{/* <FontAwesomeIcon
 									className="action-btn edit"
 									icon={faPen}
 									onClick={(e) => handleEdit(e, question)}
@@ -198,7 +214,7 @@ function ChoosePublicQuestions(props) {
 									className="action-btn delete"
 									icon={faTrash}
 									onClick={(e) => handleDelete(e, question)}
-								/>
+								/> */}
 							</li>
 						);
 					})}
@@ -220,10 +236,13 @@ function ChoosePublicQuestions(props) {
 
 function mapStateToProps(state) {
 	return {
-		questionBank: state.employerReducer.questionBank.data.public_question_bank.sort(function (a, b) {
-			const x = a['question_id']; const y = b['question_id'];
-			return ((x < y) ? 1 : ((x > y) ? -1 : 0));
-		}),
+		questionBank: state.employerReducer.questionBank.data.public_question_bank.sort(
+			function (a, b) {
+				const x = a["question_id"];
+				const y = b["question_id"];
+				return x < y ? 1 : x > y ? -1 : 0;
+			}
+		),
 		questionsSelected: state.employerReducer.questionBank.questions,
 	};
 }

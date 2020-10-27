@@ -9,6 +9,9 @@
 					display: block;
 					text-align: left;
 					margin-bottom: 10px;
+					span {
+						color: red;
+					}
 				}
 				input {
 					width: 100%;
@@ -43,6 +46,9 @@
 		.cta {
 			display: flex;
 			justify-content: flex-end;
+			.outline {
+				margin-right: 20px;
+			}
 		}
 	}
 }

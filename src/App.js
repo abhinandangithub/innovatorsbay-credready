@@ -9,6 +9,7 @@ import Home from "./components/Home";
 import Overlay from "./components/Overlay";
 import Popup from "./components/Popup";
 import LandingPage from "./components/LandingPage";
+import ToastMessage from "./components/_Elements/Toast";
 
 const App = () => {
 	const { popup, overlay } = useSelector((state) => state.popupOverlayReducer);
@@ -24,6 +25,7 @@ const App = () => {
 			</Switch>
 			<Overlay active={overlay.show} />
 			<Popup active={popup.show}></Popup>
+			<ToastMessage></ToastMessage>
 		</BrowserRouter>
 	);
 };

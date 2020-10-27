@@ -173,3 +173,17 @@ export const setOrgNames = (val) => {
 	};
 };
 
+export const setGeography = (val) => {
+	return {
+		type: actionTypes.SET_GEOGRAPHY,
+		value: val,
+	};
+};
+
+export const clearEmployerState = (val) => {
+	return {
+		type: actionTypes.CLEAR_EMPLOYER_STATE,
+		value: val,
+	};
+};
+

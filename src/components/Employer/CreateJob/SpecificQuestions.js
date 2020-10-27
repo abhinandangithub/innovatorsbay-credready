@@ -89,7 +89,7 @@ function SpecificQuestions(props) {
 					className="primary-btn blue"
 					onClick={handlePostJob}
 				>
-					Post a Job
+					Post the job
 				</Link>
 			</div>
 		</>

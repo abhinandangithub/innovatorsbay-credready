@@ -1,21 +1,166 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
 
 import "./index.scss";
+import {
+	togglePopup,
+	toggleOverlay,
+} from "../../../../store/actions/popup_overlay";
+import { addEmailTemplate, updateEmailTemplate } from '../../../../store/thunks/employer';
 
-function CreateEmailTemplate() {
+function CreateEmailTemplate(props) {
+	console.log('props ', props.info);
+	const dispatch = useDispatch();
+	const { popup } = useSelector((state) => state.popupOverlayReducer);
+
+	const [value, setValue] = React.useState(
+		`Hello {candidate_first_name} {candidate_last_name}\nWe are looking out for {job_title} for our organization located at {location}.\n\nRegards,\n{recruiter_name}`
+	);
+
+	const [formData, setFormData] = React.useState({
+		/**
+		 * * field: ['value', 'error']
+		 */
+		name: [],
+		email: [],
+		body: [],
+
+		formValid: false,
+	});
+
+	useEffect(() => {
+		if (!!props.info.data) {
+			setFormData({
+				name: [props.info.data.template_name],
+				email: [props.info.data.email || "test@gmail.com"],
+				body: [props.info.data.email_body],
+				formValid: true
+			});
+		} else {
+			setFormData({
+				name: [],
+				email: [],
+				body: [value],
+				formValid: false
+			});
+		}
+	}, [props.info.data]);
+
+	const handleSubmit = (type = 'add') => {
+		let oldFormData = { ...formData };
+		oldFormData.formValid = true;
+
+		for (var field in oldFormData) {
+			if (
+				oldFormData.hasOwnProperty(field) &&
+				field !== "formValid" &&
+				(oldFormData[field][0] === "" ||
+					oldFormData[field][0] === undefined ||
+					oldFormData[field][0] === null)
+			) {
+				oldFormData[field][0] = "";
+				oldFormData.formValid = false;
+				if (oldFormData[field][1] !== "Required") {
+					oldFormData[field].push("Required");
+				}
+			}
+		}
+
+		if (oldFormData.formValid) {
+			/* create obj which needs to send to api */
+			// let obj = {
+			// 	name: formData ? formData.name[0] : "",
+			// 	email: formData ? formData.email[0] : "",
+			// };
+			/* send data to api */
+			// props.updateCandidateDetails(obj);
+			// props.history.push("/profile/work-experience");
+			console.log('formData ', formData);
+			if (type === 'add') {
+				dispatch(addEmailTemplate(formData));
+			} else {
+				let obj = { ...formData, templateId: props.info.data.template_id }
+				dispatch(updateEmailTemplate(obj));
+			}
+			dispatch(toggleOverlay(false));
+			dispatch(togglePopup(false));
+		}
+
+		setFormData(oldFormData);
+	};
+
+	const handleFieldChange = (field, value) => {
+		let msg = value === "" || value === null ? "Required" : "";
+
+		let arr = [];
+		arr[0] = value;
+		arr[1] = msg;
+
+		setFormData({
+			...formData,
+			[field]: arr,
+		});
+	};
+
+	const updateTemplate = () => {
+		console.log("updateTemplate");
+		handleSubmit('edit');
+	};
+
+	const saveAsNewTemplate = () => {
+		console.log("saveAsNewTemplate");
+		handleSubmit('add');
+	};
+
+	const addTemplate = () => {
+		console.log("addTemplate");
+		handleSubmit('add');
+	};
+
 	return (
 		<div className="create-email-template">
-			<h1>Add Email Template</h1>
+			{popup.info.type === "add" ? (
+				<h1>Add Email Template</h1>
+			) : (
+					<h1>Edit Email Template</h1>
+				)}
+
 			<div className="content">
 				<ul>
 					<li>
-						<label htmlFor="templateName">
+						<label htmlFor="name">
 							Template Name <span>*</span>
+							<span className={`error-text ${!formData.name[1] && "hidden"}`}>
+								Required
+							</span>
 						</label>
-						<input type="text" id="templateName" />
+						<input
+							type="text"
+							id="name"
+							defaultValue={formData.name[0]}
+							onChange={(e) => handleFieldChange(e.target.id, e.target.value)}
+						/>
 					</li>
 					<li>
-						<label htmlFor="">Tags</label>
+						<label htmlFor="email">
+							From Email Address <span>*</span>
+							<span className={`error-text ${!formData.email[1] && "hidden"}`}>
+								Required
+							</span>
+						</label>
+						<input
+							type="email"
+							id="email"
+							defaultValue={formData.email[0]}
+							onChange={(e) => handleFieldChange(e.target.id, e.target.value)}
+						/>
+					</li>
+					<li>
+						<label htmlFor="body">Tags<span>*</span>
+							<span className={`error-text ${!formData.body[1] && "hidden"}`}>
+								Required
+							</span>
+						</label>
 						<ul>
 							<li>
 								<input
@@ -93,17 +238,36 @@ function CreateEmailTemplate() {
 					</li>
 					<li>
 						<textarea
-							name="template"
-							id="template"
+							name="body"
+							id="body"
 							cols="30"
 							rows="10"
-							value={`Hello {candidate_first_name} {candidate_last_name}\nWe are looking out fpr {job_title} for our organisation located at {location}.\n\nRegards,\n{recruiter_name}`}
+							//value={value}
+							defaultValue={formData.body[0]}
+							onChange={(e) => handleFieldChange(e.target.id, e.target.value)}
+						//	onChange={(e) => setValue(e.target.value)}
 						></textarea>
 					</li>
 				</ul>
-				<div className="cta">
-					<button className="primary-btn">Add</button>
-				</div>
+				{popup.info.type === "add" ? (
+					<div className="cta">
+						<button className="primary-btn blue" onClick={addTemplate}>
+							Add
+						</button>
+					</div>
+				) : (
+						<div className="cta">
+							<button
+								className="primary-btn blue outline"
+								onClick={updateTemplate}
+							>
+								Update Template
+						</button>
+							<button className="primary-btn blue" onClick={saveAsNewTemplate}>
+								Save as new Template
+						</button>
+						</div>
+					)}
 			</div>
 		</div>
 	);

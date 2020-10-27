@@ -344,6 +344,41 @@
 					min-height: 135px;
 				}
 			}
+			.email-templates {
+				.input_button {
+					display: flex;
+					button {
+						width: 46px;
+						height: 46px;
+						border-radius: 40px;
+						margin-left: 20px;
+						background: #ffffff 0% 0% no-repeat padding-box;
+						border: 1px solid #cdcdcd;
+						svg {
+							color: #a1a1a1;
+							opacity: 1;
+							font-size: 18px;
+						}
+						&:hover {
+							opacity: 0.8;
+						}
+					}
+				}
+				.email_body {
+					border: 1px solid #bcd1e4;
+					padding: 20px;
+					min-height: 130px;
+					overflow: auto;
+					p {
+						&:first-child {
+							margin-top: 0;
+						}
+						&:last-child {
+							margin-bottom: 0;
+						}
+					}
+				}
+			}
 		}
 	}
 }
