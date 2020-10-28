@@ -16,6 +16,7 @@ function InputDropdown({
 	search_term,
 	intellisense,
 	allow_random,
+	disable = false
 }) {
 	const dispatch = useDispatch();
 	const [active, setactive] = useState(false);
@@ -117,6 +118,7 @@ function InputDropdown({
 						setvalue(e.target.value);
 						onchange && onchange(e.target.value);
 					}}
+					disabled={disable}
 				/>
 			</div>
 			{intellisense

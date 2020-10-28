@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 // import { useForm } from "react-hook-form";
-import { connect, useSelector } from "react-redux";
+import { connect, useSelector, useDispatch } from "react-redux";
 
 import "./index.scss";
 import Input from "../../../../_Elements/Input";
@@ -47,8 +47,10 @@ const joiningDuration = {
 };
 
 function PersonalDetails(props) {
+	const dispatch = useDispatch();
 	const data = useSelector((state) => state.candidateSetDataReducer.data);
-	console.log(data, props.currentStatus);
+	const currentStatus = useSelector((state) => state.candidateCurrentStatusReducer.data ? state.candidateCurrentStatusReducer.data : [])
+	console.log(data, currentStatus);
 	const [formData, setFormData] = React.useState({
 		/**
 		 * * field: ['value', 'error']
@@ -56,10 +58,10 @@ function PersonalDetails(props) {
 		firstName: [data.first_name],
 		lastName: [data.last_name],
 		employmentStatus: [
-			props.currentStatus.find(
+			currentStatus.find(
 				(val) => val.id === data.current_employment_status
 			)
-				? props.currentStatus.find(
+				? currentStatus.find(
 					(val) => val.id === data.current_employment_status
 				)
 				: "",
@@ -104,7 +106,7 @@ function PersonalDetails(props) {
 				openToOtherRoles:
 					formData && formData.interestedIn[0] === "on" ? true : false,
 				currentEmploymentStatusId: formData
-					? formData.employmentStatus[0].id
+					? formData.employmentStatus[0]
 					: "",
 				availableWithin: formData ? formData.joiningDuration[0] : "",
 				streetAddress: formData ? formData.streetAddress[0] : "",
@@ -112,8 +114,9 @@ function PersonalDetails(props) {
 				city: formData ? formData.city[0] : "",
 				zipCode: formData ? parseInt(formData.zipCode[0]) : "",
 			};
+			console.log('obj......', obj);
 			/* send data to api */
-			props.updateCandidateDetails(obj);
+			dispatch(updateCandidateDetails(obj));
 			props.history.push("/profile/work-experience");
 		}
 
@@ -134,10 +137,9 @@ function PersonalDetails(props) {
 	};
 
 	React.useEffect(() => {
-		if (props.currentStatus.length > 1) return;
-		props.fetchCandidateCurrentStatus();
-		props.fetchCandidateDetails();
-	}, [data, formData]);
+		dispatch(fetchCandidateCurrentStatus())
+		dispatch(fetchCandidateDetails());
+	}, []);
 
 	return (
 		<div className="personal-details">
@@ -191,7 +193,7 @@ function PersonalDetails(props) {
 							<InputDropdown
 								placeholder={employmentStatus.heading}
 								selected={formData.employmentStatus[0].employment_status}
-								content={props.currentStatus.map((val) => ({
+								content={currentStatus.map((val) => ({
 									val: val.employment_status,
 									id: val.id,
 								}))}
@@ -330,13 +332,13 @@ function PersonalDetails(props) {
 				<div className="cta">
 					<Link
 						to="/profile/resume"
-						className="primary-btn outline"
+						className="primary-btn blue outline"
 						id="previousLink"
 					>
 						Previous
 					</Link>
 					<input
-						className="primary-btn"
+						className="primary-btn blue"
 						type="submit"
 						value="Next"
 						id="nextLink"
@@ -354,17 +356,4 @@ function PersonalDetails(props) {
 	);
 }
 
-function mapStateToProps(state) {
-	return {
-		currentStatus: state.candidateCurrentStatusReducer.data,
-		candidatePreviousData: state.candidateSetDataReducer.data,
-	};
-}
-
-const mapDispatchToProps = {
-	updateCandidateDetails: updateCandidateDetails,
-	fetchCandidateCurrentStatus: fetchCandidateCurrentStatus,
-	fetchCandidateDetails: fetchCandidateDetails,
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(PersonalDetails);
+export default PersonalDetails

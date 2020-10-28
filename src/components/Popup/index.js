@@ -65,9 +65,7 @@ function Popup(props) {
 			case "addStrength":
 				return <AddStrength heading={info.heading} />;
 			case "createEmailTemplate":
-				return <CreateEmailTemplate
-					info={info}
-				/>;
+				return <CreateEmailTemplate info={info} />;
 			case "createNewQuestion":
 				return (
 					<CreateNewQuestion

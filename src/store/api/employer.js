@@ -272,3 +272,8 @@ export const orgNameUrl = constructUrl(
   employerRouteWithBase,
   "organization"
 );
+
+export const profileDownloadUrl = constructUrl(
+  employerRouteWithBase,
+  "profile/download"
+);

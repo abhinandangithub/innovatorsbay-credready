@@ -158,3 +158,8 @@ export const candidateJobApplicationUrl = constructUrl(
   candidateRouteWithBase,
   "jobs/dashboard/applications"
 );
+
+export const profileCandidateDownloadUrl = constructUrl(
+  candidateRouteWithBase,
+  "profile/download"
+);

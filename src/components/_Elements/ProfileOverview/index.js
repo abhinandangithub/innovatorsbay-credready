@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch, useSelector, connect } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
 	faPen,
@@ -11,6 +11,7 @@ import {
 	faTimes,
 	faCheck,
 } from "@fortawesome/free-solid-svg-icons";
+import { useToasts } from "react-toast-notifications";
 
 import "./index.scss";
 import ImgNYP from "../../../assets/nyp.png";
@@ -25,17 +26,21 @@ import {
 	updatePhoneThunk,
 	getProfileThunk,
 	uploadProfileImage,
+	profileDownload
 } from "../../../store/thunks/employer";
 import {
 	updateCandidatePhone,
 	updateCandidateAbout,
 	updateCandidateEmail,
+	fetchCandidateCurrentStatus,
 	uploadCandidateImage,
 	fetchAllAnswers,
 } from "../../../modals/candidateProfile/thunk";
 
 function ProfileOverview(props) {
 	const dispatch = useDispatch();
+	const { addToast } = useToasts();
+
 	const allData = useSelector((state) => state.candidateSetDataReducer.data);
 	const employerProfile = useSelector((state) => state.employerReducer.profile);
 	const [email, setEmail] = useState(
@@ -55,6 +60,41 @@ function ProfileOverview(props) {
 			? allData.contacts.find((el) => el.contact_type === "phone").contact
 			: ""
 	);
+	useEffect(() => {
+		dispatch(profileDownload(props.type))
+	}, [dispatch]);
+
+	useEffect(() => {
+		console.log('employerProfilePath ', props.employerProfilePath);
+	}, [props.employerProfilePath]);
+
+	const handleDownloadClick = () => {
+		dispatch(profileDownload())
+		if (props.employerProfilePath) {
+			let name = props.employerProfilePath.data.substr(props.employerProfilePath.data.lastIndexOf("/") + 1);
+			console.log('name ', name);
+			fetch(props.employerProfilePath.data)
+				.then(response => {
+					response.blob().then(blob => {
+						let url = window.URL.createObjectURL(blob);
+						let a = document.createElement('a');
+						a.href = url;
+						a.download = name ? name : 'resume.pdf';
+						a.click();
+					});
+				});
+			addToast("Profile downloaded successfully.", {
+				appearance: "success",
+				autoDismiss: true,
+			});
+		} else {
+			addToast("Could download find resume", {
+				appearance: "warning",
+				autoDismiss: true,
+			});
+		}
+	}
+
 	const [editingPhone, setEditingPhone] = useState(false);
 	const [editingEmail, setEditingEmail] = useState(false);
 	const [editingAboutMe, setEditingAboutMe] = useState(false);
@@ -83,10 +123,10 @@ function ProfileOverview(props) {
 					? allData.username
 					: ""
 				: employerProfile.data.contacts.length > 0
-				? employerProfile.data.contacts.find(
+					? employerProfile.data.contacts.find(
 						(el) => el.contact_type === "email"
-				  ).contact
-				: ""
+					).contact
+					: ""
 		);
 		setAbout(
 			props.type === "candidate" && allData.about_me ? allData.about_me : ""
@@ -97,10 +137,10 @@ function ProfileOverview(props) {
 					? allData.contacts.find((el) => el.contact_type === "phone").contact
 					: ""
 				: employerProfile.data.contacts.length > 0
-				? employerProfile.data.contacts.find(
+					? employerProfile.data.contacts.find(
 						(el) => el.contact_type === "phone"
-				  ).contact
-				: ""
+					).contact
+					: ""
 		);
 		setCandidateImage({
 			preview: allData.profile_image_path,
@@ -111,6 +151,7 @@ function ProfileOverview(props) {
 			raw: "",
 		});
 		dispatch(fetchAllAnswers());
+		dispatch(fetchCandidateCurrentStatus());
 	}, [employerProfile, allData]);
 
 	const handleDelete = () => {
@@ -189,8 +230,8 @@ function ProfileOverview(props) {
 					{props.type === "candidate" ? (
 						<img src={candidateImage.preview} alt="Guest" />
 					) : (
-						<img src={image.preview} alt="NYP" />
-					)}
+							<img src={image.preview} alt="NYP" />
+						)}
 					<div className="edit" id="editPicBtn">
 						<label htmlFor="upload-button">
 							<FontAwesomeIcon className="btn" icon={faPen} />
@@ -317,14 +358,18 @@ function ProfileOverview(props) {
 					)}
 
 					<li className="highlight">
-						<a
+						{/* <a
 							href="https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf"
 							download="myFile"
 							id="downloadPersonalInfoLink"
 						>
 							<FontAwesomeIcon className="icon" icon={faDownload} />
 							Download personal information
-						</a>
+						</a> */}
+						<div onClick={handleDownloadClick} id="deleteProfileBtn">
+							<FontAwesomeIcon className="icon" icon={faDownload} />
+							Download personal information
+						</div>
 					</li>
 					<li className="highlight">
 						<div onClick={handleDelete} id="deleteProfileBtn">
@@ -338,11 +383,12 @@ function ProfileOverview(props) {
 	);
 }
 
-// function mapStateToProps(state) {
-// 	return {
-// 		employerProfile: state.employerReducer.profile,
-// 	}
-// }
+function mapStateToProps(state) {
+	return {
+		// employerProfile: state.employerReducer.profile,
+		employerProfilePath: state.employerReducer.employerProfilePath
+	}
+}
 
-// export default connect(mapStateToProps)(ProfileOverview);
-export default ProfileOverview;
+export default connect(mapStateToProps)(ProfileOverview);
+// export default ProfileOverview;

@@ -1,7 +1,8 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { connect, useDispatch } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPen, faTrash } from "@fortawesome/free-solid-svg-icons";
+import { Link, useParams } from "react-router-dom";
 
 import Input from "../../../_Elements/Input";
 import AddButton from "../../../_Elements/AddButton";
@@ -10,14 +11,30 @@ import {
 	toggleOverlay,
 } from "../../../../store/actions/popup_overlay";
 import { getQuestionBank } from "../../../../store/thunks/employer";
+import { setQuestionBankQuestion, setNewJob } from '../../../../store/actions/employer';
 
 function JobSpecificQuestions(props) {
+	let { jobId } = useParams();
+	const [defaultQuestions, setDefaultQuestions] = React.useState([]);
+	const [disableCtrl, setDisableCtrl] = useState(false);
+
 	const dispatch = useDispatch();
 	// console.log('props questionBank ', props.questionBank.questionBank.questions);
 	useEffect(() => {
 		// console.log('props questionBank dispatch', props.questionBank);
 		dispatch(getQuestionBank());
 	}, [dispatch]);
+
+	useEffect(() => {
+		console.log('questions ', props.jobToUpdate.questions);
+		if (!!jobId) {
+			// setDefaultQuestions(props.jobToUpdate.questions);
+			dispatch(setQuestionBankQuestion(props.jobToUpdate.questions));
+			dispatch(setNewJob({ jobQuestionnaireMap: props.jobToUpdate.questions }));
+		}
+		if (props.jobToUpdate.count_of_applied_candidates && jobId)
+			setDisableCtrl(true)
+	}, [props.jobToUpdate]);
 
 	useEffect(() => {
 		// console.log('props questionBank useeffect', props.questionBank);
@@ -111,6 +128,7 @@ function JobSpecificQuestions(props) {
 				id={"addQuestionBtn"}
 				onclick={addQuestion}
 				content="Add New Question"
+				disable={disableCtrl}
 			/>
 			<ul className="general-questions">
 				{props.questionBank.questionBank.questions.map((question, i) => {
@@ -148,7 +166,7 @@ function JobSpecificQuestions(props) {
 															key={i}
 															className={`fancy-toggle blue ${
 																i === 0 ? "yes" : "yes"
-															}`}
+																}`}
 															id={`${option.id}${option.question_id}`}
 															name={`${option.question_id}`}
 															type="radio"
@@ -189,6 +207,7 @@ function mapStateToProps(state) {
 	return {
 		//  questionBank: state.employerReducer.questionBank.questions
 		questionBank: state.employerReducer,
+		jobToUpdate: state.employerReducer.jobToUpdate
 	};
 }
 

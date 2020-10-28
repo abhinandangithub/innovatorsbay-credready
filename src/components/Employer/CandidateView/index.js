@@ -84,7 +84,7 @@ function CandidateView(props) {
 								<li>{job.candidate.address.city}</li>
 
 								<li>{job.candidate.exp_in_years}</li>
-								<li>{job.candidate.job_distance || "**" } </li>
+								<li>{job.candidate.job_distance || "**"} </li>
 								<li>{job.candidate.address.street_address}</li>
 							</ul>
 						</div>
@@ -136,10 +136,11 @@ function CandidateView(props) {
 						}
 					</div>
 				</div>
-				<Accordion className="blank" type="blank">
-					{job.candidate.work_experience.map((j) => {
-						return (
-							<div>
+				{/* <Accordion className="blank" type="blank"> */}
+				{job.candidate.work_experience.map((j) => {
+					return (
+						<div>
+							<Accordion className="blank" type="blank">
 								<ul className="info flex for-click">
 									<li>
 										Title : <span>{j.title}</span>
@@ -171,10 +172,11 @@ function CandidateView(props) {
 										Supervisor Phone Number : <span>{j.workex_verification.phone}</span>
 									</li>
 								</ul>
-							</div>
-						)
-					})}
-				</Accordion>
+							</Accordion>
+						</div>
+					)
+				})}
+				{/* </Accordion> */}
 				<JobSpecificQuestions questions={job.submittedAnswer.employerQuestions} />
 				<div className="cta flex">
 					<p>

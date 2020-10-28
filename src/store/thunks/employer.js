@@ -25,7 +25,8 @@ import {
 	employerUpdateCompanyLogoUrl,
 	orgNameUrl,
 	employeAddEmailTemplate,
-	employeUpdateEmailTemplate
+	employeUpdateEmailTemplate,
+	profileDownloadUrl
 } from "../api/employer";
 
 import { updateLoggedIn } from "../actions/auth";
@@ -38,7 +39,9 @@ import {
 	setAppliedCandidateDetails, setLocations, setJobDetails, setLogin,
 	setOrgNames,
 	setGeography,
-	setQuestionBankQuestion
+	setQuestionBankQuestion,
+	setEmployerResumePath,
+	jobToUpdate
 } from "../actions/employer";
 
 import {
@@ -49,7 +52,7 @@ import {
 	showToast
 } from "../actions/toast";
 
-import { candidateFetchAllCertificatesUrl } from '../api/candidate';
+import { candidateFetchAllCertificatesUrl, profileCandidateDownloadUrl } from '../api/candidate';
 
 // import Cookies from "js-cookie";
 import { setDefaultAuthorizationHeader, setAllowAccessHeader } from "../utility";
@@ -221,7 +224,7 @@ export const deleteAccount = (token) => async (dispatch, getState) => {
 	}
 };
 
-export const getPostedJobs = (token) => async (dispatch, getState) => {
+export const getPostedJobs = (isUpdate = undefined, jobId = undefined) => async (dispatch, getState) => {
 	try {
 		const state = getState();
 		dispatch(beginApiCall());
@@ -234,6 +237,10 @@ export const getPostedJobs = (token) => async (dispatch, getState) => {
 		dispatch(apiCallError());
 		if (!data) return false;
 		dispatch(setEmployerJobs(data.data));
+		if (isUpdate === 'update' && jobId) {
+			console.log('getPostedJobs');
+			dispatch(jobToUpdate(jobId));
+		}
 	} catch (err) {
 		if (err.response) console.error(`failed to fetch the posted jobs ${err}`);
 	}
@@ -288,8 +295,18 @@ export const updateStatus = (status) => async (dispatch, getState) => {
 				'Content-Type': 'application/vnd.credready.com+json'
 			}
 		});
+		dispatch(showToast({
+			message: "Status Changed successfully.",
+			type: "success",
+			isShow: true
+		}));
 		if (!data) return false;
 	} catch (err) {
+		dispatch(showToast({
+			message: "Error in changing the status..",
+			type: "error",
+			isShow: true
+		}));
 		if (err.response) console.error(`failed to set the status candidate ${err}`);
 	}
 };
@@ -445,31 +462,67 @@ export const updateEmailTemplate = (body) => async (dispatch, getState) => {
 	}
 };
 
-export const postJob = (job) => async (dispatch, getState) => {
+export const postJob = (jobId = undefined) => async (dispatch, getState) => {
 	try {
 		const state = getState();
-		const data = await Axios.post(employerPostJob, state.employerReducer.newJob, {
+		let body = {};
+		if (!!jobId) {
+			body = { ...state.employerReducer.newJob, jobId: jobId };
+		}
+		else {
+			body = { ...state.employerReducer.newJob }
+		}
+		dispatch(beginApiCall());
+		const data = await Axios.post(employerPostJob, body, {
 			headers: {
 				'Authorization': getState().authReducer.JWT.map.jwt,
 				'Content-Type': 'application/vnd.credready.com+json'
 			}
 		});
+		dispatch(apiCallError());
 		if (!data) return false;
 		dispatch(showToast({
-			message: "Job posted successfully.",
+			message: jobId ? "Job Updated successfully." : "Job posted successfully.",
 			type: "success",
 			isShow: true
 		}));
 		dispatch(setPostedJobURL(data.data.data));
 	} catch (err) {
+		dispatch(apiCallError());
 		dispatch(showToast({
-			message: "Error in posting the job.",
+			message: jobId ? "Error in updating the job." : "Error in posting the job.",
 			type: "error",
 			isShow: true
 		}));
 		if (err.response) console.error(`failed to post the job ${err}`);
 	}
 };
+
+// export const createQuestion = (question, action) => async (dispatch, getState) => {
+// 	try {
+// 		const state = getState();
+// 		let data = "";
+// 		if (action === "edit") {
+// 			data = await Axios.patch(employerUpdateQuestion, question, {
+// 				headers: {
+// 					'Authorization': getState().authReducer.JWT.map.jwt,
+// 					'Content-Type': 'application/vnd.credready.com+json'
+// 				}
+// 			});
+// 		} else {
+// 			data = await Axios.post(employeCreateQuestion, question, {
+// 				headers: {
+// 					'Authorization': getState().authReducer.JWT.map.jwt,
+// 					'Content-Type': 'application/vnd.credready.com+json'
+// 				}
+// 			});
+// 		}
+// 		if (!data) return false;
+// 		dispatch(getQuestionBank());
+// 	} catch (err) {
+// 		if (err.response) console.error(`failed to post the question ${err}`);
+// 	}
+// };
 
 export const createQuestion = (question, action) => async (dispatch, getState) => {
 	try {
@@ -482,6 +535,27 @@ export const createQuestion = (question, action) => async (dispatch, getState) =
 					'Content-Type': 'application/vnd.credready.com+json'
 				}
 			});
+			console.log('questionToSave ', question);
+			let temp = state.employerReducer.questionBank.questions.map((val) => {
+				if (val.question_id === question.questionId) {
+					val.job_title = question.jobTitle;
+					val.question_type = question.questionType;
+					val.question_name = question.questionName;
+					if (question.questionType === "mcq") {
+						val.option_choices = question.optionChoices.map((o) => {
+							return {
+								option_choice_name: o.optionChoiceName,
+								question_type: o.questionType,
+								id: o.id ? o.id : 1,
+								question_id: o.questionId ? o.questionId : question.questionId
+							}
+						})
+					}
+				}
+				return val;
+			});
+			console.log('questionToSave ', temp);
+			dispatch(setQuestionBankQuestion(temp));
 		} else {
 			data = await Axios.post(employeCreateQuestion, question, {
 				headers: {
@@ -566,6 +640,23 @@ export const getJobDetails = (jobID) => async (dispatch, getState) => {
 	}
 };
 
+// export const deleteQuestion = (id) => async (dispatch, getState) => {
+// 	try {
+// 		const state = getState();
+// 		let URL = employerDeleteQuestionFromJobUrl + '/' + id;
+// 		const data = await Axios.delete(URL, {
+// 			headers: {
+// 				'Authorization': getState().authReducer.JWT.map.jwt,
+// 				'Content-Type': 'application/vnd.credready.com+json'
+// 			}
+// 		});
+// 		if (!data) return false;
+// 		dispatch(getQuestionBank());
+// 	} catch (err) {
+// 		if (err.response) console.error(`failed to post the question ${err}`);
+// 	}
+// };
+
 export const deleteQuestion = (id) => async (dispatch, getState) => {
 	try {
 		const state = getState();
@@ -576,12 +667,18 @@ export const deleteQuestion = (id) => async (dispatch, getState) => {
 				'Content-Type': 'application/vnd.credready.com+json'
 			}
 		});
+		let temp = state.employerReducer.questionBank.questions.filter((val) => {
+			return val.question_id != id;
+		});
+		console.log('questionToSave ', temp);
+		dispatch(setQuestionBankQuestion(temp));
 		if (!data) return false;
 		dispatch(getQuestionBank());
 	} catch (err) {
 		if (err.response) console.error(`failed to post the question ${err}`);
 	}
 };
+
 
 export const uploadProfileImage = (image) => async (dispatch, getState) => {
 	try {
@@ -603,6 +700,28 @@ export const uploadProfileImage = (image) => async (dispatch, getState) => {
 			type: "error",
 			isShow: true
 		}));
+		if (err.response) console.error(`failed to post the question ${err}`);
+	}
+};
+
+export const profileDownload = (type) => async (dispatch, getState) => {
+	try {
+		const state = getState();
+		let url = '';
+		if (type === "candidate") {
+			url = profileCandidateDownloadUrl;
+		} else {
+			url = profileDownloadUrl;
+		}
+		const data = await Axios.get(url, {
+			headers: {
+				'Authorization': getState().authReducer.JWT.map.jwt,
+				'Content-Type': 'application/vnd.credready.com+json'
+			}
+		});
+		if (!data) return false;
+		dispatch(setEmployerResumePath(data.data));
+	} catch (err) {
 		if (err.response) console.error(`failed to post the question ${err}`);
 	}
 };

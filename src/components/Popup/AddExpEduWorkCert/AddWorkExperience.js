@@ -343,13 +343,10 @@ function AddWorkExperience() {
 						</div>
 					</li>
 					<li>
-						<label htmlFor="strengths">Strengths</label>
-						<Input id="strengths" type="text" />
-					</li>
-					<li>
 						<label htmlFor="employerWebsite">Employer website</label>
 						<Input
 							id="employerWebsite"
+							defaultValue={formData.employerWebsite[0]}
 							type="text"
 							onChange={(e) => handleFieldChange(e.target.id, e.target.value)}
 						/>

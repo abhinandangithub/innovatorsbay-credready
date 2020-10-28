@@ -15,7 +15,8 @@ import SortIcon from "../../_Elements/SortIcon";
 import Pagination from "../../_Elements/Pagination";
 import ImgUser from "../../../assets/user-placeholder.jpg";
 import ImgMail from "../../../assets/email.svg";
-import ImgDownload from "../../../assets/download.svg";
+import ImgDownload from "../../../assets/download_resume.svg";
+import ImgFilter from "../../../assets/filter.svg";
 import Input from "../../_Elements/Input";
 import Spinner from "../../_Elements/Spinner";
 import { dateFormats } from "highcharts";
@@ -552,10 +553,10 @@ function CandidateList(props) {
 							onChange={(e) => handleFreeSearch(e.target.value)}
 						/>
 						<button
-							className="primary-btn blue"
+							className="primary-btn blue filter_btn"
 							onClick={() => setFilterOptions(!filterOptions)}
 						>
-							Filter
+							<img src={ImgFilter} alt="Filter" />
 						</button>
 						<div className={`options ${filterOptions ? "on" : "off"}`}>
 							<div className="listing">

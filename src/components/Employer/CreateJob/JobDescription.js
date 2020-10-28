@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import RichTextEditor from "react-rte";
-import { useDispatch } from "react-redux";
+import { useDispatch, connect } from "react-redux";
 import { setNewJob } from "../../../store/actions/employer";
+import { Link, useParams } from "react-router-dom";
 
 const toolbarConfig = {
 	// Optionally specify the groups to display (displayed in the order listed).
@@ -30,11 +31,23 @@ const toolbarConfig = {
 };
 
 function CreateJob(props) {
+	console.log('props ', props.jobToUpdate.job_description);
+	let { jobId } = useParams();
+	const [disableCtrl, setDisableCtrl] = useState(false);
+
 	const parent = React.useRef();
 	const dispatch = useDispatch();
 	const [richTextEditorvalue, setRichTextEditorvalue] = React.useState(
 		RichTextEditor.createEmptyValue()
 	);
+	
+	React.useEffect(() => {
+		console.log('props 11', props.jobToUpdate.job_description);
+		if (!!jobId)
+			setRichTextEditorvalue(RichTextEditor.createValueFromString(props.jobToUpdate.job_description, 'html'))
+		if (props.jobToUpdate.count_of_applied_candidates && jobId)
+			setDisableCtrl(true)
+	}, [props.jobToUpdate]);
 
 	React.useEffect(() => {
 		props.calHeight(parent.current.clientHeight);
@@ -58,6 +71,7 @@ function CreateJob(props) {
 					toolbarConfig={toolbarConfig}
 					id="description"
 					value={richTextEditorvalue}
+				//	disabled={disableCtrl}
 					onChange={(value) => onRichTextEditorChange(value)}
 				/>
 			</div>
@@ -65,4 +79,13 @@ function CreateJob(props) {
 	);
 }
 
-export default CreateJob;
+// export default CreateJob;
+
+function mapStateToProps(state) {
+	return {
+		jobToUpdate: state.employerReducer.jobToUpdate
+	};
+}
+
+// export default CreateJob;
+export default connect(mapStateToProps)(CreateJob);

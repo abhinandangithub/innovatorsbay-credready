@@ -1,21 +1,144 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import RichTextEditor from "react-rte";
+import ContentEditable from "react-contenteditable";
 
 import "./index.scss";
 import {
 	togglePopup,
 	toggleOverlay,
 } from "../../../../store/actions/popup_overlay";
-import { addEmailTemplate, updateEmailTemplate } from '../../../../store/thunks/employer';
+import {
+	addEmailTemplate,
+	updateEmailTemplate,
+} from "../../../../store/thunks/employer";
+
+const tags = [
+	{
+		label: "Job Title",
+		text: "job_title",
+	},
+	{
+		label: "Recruiter Name",
+		text: "recruiter_name",
+	},
+	{
+		label: "Location",
+		text: "location",
+	},
+	{
+		label: "Job Description",
+		text: "job_description",
+	},
+	{
+		label: "Candidate First Name",
+		text: "candidate_first_name",
+	},
+	{
+		label: "Candidate Last Name",
+		text: "candidate_last_name",
+	},
+	{
+		label: "Years Experience Required",
+		text: "years_experience_required",
+	},
+	{
+		label: "Skills",
+		text: "skills",
+	},
+	{
+		label: "Certificates",
+		text: "certificates",
+	},
+];
+
+let _cursorInfo = {
+	el: null,
+	pos: -1,
+};
+
+let defaultText = `<p>Hello {candidate_first_name} {candidate_last_name}</p>
+<p>We are looking out for {job_title} for our organization located at {location}.</p>
+<div><br/></div>
+<p>Regards,</p>
+<p>{recruiter_name}</p>`;
+// defaultText = "";
 
 function CreateEmailTemplate(props) {
-	console.log('props ', props.info);
+	const myEditorEl = useRef();
+	const contentEditable = React.createRef();
 	const dispatch = useDispatch();
 	const { popup } = useSelector((state) => state.popupOverlayReducer);
 
-	const [value, setValue] = React.useState(
-		`Hello {candidate_first_name} {candidate_last_name}\nWe are looking out for {job_title} for our organization located at {location}.\n\nRegards,\n{recruiter_name}`
-	);
+	function getCaretPosition() {
+		if (window.getSelection && window.getSelection().getRangeAt) {
+			var range = window.getSelection().getRangeAt(0);
+			var selectedObj = window.getSelection();
+			var rangeCount = 0;
+			var childNodes = selectedObj.anchorNode.parentNode.childNodes;
+			let index = null;
+			for (var i = 0; i < childNodes.length; i++) {
+				if (childNodes[i] === selectedObj.anchorNode) {
+					index = i;
+					break;
+				}
+				if (childNodes[i].outerHTML) {
+					rangeCount += childNodes[i].outerHTML.length;
+					index = i;
+				} else if (childNodes[i].nodeType === 3) {
+					rangeCount += childNodes[i].textContent.length;
+					index = i;
+				}
+			}
+			return {
+				el: childNodes[index].parentElement,
+				pos: range.startOffset + rangeCount,
+			};
+		}
+		return -1;
+	}
+
+	const handleDefaultChecked = (tag) => {
+		return formData.body[0].includes(tag.text);
+	};
+
+	const handleInputChange = (e, tag) => {
+		let editor = document.getElementById("myEditor");
+
+		if (e.target.checked) {
+			var textToInsert = ` {${tag.text}} `;
+			if (_cursorInfo.pos > -1) {
+				let output = [
+					_cursorInfo.el.innerHTML.slice(0, _cursorInfo.pos),
+					textToInsert,
+					_cursorInfo.el.innerHTML.slice(_cursorInfo.pos),
+				].join("");
+				_cursorInfo.el.innerHTML = output;
+
+				_cursorInfo.pos = -1;
+
+				setFormData({
+					...formData,
+					body: [editor.innerHTML],
+				});
+			}
+		} else {
+			var textToSearch = `${tag.text}`;
+			var stringWithTag = myEditorEl.current.lastHtml;
+			var regex = new RegExp("\\{" + textToSearch + "\\}", "g");
+			let output = stringWithTag.replace(regex, " ");
+
+			setFormData({
+				...formData,
+				body: [output],
+			});
+		}
+	};
+
+	const getCursorPos = () => {
+		_cursorInfo = getCaretPosition();
+		return _cursorInfo;
+	};
 
 	const [formData, setFormData] = React.useState({
 		/**
@@ -23,7 +146,7 @@ function CreateEmailTemplate(props) {
 		 */
 		name: [],
 		email: [],
-		body: [],
+		body: [defaultText],
 
 		formValid: false,
 	});
@@ -32,21 +155,21 @@ function CreateEmailTemplate(props) {
 		if (!!props.info.data) {
 			setFormData({
 				name: [props.info.data.template_name],
-				email: [props.info.data.email || "test@gmail.com"],
+				email: [props.info.data.from_email || "test@gmail.com"],
 				body: [props.info.data.email_body],
-				formValid: true
+				formValid: true,
 			});
 		} else {
 			setFormData({
 				name: [],
 				email: [],
-				body: [value],
-				formValid: false
+				body: [defaultText],
+				formValid: false,
 			});
 		}
 	}, [props.info.data]);
 
-	const handleSubmit = (type = 'add') => {
+	const handleSubmit = (type = "add") => {
 		let oldFormData = { ...formData };
 		oldFormData.formValid = true;
 
@@ -75,11 +198,11 @@ function CreateEmailTemplate(props) {
 			/* send data to api */
 			// props.updateCandidateDetails(obj);
 			// props.history.push("/profile/work-experience");
-			console.log('formData ', formData);
-			if (type === 'add') {
+			console.log("formData ", formData);
+			if (type === "add") {
 				dispatch(addEmailTemplate(formData));
 			} else {
-				let obj = { ...formData, templateId: props.info.data.template_id }
+				let obj = { ...formData, templateId: props.info.data.template_id };
 				dispatch(updateEmailTemplate(obj));
 			}
 			dispatch(toggleOverlay(false));
@@ -104,17 +227,17 @@ function CreateEmailTemplate(props) {
 
 	const updateTemplate = () => {
 		console.log("updateTemplate");
-		handleSubmit('edit');
+		handleSubmit("edit");
 	};
 
 	const saveAsNewTemplate = () => {
 		console.log("saveAsNewTemplate");
-		handleSubmit('add');
+		handleSubmit("add");
 	};
 
 	const addTemplate = () => {
 		console.log("addTemplate");
-		handleSubmit('add');
+		handleSubmit("add");
 	};
 
 	return (
@@ -122,8 +245,8 @@ function CreateEmailTemplate(props) {
 			{popup.info.type === "add" ? (
 				<h1>Add Email Template</h1>
 			) : (
-					<h1>Edit Email Template</h1>
-				)}
+				<h1>Edit Email Template</h1>
+			)}
 
 			<div className="content">
 				<ul>
@@ -143,7 +266,7 @@ function CreateEmailTemplate(props) {
 					</li>
 					<li>
 						<label htmlFor="email">
-							From Email Address <span>*</span>
+							Reply To Email Address <span>*</span>
 							<span className={`error-text ${!formData.email[1] && "hidden"}`}>
 								Required
 							</span>
@@ -156,97 +279,54 @@ function CreateEmailTemplate(props) {
 						/>
 					</li>
 					<li>
-						<label htmlFor="body">Tags<span>*</span>
+						<label htmlFor="body">
+							Tags<span>*</span>
 							<span className={`error-text ${!formData.body[1] && "hidden"}`}>
 								Required
 							</span>
 						</label>
 						<ul>
-							<li>
-								<input
-									className="block-toggle blue checkbox"
-									id="cert1"
-									name="cert"
-									type="checkbox"
-								/>
-								<label htmlFor="cert1">Job Title</label>
-							</li>
-							<li>
-								<input
-									className="block-toggle blue checkbox"
-									id="cert2"
-									name="cert"
-									type="checkbox"
-								/>
-								<label htmlFor="cert2">Recruiter Name</label>
-							</li>
-							<li>
-								<input
-									className="block-toggle blue checkbox"
-									id="cert3"
-									name="cert"
-									type="checkbox"
-								/>
-								<label htmlFor="cert3">Candidate First Name</label>
-							</li>
-							<li>
-								<input
-									className="block-toggle blue checkbox"
-									id="cert4"
-									name="cert"
-									type="checkbox"
-								/>
-								<label htmlFor="cert4">Job Description</label>
-							</li>
-							<li>
-								<input
-									className="block-toggle blue checkbox"
-									id="cert5"
-									name="cert"
-									type="checkbox"
-								/>
-								<label htmlFor="cert5">Job Title</label>
-							</li>
-							<li>
-								<input
-									className="block-toggle blue checkbox"
-									id="cert6"
-									name="cert"
-									type="checkbox"
-								/>
-								<label htmlFor="cert6">Recruiter Name</label>
-							</li>
-							<li>
-								<input
-									className="block-toggle blue checkbox"
-									id="cert7"
-									name="cert"
-									type="checkbox"
-								/>
-								<label htmlFor="cert7">Candidate First Name</label>
-							</li>
-							<li>
-								<input
-									className="block-toggle blue checkbox"
-									id="cert8"
-									name="cert"
-									type="checkbox"
-								/>
-								<label htmlFor="cert8">Job Description</label>
-							</li>
+							{tags.map((tag, i) => {
+								let isChecked = handleDefaultChecked(tag);
+								return (
+									<li key={i}>
+										<input
+											className="block-toggle blue checkbox"
+											id={`tag_${i}`}
+											name="tag"
+											type="checkbox"
+											// disabled
+											checked={isChecked}
+											onChange={(e) => handleInputChange(e, tag)}
+										/>
+										<label htmlFor={`tag_${i}`} data-text={tag.text}>
+											{tag.label}
+										</label>
+									</li>
+								);
+							})}
 						</ul>
 					</li>
 					<li>
-						<textarea
-							name="body"
-							id="body"
-							cols="30"
-							rows="10"
-							//value={value}
+						<ContentEditable
+							ref={myEditorEl}
+							innerRef={contentEditable}
 							defaultValue={formData.body[0]}
-							onChange={(e) => handleFieldChange(e.target.id, e.target.value)}
-						//	onChange={(e) => setValue(e.target.value)}
-						></textarea>
+							onChange={(e) => {
+								console.log(myEditorEl);
+								// handleFieldChange("body", myEditorEl.current.lastHtml);
+							}}
+							// onBlur={() =>
+							// 	handleFieldChange("body", myEditorEl.current.lastHtml)
+							// }
+							html={formData.body[0]}
+							disabled={false}
+							tagName="div"
+							className="my_editor"
+							id="myEditor"
+							onMouseUp={getCursorPos}
+							onKeyUp={getCursorPos}
+						/>
 					</li>
 				</ul>
 				{popup.info.type === "add" ? (
@@ -256,18 +336,18 @@ function CreateEmailTemplate(props) {
 						</button>
 					</div>
 				) : (
-						<div className="cta">
-							<button
-								className="primary-btn blue outline"
-								onClick={updateTemplate}
-							>
-								Update Template
+					<div className="cta">
+						<button
+							className="primary-btn blue outline"
+							onClick={updateTemplate}
+						>
+							Update Template
 						</button>
-							<button className="primary-btn blue" onClick={saveAsNewTemplate}>
-								Save as new Template
+						<button className="primary-btn blue" onClick={saveAsNewTemplate}>
+							Save as new Template
 						</button>
-						</div>
-					)}
+					</div>
+				)}
 			</div>
 		</div>
 	);

@@ -5,14 +5,19 @@ import {
 	sendNotification,
 	getCandidatesList
 } from "../../../store/thunks/employer";
-import { clearSelectedJobs } from "../../../store/actions/employer";
+import { clearSelectedJobs, jobToUpdate } from "../../../store/actions/employer";
 import Spinner from "../../_Elements/Spinner";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPencilAlt } from "@fortawesome/free-solid-svg-icons";
+import {
+	faUser,
+	faMapMarker,
+	faCalendar,
+} from "@fortawesome/free-solid-svg-icons";
 
 import { Link } from "react-router-dom";
 
 import "./index.scss";
+import { faPen, faTrash } from "@fortawesome/free-solid-svg-icons";
 
 function PostedJobs(props) {
 	const [jobs, setJobs] = useState(props.postedJobs);
@@ -29,12 +34,12 @@ function PostedJobs(props) {
 
 	const handleSendEmail = (e, job_id) => {
 		// if(e.target.checked) {
-		let jobs = props.postedJobs.map(j => {
+		let jobs = props.postedJobs.map((j) => {
 			if (j.job_id === job_id) {
 				j.is_following_on_email = e.target.checked;
-			};
+			}
 			return j;
-		})
+		});
 		setJobs(jobs);
 		dispatch(
 			sendNotification({
@@ -48,12 +53,12 @@ function PostedJobs(props) {
 
 	const handleSendSMS = (e, job_id) => {
 		// if(e.target.checked) {
-		let jobs = props.postedJobs.map(j => {
+		let jobs = props.postedJobs.map((j) => {
 			if (j.job_id === job_id) {
 				j.is_following_on_sms = e.target.checked;
-			};
+			}
 			return j;
-		})
+		});
 		setJobs(jobs);
 		dispatch(
 			sendNotification({
@@ -71,9 +76,16 @@ function PostedJobs(props) {
 
 	const handleSearch = (searchSting) => {
 		setJobs(
-			props.postedJobs.filter((val) => val.job_title.toLowerCase().includes(searchSting.toLowerCase()))
+			props.postedJobs.filter((val) =>
+				val.job_title.toLowerCase().includes(searchSting.toLowerCase())
+			)
 		);
 	};
+
+	const handleEdit = (id) => {
+		dispatch(jobToUpdate(id));
+		props.history.push(`/jobs/create-job/${id}`);
+	}
 
 	const jobsList = [1, 2];
 	// const jobsList = props.postedJobs;
@@ -81,19 +93,23 @@ function PostedJobs(props) {
 	const List = ({ job }) => {
 		console.log(job);
 		return (
-			<>	
-				<div className="list-btn">
-					<h2 className="heading">{job.job_title}</h2>
-					<Link to="/jobs/create-job" className="edit" id="editBtn">
-						<FontAwesomeIcon icon={faPencilAlt} />
-					</Link>
-				</div>
-				
-				<div className="description">
-					<p>
-						<span>Description: </span>
-					</p>
-					<div dangerouslySetInnerHTML={{ __html: job.job_description }}></div>
+			<>
+				<h2 className="heading">{job.job_title}</h2>
+				<div className="description flex-end">
+					<div>
+						<p>
+							<span>Description: </span>
+						</p>
+						<div dangerouslySetInnerHTML={{ __html: job.job_description }}></div>
+					</div>
+					<div>
+						<FontAwesomeIcon
+							className="action-btn edit"
+							icon={faPen}
+							// id={"workExperienceEdit_" + i}
+							onClick={() => handleEdit(job.job_id)}
+						/>
+					</div>
 				</div>
 
 				<ul className="common-skills-list">
@@ -112,12 +128,19 @@ function PostedJobs(props) {
 					<ul className="info">
 						{/* <li>Warren, NY</li> */}
 						<li>
+							<FontAwesomeIcon className="icon" icon={faMapMarker} />
 							{!!job.address && job.address.city},{" "}
 							{!!job.address && job.address.state}
 						</li>
 						{/* <li>January 21, 2020</li> */}
-						<li>{job.modified_on}</li>
-						<li>{job.modified_by}</li>
+						<li>
+							<FontAwesomeIcon className="icon" icon={faCalendar} />
+							{job.modified_on}
+						</li>
+						<li>
+							<FontAwesomeIcon className="icon" icon={faUser} />
+							{job.modified_by}
+						</li>
 						<li>Candidates applied {job.count_of_applied_candidates}</li>
 					</ul>
 					<Link

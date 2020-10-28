@@ -187,3 +187,16 @@ export const clearEmployerState = (val) => {
 	};
 };
 
+export const jobToUpdate = (val) => {
+	return {
+		type: actionTypes.JOB_TO_UPDATE,
+		value: val,
+	};
+};
+
+export const setEmployerResumePath = (val) => {
+	return {
+		type: actionTypes.EMPLOYER_RESUME_PATH,
+		value: val,
+	};
+};

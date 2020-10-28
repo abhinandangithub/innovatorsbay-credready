@@ -212,12 +212,12 @@ function Education(props) {
 			<div className="cta">
 				<Link
 					to="/profile/work-experience"
-					className="primary-btn outline"
+					className="primary-btn blue outline"
 					id="previousLink"
 				>
 					Previous
 				</Link>
-				<Link to="/profile/preview" className="primary-btn" id="nextLink">
+				<Link to="/profile/preview" className="primary-btn blue" id="nextLink">
 					Next
 				</Link>
 			</div>

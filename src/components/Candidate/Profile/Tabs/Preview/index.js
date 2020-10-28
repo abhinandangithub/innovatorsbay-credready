@@ -59,7 +59,7 @@ function Preview(props) {
 					</div>
 					<div className="bottom">
 						<p>
-							<Link to="/profile/resume">{personelDetailsData.resume_name}</Link>
+							<Link to="/profile/resume">{personelDetailsData.resume_name ? personelDetailsData.resume_name : "not-found"}</Link>
 						</p>
 					</div>
 				</div>
@@ -198,15 +198,17 @@ function Preview(props) {
 											</p>
 											<p>
 												<span className="heading">Major : </span>
-												{exp.education_major && exp.education_major.map((major) => {
-													return major.name;
-												})}
+												{exp.education_major &&
+													exp.education_major.map((major) => {
+														return major.name;
+													})}
 											</p>
 											<p>
 												<span className="heading">Minor : </span>
-												{exp.education_minor && exp.education_minor.map((minor) => {
-													return minor.name;
-												})}
+												{exp.education_minor &&
+													exp.education_minor.map((minor) => {
+														return minor.name;
+													})}
 											</p>
 										</p>
 										<p>
@@ -341,7 +343,7 @@ function Preview(props) {
 			<div className="check-boxes">
 				<div className="check-box">
 					<input
-						className="fancy-toggle checkbox"
+						className="fancy-toggle blue"
 						type="checkbox"
 						name="termsandconditions"
 						id="allowContact"
@@ -354,7 +356,7 @@ function Preview(props) {
 				</div>
 				<div className="check-box">
 					<input
-						className="fancy-toggle checkbox"
+						className="fancy-toggle blue"
 						type="checkbox"
 						name="termsandconditions"
 						id="confirm"
@@ -370,7 +372,7 @@ function Preview(props) {
 				{/* <button className="primary-btn ">Proceed to questions</button> */}
 				<Link
 					to="/profile/questions"
-					className="primary-btn flex"
+					className="primary-btn blue flex"
 					id="profileQuestionsLink"
 				>
 					Proceed to questions

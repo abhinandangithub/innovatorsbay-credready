@@ -7,11 +7,13 @@ import WorkHistory from "./Questions/WorkHistory";
 import CommuteQuestions from "./Questions/CommuteQuestions";
 import GeneralQuestions from "./Questions/GeneralQuestions";
 import JobSpecificQuestions from "./Questions/JobSpecificQuestions";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { connect, useDispatch } from "react-redux";
 import { postJob } from "../../../store/thunks/employer";
 
 function SpecificQuestions(props) {
+	let { jobId } = useParams();
+
 	const parent = React.useRef();
 	const [activeTab, setActiveTab] = React.useState(0);
 
@@ -27,19 +29,7 @@ function SpecificQuestions(props) {
 	const handlePostJob = () => {
 		props.onEnableLink();
 		dispatch(
-			postJob({
-				emailTemplateId: 3,
-				employmentType: 3,
-				function: 1,
-				industry: 1,
-				jobDescription: "Some nice job description",
-				jobQuestionnaireMap: [1, 2, 3],
-				jobTitle: "Senior Nursing Assistant",
-				location: 3,
-				maxExp: 1,
-				minExp: 4,
-				openPositions: 15,
-			})
+			postJob(jobId)
 		);
 	};
 
@@ -79,21 +69,29 @@ function SpecificQuestions(props) {
 					) : activeTab === 1 ? (
 						<GeneralQuestions />
 					) : (
-						<JobSpecificQuestions />
-					)}
+								<JobSpecificQuestions />
+							)}
 				</div>
 			</div>
 			<div className="cta">
 				<Link
-					to="/jobs/create-job"
+					//to="/jobs/create-job"
 					className="primary-btn blue"
 					onClick={handlePostJob}
 				>
-					Post the job
+					{jobId ? "Update the job" : "Post the job"}
 				</Link>
 			</div>
 		</>
 	);
 }
 
-export default SpecificQuestions;
+//export default SpecificQuestions;
+
+function mapStateToProps(state) {
+	return {
+		jobToUpdate: state.employerReducer.jobToUpdate
+	};
+}
+
+export default connect(mapStateToProps)(SpecificQuestions);

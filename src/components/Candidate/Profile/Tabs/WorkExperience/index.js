@@ -121,12 +121,16 @@ function WorkExperience(props) {
 			<div className="cta">
 				<Link
 					to="/profile/personal-details"
-					className="primary-btn outline"
+					className="primary-btn blue outline"
 					id="previousLink"
 				>
 					Previous
 				</Link>
-				<Link to="/profile/education" className="primary-btn" id="nextLink">
+				<Link
+					to="/profile/education"
+					className="primary-btn blue"
+					id="nextLink"
+				>
 					Next
 				</Link>
 			</div>

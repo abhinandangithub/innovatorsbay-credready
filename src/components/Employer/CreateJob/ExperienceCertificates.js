@@ -1,24 +1,28 @@
-import React from "react";
+import React, { useState } from "react";
 import { connect, useDispatch } from "react-redux";
 import InputRange from "react-input-range";
 import { getSkills } from "../../../store/thunks/employer";
 import { Multiselect } from "multiselect-react-dropdown";
 import { setNewJob } from "../../../store/actions/employer";
+import { Link, useParams } from "react-router-dom";
 
 function CreateJob(props) {
+	let { jobId } = useParams();
+
 	const dispatch = useDispatch();
 	const [value, setValue] = React.useState({
 		min: 3,
 		max: 7,
 	});
 
+	const [certificates, setCertificates] = React.useState([]);
+
 	const options = [
 		{ name: "Srigar", id: 1 },
 		{ name: "Sam", id: 2 },
 	];
 
-	// value.min
-	// value.max
+	const [disableCtrl, setDisableCtrl] = useState(false);
 
 	const parent = React.useRef();
 
@@ -30,21 +34,31 @@ function CreateJob(props) {
 		dispatch(getSkills());
 	}, [dispatch]);
 
-	// React.useEffect(() => {
-	// 	dispatch(setNewJob({ minExp: value.min, maxExp: value.max }));
-	// }, [value]);
+	React.useEffect(() => {
+		console.log('certificates ', props.jobToUpdate.certificates);
+		if (!!jobId) {
+			setValue({
+				min: props.jobToUpdate.min_experience,
+				max: props.jobToUpdate.max_experience,
+			});
+			setCertificates(props.jobToUpdate.certificates);
+			dispatch(setNewJob({ jobCertificateMap: props.jobToUpdate.certificates }));
+		}
+		if (props.jobToUpdate.count_of_applied_candidates && jobId)
+			setDisableCtrl(true)
+	}, [props.jobToUpdate]);
+
+	React.useEffect(() => {
+		dispatch(setNewJob({ minExp: value.min, maxExp: value.max }));
+	}, [value]);
 
 	const handleSelect = (selectedList, selectedItem) => {
+		console.log('selectedList ', selectedList)
 		dispatch(setNewJob({ jobCertificateMap: selectedList }));
 	};
 
 	const handleRemove = (selectedList, selectedItem) => {
 		dispatch(setNewJob({ jobCertificateMap: selectedList }));
-	};
-
-	const handleHandleExpChange = (exp) => {
-		setValue(exp);
-		dispatch(setNewJob({ minExp: exp.min, maxExp: exp.max }));
 	};
 
 	return (
@@ -58,24 +72,7 @@ function CreateJob(props) {
 				<h2 className="sub-heading">
 					Certificates <span>*</span>
 				</h2>
-				{/* <ul className="added-items">
-					{props.skills.map((val, i) => {
-						if (i > 4) return false;
-						return (
-							<li>
-								{val.name} <span></span>{" "}
-							</li>
-						);
-					})}
-					<li>
-						Nursing <span></span>{" "}
-					</li>
-					<li>
-						Take Care <span></span>{" "}
-					</li>
-					<li className="btn"></li>
-				</ul> */}
-				{/* <div style={{width: '50%'}}> */}
+
 				<Multiselect
 					style={{
 						multiselectContainer: {
@@ -85,7 +82,7 @@ function CreateJob(props) {
 						},
 					}}
 					options={props.skills} // Options to display in the dropdown
-					// selectedValues={this.state.selectedValue} // Preselected value to persist in dropdown
+					selectedValues={certificates} // Preselected value to persist in dropdown
 					onSelect={(selectedList, selectedItem) =>
 						handleSelect(selectedList, selectedItem)
 					} // Function will trigger on select event
@@ -93,6 +90,7 @@ function CreateJob(props) {
 						handleRemove(selectedList, selectedItem)
 					} // Function will trigger on remove event
 					displayValue="title_name" // Property name to display in the dropdown options
+					disable={disableCtrl}
 				/>
 				{/* </div> */}
 				<h2 className="sub-heading">
@@ -105,8 +103,8 @@ function CreateJob(props) {
 					maxValue={10}
 					value={value}
 					// formatLabel={(value) => `${value} years`}
-					// onChange={(value) => setValue(value)}
-					onChange={(value) => handleHandleExpChange(value)}
+					onChange={(value) => setValue(value)}
+				//	disabled={disableCtrl}
 				/>
 			</div>
 		</div>
@@ -116,9 +114,9 @@ function CreateJob(props) {
 function mapStateToProps(state) {
 	return {
 		skills: state.employerReducer.skills.data,
+		jobToUpdate: state.employerReducer.jobToUpdate
 	};
 }
 
 // export default CreateJob;
 export default connect(mapStateToProps)(CreateJob);
-// export default CreateJob;

@@ -55,30 +55,13 @@ function CreateNewQuestion(props) {
 	const [optionInput, setOptionInput] = useState([""]);
 	const dispatch = useDispatch();
 
-	let choices = () => {
-		if (props.action === "edit") {
-			return props.data.option_choices;
-		} else {
-			return [
-				{
-					option_choice_name: "",
-					question_type: "boolean",
-				},
-				{
-					option_choice_name: "",
-					question_type: "boolean",
-				},
-			];
-		}
-	};
-
 	const [formData, setFormData] = React.useState({
 		/**
 		 * * field: ['value', 'error']
 		 */
-		_questionName: [],
+		_questionName: [questionName],
 		// _answers: [choices],
-		_answers: [["", ""]],
+		_answers: [optionChoiceName.map((option, i) => option.option_choice_name)],
 
 		formValid: false,
 	});
@@ -252,7 +235,7 @@ function CreateNewQuestion(props) {
 		if (props.data && props.data.question_type === "mcq") {
 			document.getElementById("multipleChoice").checked = true;
 		}
-	}, [props.data, formData]);
+	}, [props.data]);
 
 	useEffect(() => {
 		let __answers = [...formData._answers];

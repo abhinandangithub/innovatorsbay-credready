@@ -22,7 +22,7 @@ function JobApplied(props) {
 			<h1>Thank you !</h1>
 			<div className="content">
 				<p>
-					Thanks for applying Certified Nursing Assistant Job. <br />
+					Thanks for applying. <br />
 					You will receive a confirmation email soon.
 				</p>
 				<div className="cta">

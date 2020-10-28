@@ -11,6 +11,7 @@ import {
 	togglePopup,
 	toggleOverlay,
 } from "../../../store/actions/popup_overlay";
+import { Link, useParams } from "react-router-dom";
 
 const employmentStatus = {
 	heading: "Select Email Template",
@@ -18,12 +19,15 @@ const employmentStatus = {
 };
 
 function EmailTemplate(props) {
+	let { jobId } = useParams();
+
 	const parent = React.useRef();
 	const emailBodyEl = React.useRef();
 	const dispatch = useDispatch();
 	const [emailBody, setEmailBody] = useState("");
 	const [templateID, setTemplateID] = useState(0);
 	const [emailTemplates, setEmailTemplates] = useState(props.emailTemplate);
+	const [disableCtrl, setDisableCtrl] = useState(false);
 
 	React.useEffect(() => {
 		props.calHeight(parent.current.clientHeight);
@@ -32,6 +36,17 @@ function EmailTemplate(props) {
 	React.useEffect(() => {
 		dispatch(getEmailTemplate());
 	}, [dispatch]);
+
+	React.useEffect(() => {
+		console.log('email default 11', props.jobToUpdate.email_template_id);
+		if (!!jobId) {
+			setTemplateID(props.jobToUpdate.email_template_id);
+			handleTemplateChange(props.jobToUpdate.email_template_id);
+		}
+		if (props.jobToUpdate.count_of_applied_candidates && jobId)
+			setDisableCtrl(true)
+
+	}, [props.jobToUpdate]);
 
 	React.useEffect(() => {
 		console.log('props.emailTemplate ', props.emailTemplate);
@@ -44,40 +59,32 @@ function EmailTemplate(props) {
 		setEmailTemplates(props.emailTemplate);
 	}, [props.emailTemplate]);
 
-	// React.useEffect(() => {
-	// 	dispatch(setNewJob({ emailTemplateId: templateID }));
+	React.useEffect(() => {
+		dispatch(setNewJob({ emailTemplateId: templateID }));
 		// setEmailBody(props.emailTemplate[0].email_body);
-	// }, [dispatch, templateID]);
+	}, [dispatch, templateID]);
 
 	const handleTemplateChange = (item) => {
 		console.log('item ', item);
 		if (typeof item !== "number") return;
-		setEmailBody(
-			// props.emailTemplate.find((x) => x.public_template_id === item).email_body
-			(emailBodyEl.current.innerHTML = props.emailTemplate.find(
-				(x) => x.public_template_id === item || x.template_id === item
-			).email_body)
-		);
-		console.log('item ', item);
+		if (!!emailBodyEl && props.emailTemplate && props.emailTemplate.length) {
+			// setEmailBody(
+			// 	(emailBodyEl.current.innerHTML = props.emailTemplate.find(
+			// 		(x) => x.public_template_id === item || x.template_id === item
+			// 	).email_body)
+			// );
 
-		// props.emailTemplate
-		// 	.find((x) => x.public_template_id === item)
-		// 	.email_body.replace(/(<([^>]+)>)/gi, "")
-		// if (
-		// 	props.emailTemplate.find((x) => x.template_name === item).template_id ===
-		// 	undefined
-		// ) {
-		// 	setTemplateID(
-		// 		props.emailTemplate.find((x) => x.template_name === item)
-		// 			.public_template_id
-		// 	);
-		// } else {
-		// 	setTemplateID(
-		// 		props.emailTemplate.find((x) => x.template_name === item).template_id
-		// 	);
-		// }
+			let obj = props.emailTemplate.find(
+				(x) => x.public_template_id === item || x.template_id === item
+			);
+			console.log('obj ', obj);
+			if (obj && obj.email_body) {
+				emailBodyEl.current.innerHTML = obj.email_body;
+			}
+
+			console.log('item ', item);
+		}
 		setTemplateID(item);
-		dispatch(setNewJob({ emailTemplateId: item }));
 	};
 
 	const handleTemplateSearch = (value) => {
@@ -127,15 +134,16 @@ function EmailTemplate(props) {
 							handleTemplateChange(value);
 							// handleTemplateSearch(value);
 						}}
+					// disable={disableCtrl}
 					/>
-					<button onClick={createEmailTemplate}>
+					<button onClick={createEmailTemplate} disabled={!templateID}>
 						<FontAwesomeIcon className="icon" icon={faPencilAlt} />
 					</button>
 				</div>
 
 				<h2 className="sub-heading">Email</h2>
 
-				<div className="email_body" ref={emailBodyEl}></div>
+				<div className="email_body" ref={emailBodyEl} disabled={disableCtrl}></div>
 				{/* <textarea
 					name="email"
 					id="email"
@@ -156,6 +164,7 @@ function mapStateToProps(state) {
 		employmentType: state.employerReducer.employmentType.data,
 		emailTemplate: state.employerReducer.emailTemplate,
 		emailTemplateNames: state.employerReducer.emailTemplateNames,
+		jobToUpdate: state.employerReducer.jobToUpdate
 	};
 }
 

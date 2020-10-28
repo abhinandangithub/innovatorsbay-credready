@@ -13,7 +13,10 @@ import { useDispatch, useSelector } from "react-redux";
 import {
 	fetchAllAnswers,
 	fetchJobDescription,
+	fetchAllCertificateTitles,
+	fetchCandidateDegreeTitles,
 	submitCandidateAnswers,
+	fetchCandidateDetails
 } from "../../../../modals/candidateProfile/thunk";
 import { findIndexOfObjInArr } from "../../../../assets/js/Utility";
 
@@ -443,7 +446,10 @@ function Questions(props) {
 			dispatch(fetchJobDescription(localStorage.getItem("jobId")));
 		}
 		dispatch(fetchAllAnswers());
-	}, [formData]);
+		dispatch(fetchAllCertificateTitles());
+		dispatch(fetchCandidateDegreeTitles());
+		dispatch(fetchCandidateDetails());
+	}, []);
 
 	const handleAddress = (_addressCount) => {
 		// console.log(_addressCount);

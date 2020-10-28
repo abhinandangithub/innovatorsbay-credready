@@ -15,19 +15,30 @@ import {
 	togglePopup,
 	toggleOverlay,
 } from "../../../../../store/actions/popup_overlay";
-import { uploadCandidateResume, fetchCandidateDetails } from "../../../../../modals/candidateProfile/thunk";
+import {
+	uploadCandidateResume,
+	fetchCandidateDetails,
+} from "../../../../../modals/candidateProfile/thunk";
 import { fetchAllCandidateDataUrl } from "../../../../../modals/candidateProfile/api";
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
 function Resume(props) {
 	const dispatch = useDispatch();
-	const allData = useSelector(state => state.candidateSetDataReducer.data ? state.candidateSetDataReducer.data : [])
+	const allData = useSelector((state) =>
+		state.candidateSetDataReducer.data ? state.candidateSetDataReducer.data : []
+	);
 	const [success, setSuccess] = useState(false);
 	const [errorMessage, setErrorMessage] = useState(null);
 	const [selectedFile, setSelectedFile] = useState(null);
 	const [isFormValid, setIsFormValid] = useState(null);
-	const [resume, setResume] = useState({ preview: allData.resume_path && allData.resume_path !== "" ? allData.resume_path : "", raw: "" })
+	const [resume, setResume] = useState({
+		preview:
+			allData.resume_path && allData.resume_path !== ""
+				? allData.resume_path
+				: "",
+		raw: "",
+	});
 	// const [resumeInfo, setResumeInfo] = useState({
 	// 	numPages: null,
 	// 	pageNumber: 1,
@@ -50,7 +61,7 @@ function Resume(props) {
 		if (e.target.files.length) {
 			setResume({
 				preview: URL.createObjectURL(e.target.files[0]),
-				raw: e.target.files[0]
+				raw: e.target.files[0],
 			});
 		}
 		formData.set("resume", e.target.files[0]);
@@ -122,14 +133,13 @@ function Resume(props) {
 
 	const renderSuccess = () => {
 		console.log(selectedFile);
-		if ((selectedFile || (allData && allData.resume_path))) {
+		if (selectedFile || (allData && allData.resume_path)) {
 			// let filePath = uploadBtnRef.current
 			// 	? uploadBtnRef.current.value
 			// 	: reUploadBtnRef.current.value;
 			const date = formatDate(new Date());
 			let name = selectedFile && selectedFile.name;
-			if (allData.resume_name)
-				name = allData.resume_name;
+			if (allData.resume_name) name = allData.resume_name;
 
 			return (
 				<div className="content">
@@ -167,7 +177,7 @@ function Resume(props) {
 					<div className="preview">
 						{/* <img src={ImgResume} alt="Resume Preview" /> */}
 						<Document
-							file={allData.resume_path ? allData.resume_path : ''}
+							file={allData.resume_path ? allData.resume_path : ""}
 							onLoadSuccess={() => onDocumentLoadSuccess()}
 						>
 							{/* <Page pageNumber={resumeInfo.pageNumber} width={600} /> */}
@@ -181,9 +191,9 @@ function Resume(props) {
 
 	const handleSubmit = () => {
 		console.log("form submitting...");
-		console.log(success);
+		console.log(success || (allData && allData.resume_path));
 
-		if (success) {
+		if (success || (allData && allData.resume_path)) {
 			dispatch(toggleOverlay(true));
 			dispatch(togglePopup([true, "populateInformation"]));
 			// props.history.push("/profile/personal-details");
@@ -194,17 +204,19 @@ function Resume(props) {
 	console.log(allData);
 	return (
 		<div className="resume">
-			{(success || (allData && allData.resume_path)) ? renderSuccess() : renderNormal()}
+			{success || (allData && allData.resume_path)
+				? renderSuccess()
+				: renderNormal()}
 			<div className="cta">
 				{/* <input
-					className="primary-btn"
+					className="primary-btn blue"
 					type="submit"
 					value="Next"
 					id="nextLink"
 					onClick={handleSubmit}
 				/> */}
 				<Link
-					className="primary-btn"
+					className="primary-btn blue"
 					to="/profile/personal-details"
 					id="nextLink"
 				>

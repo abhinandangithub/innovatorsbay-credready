@@ -13,10 +13,6 @@ import WorkHistory from "../../../Candidate/Jobs/Questions/WorkHistory";
 import CommuteQuestions from "../../../Candidate/Jobs/Questions/CommuteQuestions";
 import EmployerQuestions from "../../../Candidate/Jobs/Questions/EmployerQuestions";
 import {
-	togglePopup,
-	toggleOverlay,
-} from "../../../../store/actions/popup_overlay";
-import {
 	fetchAllCertificateTitles,
 	fetchCandidateDetails,
 	jobApply,
@@ -38,10 +34,14 @@ function Application(props) {
 	const allCertificates = useSelector(
 		(state) => state.setCandidateCertificateTitlesReducer.data
 	);
-	const allDegress = useSelector(
+	const degrees = useSelector(
 		(state) => state.setCandidateDegreeTitlesReducer.data
 	);
-
+	const institutions = useSelector((state) =>
+		state.setCandidateInstitutionTypeReducer
+			? state.setCandidateInstitutionTypeReducer.data
+			: []
+	);
 
 	const [allAnswersData, setAllAnswersData] = React.useState(useSelector(
 		(state) => state.setCandidateAllAnswersReducer.data
@@ -60,45 +60,6 @@ function Application(props) {
 		});
 	};
 
-	const handleFieldChange = (type, q, a) => {
-		let i = findIndex(formData[type], q);
-		let _formData = { ...formData };
-
-		if (Array.isArray(a)) {
-			let index = _formData[type][i]["answer"].indexOf(a[0]);
-			if (index > -1) {
-				_formData[type][i]["answer"].splice(index, 1);
-			} else {
-				_formData[type][i]["answer"].push(a[0]);
-			}
-		} else if (typeof a === "object") {
-			if (a.sub_question_id_2) {
-				let index = findIndex(formData[type][i].answer, a.sub_question_id_2);
-				_formData[type][i]["answer"][index].sub_answer = a.sub_answer;
-			} else if (a.sub_answer) {
-				_formData[type][i]["sub_answer"] = a.sub_answer;
-			} else if (a.sub_question_id) {
-				let obj = {
-					sub_question_id: a.sub_question_id,
-					sub_answer: null,
-				};
-
-				let index = findIndex(formData[type][i].answer, a.sub_question_id);
-				if (index > -1) {
-					_formData[type][i]["answer"].splice(index, 1);
-				} else {
-					_formData[type][i]["answer"].push(obj);
-				}
-			} else if (a.address) {
-				_formData[type][i]["answer"][a.address] = a.value;
-			}
-		} else {
-			_formData[type][i]["answer"] = a;
-		}
-
-		setFormData(_formData);
-	};
-
 	const empQuestions = jobData.questions ? jobData.questions : [];
 
 	const empQuestionFormat =
@@ -111,14 +72,13 @@ function Application(props) {
 					answer: "",
 				};
 			}
-			if (entity.question_type === "mcq") {
+			else {
 				return {
 					question_id: entity.question_id,
-					answer: ""
+					answer: []
 				};
 			}
 		});
-
 	const fetchAnswers = (type) => {
 		console.log(type, allAnswersData);
 		return JSON.parse(
@@ -128,6 +88,7 @@ function Application(props) {
 				.answer
 		);
 	};
+
 
 	const formDataFetched = {
 		general_questions: fetchAnswers("general_questions"),
@@ -360,6 +321,7 @@ function Application(props) {
 				: [],
 	};
 
+
 	/* Add address obj if not present */
 
 	if (
@@ -377,6 +339,54 @@ function Application(props) {
 		};
 	}
 	const [formData, setFormData] = React.useState(_formData);
+
+	const handleFieldChange = (type, q, a) => {
+		let i = findIndex(formData[type], q);
+		let _formData = { ...formData };
+
+		if (Array.isArray(a)) {
+			let index = _formData[type][i]["answer"].indexOf(a[0]);
+			if (type === "employer_questions") {
+				_formData[type][i]["answer"][0] = a[0];
+			}
+			else {
+				if (index > -1) {
+					_formData[type][i]["answer"].splice(index, 1);
+				} else {
+					_formData[type][i]["answer"].push(a[0]);
+				}
+			}
+		} else if (typeof a === "object") {
+			if (a.sub_question_id_2) {
+				let index = findIndex(formData[type][i].answer, a.sub_question_id_2);
+				_formData[type][i]["answer"][index].sub_answer = a.sub_answer;
+			} else if (a.sub_answer) {
+				_formData[type][i]["sub_answer"] = a.sub_answer;
+			} else if (a.sub_question_id) {
+				let obj = {
+					sub_question_id: a.sub_question_id,
+					sub_answer: null,
+				};
+
+				let index = findIndex(formData[type][i].answer, a.sub_question_id);
+				if (index > -1) {
+					_formData[type][i]["answer"].splice(index, 1);
+				} else {
+					_formData[type][i]["answer"].push(obj);
+				}
+			} else if (a.address) {
+				_formData[type][i]["answer"][a.address] = a.value;
+			}
+		} else {
+			_formData[type][i]["answer"] = a;
+		}
+
+		setFormData(_formData);
+	};
+
+
+
+
 
 	const calHeight = (height) => {
 		console.log(height);
@@ -435,7 +445,7 @@ function Application(props) {
 						</div>
 						<div className="bottom">
 							<p>
-								<Link to="/">{"marryjane_cv.pdf"}</Link>
+								<Link to="/">{userData.resume_name ? userData.resume_name : "not-found"}</Link>
 							</p>
 						</div>
 					</div>
@@ -499,29 +509,42 @@ function Application(props) {
 						<div className="bottom">
 							{userData &&
 								userData.work_experience &&
-								userData.work_experience.length > 1
+								userData.work_experience.length > 0
 								? userData.work_experience.map((exp, index) => {
 									return (
 										<div className="details" key={index}>
 											<h2>{exp.title}</h2>
 											<p>
-												<span className="text">{exp.location}</span>
+												<span className="heading">Description : </span>
+												{exp.job_description}
 											</p>
 											<p>
-												<span className="heading">{exp.employment_from}</span>
+												<span className="heading">Organization : </span>
+												{exp.company}
+											</p>
+											<p>
+												<span className="heading">Location : </span>
+												{exp.location}
+											</p>
+											<p>
+												<span className="heading">Employer Website : </span>
+												{exp.employer_website}
+											</p>
+											<p>
+												<span className="text">{exp.employment_from}</span>
 												{" to "}
 												<span className="text">{exp.employment_to}</span>
 											</p>
-											<p>
-												<span className="heading">
-													Current employment status:{" "}
-												</span>
-												<span className="text">Employed</span>
-											</p>
-											<p>
-												<span className="heading">Skills: </span>
-												<span className="text">{exp.job_description}</span>
-											</p>
+											{/* <p>
+											<span className="heading">
+												Current employment status:{" "}
+											</span>
+											<span className="text">Employed</span>
+										</p> */}
+											{/* <p>
+											<span className="heading">Skills: </span>
+											<span className="text">{exp.job_description}</span>
+										</p> */}
 										</div>
 									);
 								})
@@ -549,36 +572,63 @@ function Application(props) {
 								onClick={() => alert(`Deleting`)}
 							/>
 						</div>
+						<div className="bottom">
 
-						{userData &&
-							userData.education_experience &&
-							userData.education_experience.length > 0
-							? userData.education_experience.map((exp, index) => {
-								return (
-									<div className="bottom">
-										<div className="details">
+							{userData &&
+								userData.education_experience &&
+								userData.education_experience.length > 0
+								? userData.education_experience.map((exp, index) => {
+									return (
+										<div className="details" key={index}>
 											<h2>
-												{allDegress.map((cert) => {
-													if (cert.id === parseInt(exp.title_id))
-														return cert.title;
-												})}
+												{degrees.length > 0 &&
+													degrees.map((entity) => {
+														if (entity.id === parseInt(exp.title))
+															return entity.title;
+													})}
 											</h2>
 											<p>
-												<span className="heading">{exp.title}</span>
-												{" - "}
-												<span className="text">ABC University</span>
+												<span className="heading">
+													{degrees.length > 0 &&
+														degrees.map((entity) => {
+															if (entity.id === exp.title) return entity.title;
+														})}
+												</span>
+												<span className="heading">Description : </span>
+												{exp.education_description}
+												<p>
+													<span className="heading">Institution : </span>
+													{institutions.length > 0 &&
+														institutions.map((entity) => {
+															if (entity.id === exp.institution)
+																return entity.institute_name;
+														})}
+												</p>
+												<p>
+													<span className="heading">Major : </span>
+													{exp.education_major && exp.education_major.map((major) => {
+														return major.name;
+													})}
+												</p>
+												<p>
+													<span className="heading">Minor : </span>
+													{exp.education_minor && exp.education_minor.map((minor) => {
+														return minor.name;
+													})}
+												</p>
 											</p>
 											<p>
-												<span className="text">{exp.attended_from}</span>
+												<span className="text">FROM {exp.attended_from}</span>
 												{" to "}
 												<span className="text">{exp.attended_till}</span>
 											</p>
 										</div>
-									</div>
-								);
-							})
-							: ""}
+									);
+								})
+								: ""}
+						</div>
 					</div>
+
 					<div className="group ">
 						<div className="top">
 							<h1>
@@ -688,7 +738,9 @@ function Application(props) {
 					noHeading
 					empQuestions={empQuestions}
 					data={formData.employer_questions}
-					onchange={(q, a) => handleFieldChange("employer_questions", q, a)}
+					onchange={(q, a) =>
+						handleFieldChange("employer_questions", q, a)
+					}
 				/>
 			</Accordion>
 

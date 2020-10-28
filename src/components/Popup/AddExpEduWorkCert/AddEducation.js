@@ -68,7 +68,7 @@ function AddEducation(props) {
 		endDate: [],
 		major: [],
 		minor: [],
-		strengths: [],
+		// strengths: [],
 		comments: [],
 		degreeGranted: [],
 
@@ -349,7 +349,7 @@ function AddEducation(props) {
 						</button>
 					</div>
 				</li>
-				<li>
+				{/* <li>
 					<label htmlFor="strengths">
 						Strengths <span>*</span>
 						<span
@@ -364,7 +364,7 @@ function AddEducation(props) {
 						defaultValue={formData.strengths[0]}
 						onChange={(e) => handleFieldChange(e.target.id, e.target.value)}
 					/>
-				</li>
+				</li> */}
 				<li>
 					<label htmlFor="comments">
 						Additional Comments <span>*</span>

@@ -320,7 +320,11 @@ const initialState = {
 		},
 		"status": "OK"
 	},
+	jobToUpdate: {
+
+	},
 	redirectURL: "",
+	employerProfilePath: "",
 	JWT: null,
 };
 
@@ -394,6 +398,17 @@ const reducer = (state = initialState, action) => {
 		case actionTypes.SET_EMPLOYER_POSTED_JOBS:
 			return updateObject(state, {
 				postedJobs: action.value
+			});
+
+		case actionTypes.JOB_TO_UPDATE:
+			const jobs = state.postedJobs.data;
+			console.log('action.value ', action.value);
+			console.log('action.value ', jobs);
+
+			let temp = jobs.find((j) => j.job_id == action.value);
+			console.log('temp ', temp);
+			return updateObject(state, {
+				jobToUpdate: temp
 			});
 
 		case actionTypes.SET_EMPLOYMENT_TYPE:
@@ -618,6 +633,11 @@ const reducer = (state = initialState, action) => {
 		case actionTypes.SET_REDIRECT_URL:
 			return updateObject(state, {
 				redirectURL: action.value
+			});
+
+		case actionTypes.EMPLOYER_RESUME_PATH:
+			return updateObject(state, {
+				employerProfilePath: action.value
 			});
 
 		case actionTypes.CLEAR_EMPLOYER_STATE:

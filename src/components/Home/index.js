@@ -157,6 +157,11 @@ function Home(props) {
 									/>
 									<Route
 										exact
+										path="/jobs/create-job/:jobId"
+										component={EmployerCreateJob}
+									/>
+									<Route
+										exact
 										// path="/jobs/candidates-list"
 										path="/jobs/candidates-list/:jobId"
 										component={EmployerCandidateList}
