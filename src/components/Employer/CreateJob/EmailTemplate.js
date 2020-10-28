@@ -44,10 +44,10 @@ function EmailTemplate(props) {
 		setEmailTemplates(props.emailTemplate);
 	}, [props.emailTemplate]);
 
-	React.useEffect(() => {
-		dispatch(setNewJob({ emailTemplateId: templateID }));
+	// React.useEffect(() => {
+	// 	dispatch(setNewJob({ emailTemplateId: templateID }));
 		// setEmailBody(props.emailTemplate[0].email_body);
-	}, [dispatch, templateID]);
+	// }, [dispatch, templateID]);
 
 	const handleTemplateChange = (item) => {
 		console.log('item ', item);
@@ -77,6 +77,7 @@ function EmailTemplate(props) {
 		// 	);
 		// }
 		setTemplateID(item);
+		dispatch(setNewJob({ emailTemplateId: item }));
 	};
 
 	const handleTemplateSearch = (value) => {

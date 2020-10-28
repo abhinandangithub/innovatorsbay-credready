@@ -30,9 +30,9 @@ function CreateJob(props) {
 		dispatch(getSkills());
 	}, [dispatch]);
 
-	React.useEffect(() => {
-		dispatch(setNewJob({ minExp: value.min, maxExp: value.max }));
-	}, [value]);
+	// React.useEffect(() => {
+	// 	dispatch(setNewJob({ minExp: value.min, maxExp: value.max }));
+	// }, [value]);
 
 	const handleSelect = (selectedList, selectedItem) => {
 		dispatch(setNewJob({ jobCertificateMap: selectedList }));
@@ -40,6 +40,11 @@ function CreateJob(props) {
 
 	const handleRemove = (selectedList, selectedItem) => {
 		dispatch(setNewJob({ jobCertificateMap: selectedList }));
+	};
+
+	const handleHandleExpChange = (exp) => {
+		setValue(exp);
+		dispatch(setNewJob({ minExp: exp.min, maxExp: exp.max }));
 	};
 
 	return (
@@ -100,7 +105,8 @@ function CreateJob(props) {
 					maxValue={10}
 					value={value}
 					// formatLabel={(value) => `${value} years`}
-					onChange={(value) => setValue(value)}
+					// onChange={(value) => setValue(value)}
+					onChange={(value) => handleHandleExpChange(value)}
 				/>
 			</div>
 		</div>

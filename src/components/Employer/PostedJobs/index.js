@@ -3,10 +3,12 @@ import { connect, useDispatch } from "react-redux";
 import {
 	getPostedJobs,
 	sendNotification,
-	getCandidatesList,
+	getCandidatesList
 } from "../../../store/thunks/employer";
 import { clearSelectedJobs } from "../../../store/actions/employer";
 import Spinner from "../../_Elements/Spinner";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPencilAlt } from "@fortawesome/free-solid-svg-icons";
 
 import { Link } from "react-router-dom";
 
@@ -79,8 +81,14 @@ function PostedJobs(props) {
 	const List = ({ job }) => {
 		console.log(job);
 		return (
-			<>
-				<h2 className="heading">{job.job_title}</h2>
+			<>	
+				<div className="list-btn">
+					<h2 className="heading">{job.job_title}</h2>
+					<Link to="/jobs/create-job" className="edit" id="editBtn">
+						<FontAwesomeIcon icon={faPencilAlt} />
+					</Link>
+				</div>
+				
 				<div className="description">
 					<p>
 						<span>Description: </span>

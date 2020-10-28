@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { Scrollbars } from "react-custom-scrollbars";
-
+import { useParams } from "react-router-dom";
 import "./index.scss";
 import JobDetails from "./JobDetails";
 import JobDescription from "./JobDescription";
@@ -17,6 +17,7 @@ let scrollBarStyle = {
 let scrollHeights = [];
 
 function CreateJob() {
+	const { action } = useParams();
 	let heights = [0];
 	const [activeTab, setActiveTab] = React.useState(0);
 	const [enableLink, setEnableLink] = React.useState(false);

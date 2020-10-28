@@ -44,7 +44,20 @@ function Details(props) {
 	const dispatch = useDispatch();
 
 	const [addressCount, setAddressCount] = React.useState([""]);
-	const [city, setCity] = React.useState([]);
+	const [city, setCity] = React.useState(() => {
+	// 	let cty;
+	// 	for(let i = 0; i < props.profile.org.address.length; i++) {
+	// 	cty =	props.geographyKeys &&
+	// 	props.geographyKeys[
+	// 	findIndexOfObjInArr(props.geographyKeys, "city", formData[`city_${i}`][0])
+	// 	] &&
+	// 	props.geographyKeys[
+	// 		findIndexOfObjInArr(props.geographyKeys, "city", formData[`city_${i}`][0])
+	// 	].city
+	// 	}
+	// 	return cty;
+		}
+		);
 	const [state, setState] = React.useState([]);
 	const [isAddAddressClicked, setIsAddAddressClicked] = React.useState(false)
  
@@ -74,7 +87,7 @@ function Details(props) {
 				props.profile.org.address[i].street_address,
 			];
 			// initialState["city_" + i] = [props.geographyKeys.find(c => c.city === props.profile.org.address[i].city).id];
-			initialState["city_" + i] = [props.profile.org.address[i].city];			
+			initialState["city_" + i] = [props.profile.org.address[i].city];
 			initialState["state_" + i] = [props.profile.org.address[i].state];
 			initialState["zipCode_" + i] = [props.profile.org.address[i].zip_code];
 		}
@@ -184,36 +197,55 @@ function Details(props) {
 		});
 	};
 
-	// const handleFieldChangeCity = (field, value, stateField) => {
-	// 	console.log('address ', field, value);
-	// 	let msg = value === "" || value === null ? "Required" : "";
-	// 	let obj = props.geographyKeys.find((c) => {
-	// 		return c.id === value;
-	// 	});
+	const handleFieldChangeCity = (field, value, stateField) => {
+		if(typeof value !== "number") return;
+		console.log('address ', field, value);
+		let msg = value === "" || value === null ? "Required" : "";
+		let obj = props.geographyKeys.find((c) => {
+			return c.id === value;
+		});
+		
+		if(!obj) {
+			msg = "Required";
+		}
+		
+		console.log('obj ', obj);
+		// setState(obj.state);
+		let city = [];
+		// city[0] = value;
+		city[0] = obj.city;
+		city[1] = msg;
+		
+		let state = [];
+		state[0] = obj.state;
+		state[1] = msg;
+		
+		setFormData({
+			...formData,
+			[field]: city,
+			[stateField]: state,
+		});
+		
+		// setFormData({
+		// 	...formData,
+		// 	[stateField]: state,
+		// });
+		// console.log(formData);
+	};
 
-	// 	if(!obj) {
-	// 		msg = "Required";
-	// 	}
-
-	// 	console.log('obj ', obj);
-	// 	let city = [];
-	// 	city[0] = value;
-	// 	city[1] = msg;
-
-	// 	// let state = [];
-	// 	// state[0] = obj.state;
-	// 	// state[1] = msg;
-
-	// 	setFormData({
-	// 		...formData,
-	// 		[field]: city,
-	// 	});
-
-	// 	// setFormData({
-	// 	// 	...formData,
-	// 	// 	[stateField]: state,
-	// 	// });
-	// };
+	const handleFieldSearchCity = (field, value) => {
+		if(typeof value === "number") return;
+		let msg = value === "" || value === null ? "Required" : "";
+		
+		let city = [];
+		// city[0] = value;
+		city[0] = value;
+		city[1] = msg;
+		setFormData({
+			...formData,
+			[field]: city,
+		});
+	};
 
 	const renderAddresses = () => {
 		return addressCount.map((address, index) => {
@@ -254,14 +286,14 @@ function Details(props) {
 								Required
 							</span>
 						</label>
-						<Input
+						{/* <Input
 							id={`city_${i}`}
 							type="text"
 							value={formData[`city_${i}`][0]}
 							// value={address.city}
 							onChange={(e) => handleFieldChange(e.target.id, e.target.value)}
-						/>
-						{/* <InputDropdown
+						/> */}
+						<InputDropdown
 							id={`city_${i}`}
 							placeholder="city"
 							content={props.geographyKeys.map((val) => ({
@@ -269,18 +301,17 @@ function Details(props) {
 								id: val.id,
 							}))}
 							search_term="city"
-							// selected={formData[`city_${i}`][0]}
-							selected={
-								props.geographyKeys &&
-								props.geographyKeys[
-								findIndexOfObjInArr(props.geographyKeys, "id", formData[`city_${i}`][0])
-								] &&
-								props.geographyKeys[
-									findIndexOfObjInArr(props.geographyKeys, "id", formData[`city_${i}`][0])
-								].city
+							selected={formData[`city_${i}`][0]}
+							// selected={
+							// 	city
+							// }
+							onchange={
+								(value) => {
+									handleFieldChangeCity(`city_${i}`, value, `state_${i}`)
+									handleFieldSearchCity(`city_${i}`,value)
+								}
 							}
-							onchange={(value) => handleFieldChangeCity(`city_${i}`, value, `state_${i}`)}
-						/> */}
+						/>
 					</li>
 					<li>
 						<label htmlFor={`state_${i}`}>
@@ -299,6 +330,7 @@ function Details(props) {
 							value={formData[`state_${i}`][0]}
 							// value={address.state}
 							onChange={(e) => handleFieldChange(e.target.id, e.target.value)}
+							disabled
 						/>
 					</li>
 					<li style={{ marginBottom: "30px" }}>

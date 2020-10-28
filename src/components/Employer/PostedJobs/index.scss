@@ -110,4 +110,15 @@
 			}
 		}
 	}
+	.edit {
+		top: 20px;
+		right: 20px;
+		border: none;
+		background: transparent;
+		font-size: 20px;
+		color: #0092d0;
+		&:hover {
+			opacity: 0.8;
+		}
+	}
 }
