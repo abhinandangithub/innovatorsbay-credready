@@ -23,6 +23,7 @@ function CreateJob(props) {
 	];
 
 	const [disableCtrl, setDisableCtrl] = useState(false);
+	const [certValidation, setCertValidation] = useState("");
 
 	const parent = React.useRef();
 
@@ -53,11 +54,16 @@ function CreateJob(props) {
 	}, [value]);
 
 	const handleSelect = (selectedList, selectedItem) => {
-		console.log('selectedList ', selectedList)
+		console.log('selectedList ', selectedList);
+		let msg = selectedList.length === 0 ? "Required" : "";
+		setCertValidation(msg);
 		dispatch(setNewJob({ jobCertificateMap: selectedList }));
 	};
 
 	const handleRemove = (selectedList, selectedItem) => {
+		console.log('selectedList ', selectedList);
+		let msg = selectedList.length === 0 ? "Required" : "";
+		setCertValidation(msg);
 		dispatch(setNewJob({ jobCertificateMap: selectedList }));
 	};
 
@@ -71,6 +77,9 @@ function CreateJob(props) {
 			<div className="content">
 				<h2 className="sub-heading">
 					Certificates <span>*</span>
+					<span className={`error-text ${!certValidation && "hidden"}`}>
+						Required
+					</span>
 				</h2>
 
 				<Multiselect
