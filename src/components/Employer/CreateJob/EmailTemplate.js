@@ -29,7 +29,7 @@ function EmailTemplate(props) {
 	const [templateID, setTemplateID] = useState(0);
 	const [emailTemplates, setEmailTemplates] = useState(props.emailTemplate);
 	const [disableCtrl, setDisableCtrl] = useState(false);
-
+	let templateName = '';
 	React.useEffect(() => {
 		props.calHeight(parent.current.clientHeight);
 	}, [props]);
@@ -66,10 +66,11 @@ function EmailTemplate(props) {
 	}, [dispatch, templateID]);
 
 	const handleTemplateChange = (item) => {
-		console.log('item ', item);
+		console.log('item template ', item);
 		let msg = item === "" || item === null ? "Required" : "";
 		setEmailValidation(msg);
 		if (typeof item !== "number") return;
+
 		if (!!emailBodyEl && props.emailTemplate && props.emailTemplate.length) {
 			// setEmailBody(
 			// 	(emailBodyEl.current.innerHTML = props.emailTemplate.find(
@@ -137,7 +138,9 @@ function EmailTemplate(props) {
 						}))}
 						id="emailtemplate"
 						search_term
-						// selected={institution.content[formData.institution[0]]}
+						selected={templateID && emailTemplates.find((val) =>
+							val.template_id === templateID
+						).template_name}
 						onchange={(value) => {
 							handleTemplateChange(value);
 							// handleTemplateSearch(value);

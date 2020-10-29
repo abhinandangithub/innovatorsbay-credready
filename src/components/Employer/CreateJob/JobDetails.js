@@ -99,12 +99,19 @@ function CreateJob(props) {
 					props.jobToUpdate.function
 				],
 				position: [props.jobToUpdate.open_positions],
-				location: [props.jobToUpdate.address]
-				// &&
-				// props.jobToUpdate.address.street_address + ", " +
-				// props.jobToUpdate.address.city + ", " +
-				// props.jobToUpdate.address.state + ", " +
-				// props.jobToUpdate.address.zip_code + ", "
+				// location: [props.jobToUpdate.address]
+
+				// location: [props.jobToUpdate.address && props.jobToUpdate.address.street_address + ", " +
+				// 	props.jobToUpdate.address.city + ", " +
+				// 	props.jobToUpdate.address.state + ", " +
+				// 	props.jobToUpdate.address.zip_code + ", "]
+
+				location: [{
+					city: [props.jobToUpdate.address && props.jobToUpdate.address.street_address + ", " +
+						props.jobToUpdate.address.city + ", " +
+						props.jobToUpdate.address.state + ", " +
+						props.jobToUpdate.address.zip_code + ", "]
+				}]
 			})
 		}
 
@@ -147,7 +154,7 @@ function CreateJob(props) {
 	};
 	const handleChangeJobTile = (e) => {
 		handleFieldChange(e.target.id, e.target.value);
-		dispatch(setNewJob({ jobTitle: e.target.value }));
+		dispatch(setNewJob({ jobTitle: e.target.valu }));
 	};
 	const handleChangeLocation = (e) => {
 		// if (typeof e !== "number") return;
@@ -175,6 +182,9 @@ function CreateJob(props) {
 			...formData,
 			[field]: arr,
 		});
+
+		console.log('formData ', formData);
+
 	};
 
 	return (
@@ -223,12 +233,15 @@ function CreateJob(props) {
 							}))}
 							id="location"
 							search_term
-							// selected={formData.location[0] &&
-							// 	formData.location[0].street_address + ", " +
-							// 	formData.location[0].city + ", " +
-							// 	formData.location[0].state + ", " +
-							// 	formData.location[0].zip_code + ", "
-							// }
+							selected={formData.location[0] &&
+								// formData.location[0].street_address + ", " +
+								// formData.location[0].city + ", " +
+								// formData.location[0].state + ", " +
+								// formData.location[0].zip_code + ", "
+								formData.location[0].city
+
+
+							}
 							onchange={(value) => {
 								handleChangeLocation(value);
 							}}
@@ -258,7 +271,7 @@ function CreateJob(props) {
 							onchange={(value) => {
 								handleChangeEmpType(value, "employment");
 							}}
-							// disable={disableCtrl}
+						// disable={disableCtrl}
 						/>
 					</li>
 					<li>
@@ -310,9 +323,9 @@ function CreateJob(props) {
 					</li>
 					<li>
 						<label>How many Open Positions Are There?</label>
-						<Input type="text" 
-						// disabled={disableCtrl} 
-						id="position" value={formData.position[0]} onChange={handleChangeOpenPosition} />
+						<Input type="text"
+							// disabled={disableCtrl} 
+							id="position" value={formData.position[0]} onChange={handleChangeOpenPosition} />
 					</li>
 				</ul>
 			</div>

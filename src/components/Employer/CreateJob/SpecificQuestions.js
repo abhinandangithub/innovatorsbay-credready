@@ -10,9 +10,12 @@ import JobSpecificQuestions from "./Questions/JobSpecificQuestions";
 import { Link, useParams } from "react-router-dom";
 import { connect, useDispatch } from "react-redux";
 import { postJob } from "../../../store/thunks/employer";
+import { useToasts } from "react-toast-notifications";
+
 
 function SpecificQuestions(props) {
 	let { jobId } = useParams();
+	const { addToast } = useToasts();
 
 	const parent = React.useRef();
 	const [activeTab, setActiveTab] = React.useState(0);
@@ -27,10 +30,37 @@ function SpecificQuestions(props) {
 	const dispatch = useDispatch();
 
 	const handlePostJob = () => {
-		props.onEnableLink();
-		dispatch(
-			postJob(jobId)
-		);
+		let message = undefined;
+		if (!props.jobData.emailTemplateId) {
+			message = "<p>Please select email template.  </p> ";
+		} if (!props.jobData.employmentType) {
+			message += "<p>Please select employment type. </p> ";
+		} if (!props.jobData.function) {
+			message += "<p>Please select function.</p>";
+		} if (!props.jobData.industry) {
+			message += "<p>Please select industry.</p>";
+		} if (!props.jobData.jobDescription) {
+			message += "<p>Please select email template.</p>";
+		} if (!props.jobData.jobCertificateMap.length) {
+			message += "<p>Please select atleast one certificate.</p>";
+		} if (!props.jobData.location) {
+			message += "<p>Please select location.</p>";
+		} if (!props.jobData.jobTitle) {
+			message += "<p>Please select job title.</p>";
+		}
+		else {
+			props.onEnableLink();
+			dispatch(
+				postJob(jobId)
+			);
+		}
+		if (!!message) {
+			addToast(<div dangerouslySetInnerHTML={{ __html: message }}></div>, {
+				appearance: "warning",
+				autoDismiss: true,
+				placement: 'top-center'
+			});
+		}
 	};
 
 	return (
@@ -73,14 +103,33 @@ function SpecificQuestions(props) {
 							)}
 				</div>
 			</div>
+
+
+			{/* T/F: {props.jobData.emailTemplateId &&
+				props.jobData.employmentType && props.jobData.function &&
+				props.jobData.industry && props.jobData.jobDescription &&
+				props.jobData.jobCertificateMap.length && props.jobData.jobTitle &&
+				props.jobData.location}<br></br>*/}
+			{/* 
+			wmail: {props.jobData.emailTemplateId}><br></br>
+			employmentType: {props.jobData.employmentType}<br></br>
+			function:{props.jobData.function}<br></br>
+			industry:{props.jobData.industry}<br></br>
+			jobDescription:{props.jobData.jobDescription}<br></br>
+			jobCertificateMap:{props.jobData.jobCertificateMap.length} <br></br>
+			jobTitle:{props.jobData.jobTitle}<br></br>
+			location:{props.jobData.location}<br></br> */}
+
 			<div className="cta">
-				<Link 
+				<Link
 					//to="/jobs/create-job"
-					style={{ pointerEvents: !props.jobData.emailTemplateId === null && 
-						!props.jobData.employmentType === null && !props.jobData.function === null &&
-						!props.jobData.industry === null && !props.jobData.jobDescription === "" && 
-						!props.jobData.jobCertificateMap.length === 0 && !props.jobData.jobTitle === "" &&
-						!props.jobData.location === null  ? 'visible' : 'none' }}
+					// style={{
+					// 	pointerEvents: props.jobData.emailTemplateId &&
+					// 		props.jobData.employmentType && props.jobData.function &&
+					// 		props.jobData.industry && props.jobData.jobDescription &&
+					// 		props.jobData.jobCertificateMap.length && props.jobData.jobTitle &&
+					// 		props.jobData.location ? 'visible' : 'none'
+					// }}
 					className="primary-btn blue"
 					onClick={handlePostJob}
 				>
