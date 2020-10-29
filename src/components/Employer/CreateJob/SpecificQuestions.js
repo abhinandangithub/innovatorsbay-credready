@@ -32,32 +32,36 @@ function SpecificQuestions(props) {
 		let message = undefined;
 		if (!props.jobData.emailTemplateId) {
 			message = "<p>Please select email template.  </p> ";
-		} if (!props.jobData.employmentType) {
-			message += "<p>Please select employment type. </p> ";
-		} if (!props.jobData.function) {
-			message += "<p>Please select function.</p>";
-		} if (!props.jobData.industry) {
-			message += "<p>Please select industry.</p>";
-		} if (!props.jobData.jobDescription) {
-			message += "<p>Please select email template.</p>";
-		} if (!props.jobData.jobCertificateMap.length) {
-			message += "<p>Please select atleast one certificate.</p>";
-		} if (!props.jobData.location) {
-			message += "<p>Please select location.</p>";
-		} if (!props.jobData.jobTitle) {
-			message += "<p>Please select job title.</p>";
 		}
-		else {
+		if (!props.jobData.employmentType) {
+			message += "<p>Please select employment type. </p> ";
+		}
+		if (!props.jobData.function) {
+			message += "<p>Please select function.</p>";
+		}
+		if (!props.jobData.industry) {
+			message += "<p>Please select industry.</p>";
+		}
+		if (!props.jobData.jobDescription) {
+			message += "<p>Please select email template.</p>";
+		}
+		if (!props.jobData.jobCertificateMap.length) {
+			message += "<p>Please select atleast one certificate.</p>";
+		}
+		if (!props.jobData.location) {
+			message += "<p>Please select location.</p>";
+		}
+		if (!props.jobData.jobTitle) {
+			message += "<p>Please select job title.</p>";
+		} else {
 			props.onEnableLink();
-			dispatch(
-				postJob(jobId)
-			);
+			dispatch(postJob(jobId));
 		}
 		if (!!message) {
 			addToast(<div dangerouslySetInnerHTML={{ __html: message }}></div>, {
 				appearance: "warning",
 				autoDismiss: true,
-				placement: 'top-center'
+				placement: "top-center",
 			});
 		}
 	};
@@ -90,6 +94,10 @@ function SpecificQuestions(props) {
 				<div className="content questions_employer">
 					{activeTab === 0 ? (
 						<div>
+							<p>
+								These questions are used to calculate CredReadiness and cannot
+								be changed.
+							</p>
 							<PersonalityAssessment />
 							<CourseWork />
 							<WorkHistory />
@@ -98,8 +106,8 @@ function SpecificQuestions(props) {
 					) : activeTab === 1 ? (
 						<GeneralQuestions />
 					) : (
-								<JobSpecificQuestions />
-							)}
+						<JobSpecificQuestions />
+					)}
 				</div>
 			</div>
 
@@ -143,7 +151,7 @@ function SpecificQuestions(props) {
 function mapStateToProps(state) {
 	return {
 		jobToUpdate: state.employerReducer.jobToUpdate,
-		jobData: state.employerReducer.newJob
+		jobData: state.employerReducer.newJob,
 	};
 }
 

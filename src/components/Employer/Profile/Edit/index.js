@@ -42,7 +42,7 @@ const socialMedia = {
 function Details(props) {
 	const dispatch = useDispatch();
 
-	const [addressCount, setAddressCount] = React.useState([]);
+	const [addressCount, setAddressCount] = React.useState([""]);
 	const [city, setCity] = React.useState(() => {
 		// 	let cty;
 		// 	for(let i = 0; i < props.profile.org.address.length; i++) {
@@ -79,15 +79,23 @@ function Details(props) {
 				).range_display_value,
 		];
 		initialState.reference = [props.profile.org.reference_source];
-		for (let i = 0; i < props.profile.org.address.length; i++) {
-			initialState["id_" + i] = [props.profile.org.address[i].id];
-			initialState["street_" + i] = [
-				props.profile.org.address[i].street_address,
-			];
-			// initialState["city_" + i] = [props.geographyKeys.find(c => c.city === props.profile.org.address[i].city).id];
-			initialState["city_" + i] = [props.profile.org.address[i].city];
-			initialState["state_" + i] = [props.profile.org.address[i].state];
-			initialState["zipCode_" + i] = [props.profile.org.address[i].zip_code];
+
+		if (props.profile.org.address.length === 0) {
+			initialState["street_0"] = [""];
+			initialState["city_0"] = [""];
+			initialState["state_0"] = [""];
+			initialState["zipCode_0"] = [""];
+		} else {
+			for (let i = 0; i < props.profile.org.address.length; i++) {
+				initialState["id_" + i] = [props.profile.org.address[i].id];
+				initialState["street_" + i] = [
+					props.profile.org.address[i].street_address,
+				];
+				// initialState["city_" + i] = [props.geographyKeys.find(c => c.city === props.profile.org.address[i].city).id];
+				initialState["city_" + i] = [props.profile.org.address[i].city];
+				initialState["state_" + i] = [props.profile.org.address[i].state];
+				initialState["zipCode_" + i] = [props.profile.org.address[i].zip_code];
+			}
 		}
 
 		console.log(initialState);
@@ -96,12 +104,18 @@ function Details(props) {
 
 	useEffect(() => {
 		let addCnt = [];
+
 		dispatch(getHiringNeedsThunk());
 		dispatch(getCompanySizeThunk());
 		dispatch(getGeographyThunk());
-		for (let i = 0; i < props.profile.org.address.length; i++) {
-			addCnt.push(i);
+		if (props.profile.org.address.length === 0) {
+			addCnt.push("");
+		} else {
+			for (let i = 0; i < props.profile.org.address.length; i++) {
+				addCnt.push(i);
+			}
 		}
+
 		setAddressCount(addCnt);
 	}, [dispatch]);
 
@@ -167,7 +181,7 @@ function Details(props) {
 		/* IF FORM IS VALID */
 		if (_formData.formValid) {
 			/* SEND DATA TO API */
-			console.log(profileData);
+			console.log("profileData", profileData);
 			dispatch(updateProfileThunk(null, profileData));
 			props.history.push("/profile/view");
 		}
@@ -238,6 +252,7 @@ function Details(props) {
 	};
 
 	const renderAddresses = () => {
+		console.log("form data ", formData);
 		return addressCount.map((address, index) => {
 			let i = index;
 			return (
@@ -461,7 +476,11 @@ function Details(props) {
 				</button>
 			</div>
 			<div className="cta">
-				<button className="primary-btn" id="onSubmit" onClick={handleSubmit}>
+				<button
+					className="primary-btn blue"
+					id="onSubmit"
+					onClick={handleSubmit}
+				>
 					Submit
 				</button>
 			</div>

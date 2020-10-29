@@ -181,7 +181,7 @@ export const addWorkExperience = (formData) => async (dispatch, getState) => {
 	let id = formData.id
 	delete formData.id;
 	if (id) {
-		formData.work_ex_id = id;
+		formData.workExpId = id;
 		try {
 			const { data } = await Axios.post(
 				addWorkExperienceUrl,

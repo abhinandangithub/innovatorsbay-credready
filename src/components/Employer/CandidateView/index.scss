@@ -99,15 +99,24 @@
 		flex-wrap: wrap;
 		padding: 0 60px 20px 20px;
 		li {
-			width: 50%;
+			width: 33.33%;
 			display: block;
-			margin-bottom: 20px;
+			// margin-bottom: 20px;
 			font-weight: 500;
+			&.phone {
+				padding-left: 20px;
+				width: 66.67%;
+			}
 			span {
 				font-weight: normal;
 				color: #6b6c6f;
+				&:first-child {
+					color: black;
+					font-weight: 500;
+				}
 			}
 			&.full {
+				margin-bottom: 20px;
 				width: 100%;
 			}
 			&:last-child {
@@ -121,13 +130,47 @@
 		}
 		&.for-click {
 			cursor: pointer;
-			padding-top: 20px;
+			padding-bottom: 0px;
+			background: #f7f6f66b;
+			margin-bottom: 10px;
 			li {
-				width: auto;
+				width: 33.33%;
 				margin-bottom: 0;
+				padding: 0 20px;
+				display: flex;
+				align-items: center;
+				min-height: 60px;
+				text-align: left;
+				flex-direction: row;
+				&:nth-child(1) {
+					padding-left: 0;
+					span {
+						&:first-child {
+							// width: 85px;
+							// min-width: 85px;
+						}
+					}
+				}
+				&:nth-child(2) {
+					span {
+						&:first-child {
+							// width: 85px;
+							// min-width: 85px;
+						}
+					}
+				}
+				&:nth-child(3) {
+					padding-right: 0;
+					span {
+						&:first-child {
+							// width: 85px;
+							// min-width: 85px;
+						}
+					}
+				}
 			}
 			&:hover {
-				background: #f7f6f66b;
+				background: #f7f6f696;
 			}
 		}
 	}

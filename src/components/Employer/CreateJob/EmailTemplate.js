@@ -27,9 +27,11 @@ function EmailTemplate(props) {
 	const [emailBody, setEmailBody] = useState("");
 	const [emailValidation, setEmailValidation] = useState("");
 	const [templateID, setTemplateID] = useState(0);
+	const [tempName, setTempName] = useState(undefined);
+
 	const [emailTemplates, setEmailTemplates] = useState(props.emailTemplate);
 	const [disableCtrl, setDisableCtrl] = useState(false);
-	let templateName = '';
+	let templateName = "";
 	React.useEffect(() => {
 		props.calHeight(parent.current.clientHeight);
 	}, [props]);
@@ -39,23 +41,33 @@ function EmailTemplate(props) {
 	}, [dispatch]);
 
 	React.useEffect(() => {
+		console.log('props.emailTemplate) ', props.emailTemplate);
+	}, [props.emailTemplate]);
+
+	React.useEffect(() => {
 		if (!!jobId && !!props.jobToUpdate) {
 			setTemplateID(props.jobToUpdate.email_template_id);
 			handleTemplateChange(props.jobToUpdate.email_template_id);
-			dispatch(setNewJob({ emailTemplateId: props.jobToUpdate.email_template_id }));
+			dispatch(
+				setNewJob({ emailTemplateId: props.jobToUpdate.email_template_id })
+			);
 		} else {
 			dispatch(setNewJob({ emailTemplateId: null }));
 		}
-		if (props.jobToUpdate && props.jobToUpdate.count_of_applied_candidates && jobId)
-			setDisableCtrl(true)
-
+		if (
+			props.jobToUpdate &&
+			props.jobToUpdate.count_of_applied_candidates &&
+			jobId
+		)
+			setDisableCtrl(true);
 	}, [props.jobToUpdate]);
 
 	React.useEffect(() => {
-		console.log('props.emailTemplate ', props.emailTemplate);
+		console.log("props.emailTemplate ", props.emailTemplate);
 		if (!!templateID) {
-			document.getElementById('emailtemplate').value = props.emailTemplate.find(
-				(x) => x.public_template_id === templateID || x.template_id === templateID
+			document.getElementById("emailtemplate").value = props.emailTemplate.find(
+				(x) =>
+					x.public_template_id === templateID || x.template_id === templateID
 			).template_name;
 			handleTemplateChange(templateID);
 		}
@@ -65,10 +77,16 @@ function EmailTemplate(props) {
 	React.useEffect(() => {
 		dispatch(setNewJob({ emailTemplateId: templateID }));
 		// setEmailBody(props.emailTemplate[0].email_body);
+		console.log(
+			templateID,
+			emailTemplates,
+			emailTemplates.find((val) => val.template_id === 13)
+		);
 	}, [dispatch, templateID]);
 
 	const handleTemplateChange = (item) => {
 		console.log('item template ', item);
+		setTempName(item);
 		let msg = item === "" || item === null ? "Required" : "";
 		setEmailValidation(msg);
 		if (typeof item !== "number") return;
@@ -83,11 +101,11 @@ function EmailTemplate(props) {
 			let obj = props.emailTemplate.find(
 				(x) => x.public_template_id === item || x.template_id === item
 			);
-			console.log('obj ', obj);
+			console.log("obj ", obj);
 			if (obj && obj.email_body) {
 				emailBodyEl.current.innerHTML = obj.email_body;
 			}
-
+			setTempName(obj && obj.template_name);
 			console.log('item ', item);
 		}
 		setTemplateID(item);
@@ -110,12 +128,20 @@ function EmailTemplate(props) {
 
 	const createEmailTemplate = () => {
 		dispatch(toggleOverlay(true));
-		dispatch(togglePopup([true, "createEmailTemplate", {
-			type: "edit",
-			data: props.emailTemplate.find(
-				(x) => x.public_template_id === templateID || x.template_id === templateID
-			)
-		}]));
+		dispatch(
+			togglePopup([
+				true,
+				"createEmailTemplate",
+				{
+					type: "edit",
+					data: props.emailTemplate.find(
+						(x) =>
+							x.public_template_id === templateID ||
+							x.template_id === templateID
+					),
+				},
+			])
+		);
 	};
 
 	return (
@@ -130,7 +156,7 @@ function EmailTemplate(props) {
 			</div>
 			<div className="content">
 				<h2 className="sub-heading">Attach Email</h2>
-				<p>Select / Modify Introduction Email Template</p>
+				<p>Select / Modify Introduction Email Template {templateID}</p>
 				<div className="input_button">
 					<InputDropdown
 						placeholder={employmentStatus.heading}
@@ -140,9 +166,13 @@ function EmailTemplate(props) {
 						}))}
 						id="emailtemplate"
 						search_term
-						// selected={templateID && emailTemplates.find((val) =>
-						// 	val.template_id === templateID
-						// ).template_name}
+						selected={tempName}
+						// selected={
+						// 	templateID &&
+						// 	emailTemplates.find((val) => val.template_id === templateID) &&
+						// 	emailTemplates.find((val) => val.template_id === templateID)
+						// 		.template_name
+						// }
 						onchange={(value) => {
 							handleTemplateChange(value);
 							// handleTemplateSearch(value);
@@ -156,7 +186,11 @@ function EmailTemplate(props) {
 
 				<h2 className="sub-heading">Email</h2>
 
-				<div className="email_body" ref={emailBodyEl} disabled={disableCtrl}></div>
+				<div
+					className="email_body"
+					ref={emailBodyEl}
+					disabled={disableCtrl}
+				></div>
 				{/* <textarea
 					name="email"
 					id="email"
@@ -177,7 +211,7 @@ function mapStateToProps(state) {
 		employmentType: state.employerReducer.employmentType.data,
 		emailTemplate: state.employerReducer.emailTemplate,
 		emailTemplateNames: state.employerReducer.emailTemplateNames,
-		jobToUpdate: state.employerReducer.jobToUpdate
+		jobToUpdate: state.employerReducer.jobToUpdate,
 	};
 }
 

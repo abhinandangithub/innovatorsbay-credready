@@ -97,7 +97,9 @@ export const getGeographyThunk = (token) => async (dispatch, getState) => {
 export const updateProfileThunk = (token, profile) => async (dispatch, getState) => {
 	try {
 		const state = getState();
+		if(!!profile.companySize)
 		profile.companySize = state.employerReducer.companySizeKeys.find(val => val.range_display_value === profile.companySize).id;
+		if(!!profile.hiresRequired)
 		profile.hiresRequired = state.employerReducer.hiringKeys.find(val => val.range_display_value === profile.hiresRequired).id;
 		dispatch(beginApiCall());
 		const data = await Axios.patch(employerUpdateProfileUrl, profile, {
@@ -486,11 +488,6 @@ export const postJob = (jobId = undefined) => async (dispatch, getState) => {
 				}
 			});
 			if (!!jobId) {
-				// setTimeout(() => {
-				// 	// dispatch(getPostedJobs(undefined, jobId, true));
-				// 	dispatch(getPostedJobs("update", jobId));
-
-				// }, 3000);
 				dispatch(getPostedJobs("update", jobId));
 			}
 		}

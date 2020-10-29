@@ -39,12 +39,16 @@ function Delete(props) {
 		if (popup && popup.info) {
 			if (popup.info.what === "workExperience") {
 				dispatch(deleteWorkExperience(obj.id));
+				closePopupOverlay();
 			} else if (popup.info.what === "otherExperience") {
 				dispatch(deleteOtherExperience(obj.id));
+				closePopupOverlay();
 			} else if (popup.info.what === "education") {
 				dispatch(deleteEducationExperience(obj.id));
+				closePopupOverlay();
 			} else if (popup.info.what === "certificate") {
 				dispatch(deleteCertificates(obj.id));
+				closePopupOverlay();
 			} else if (popup.info.what === "profileEmployer") {
 				closePopupOverlay();
 				dispatch(deleteAccount());

@@ -262,8 +262,9 @@ function ProfileOverview(props) {
 				)}
 				{props.type === "employer" && (
 					<>
-						<h2>{employerProfile.data.name}</h2>
-						<h3>{employerProfile.data.title}</h3>
+						{/* <h2>{employerProfile.data.name}</h2> */}
+						<h2>{employerProfile.data.org.org_name}</h2>
+						{/* <h3>{employerProfile.data.title}</h3> */}
 					</>
 				)}
 			</div>

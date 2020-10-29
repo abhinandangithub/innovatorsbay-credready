@@ -346,7 +346,6 @@ function AddWorkExperience() {
 						<label htmlFor="employerWebsite">Employer website</label>
 						<Input
 							id="employerWebsite"
-							defaultValue={formData.employerWebsite[0]}
 							type="text"
 							onChange={(e) => handleFieldChange(e.target.id, e.target.value)}
 						/>

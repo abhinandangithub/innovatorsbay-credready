@@ -97,6 +97,9 @@ function CreateEmailTemplate(props) {
 				el: childNodes[index].parentElement,
 				pos: range.startOffset + rangeCount,
 			};
+
+			if (_cursorInfo.el.tagName === "LI") _cursorInfo.pos = -1;
+
 			return _cursorInfo;
 		}
 
@@ -116,9 +119,10 @@ function CreateEmailTemplate(props) {
 
 		if (e.target.checked) {
 			let textToInsert = ` {${tag.text}} `;
-			let elHtml = _cursorInfo.el.innerHTML.replace(/&nbsp;/g, "");
 
 			if (_cursorInfo.pos > -1) {
+				let elHtml = _cursorInfo.el.innerHTML.replace(/&nbsp;+/g, " ");
+
 				let output = [
 					elHtml.slice(0, _cursorInfo.pos),
 					textToInsert,
@@ -126,13 +130,21 @@ function CreateEmailTemplate(props) {
 				].join("");
 
 				_cursorInfo.el.innerHTML = output;
-				_cursorInfo.pos = -1;
+			} else {
+				let output = [
+					editor.innerHTML.slice(0, 0),
+					textToInsert,
+					editor.innerHTML.slice(0),
+				].join("");
 
-				setFormData({
-					...formData,
-					body: [editor.innerHTML],
-				});
+				editor.innerHTML = output;
 			}
+
+			_cursorInfo.pos = -1;
+			setFormData({
+				...formData,
+				body: [editor.innerHTML],
+			});
 		} else {
 			let textToSearch = `${tag.text}`;
 			let stringWithTag = myEditorEl.current.lastHtml;
@@ -177,11 +189,23 @@ function CreateEmailTemplate(props) {
 		}
 	}, [props.info.data]);
 
+	useEffect(() => {
+		if (bodyError === true && formData.body[0].trim().length > 0) {
+			setBodyError(false);
+		} else if (bodyError === false && formData.body[0].trim().length === 0) {
+			setBodyError(true);
+		}
+		return () => {};
+	}, [formData]);
+
 	const handleSubmit = (type = "add") => {
 		let oldFormData = { ...formData };
 		oldFormData.formValid = true;
+		oldFormData.body[0] = myEditorEl.current.lastHtml.replace(/&nbsp;+/g, " ");
 
-		setBodyError(!(oldFormData.body[0].length > 0));
+		if (bodyError === null && formData.body[0].trim().length === 0) {
+			setBodyError(true);
+		}
 
 		for (var field in oldFormData) {
 			if (
@@ -208,7 +232,6 @@ function CreateEmailTemplate(props) {
 			/* send data to api */
 			// props.updateCandidateDetails(obj);
 			// props.history.push("/profile/work-experience");
-			console.log("formData ", formData);
 			if (type === "add") {
 				dispatch(addEmailTemplate(formData));
 			} else {
@@ -238,11 +261,6 @@ function CreateEmailTemplate(props) {
 	const updateTemplate = () => {
 		// console.log("updateTemplate");
 		handleSubmit("edit");
-	};
-
-	const saveAsNewTemplate = () => {
-		// console.log("saveAsNewTemplate");
-		handleSubmit("add");
 	};
 
 	const addTemplate = () => {
@@ -324,7 +342,7 @@ function CreateEmailTemplate(props) {
 							innerRef={contentEditable}
 							defaultValue={formData.body[0]}
 							onChange={(e) => {
-								console.log(myEditorEl.current.lastHtml);
+								// console.log(myEditorEl.current.lastHtml);
 							}}
 							// onBlur={() =>
 							// 	handleFieldChange("body", myEditorEl.current.lastHtml)
@@ -338,21 +356,25 @@ function CreateEmailTemplate(props) {
 							onKeyUp={() => {
 								getCaretPosition();
 
-								console.log(myEditorEl.current.lastHtml);
-
 								if (
 									myEditorEl.current.lastHtml.length > 0 &&
 									bodyError === true
 								) {
 									setBodyError(false);
-								} else if (myEditorEl.current.lastHtml.length === 0) {
+									setFormData({
+										...formData,
+										body: [myEditorEl.current.lastHtml],
+									});
+								} else if (
+									myEditorEl.current.lastHtml.length === 0 &&
+									bodyError === false
+								) {
 									setBodyError(true);
+									setFormData({
+										...formData,
+										body: [myEditorEl.current.lastHtml],
+									});
 								}
-
-								setFormData({
-									...formData,
-									body: [myEditorEl.current.lastHtml],
-								});
 							}}
 						/>
 					</li>
@@ -365,15 +387,9 @@ function CreateEmailTemplate(props) {
 					</div>
 				) : (
 					<div className="cta">
-						<button
-							className="primary-btn blue outline"
-							onClick={updateTemplate}
-						>
+						<button className="primary-btn blue" onClick={updateTemplate}>
 							Update Template
 						</button>
-						{/* <button className="primary-btn blue" onClick={saveAsNewTemplate}>
-							Save as new Template
-						</button> */}
 					</div>
 				)}
 			</div>
