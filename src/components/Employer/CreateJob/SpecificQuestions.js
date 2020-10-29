@@ -74,8 +74,13 @@ function SpecificQuestions(props) {
 				</div>
 			</div>
 			<div className="cta">
-				<Link
+				<Link 
 					//to="/jobs/create-job"
+					style={{ pointerEvents: !props.jobData.emailTemplateId === null && 
+						!props.jobData.employmentType === null && !props.jobData.function === null &&
+						!props.jobData.industry === null && !props.jobData.jobDescription === "" && 
+						!props.jobData.jobCertificateMap.length === 0 && !props.jobData.jobTitle === "" &&
+						!props.jobData.location === null  ? 'visible' : 'none' }}
 					className="primary-btn blue"
 					onClick={handlePostJob}
 				>
@@ -90,7 +95,8 @@ function SpecificQuestions(props) {
 
 function mapStateToProps(state) {
 	return {
-		jobToUpdate: state.employerReducer.jobToUpdate
+		jobToUpdate: state.employerReducer.jobToUpdate,
+		jobData: state.employerReducer.newJob
 	};
 }
 

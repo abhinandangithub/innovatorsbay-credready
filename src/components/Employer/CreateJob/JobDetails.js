@@ -33,7 +33,6 @@ function CreateJob(props) {
 
 	const parent = React.useRef();
 	let { jobId } = useParams();
-
 	const [location, setLocation] = useState(props.locationData);
 	const [employmentType, setEmploymentType] = useState(
 		props.employmentTypeData
@@ -190,6 +189,9 @@ function CreateJob(props) {
 					<li>
 						<label>
 							Job Title <span>*</span>
+							<span className={`error-text ${!formData.title[1] && "hidden"}`}>
+								Required
+							</span>
 						</label>
 						<Input type="text"
 							onChange={handleChangeJobTile}
@@ -202,6 +204,9 @@ function CreateJob(props) {
 					<li>
 						<label>
 							Job Location <span>*</span>
+							<span className={`error-text ${!formData.location[1] && "hidden"}`}>
+								Required
+							</span>
 						</label>
 						<InputDropdown
 							placeholder="Zip or city, state"
@@ -236,6 +241,9 @@ function CreateJob(props) {
 					<li>
 						<label>
 							Employment Type <span>*</span>
+							<span className={`error-text ${!formData.employment[1] && "hidden"}`}>
+								Required
+							</span>
 						</label>
 
 						<InputDropdown
@@ -256,6 +264,9 @@ function CreateJob(props) {
 					<li>
 						<label>
 							Industry <span>*</span>
+							<span className={`error-text ${!formData.industry[1] && "hidden"}`}>
+								Required
+							</span>
 						</label>
 
 						<InputDropdown
@@ -277,6 +288,9 @@ function CreateJob(props) {
 					<li>
 						<label>
 							Function <span>*</span>
+							<span className={`error-text ${!formData.function[1] && "hidden"}`}>
+								Required
+							</span>
 						</label>
 
 						<InputDropdown

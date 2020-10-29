@@ -34,6 +34,7 @@ function CreateJob(props) {
 	console.log('props ', props.jobToUpdate.job_description);
 	let { jobId } = useParams();
 	const [disableCtrl, setDisableCtrl] = useState(false);
+	const [jobDesc, setJobDesc] = useState("");
 
 	const parent = React.useRef();
 	const dispatch = useDispatch();
@@ -55,6 +56,8 @@ function CreateJob(props) {
 
 	const onRichTextEditorChange = (value) => {
 		console.log(value.toString("html"));
+		let msg = value.toString("html") === "" || value.toString("html") === null || value.toString("html") === "<p><br></p>" ? "Required" : "";
+		setJobDesc(msg);
 		setRichTextEditorvalue(value);
 		dispatch(setNewJob({ jobDescription: value.toString("html") }));
 	};
@@ -64,6 +67,9 @@ function CreateJob(props) {
 			<div className="heading">
 				<h2>
 					Job Description <span>*</span>
+					<span className={`error-text ${!jobDesc && "hidden"}`}>
+						Required
+					</span>
 				</h2>
 			</div>
 			<div className="content">

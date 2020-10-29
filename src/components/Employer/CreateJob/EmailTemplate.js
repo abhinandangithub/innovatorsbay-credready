@@ -25,6 +25,7 @@ function EmailTemplate(props) {
 	const emailBodyEl = React.useRef();
 	const dispatch = useDispatch();
 	const [emailBody, setEmailBody] = useState("");
+	const [emailValidation, setEmailValidation] = useState("");
 	const [templateID, setTemplateID] = useState(0);
 	const [emailTemplates, setEmailTemplates] = useState(props.emailTemplate);
 	const [disableCtrl, setDisableCtrl] = useState(false);
@@ -66,6 +67,8 @@ function EmailTemplate(props) {
 
 	const handleTemplateChange = (item) => {
 		console.log('item ', item);
+		let msg = item === "" || item === null ? "Required" : "";
+		setEmailValidation(msg);
 		if (typeof item !== "number") return;
 		if (!!emailBodyEl && props.emailTemplate && props.emailTemplate.length) {
 			// setEmailBody(
@@ -98,6 +101,8 @@ function EmailTemplate(props) {
 			}
 		});
 		setEmailTemplates([...filteredData]);
+		let msg = value === "" || value === null ? "Required" : "";
+		setEmailValidation(msg);
 	};
 
 	const createEmailTemplate = () => {
@@ -115,6 +120,9 @@ function EmailTemplate(props) {
 			<div className="heading">
 				<h2>
 					Email Template<span>*</span>
+					<span className={`error-text ${!emailValidation && "hidden"}`}>
+						Required
+					</span>
 				</h2>
 			</div>
 			<div className="content">
