@@ -28,6 +28,7 @@ function JobSpecificQuestions({ questions }) {
 															id={`${option.id}${option.question_id}`}
 															name={`${option.question_id}`}
 															type="checkbox"
+															checked={question.candidate_answer && question.candidate_answer.ans_option_choice.find(val => val - 1 === i) ? true : false}
 															disabled
 														/>
 														<label
@@ -48,6 +49,7 @@ function JobSpecificQuestions({ questions }) {
 															id={`${option.id}${option.question_id}`}
 															name={`${option.question_id}`}
 															type="radio"
+															checked={question.candidate_answer && question.candidate_answer.ans_option_choice.find(val => val - 1 === i) ? true : false}
 															disabled
 														/>
 														<label
