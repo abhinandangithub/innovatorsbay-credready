@@ -241,7 +241,7 @@ function AddEducation(props) {
 						}))}
 						search_term="institute_name"
 						id="institution"
-						selected={institution.content[formData.institution[0]]}
+						selected={institution[formData.institution[0]]}
 						onchange={(value) => {
 							handleFieldChange("institution", value);
 							// handleInstitutionSearch(value);

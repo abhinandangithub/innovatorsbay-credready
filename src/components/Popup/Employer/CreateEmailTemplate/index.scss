@@ -1,4 +1,5 @@
 .create-email-template {
+	// border: 1px solid black;
 	.content {
 		padding: 30px 30px 30px;
 		ul {
@@ -89,5 +90,10 @@
 				margin-bottom: 0;
 			}
 		}
+	}
+	.error-text.body {
+		display: block;
+		text-align: left;
+		margin-bottom: 10px;
 	}
 }

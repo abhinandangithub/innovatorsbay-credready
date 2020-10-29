@@ -12,7 +12,6 @@ import { connect, useDispatch } from "react-redux";
 import { postJob } from "../../../store/thunks/employer";
 import { useToasts } from "react-toast-notifications";
 
-
 function SpecificQuestions(props) {
 	let { jobId } = useParams();
 	const { addToast } = useToasts();
@@ -103,7 +102,6 @@ function SpecificQuestions(props) {
 							)}
 				</div>
 			</div>
-
 
 			{/* T/F: {props.jobData.emailTemplateId &&
 				props.jobData.employmentType && props.jobData.function &&

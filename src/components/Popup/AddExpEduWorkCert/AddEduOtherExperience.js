@@ -255,10 +255,6 @@ function AddEduOtherExperience(props) {
 					/>
 				</li>
 				<li>
-					<label htmlFor="strengths">Strengths</label>
-					<Input id="strengths" type="text" />
-				</li>
-				<li>
 					<label htmlFor="description">
 						Description <span>*</span>
 						<span

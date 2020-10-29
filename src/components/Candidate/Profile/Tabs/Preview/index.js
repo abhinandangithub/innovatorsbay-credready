@@ -15,8 +15,15 @@ import {
 
 function Preview(props) {
 	const dispatch = useDispatch();
+	const [checkedConditions, setCheckedConditions] = React.useState(false)
 	const [personelDetailsData, setpersonelDetailsData] = React.useState(
 		props.candidateData
+	);
+
+	const status = useSelector((state) =>
+		state.candidateCurrentStatusReducer
+			? state.candidateCurrentStatusReducer.data
+			: []
 	);
 
 	const institutions = useSelector((state) =>
@@ -80,7 +87,10 @@ function Preview(props) {
 					<div className="bottom">
 						<p>First Name : {personelDetailsData.first_name}</p>
 						<p>Last Name : {personelDetailsData.last_name}</p>
-						<p>Current employment status : Employed</p>
+						<p>Current employment status : {status.map(entity => {
+							if (entity.id === personelDetailsData.current_employment_status)
+								return entity.employment_status
+						})}</p>
 						<p>
 							How long would you begin a new role? :{" "}
 							{personelDetailsData.available_within}
@@ -360,6 +370,7 @@ function Preview(props) {
 						type="checkbox"
 						name="termsandconditions"
 						id="confirm"
+						onClick={() => { setCheckedConditions(true) }}
 					/>
 					<label htmlFor="confirm">
 						<span className="input"></span>I confirm that the information given
@@ -369,14 +380,24 @@ function Preview(props) {
 			</div>
 
 			<div className="cta">
-				{/* <button className="primary-btn ">Proceed to questions</button> */}
-				<Link
-					to="/profile/questions"
-					className="primary-btn blue flex"
-					id="profileQuestionsLink"
-				>
-					Proceed to questions
+				{
+					checkedConditions ?
+						localStorage.getItem("jobId") ? <Link
+							to="/profile/questions"
+							className="primary-btn flex"
+							id="profileQuestionsLink"
+						>
+							Proceed to questions
+				</Link> : <Link
+								to="/jobs"
+								className="primary-btn flex"
+								id="profileQuestionsLink"
+							>Go to Jobs
 				</Link>
+						: ""
+				}
+
+
 			</div>
 		</div>
 	);

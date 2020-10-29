@@ -33,7 +33,7 @@ function CopyLink(props) {
 
 	return (
 		<>
-			<div className="copy-link" ref={parent}>
+			<div className="copy-link" ref={parent} id="copyLink">
 				<div className="heading">
 					<h2>
 						Add to Your Website and Job Postings <span>*</span>

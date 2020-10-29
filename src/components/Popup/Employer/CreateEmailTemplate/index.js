@@ -62,13 +62,15 @@ let defaultText = `<p>Hello {candidate_first_name} {candidate_last_name}</p>
 <div><br/></div>
 <p>Regards,</p>
 <p>{recruiter_name}</p>`;
-// defaultText = "";
+defaultText = "";
 
 function CreateEmailTemplate(props) {
 	const myEditorEl = useRef();
 	const contentEditable = React.createRef();
 	const dispatch = useDispatch();
 	const { popup } = useSelector((state) => state.popupOverlayReducer);
+	let type = popup.info.type;
+	// type = "add";
 
 	function getCaretPosition() {
 		if (window.getSelection && window.getSelection().getRangeAt) {
@@ -144,6 +146,8 @@ function CreateEmailTemplate(props) {
 		}
 	};
 
+	const [bodyError, setBodyError] = React.useState(null);
+
 	const [formData, setFormData] = React.useState({
 		/**
 		 * * field: ['value', 'error']
@@ -177,6 +181,8 @@ function CreateEmailTemplate(props) {
 		let oldFormData = { ...formData };
 		oldFormData.formValid = true;
 
+		setBodyError(!(oldFormData.body[0].length > 0));
+
 		for (var field in oldFormData) {
 			if (
 				oldFormData.hasOwnProperty(field) &&
@@ -193,7 +199,7 @@ function CreateEmailTemplate(props) {
 			}
 		}
 
-		if (oldFormData.formValid) {
+		if (oldFormData.formValid && !bodyError) {
 			/* create obj which needs to send to api */
 			// let obj = {
 			// 	name: formData ? formData.name[0] : "",
@@ -246,7 +252,7 @@ function CreateEmailTemplate(props) {
 
 	return (
 		<div className="create-email-template">
-			{popup.info.type === "add" ? (
+			{type === "add" ? (
 				<h1>Add Email Template</h1>
 			) : (
 				<h1>Edit Email Template</h1>
@@ -284,10 +290,8 @@ function CreateEmailTemplate(props) {
 					</li>
 					<li>
 						<label htmlFor="body">
-							Tags<span>*</span>
-							<span className={`error-text ${!formData.body[1] && "hidden"}`}>
-								Required
-							</span>
+							Tags
+							{/* <span>*</span> */}
 						</label>
 						<ul>
 							{tags.map((tag, i) => {
@@ -312,13 +316,15 @@ function CreateEmailTemplate(props) {
 						</ul>
 					</li>
 					<li>
+						<span className={`error-text body ${!bodyError && "hidden"}`}>
+							Required
+						</span>
 						<ContentEditable
 							ref={myEditorEl}
 							innerRef={contentEditable}
 							defaultValue={formData.body[0]}
 							onChange={(e) => {
-								console.log(myEditorEl);
-								// handleFieldChange("body", myEditorEl.current.lastHtml);
+								console.log(myEditorEl.current.lastHtml);
 							}}
 							// onBlur={() =>
 							// 	handleFieldChange("body", myEditorEl.current.lastHtml)
@@ -329,11 +335,29 @@ function CreateEmailTemplate(props) {
 							className="my_editor"
 							id="myEditor"
 							onMouseUp={getCaretPosition}
-							onKeyUp={getCaretPosition}
+							onKeyUp={() => {
+								getCaretPosition();
+
+								console.log(myEditorEl.current.lastHtml);
+
+								if (
+									myEditorEl.current.lastHtml.length > 0 &&
+									bodyError === true
+								) {
+									setBodyError(false);
+								} else if (myEditorEl.current.lastHtml.length === 0) {
+									setBodyError(true);
+								}
+
+								setFormData({
+									...formData,
+									body: [myEditorEl.current.lastHtml],
+								});
+							}}
 						/>
 					</li>
 				</ul>
-				{popup.info.type === "add" ? (
+				{type === "add" ? (
 					<div className="cta">
 						<button className="primary-btn blue" onClick={addTemplate}>
 							Add

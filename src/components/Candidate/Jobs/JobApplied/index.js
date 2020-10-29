@@ -56,75 +56,75 @@ function JobApplied(props) {
             <span className="text">Employed</span>
           </p>
           <p>
-            <span className="heading">Skills: </span>
+            {/* <span className="heading">Skills: </span>
             <span className="text">
               Patient Care & Safety, Medical Terminology, Electronic Medical
               Records, Diagnostic Testing, Vital Signs & Patient Monitoring,
               Medication Administration, Patient Advocacy and Support.
-            </span>
+            </span> */}
           </p>
         </div>
       </>
     );
   }
 
-  function EducationExperienceComponent({experience}) {
-	  return (
-		<>
-		<div className="details">
-        	<h2>{experience.title}</h2>
-            	<p>
-                  <span className="heading">{experience.education_description ? experience.education_description : experience.description}</span>
-                  {" - "}
-                  <span className="text">{experience.institution ? experience.institution : experience.organization_name}</span>
-                </p>
-                <p>
-                  <span className="text">{experience.attended_from ? experience.attended_from : experience.employed_from}</span>
-                  {" to "}
-                  <span className="text">{experience.attended_till ? experience.attended_till : experience.employed_till}</span>
-                </p>
-              </div>
-		</>
-	  );
+  function EducationExperienceComponent({ experience }) {
+    return (
+      <>
+        <div className="details">
+          <h2>{experience.title}</h2>
+          <p>
+            <span className="heading">{experience.education_description ? experience.education_description : experience.description}</span>
+            {" - "}
+            <span className="text">{experience.institution ? experience.institution : experience.organization_name}</span>
+          </p>
+          <p>
+            <span className="text">{experience.attended_from ? experience.attended_from : experience.employed_from}</span>
+            {" to "}
+            <span className="text">{experience.attended_till ? experience.attended_till : experience.employed_till}</span>
+          </p>
+        </div>
+      </>
+    );
   }
 
-  function CertificationComponent({experience}) {
-	  return (
-		<>
-		<div className="details">
-                <h2>GHI Nursing Certificate</h2>
-                <p>
-                  <span className="heading">Description: </span>
-                  {" - "}
-                  <span className="text">
-                    {/* Patient Care & Safety, Medical Terminology, Electronic
+  function CertificationComponent({ experience }) {
+    return (
+      <>
+        <div className="details">
+          <h2>GHI Nursing Certificate</h2>
+          <p>
+            <span className="heading">Description: </span>
+            {" - "}
+            <span className="text">
+              {/* Patient Care & Safety, Medical Terminology, Electronic
                     Medical Records, Diagnostic Testing, Vital Signs & Patient
                     Monitoring, Medication Administration, Patient Advocacy and
                     Support. */}
-					{experience.description}
-                  </span>
-                </p>
-                <p>
-                  <span className="heading">Issued Date: </span>
-                  {" to "}
-                  <span className="text">{experience.issued_date}</span>
-                </p>
-                <p>
-                  <span className="heading">Certificate link: </span>
-                  <span className="text">
-                    <Link to="/">
-                      {/* https://www.certificatelink.com/certi.pdf */}
-					  {experience.certificate_link}
-                    </Link>
-                  </span>
-                </p>
-                <p>
-                  <span className="heading">Certificate Image: </span>
-                  <span className="text">Image here</span>
-                </p>
-              </div>
-		</>
-	  );
+              {experience.description}
+            </span>
+          </p>
+          <p>
+            <span className="heading">Issued Date: </span>
+            {" to "}
+            <span className="text">{experience.issued_date}</span>
+          </p>
+          <p>
+            <span className="heading">Certificate link: </span>
+            <span className="text">
+              <Link to="/">
+                {/* https://www.certificatelink.com/certi.pdf */}
+                {experience.certificate_link}
+              </Link>
+            </span>
+          </p>
+          <p>
+            <span className="heading">Certificate Image: </span>
+            <span className="text">Image here</span>
+          </p>
+        </div>
+      </>
+    );
   }
 
   return (
@@ -302,14 +302,14 @@ function JobApplied(props) {
             </div>
 
             <div className="bottom">
-				{props.candidateJobDetails.candidate.work_experience.map(val => {
-					return <WorkExperienceComponent experience={val}></WorkExperienceComponent>
-				})}
-				{props.candidateJobDetails.candidate.additional_experiences.map(val => {
-					if(val.career_path === "work"){
-						return <WorkExperienceComponent experience={val}></WorkExperienceComponent>
-					}
-				})}
+              {props.candidateJobDetails.candidate.work_experience.map(val => {
+                return <WorkExperienceComponent experience={val}></WorkExperienceComponent>
+              })}
+              {props.candidateJobDetails.candidate.additional_experiences.map(val => {
+                if (val.career_path === "work") {
+                  return <WorkExperienceComponent experience={val}></WorkExperienceComponent>
+                }
+              })}
               {/* <div className="details">
                 <h2>Certified Nursing Assistant</h2>
                 <p>
@@ -392,14 +392,14 @@ function JobApplied(props) {
                   <span className="text">1012</span>
                 </p>
               </div> */}
-			  {props.candidateJobDetails.candidate.education_experience.map(val => {
-				  return <EducationExperienceComponent experience={val}></EducationExperienceComponent>
-			  })}
-			  {props.candidateJobDetails.candidate.additional_experiences.map(val => {
-					if(val.career_path === "EDUCATION"){
-						return <EducationExperienceComponent experience={val}></EducationExperienceComponent>
-					}
-				})}
+              {props.candidateJobDetails.candidate.education_experience.map(val => {
+                return <EducationExperienceComponent experience={val}></EducationExperienceComponent>
+              })}
+              {props.candidateJobDetails.candidate.additional_experiences.map(val => {
+                if (val.career_path === "EDUCATION") {
+                  return <EducationExperienceComponent experience={val}></EducationExperienceComponent>
+                }
+              })}
             </div>
           </div>
           <div className="group ">
@@ -417,9 +417,9 @@ function JobApplied(props) {
               />
             </div>
             <div className="bottom">
-				{props.candidateJobDetails.candidate.certificate.map(val => {
-					return <CertificationComponent experience={val}></CertificationComponent>
-				})}
+              {props.candidateJobDetails.candidate.certificate.map(val => {
+                return <CertificationComponent experience={val}></CertificationComponent>
+              })}
               {/* <div className="details">
                 <h2>GHI Nursing Certificate</h2>
                 <p>
@@ -523,65 +523,64 @@ function JobApplied(props) {
           <h2>Employer Questions</h2>
         </div>
         <div className="content">
-		<ul className="general-questions">
-				{props.candidateJobDetails.submittedAnswer.employerQuestions.map((question, i) => {
-					return (
-						<li className="general-question" key={i}>
-							<h2 className="question">{question.question_name}</h2>
-							<div className="options">
-								{question.question_type === "text-input" ? (
-									<Input type="text" />
-								) : question.question_type === "mcq" ? (
-									<>
-										{question.option_choices.map((option, i) => {
-											if (option.question_type === "checkbox") {
-												return (
-													<div key={i}>
-														<input
-															key={i}
-															className="block-toggle blue"
-															id={`${option.id}${option.question_id}`}
-															name={`${option.question_id}`}
-															type="checkbox"
-															disabled
-														/>
-														<label
-															htmlFor={`${option.id}${option.question_id}`}
-														>
-															{option.option_choice_name}
-														</label>
-													</div>
-												);
-											} else if (option.question_type === "boolean") {
-												return (
-													<div key={i}>
-														<input
-															key={i}
-															className={`fancy-toggle blue ${
-																i === 0 ? "yes" : "no"
-															}`}
-															id={`${option.id}${option.question_id}`}
-															name={`${option.question_id}`}
-															type="radio"
-															disabled
-														/>
-														<label
-															htmlFor={`${option.id}${option.question_id}`}
-														>
-															<span className="input"></span>
-															{option.option_choice_name}
-														</label>
-													</div>
-												);
-											}
-										})}
-									</>
-								) : null}
-							</div>
-						</li>
-					);
-				})}
-			</ul>
+          <ul className="general-questions">
+            {props.candidateJobDetails.submittedAnswer.employerQuestions.map((question, i) => {
+              return (
+                <li className="general-question" key={i}>
+                  <h2 className="question">{question.question_name}</h2>
+                  <div className="options">
+                    {question.question_type === "text-input" ? (
+                      <Input type="text" />
+                    ) : question.question_type === "mcq" ? (
+                      <>
+                        {question.option_choices.map((option, i) => {
+                          if (option.question_type === "checkbox") {
+                            return (
+                              <div key={i}>
+                                <input
+                                  key={i}
+                                  className="block-toggle blue"
+                                  id={`${option.id}${option.question_id}`}
+                                  name={`${option.question_id}`}
+                                  type="checkbox"
+                                  disabled
+                                />
+                                <label
+                                  htmlFor={`${option.id}${option.question_id}`}
+                                >
+                                  {option.option_choice_name}
+                                </label>
+                              </div>
+                            );
+                          } else if (option.question_type === "boolean") {
+                            return (
+                              <div key={i}>
+                                <input
+                                  key={i}
+                                  className={`fancy-toggle blue ${i === 0 ? "yes" : "no"
+                                    }`}
+                                  id={`${option.id}${option.question_id}`}
+                                  name={`${option.question_id}`}
+                                  type="radio"
+                                  disabled
+                                />
+                                <label
+                                  htmlFor={`${option.id}${option.question_id}`}
+                                >
+                                  <span className="input"></span>
+                                  {option.option_choice_name}
+                                </label>
+                              </div>
+                            );
+                          }
+                        })}
+                      </>
+                    ) : null}
+                  </div>
+                </li>
+              );
+            })}
+          </ul>
           {/* <ul className="general-questions">
             <li className="general-question">
               <h2 className="question">Acceptable Shifts?</h2>

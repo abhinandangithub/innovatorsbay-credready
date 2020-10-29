@@ -53,14 +53,14 @@ function JobApply(props) {
 						<img src={ImgWidgetLogo} alt="" />
 					</div>
 					<div className="info">
-						<h3>{jobDetails.job_title}</h3>
-						<p>{jobDetails.organization && jobDetails.organization.org_name}</p>
+						<h3>{jobDetails ? jobDetails.job_title : ""}</h3>
+						<p>{jobDetails && jobDetails.organization && jobDetails.organization.org_name}</p>
 					</div>
 					<div className="short-info">
 						<p>
-							{jobDetails.min_experience}-{jobDetails.max_experience} Years
+							{jobDetails ? jobDetails.min_experience : ""}-{jobDetails ? jobDetails.max_experience : ""} Years
 						</p>
-						<p>{jobDetails.location}</p>
+						<p>{jobDetails ? jobDetails.location : ""}</p>
 					</div>
 				</div>
 				<div className="bottom">
@@ -68,10 +68,10 @@ function JobApply(props) {
 						<span className="text">
 							<span
 								dangerouslySetInnerHTML={{
-									__html: jobDetails.jobDescription,
+									__html: jobDetails ? jobDetails.jobDescription : "",
 								}}
 							></span>
-							<span dangerouslySetInnerHTML={{ __html: allData.job_description }}></span>
+							<span dangerouslySetInnerHTML={{ __html: allData && allData.job_description }}></span>
 						</span>
 					</p>
 					<div className="cta flex">
@@ -89,7 +89,7 @@ function JobApply(props) {
 
 						<Link
 							className="primary-btn blue"
-							to={allJobData.jobDetails ? `/jobs/application/${props.match.params.id}` : `/jobs/questions/${props.match.params.id}`}
+							to={allJobData && allJobData.jobDetails ? `/jobs/application/${props.match.params.id}` : `/jobs/questions/${props.match.params.id}`}
 						>
 							Apply
 						</Link>

@@ -14,17 +14,14 @@ import {
 import { useToasts } from "react-toast-notifications";
 
 import "./index.scss";
-import ImgNYP from "../../../assets/nyp.png";
 import ImgUserPlaceholder from "../../../assets/user-placeholder.jpg";
 import {
 	togglePopup,
 	toggleOverlay,
 } from "../../../store/actions/popup_overlay";
 import {
-	deleteAccount,
 	updateEmailThunk,
 	updatePhoneThunk,
-	getProfileThunk,
 	uploadProfileImage,
 	profileDownload
 } from "../../../store/thunks/employer";
@@ -279,7 +276,7 @@ function ProfileOverview(props) {
 							style={{ transform: "rotateY(180deg)" }}
 						/>
 						<input
-							type="text"
+							type="phone"
 							// defaultValue={allData.contacts[0] && allData.contacts[0].contact ? allData.contacts[0].contact : ""}
 							value={phone}
 							className={`${editingPhone ? "edit" : ""}`}
@@ -308,7 +305,7 @@ function ProfileOverview(props) {
 					<li>
 						<FontAwesomeIcon className="icon" icon={faMailBulk} />
 						<input
-							type="text"
+							type="email"
 							// defaultValue={allData.username ? allData.username : ""}
 							value={email}
 							className={`${editingEmail ? "edit" : ""}`}

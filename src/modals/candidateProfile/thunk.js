@@ -54,6 +54,7 @@ import {
 	togglePopup,
 	toggleOverlay,
 } from "../../store/actions/popup_overlay";
+import { setCandidateJobDetails } from "../../store/actions/candidate";
 
 export const uploadCandidateImage = (image) => async (dispatch, getState) => {
 	try {
@@ -250,6 +251,8 @@ export const jobApply = (formData, id) => async (dispatch, getState) => {
 		dispatch(toggleOverlay(true));
 		dispatch(togglePopup([true, "jobApplied"]));
 		dispatch(candidateGetAppliedJobs());
+		dispatch(setJobDescription());
+		dispatch(setCandidateJobDetails());
 	} catch (err) {
 		dispatch(showToast({
 			message: err.response.data.message,
@@ -712,13 +715,14 @@ export const fetchAllCertificateTitles = () => async (dispatch, getState) => {
 
 export const deleteWorkExperience = (id) => async (dispatch, getState) => {
 	try {
-		const data = await Axios.delete(deleteWorkExperienceUrl + '/' + id, {
+		let URL = deleteWorkExperienceUrl + '/' + id;
+		const data = await Axios.delete(URL, {
 			headers: {
 				'Authorization': getState().authReducer.JWT.map.jwt,
 				'Content-Type': 'application/vnd.credready.com+json'
 			}
-		});
-		if (!data) return;
+		})
+		if (!data) return false;
 		dispatch(fetchCandidateDetails());
 	} catch (err) {
 		console.log(err)
@@ -727,7 +731,8 @@ export const deleteWorkExperience = (id) => async (dispatch, getState) => {
 
 export const deleteEducationExperience = (id) => async (dispatch, getState) => {
 	try {
-		const data = await Axios.delete(deleteEducationExperienceUrl + '/' + id, {
+		let URl = deleteEducationExperienceUrl + '/' + id;
+		const data = await Axios.delete(URl, {
 			headers: {
 				'Authorization': getState().authReducer.JWT.map.jwt,
 				'Content-Type': 'application/vnd.credready.com+json'
@@ -787,10 +792,11 @@ export const updateCandidatePhone = (phone) => async (dispatch, getState) => {
 		dispatch(fetchCandidateDetails());
 	} catch (err) {
 		dispatch(showToast({
-			message: "Failed to update Candidate's Phone no please try again ",
+			message: err.response.data.message,
 			type: "error",
 			isShow: true
 		}));
+		dispatch(fetchCandidateDetails());
 		if (err.response) console.error(`failed to update  email ${err}`);
 	}
 };
@@ -837,10 +843,11 @@ export const updateCandidateEmail = (email) => async (dispatch, getState) => {
 		dispatch(fetchCandidateDetails());
 	} catch (err) {
 		dispatch(showToast({
-			message: "Failed to update Candidate's Email please try again ",
+			message: err.response.data.message,
 			type: "error",
 			isShow: true
 		}));
+		dispatch(fetchCandidateDetails());
 		if (err.response) console.error(`failed to update  email ${err}`);
 	}
 };
@@ -854,6 +861,24 @@ export const deleteCandidateAccount = () => async (dispatch, getState) => {
 			}
 		})
 	} catch (err) {
+		dispatch(showToast({
+			message: "Failed to update Candidate's Email please try again ",
+			type: "error",
+			isShow: true
+		}));
 		if (err.response) console.error(`failed to update  email ${err}`);
 	}
-}
+};
+
+// export const deleteCandidateAccount = () => async (dispatch, getState) => {
+// 	try {
+// 		await Axios.delete(deleteCandidateAccountUrl, {
+// 			headers: {
+// 				'Authorization': getState().authReducer.JWT.map.jwt,
+// 				'Content-Type': 'application/vnd.credready.com+json'
+// 			}
+// 		})
+// 	} catch (err) {
+// 		if (err.response) console.error(`failed to update  email ${err}`);
+// 	}
+// }

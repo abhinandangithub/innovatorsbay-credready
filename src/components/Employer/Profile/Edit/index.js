@@ -6,7 +6,7 @@ import {
 	getHiringNeedsThunk,
 	getCompanySizeThunk,
 	updateProfileThunk,
-	getGeographyThunk
+	getGeographyThunk,
 } from "../../../../store/thunks/employer";
 
 import "./index.scss";
@@ -15,7 +15,6 @@ import Dropdown from "../../../_Elements/Dropdown";
 import InputDropdown from "../../../_Elements/InputDropdown";
 import Spinner from "../../../_Elements/Spinner";
 import { findIndexOfObjInArr } from "../../../../assets/js/Utility";
-
 
 const hiringNeed = {
 	heading: "Hires needed in the next 6 monts",
@@ -43,7 +42,7 @@ const socialMedia = {
 function Details(props) {
 	const dispatch = useDispatch();
 
-	const [addressCount, setAddressCount] = React.useState([""]);
+	const [addressCount, setAddressCount] = React.useState([]);
 	const [city, setCity] = React.useState(() => {
 		// 	let cty;
 		// 	for(let i = 0; i < props.profile.org.address.length; i++) {
@@ -56,10 +55,9 @@ function Details(props) {
 		// 	].city
 		// 	}
 		// 	return cty;
-	}
-	);
+	});
 	const [state, setState] = React.useState([]);
-	const [isAddAddressClicked, setIsAddAddressClicked] = React.useState(false)
+	const [isAddAddressClicked, setIsAddAddressClicked] = React.useState(false);
 
 	const [formData, setFormData] = React.useState(() => {
 		let initialState = {};
@@ -68,17 +66,17 @@ function Details(props) {
 		initialState.website = [props.profile.org.website];
 		initialState.hiringNeeds = [
 			props.profile.org.hires_required &&
-			props.hiringKeys.length > 0 &&
-			props.hiringKeys.find(
-				(val) => val.id === props.profile.org.hires_required
-			).range_display_value,
+				props.hiringKeys.length > 0 &&
+				props.hiringKeys.find(
+					(val) => val.id === props.profile.org.hires_required
+				).range_display_value,
 		];
 		initialState.companySize = [
 			props.profile.org.company_size &&
-			props.companySizeKeys.length > 0 &&
-			props.companySizeKeys.find(
-				(val) => val.id === props.profile.org.company_size
-			).range_display_value,
+				props.companySizeKeys.length > 0 &&
+				props.companySizeKeys.find(
+					(val) => val.id === props.profile.org.company_size
+				).range_display_value,
 		];
 		initialState.reference = [props.profile.org.reference_source];
 		for (let i = 0; i < props.profile.org.address.length; i++) {
@@ -91,12 +89,7 @@ function Details(props) {
 			initialState["state_" + i] = [props.profile.org.address[i].state];
 			initialState["zipCode_" + i] = [props.profile.org.address[i].zip_code];
 		}
-		if (props.profile.org.address.length === 0) {
-			initialState["street_0"] = [""];
-			initialState["city_0"] = [""];
-			initialState["state_0"] = [""];
-			initialState["zipCode_0"] = [""];
-		}
+
 		console.log(initialState);
 		return initialState;
 	});
@@ -113,10 +106,10 @@ function Details(props) {
 	}, [dispatch]);
 
 	useEffect(() => {
-		console.log('props.geography ', props.geographyKeys);
+		console.log("props.geography ", props.geographyKeys);
 		let city = props.geographyKeys.map((c) => {
 			return c.city;
-		})
+		});
 	}, [props.geography, props.geographyKeys]);
 
 	const handleSubmit = () => {
@@ -126,8 +119,8 @@ function Details(props) {
 		for (var field in _formData) {
 			let skip =
 				field === "hiringNeeds" ||
-					field === "companySize" ||
-					field === "reference"
+				field === "companySize" ||
+				field === "reference"
 					? false
 					: true;
 
@@ -175,16 +168,15 @@ function Details(props) {
 		if (_formData.formValid) {
 			/* SEND DATA TO API */
 			console.log(profileData);
+			dispatch(updateProfileThunk(null, profileData));
+			props.history.push("/profile/view");
 		}
 
 		setFormData(_formData);
-
-		dispatch(updateProfileThunk(null, profileData));
-		props.history.push("/profile/view");
 	};
 
 	const handleFieldChange = (field, value) => {
-		console.log('address ', field, value);
+		console.log("address ", field, value);
 		let msg = value === "" || value === null ? "Required" : "";
 
 		let arr = [];
@@ -199,7 +191,6 @@ function Details(props) {
 
 	const handleFieldChangeCity = (field, value, stateField) => {
 		if (typeof value !== "number") return;
-		console.log('address ', field, value);
 		let msg = value === "" || value === null ? "Required" : "";
 		let obj = props.geographyKeys.find((c) => {
 			return c.id === value;
@@ -209,7 +200,6 @@ function Details(props) {
 			msg = "Required";
 		}
 
-		console.log('obj ', obj);
 		// setState(obj.state);
 		let city = [];
 		// city[0] = value;
@@ -261,7 +251,7 @@ function Details(props) {
 							<span
 								className={`error-text ${
 									!formData[`street_${i}`][1] && "hidden"
-									}`}
+								}`}
 							>
 								Required
 							</span>
@@ -281,7 +271,7 @@ function Details(props) {
 							<span
 								className={`error-text ${
 									!formData[`city_${i}`][1] && "hidden"
-									}`}
+								}`}
 							>
 								Required
 							</span>
@@ -305,12 +295,10 @@ function Details(props) {
 							// selected={
 							// 	city
 							// }
-							onchange={
-								(value) => {
-									handleFieldChangeCity(`city_${i}`, value, `state_${i}`)
-									handleFieldSearchCity(`city_${i}`, value)
-								}
-							}
+							onchange={(value) => {
+								handleFieldChangeCity(`city_${i}`, value, `state_${i}`);
+								handleFieldSearchCity(`city_${i}`, value);
+							}}
 						/>
 					</li>
 					<li>
@@ -319,7 +307,7 @@ function Details(props) {
 							<span
 								className={`error-text ${
 									!formData[`state_${i}`][1] && "hidden"
-									}`}
+								}`}
 							>
 								Required
 							</span>
@@ -339,7 +327,7 @@ function Details(props) {
 							<span
 								className={`error-text ${
 									!formData[`zipCode_${i}`][1] && "hidden"
-									}`}
+								}`}
 							>
 								Required
 							</span>
@@ -358,7 +346,7 @@ function Details(props) {
 	};
 
 	const addAdress = () => {
-		setIsAddAddressClicked(true)
+		setIsAddAddressClicked(true);
 		let _addressCount = [...addressCount];
 		_addressCount.push("");
 		setAddressCount(_addressCount);
@@ -489,7 +477,7 @@ function mapStateToProps(state) {
 		companySizeKeys: state.employerReducer.companySizeKeys,
 		hiringKeys: state.employerReducer.hiringKeys,
 		geographyKeys: state.employerReducer.geographyKeys,
-		geography: state.employerReducer.geography.data
+		geography: state.employerReducer.geography.data,
 	};
 }
 

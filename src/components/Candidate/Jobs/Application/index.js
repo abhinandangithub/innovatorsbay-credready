@@ -60,7 +60,7 @@ function Application(props) {
 		});
 	};
 
-	const empQuestions = jobData.questions ? jobData.questions : [];
+	const empQuestions = jobData.submittedAnswer && jobData.submittedAnswer.employerQuestions ? jobData.submittedAnswer.employerQuestions : [];
 
 	const empQuestionFormat =
 		empQuestions &&
@@ -69,13 +69,13 @@ function Application(props) {
 			if (entity.question_type === "text-input") {
 				return {
 					question_id: entity.question_id,
-					answer: "",
+					answer: ""
 				};
 			}
 			else {
 				return {
 					question_id: entity.question_id,
-					answer: []
+					answer: entity.candidate_answer && entity.candidate_answer.ans_option_choice.length > 0 ? entity.candidate_answer.ans_option_choice : []
 				};
 			}
 		});

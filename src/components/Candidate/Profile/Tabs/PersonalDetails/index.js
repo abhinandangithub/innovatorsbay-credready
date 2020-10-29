@@ -140,6 +140,7 @@ function PersonalDetails(props) {
 		dispatch(fetchCandidateCurrentStatus())
 		dispatch(fetchCandidateDetails());
 	}, []);
+	console.log(formData);
 
 	return (
 		<div className="personal-details">
