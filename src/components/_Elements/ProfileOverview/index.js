@@ -37,6 +37,10 @@ import {
 	fetchAllAnswers,
 } from "../../../modals/candidateProfile/thunk";
 
+let _phone = "";
+let _email = "";
+let _about = "";
+
 function ProfileOverview(props) {
 	const dispatch = useDispatch();
 	const { addToast } = useToasts();
@@ -168,31 +172,40 @@ function ProfileOverview(props) {
 	const handleClick = (id) => {
 		if (id === "checkPhoneBtn" || id === "closePhoneBtn") {
 			setEditingPhone(false);
-			if (id === "checkPhoneBtn") {
+			if (id === "checkPhoneBtn" && phone.length !== 0) {
 				if (props.type !== "candidate") {
 					dispatch(updatePhoneThunk(phone));
 				} else {
 					dispatch(updateCandidatePhone(phone));
 				}
+			} else {
+				setPhone(_phone);
 			}
 		} else if (id === "editPhoneBtn") {
+			_phone = phone;
 			setEditingPhone(true);
 		} else if (id === "checkAboutMeBtn" || id === "closeAboutMeBtn") {
 			setEditingAboutMe(false);
-			if (id === "checkAboutMeBtn") {
+			if (id === "checkAboutMeBtn" && about.length !== 0) {
 				if (props.type === "candidate") dispatch(updateCandidateAbout(about));
+			} else {
+				setAbout(_about);
 			}
 		} else if (id === "checkEmailBtn" || id === "closeEmailBtn") {
 			setEditingEmail(false);
-			if (id === "checkEmailBtn") {
+			if (id === "checkEmailBtn" && email.length !== 0) {
 				if (props.type !== "candidate") dispatch(updateEmailThunk(email));
 				dispatch(updateCandidateEmail(email));
+			} else {
+				setEmail(_email);
 			}
 		} else if (id === "editEmailBtn") {
+			_email = email;
 			setEditingEmail(true);
 		} else if (id === "checkAboutMeBtn" || id === "closeAboutMeBtn") {
 			setEditingAboutMe(false);
 		} else if (id === "editAboutMeBtn") {
+			_about = about;
 			setEditingAboutMe(true);
 		}
 	};

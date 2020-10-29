@@ -73,7 +73,7 @@ function CandidateView(props) {
 				<div className="main-info">
 					<div className="top flex">
 						<div className="left">
-							<img src={ImgUserPlaceholder} alt="UserName" />
+							<img src={job.candidate.profile_image_path ? job.candidate.profile_image_path : ImgUserPlaceholder} alt="UserName" />
 						</div>
 						<div className="right">
 							<h2>{job.candidate.first_name} {job.candidate.last_name}</h2>

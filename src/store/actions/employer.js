@@ -194,6 +194,13 @@ export const jobToUpdate = (val) => {
 	};
 };
 
+export const jobToUpdateArray = (val) => {
+	return {
+		type: actionTypes.JOB_TO_UPDATE_ARRAY,
+		value: val,
+	};
+};
+
 export const setEmployerResumePath = (val) => {
 	return {
 		type: actionTypes.EMPLOYER_RESUME_PATH,

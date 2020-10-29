@@ -7,7 +7,7 @@ function JobSpecificQuestions({ questions }) {
 	console.log('questions ', questions);
 	return (
 		<div className="job-specefic-questions">
-		 <h1 className="heading">Job Specific Questions</h1>
+			<h1 className="heading">Job Specific Questions</h1>
 			<ul className="general-questions">
 				{questions.map((question, i) => {
 					return (
@@ -15,7 +15,7 @@ function JobSpecificQuestions({ questions }) {
 							<h2 className="question">{question.question_name}</h2>
 							<div className="options">
 								{question.question_type === "text-input" ? (
-									<Input type="text" />
+									<Input type="text" value={question.candidate_answer && question.candidate_answer.ans_text} />
 								) : question.question_type === "mcq" ? (
 									<>
 										{question.option_choices.map((option, i) => {

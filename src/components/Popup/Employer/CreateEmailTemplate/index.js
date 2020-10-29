@@ -90,11 +90,18 @@ function CreateEmailTemplate(props) {
 					index = i;
 				}
 			}
-			return {
+
+			_cursorInfo = {
 				el: childNodes[index].parentElement,
 				pos: range.startOffset + rangeCount,
 			};
+			return _cursorInfo;
 		}
+
+		_cursorInfo = {
+			el: null,
+			pos: -1,
+		};
 		return -1;
 	}
 
@@ -106,15 +113,17 @@ function CreateEmailTemplate(props) {
 		let editor = document.getElementById("myEditor");
 
 		if (e.target.checked) {
-			var textToInsert = ` {${tag.text}} `;
+			let textToInsert = ` {${tag.text}} `;
+			let elHtml = _cursorInfo.el.innerHTML.replace(/&nbsp;/g, "");
+
 			if (_cursorInfo.pos > -1) {
 				let output = [
-					_cursorInfo.el.innerHTML.slice(0, _cursorInfo.pos),
+					elHtml.slice(0, _cursorInfo.pos),
 					textToInsert,
-					_cursorInfo.el.innerHTML.slice(_cursorInfo.pos),
+					elHtml.slice(_cursorInfo.pos),
 				].join("");
-				_cursorInfo.el.innerHTML = output;
 
+				_cursorInfo.el.innerHTML = output;
 				_cursorInfo.pos = -1;
 
 				setFormData({
@@ -123,9 +132,9 @@ function CreateEmailTemplate(props) {
 				});
 			}
 		} else {
-			var textToSearch = `${tag.text}`;
-			var stringWithTag = myEditorEl.current.lastHtml;
-			var regex = new RegExp("\\{" + textToSearch + "\\}", "g");
+			let textToSearch = `${tag.text}`;
+			let stringWithTag = myEditorEl.current.lastHtml;
+			let regex = new RegExp("\\{" + textToSearch + "\\}", "g");
 			let output = stringWithTag.replace(regex, " ");
 
 			setFormData({
@@ -133,11 +142,6 @@ function CreateEmailTemplate(props) {
 				body: [output],
 			});
 		}
-	};
-
-	const getCursorPos = () => {
-		_cursorInfo = getCaretPosition();
-		return _cursorInfo;
 	};
 
 	const [formData, setFormData] = React.useState({
@@ -226,17 +230,17 @@ function CreateEmailTemplate(props) {
 	};
 
 	const updateTemplate = () => {
-		console.log("updateTemplate");
+		// console.log("updateTemplate");
 		handleSubmit("edit");
 	};
 
 	const saveAsNewTemplate = () => {
-		console.log("saveAsNewTemplate");
+		// console.log("saveAsNewTemplate");
 		handleSubmit("add");
 	};
 
 	const addTemplate = () => {
-		console.log("addTemplate");
+		// console.log("addTemplate");
 		handleSubmit("add");
 	};
 
@@ -324,8 +328,8 @@ function CreateEmailTemplate(props) {
 							tagName="div"
 							className="my_editor"
 							id="myEditor"
-							onMouseUp={getCursorPos}
-							onKeyUp={getCursorPos}
+							onMouseUp={getCaretPosition}
+							onKeyUp={getCaretPosition}
 						/>
 					</li>
 				</ul>

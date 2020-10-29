@@ -26,7 +26,8 @@ import {
 	orgNameUrl,
 	employeAddEmailTemplate,
 	employeUpdateEmailTemplate,
-	profileDownloadUrl
+	profileDownloadUrl,
+	employerUpdateJob
 } from "../api/employer";
 
 import { updateLoggedIn } from "../actions/auth";
@@ -41,7 +42,8 @@ import {
 	setGeography,
 	setQuestionBankQuestion,
 	setEmployerResumePath,
-	jobToUpdate
+	jobToUpdate,
+	jobToUpdateArray
 } from "../actions/employer";
 
 import {
@@ -224,7 +226,7 @@ export const deleteAccount = (token) => async (dispatch, getState) => {
 	}
 };
 
-export const getPostedJobs = (isUpdate = undefined, jobId = undefined) => async (dispatch, getState) => {
+export const getPostedJobs = (isUpdate = undefined, jobId = undefined, isPostJob = undefined) => async (dispatch, getState) => {
 	try {
 		const state = getState();
 		dispatch(beginApiCall());
@@ -240,6 +242,13 @@ export const getPostedJobs = (isUpdate = undefined, jobId = undefined) => async 
 		if (isUpdate === 'update' && jobId) {
 			console.log('getPostedJobs');
 			dispatch(jobToUpdate(jobId));
+		}
+		console.log('abhi data.data before ', isPostJob, data.data);
+		if (isPostJob && data.data) {
+			console.log('abhi data.data ', data.data.data);
+			let temp = data.data.data.find((j) => j.job_id == jobId);
+			console.log('abhi temp ', temp);
+			dispatch(jobToUpdateArray(temp));
 		}
 	} catch (err) {
 		if (err.response) console.error(`failed to fetch the posted jobs ${err}`);
@@ -465,20 +474,35 @@ export const updateEmailTemplate = (body) => async (dispatch, getState) => {
 export const postJob = (jobId = undefined) => async (dispatch, getState) => {
 	try {
 		const state = getState();
+		let data = undefined;
+		dispatch(beginApiCall());
 		let body = {};
 		if (!!jobId) {
 			body = { ...state.employerReducer.newJob, jobId: jobId };
+			data = await Axios.patch(employerUpdateJob, body, {
+				headers: {
+					'Authorization': getState().authReducer.JWT.map.jwt,
+					'Content-Type': 'application/vnd.credready.com+json'
+				}
+			});
+			if (!!jobId) {
+				// setTimeout(() => {
+				// 	// dispatch(getPostedJobs(undefined, jobId, true));
+				// 	dispatch(getPostedJobs("update", jobId));
+
+				// }, 3000);
+				dispatch(getPostedJobs("update", jobId));
+			}
 		}
 		else {
 			body = { ...state.employerReducer.newJob }
+			data = await Axios.post(employerPostJob, body, {
+				headers: {
+					'Authorization': getState().authReducer.JWT.map.jwt,
+					'Content-Type': 'application/vnd.credready.com+json'
+				}
+			});
 		}
-		dispatch(beginApiCall());
-		const data = await Axios.post(employerPostJob, body, {
-			headers: {
-				'Authorization': getState().authReducer.JWT.map.jwt,
-				'Content-Type': 'application/vnd.credready.com+json'
-			}
-		});
 		dispatch(apiCallError());
 		if (!data) return false;
 		dispatch(showToast({

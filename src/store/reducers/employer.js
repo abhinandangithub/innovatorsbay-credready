@@ -412,6 +412,12 @@ const reducer = (state = initialState, action) => {
 				jobToUpdate: temp
 			});
 
+		case actionTypes.JOB_TO_UPDATE_ARRAY:
+			console.log('abhi action.value array', action.value);
+			return updateObject(state, {
+				jobToUpdate: action.value
+			});
+
 		case actionTypes.SET_EMPLOYMENT_TYPE:
 			const employemntTemp = state.employmentType;
 			employemntTemp.message = action.value.message;

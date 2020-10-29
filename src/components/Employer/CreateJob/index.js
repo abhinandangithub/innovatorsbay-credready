@@ -95,7 +95,7 @@ function CreateJob(props) {
 		props.loading ?
 			<Spinner /> :
 			<div className="create-job-page">
-				<h1 className="common-heading">{jobId ? "Update CNA " + props.jobToUpdate.job_title : "Create the Job"}</h1>
+				<h1 className="common-heading">{jobId ? "Update " + props.jobToUpdate.job_title : "Create the Job"}</h1>
 
 				<div className="outer">
 					<div className="left">

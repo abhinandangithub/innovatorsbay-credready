@@ -68,6 +68,9 @@ export const employeFetchHireRequiredRangesUrl = constructUrl(
  */
 export const employerPostJob = constructUrl(employerRouteWithBase, "job");
 
+
+export const employerUpdateJob = constructUrl(employerRouteWithBase, "job/update");
+
 /**
  * Name: fetch a job by id
  */
