@@ -17,11 +17,6 @@ function CreateJob(props) {
 
 	const [certificates, setCertificates] = React.useState([]);
 
-	const options = [
-		{ name: "Srigar", id: 1 },
-		{ name: "Sam", id: 2 },
-	];
-
 	const [disableCtrl, setDisableCtrl] = useState(false);
 	const [certValidation, setCertValidation] = useState("");
 
@@ -36,16 +31,19 @@ function CreateJob(props) {
 	}, [dispatch]);
 
 	React.useEffect(() => {
-		console.log('certificates ', props.jobToUpdate.certificates);
-		if (!!jobId) {
+		if (!!jobId && !!props.jobToUpdate) {
 			setValue({
 				min: props.jobToUpdate.min_experience,
 				max: props.jobToUpdate.max_experience,
 			});
 			setCertificates(props.jobToUpdate.certificates);
 			dispatch(setNewJob({ jobCertificateMap: props.jobToUpdate.certificates }));
+			dispatch(setNewJob({ minExp: props.jobToUpdate.min_experience, maxExp: props.jobToUpdate.max_experience }));
+		} else {
+			dispatch(setNewJob({ jobCertificateMap: [] }));
+			dispatch(setNewJob({ minExp: null, maxExp: null }));
 		}
-		if (props.jobToUpdate.count_of_applied_candidates && jobId)
+		if (props.jobToUpdate && props.jobToUpdate.count_of_applied_candidates && jobId)
 			setDisableCtrl(true)
 	}, [props.jobToUpdate]);
 

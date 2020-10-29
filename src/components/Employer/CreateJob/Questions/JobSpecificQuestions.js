@@ -26,13 +26,14 @@ function JobSpecificQuestions(props) {
 	}, [dispatch]);
 
 	useEffect(() => {
-		console.log('questions ', props.jobToUpdate.questions);
-		if (!!jobId) {
+		if (!!jobId && !!props.jobToUpdate) {
 			// setDefaultQuestions(props.jobToUpdate.questions);
 			dispatch(setQuestionBankQuestion(props.jobToUpdate.questions));
 			dispatch(setNewJob({ jobQuestionnaireMap: props.jobToUpdate.questions }));
+		} else {
+			dispatch(setNewJob({ jobQuestionnaireMap: [] }));
 		}
-		if (props.jobToUpdate.count_of_applied_candidates && jobId)
+		if (props.jobToUpdate && props.jobToUpdate.count_of_applied_candidates && jobId)
 			setDisableCtrl(true)
 	}, [props.jobToUpdate]);
 

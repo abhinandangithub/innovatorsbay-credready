@@ -6,7 +6,7 @@ import {
 	getHiringNeedsThunk,
 	getCompanySizeThunk,
 	updateProfileThunk,
-	getGeographyThunk,
+	getGeographyThunk
 } from "../../../../store/thunks/employer";
 
 import "./index.scss";
@@ -15,6 +15,7 @@ import Dropdown from "../../../_Elements/Dropdown";
 import InputDropdown from "../../../_Elements/InputDropdown";
 import Spinner from "../../../_Elements/Spinner";
 import { findIndexOfObjInArr } from "../../../../assets/js/Utility";
+
 
 const hiringNeed = {
 	heading: "Hires needed in the next 6 monts",
@@ -43,9 +44,22 @@ function Details(props) {
 	const dispatch = useDispatch();
 
 	const [addressCount, setAddressCount] = React.useState([""]);
-	const [city, setCity] = React.useState([]);
+	const [city, setCity] = React.useState(() => {
+		// 	let cty;
+		// 	for(let i = 0; i < props.profile.org.address.length; i++) {
+		// 	cty =	props.geographyKeys &&
+		// 	props.geographyKeys[
+		// 	findIndexOfObjInArr(props.geographyKeys, "city", formData[`city_${i}`][0])
+		// 	] &&
+		// 	props.geographyKeys[
+		// 		findIndexOfObjInArr(props.geographyKeys, "city", formData[`city_${i}`][0])
+		// 	].city
+		// 	}
+		// 	return cty;
+	}
+	);
 	const [state, setState] = React.useState([]);
-	const [isAddAddressClicked, setIsAddAddressClicked] = React.useState(false);
+	const [isAddAddressClicked, setIsAddAddressClicked] = React.useState(false)
 
 	const [formData, setFormData] = React.useState(() => {
 		let initialState = {};
@@ -54,17 +68,17 @@ function Details(props) {
 		initialState.website = [props.profile.org.website];
 		initialState.hiringNeeds = [
 			props.profile.org.hires_required &&
-				props.hiringKeys.length > 0 &&
-				props.hiringKeys.find(
-					(val) => val.id === props.profile.org.hires_required
-				).range_display_value,
+			props.hiringKeys.length > 0 &&
+			props.hiringKeys.find(
+				(val) => val.id === props.profile.org.hires_required
+			).range_display_value,
 		];
 		initialState.companySize = [
 			props.profile.org.company_size &&
-				props.companySizeKeys.length > 0 &&
-				props.companySizeKeys.find(
-					(val) => val.id === props.profile.org.company_size
-				).range_display_value,
+			props.companySizeKeys.length > 0 &&
+			props.companySizeKeys.find(
+				(val) => val.id === props.profile.org.company_size
+			).range_display_value,
 		];
 		initialState.reference = [props.profile.org.reference_source];
 		for (let i = 0; i < props.profile.org.address.length; i++) {
@@ -99,10 +113,10 @@ function Details(props) {
 	}, [dispatch]);
 
 	useEffect(() => {
-		console.log("props.geography ", props.geographyKeys);
+		console.log('props.geography ', props.geographyKeys);
 		let city = props.geographyKeys.map((c) => {
 			return c.city;
-		});
+		})
 	}, [props.geography, props.geographyKeys]);
 
 	const handleSubmit = () => {
@@ -112,8 +126,8 @@ function Details(props) {
 		for (var field in _formData) {
 			let skip =
 				field === "hiringNeeds" ||
-				field === "companySize" ||
-				field === "reference"
+					field === "companySize" ||
+					field === "reference"
 					? false
 					: true;
 
@@ -161,15 +175,16 @@ function Details(props) {
 		if (_formData.formValid) {
 			/* SEND DATA TO API */
 			console.log(profileData);
-			dispatch(updateProfileThunk(null, profileData));
-			props.history.push("/profile/view");
 		}
 
 		setFormData(_formData);
+
+		dispatch(updateProfileThunk(null, profileData));
+		props.history.push("/profile/view");
 	};
 
 	const handleFieldChange = (field, value) => {
-		console.log("address ", field, value);
+		console.log('address ', field, value);
 		let msg = value === "" || value === null ? "Required" : "";
 
 		let arr = [];
@@ -182,36 +197,55 @@ function Details(props) {
 		});
 	};
 
-	// const handleFieldChangeCity = (field, value, stateField) => {
-	// 	console.log('address ', field, value);
-	// 	let msg = value === "" || value === null ? "Required" : "";
-	// 	let obj = props.geographyKeys.find((c) => {
-	// 		return c.id === value;
-	// 	});
+	const handleFieldChangeCity = (field, value, stateField) => {
+		if (typeof value !== "number") return;
+		console.log('address ', field, value);
+		let msg = value === "" || value === null ? "Required" : "";
+		let obj = props.geographyKeys.find((c) => {
+			return c.id === value;
+		});
 
-	// 	if(!obj) {
-	// 		msg = "Required";
-	// 	}
+		if (!obj) {
+			msg = "Required";
+		}
 
-	// 	console.log('obj ', obj);
-	// 	let city = [];
-	// 	city[0] = value;
-	// 	city[1] = msg;
+		console.log('obj ', obj);
+		// setState(obj.state);
+		let city = [];
+		// city[0] = value;
+		city[0] = obj.city;
+		city[1] = msg;
 
-	// 	// let state = [];
-	// 	// state[0] = obj.state;
-	// 	// state[1] = msg;
+		let state = [];
+		state[0] = obj.state;
+		state[1] = msg;
 
-	// 	setFormData({
-	// 		...formData,
-	// 		[field]: city,
-	// 	});
+		setFormData({
+			...formData,
+			[field]: city,
+			[stateField]: state,
+		});
 
-	// 	// setFormData({
-	// 	// 	...formData,
-	// 	// 	[stateField]: state,
-	// 	// });
-	// };
+		// setFormData({
+		// 	...formData,
+		// 	[stateField]: state,
+		// });
+		// console.log(formData);
+	};
+
+	const handleFieldSearchCity = (field, value) => {
+		if (typeof value === "number") return;
+		let msg = value === "" || value === null ? "Required" : "";
+
+		let city = [];
+		// city[0] = value;
+		city[0] = value;
+		city[1] = msg;
+		setFormData({
+			...formData,
+			[field]: city,
+		});
+	};
 
 	const renderAddresses = () => {
 		return addressCount.map((address, index) => {
@@ -227,7 +261,7 @@ function Details(props) {
 							<span
 								className={`error-text ${
 									!formData[`street_${i}`][1] && "hidden"
-								}`}
+									}`}
 							>
 								Required
 							</span>
@@ -247,19 +281,19 @@ function Details(props) {
 							<span
 								className={`error-text ${
 									!formData[`city_${i}`][1] && "hidden"
-								}`}
+									}`}
 							>
 								Required
 							</span>
 						</label>
-						<Input
+						{/* <Input
 							id={`city_${i}`}
 							type="text"
 							value={formData[`city_${i}`][0]}
 							// value={address.city}
 							onChange={(e) => handleFieldChange(e.target.id, e.target.value)}
-						/>
-						{/* <InputDropdown
+						/> */}
+						<InputDropdown
 							id={`city_${i}`}
 							placeholder="city"
 							content={props.geographyKeys.map((val) => ({
@@ -267,18 +301,17 @@ function Details(props) {
 								id: val.id,
 							}))}
 							search_term="city"
-							// selected={formData[`city_${i}`][0]}
-							selected={
-								props.geographyKeys &&
-								props.geographyKeys[
-								findIndexOfObjInArr(props.geographyKeys, "id", formData[`city_${i}`][0])
-								] &&
-								props.geographyKeys[
-									findIndexOfObjInArr(props.geographyKeys, "id", formData[`city_${i}`][0])
-								].city
+							selected={formData[`city_${i}`][0]}
+							// selected={
+							// 	city
+							// }
+							onchange={
+								(value) => {
+									handleFieldChangeCity(`city_${i}`, value, `state_${i}`)
+									handleFieldSearchCity(`city_${i}`, value)
+								}
 							}
-							onchange={(value) => handleFieldChangeCity(`city_${i}`, value, `state_${i}`)}
-						/> */}
+						/>
 					</li>
 					<li>
 						<label htmlFor={`state_${i}`}>
@@ -286,7 +319,7 @@ function Details(props) {
 							<span
 								className={`error-text ${
 									!formData[`state_${i}`][1] && "hidden"
-								}`}
+									}`}
 							>
 								Required
 							</span>
@@ -297,6 +330,7 @@ function Details(props) {
 							value={formData[`state_${i}`][0]}
 							// value={address.state}
 							onChange={(e) => handleFieldChange(e.target.id, e.target.value)}
+							disabled
 						/>
 					</li>
 					<li style={{ marginBottom: "30px" }}>
@@ -305,7 +339,7 @@ function Details(props) {
 							<span
 								className={`error-text ${
 									!formData[`zipCode_${i}`][1] && "hidden"
-								}`}
+									}`}
 							>
 								Required
 							</span>
@@ -324,7 +358,7 @@ function Details(props) {
 	};
 
 	const addAdress = () => {
-		setIsAddAddressClicked(true);
+		setIsAddAddressClicked(true)
 		let _addressCount = [...addressCount];
 		_addressCount.push("");
 		setAddressCount(_addressCount);
@@ -439,11 +473,7 @@ function Details(props) {
 				</button>
 			</div>
 			<div className="cta">
-				<button
-					className="primary-btn blue"
-					id="onSubmit"
-					onClick={handleSubmit}
-				>
+				<button className="primary-btn" id="onSubmit" onClick={handleSubmit}>
 					Submit
 				</button>
 			</div>
@@ -459,7 +489,7 @@ function mapStateToProps(state) {
 		companySizeKeys: state.employerReducer.companySizeKeys,
 		hiringKeys: state.employerReducer.hiringKeys,
 		geographyKeys: state.employerReducer.geographyKeys,
-		geography: state.employerReducer.geography.data,
+		geography: state.employerReducer.geography.data
 	};
 }
 

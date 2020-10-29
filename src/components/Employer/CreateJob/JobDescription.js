@@ -31,7 +31,6 @@ const toolbarConfig = {
 };
 
 function CreateJob(props) {
-	console.log('props ', props.jobToUpdate.job_description);
 	let { jobId } = useParams();
 	const [disableCtrl, setDisableCtrl] = useState(false);
 	const [jobDesc, setJobDesc] = useState("");
@@ -41,12 +40,15 @@ function CreateJob(props) {
 	const [richTextEditorvalue, setRichTextEditorvalue] = React.useState(
 		RichTextEditor.createEmptyValue()
 	);
-	
+
 	React.useEffect(() => {
-		console.log('props 11', props.jobToUpdate.job_description);
-		if (!!jobId)
+		if (!!jobId && !!props.jobToUpdate) {
 			setRichTextEditorvalue(RichTextEditor.createValueFromString(props.jobToUpdate.job_description, 'html'))
-		if (props.jobToUpdate.count_of_applied_candidates && jobId)
+			dispatch(setNewJob({ jobDescription: props.jobToUpdate.job_description ? props.jobToUpdate.job_description.toString("html") : "" }));
+		} else {
+			dispatch(setNewJob({ jobDescription: null }));
+		}
+		if (props.jobToUpdate && props.jobToUpdate.count_of_applied_candidates && jobId)
 			setDisableCtrl(true)
 	}, [props.jobToUpdate]);
 
@@ -77,7 +79,7 @@ function CreateJob(props) {
 					toolbarConfig={toolbarConfig}
 					id="description"
 					value={richTextEditorvalue}
-				//	disabled={disableCtrl}
+					//	disabled={disableCtrl}
 					onChange={(value) => onRichTextEditorChange(value)}
 				/>
 			</div>

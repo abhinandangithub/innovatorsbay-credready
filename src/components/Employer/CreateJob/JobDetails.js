@@ -45,7 +45,7 @@ function CreateJob(props) {
 
 	useEffect(() => {
 		// dispatch(jobToUpdate(jobId));
-		if (props.jobToUpdate.count_of_applied_candidates && jobId)
+		if (props.jobToUpdate && props.jobToUpdate.count_of_applied_candidates && jobId)
 			setDisableCtrl(true)
 	}, [props.jobToUpdate]);
 
@@ -82,6 +82,13 @@ function CreateJob(props) {
 			console.log('props.jobToUpdate.industry ', props.jobToUpdate.industry, props.jobToUpdate.industry && props.jobToUpdate.industry.id);
 			console.log('props.jobToUpdate.industry ', props.jobToUpdate.function_name);
 
+			dispatch(setNewJob({ jobTitle: props.jobToUpdate.job_title }));
+			dispatch(setNewJob({ employmentType: props.jobToUpdate.employment_type }));
+			dispatch(setNewJob({ industry: props.jobToUpdate.industry_id }))
+			dispatch(setNewJob({ function: props.jobToUpdate.function_id }));
+			dispatch(setNewJob({ location: props.jobToUpdate.address && props.jobToUpdate.address.id }));
+			dispatch(setNewJob({ openPositions: props.jobToUpdate.open_positions }));
+
 			// setUpdatejob(props.jobToUpdate);
 			setFormData({
 				title: [props.jobToUpdate.job_title],
@@ -113,6 +120,13 @@ function CreateJob(props) {
 						props.jobToUpdate.address.zip_code + ", "]
 				}]
 			})
+		} else {
+			dispatch(setNewJob({ jobTitle: null }));
+			dispatch(setNewJob({ employmentType: null }));
+			dispatch(setNewJob({ industry: null }))
+			dispatch(setNewJob({ function: null }));
+			dispatch(setNewJob({ location: null }));
+			dispatch(setNewJob({ openPositions: null }));
 		}
 
 	}, [props.jobToUpdate]);
@@ -154,7 +168,7 @@ function CreateJob(props) {
 	};
 	const handleChangeJobTile = (e) => {
 		handleFieldChange(e.target.id, e.target.value);
-		dispatch(setNewJob({ jobTitle: e.target.valu }));
+		dispatch(setNewJob({ jobTitle: e.target.value }));
 	};
 	const handleChangeLocation = (e) => {
 		// if (typeof e !== "number") return;

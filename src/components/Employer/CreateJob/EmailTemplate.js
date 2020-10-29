@@ -39,12 +39,14 @@ function EmailTemplate(props) {
 	}, [dispatch]);
 
 	React.useEffect(() => {
-		console.log('email default 11', props.jobToUpdate.email_template_id);
-		if (!!jobId) {
+		if (!!jobId && !!props.jobToUpdate) {
 			setTemplateID(props.jobToUpdate.email_template_id);
 			handleTemplateChange(props.jobToUpdate.email_template_id);
+			dispatch(setNewJob({ emailTemplateId: props.jobToUpdate.email_template_id }));
+		} else {
+			dispatch(setNewJob({ emailTemplateId: null }));
 		}
-		if (props.jobToUpdate.count_of_applied_candidates && jobId)
+		if (props.jobToUpdate && props.jobToUpdate.count_of_applied_candidates && jobId)
 			setDisableCtrl(true)
 
 	}, [props.jobToUpdate]);
@@ -138,9 +140,9 @@ function EmailTemplate(props) {
 						}))}
 						id="emailtemplate"
 						search_term
-						selected={templateID && emailTemplates.find((val) =>
-							val.template_id === templateID
-						).template_name}
+						// selected={templateID && emailTemplates.find((val) =>
+						// 	val.template_id === templateID
+						// ).template_name}
 						onchange={(value) => {
 							handleTemplateChange(value);
 							// handleTemplateSearch(value);
