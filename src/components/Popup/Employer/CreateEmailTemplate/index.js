@@ -343,9 +343,9 @@ function CreateEmailTemplate(props) {
 						>
 							Update Template
 						</button>
-						<button className="primary-btn blue" onClick={saveAsNewTemplate}>
+						{/* <button className="primary-btn blue" onClick={saveAsNewTemplate}>
 							Save as new Template
-						</button>
+						</button> */}
 					</div>
 				)}
 			</div>
