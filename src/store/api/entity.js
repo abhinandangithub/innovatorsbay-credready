@@ -9,7 +9,7 @@ const entityRouteWithBase = constructUrl(BaseUrl, entityControllerRoute);
  */
 export const entityFetchEmployementSatusUrl = constructUrl(
   entityRouteWithBase,
-  "employement_status"
+  "employment_status"
 );
 
 /**
@@ -63,4 +63,12 @@ export const entityFetchSkillsUrl = constructUrl(entityRouteWithBase, "skills");
 export const enityFetchStartDateUrl = constructUrl(
   entityRouteWithBase,
   "start_date"
+);
+
+/**
+ * Name: fetch geography
+ */
+export const geographyUrl = constructUrl(
+  entityRouteWithBase,
+  "geography"
 );

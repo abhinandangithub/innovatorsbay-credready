@@ -3,12 +3,13 @@
 .questions_employer {
 	margin-bottom: -40px;
 	width: 100%;
-	& > div {
-		margin-bottom: 30px;
-	}
+	// & > div {
+	// 	margin-bottom: 30px;
+	// }
 	.heading {
 		padding: 15px 20px;
 		background-color: #ededed0f;
+		margin-top: 20px;
 		h2 {
 			margin: 0;
 			font-weight: 400;
@@ -183,10 +184,23 @@
 }
 .general-questions {
 	.general-question {
+		text-align: left;
 		width: 100%;
 		.question {
 			&:before {
 				content: "";
+			}
+			& + .question_info {
+				color: grey;
+				list-style: none;
+				flex-direction: column;
+				align-items: flex-start;
+				li {
+					margin-top: 15px;
+					&:last-child {
+						margin-bottom: 10px;
+					}
+				}
 			}
 		}
 		.options {
@@ -201,6 +215,17 @@
 			& > ul {
 				display: flex;
 				list-style: none;
+			}
+			.action-btn {
+				position: absolute;
+				color: #bcd1e4;
+				top: 24px;
+				right: 20px;
+				font-size: 14px;
+				cursor: pointer;
+				&.edit {
+					right: 40px;
+				}
 			}
 		}
 		.level_2,

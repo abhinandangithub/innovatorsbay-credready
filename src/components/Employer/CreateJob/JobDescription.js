@@ -1,5 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import RichTextEditor from "react-rte";
+import { useDispatch, connect } from "react-redux";
+import { setNewJob } from "../../../store/actions/employer";
+import { Link, useParams } from "react-router-dom";
 
 const toolbarConfig = {
 	// Optionally specify the groups to display (displayed in the order listed).
@@ -28,10 +31,26 @@ const toolbarConfig = {
 };
 
 function CreateJob(props) {
+	let { jobId } = useParams();
+	const [disableCtrl, setDisableCtrl] = useState(false);
+	const [jobDesc, setJobDesc] = useState("");
+
 	const parent = React.useRef();
+	const dispatch = useDispatch();
 	const [richTextEditorvalue, setRichTextEditorvalue] = React.useState(
 		RichTextEditor.createEmptyValue()
 	);
+
+	React.useEffect(() => {
+		if (!!jobId && !!props.jobToUpdate) {
+			setRichTextEditorvalue(RichTextEditor.createValueFromString(props.jobToUpdate.job_description, 'html'))
+			dispatch(setNewJob({ jobDescription: props.jobToUpdate.job_description ? props.jobToUpdate.job_description.toString("html") : "" }));
+		} else {
+			dispatch(setNewJob({ jobDescription: null }));
+		}
+		if (props.jobToUpdate && props.jobToUpdate.count_of_applied_candidates && jobId)
+			setDisableCtrl(true)
+	}, [props.jobToUpdate]);
 
 	React.useEffect(() => {
 		props.calHeight(parent.current.clientHeight);
@@ -39,7 +58,10 @@ function CreateJob(props) {
 
 	const onRichTextEditorChange = (value) => {
 		console.log(value.toString("html"));
+		let msg = value.toString("html") === "" || value.toString("html") === null || value.toString("html") === "<p><br></p>" ? "Required" : "";
+		setJobDesc(msg);
 		setRichTextEditorvalue(value);
+		dispatch(setNewJob({ jobDescription: value.toString("html") }));
 	};
 
 	return (
@@ -47,6 +69,9 @@ function CreateJob(props) {
 			<div className="heading">
 				<h2>
 					Job Description <span>*</span>
+					<span className={`error-text ${!jobDesc && "hidden"}`}>
+						Required
+					</span>
 				</h2>
 			</div>
 			<div className="content">
@@ -54,6 +79,7 @@ function CreateJob(props) {
 					toolbarConfig={toolbarConfig}
 					id="description"
 					value={richTextEditorvalue}
+					//	disabled={disableCtrl}
 					onChange={(value) => onRichTextEditorChange(value)}
 				/>
 			</div>
@@ -61,4 +87,13 @@ function CreateJob(props) {
 	);
 }
 
-export default CreateJob;
+// export default CreateJob;
+
+function mapStateToProps(state) {
+	return {
+		jobToUpdate: state.employerReducer.jobToUpdate
+	};
+}
+
+// export default CreateJob;
+export default connect(mapStateToProps)(CreateJob);

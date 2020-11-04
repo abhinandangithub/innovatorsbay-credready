@@ -19,10 +19,14 @@
 					margin-bottom: 20px;
 					color: #6b6c6f;
 				}
+				&.address {
+					flex-direction: column;
+				}
 				ul {
 					display: flex;
 					flex-direction: column;
 					width: 100%;
+				
 					.divider {
 						color: #6b6c6f;
 						position: relative;

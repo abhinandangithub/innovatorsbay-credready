@@ -68,12 +68,15 @@ export const employeFetchHireRequiredRangesUrl = constructUrl(
  */
 export const employerPostJob = constructUrl(employerRouteWithBase, "job");
 
+
+export const employerUpdateJob = constructUrl(employerRouteWithBase, "job/update");
+
 /**
  * Name: fetch a job by id
  */
 export const employerFetchJobById = constructUrl(
   employerRouteWithBase,
-  "job/appliedcandiates/fetch"
+  "job/appliedcandidates/fetch"
 );
 
 /**
@@ -122,7 +125,7 @@ export const employerFetchAllPostedJobsUrl = constructUrl(
  */
 export const employerJobFollowUpUrl = constructUrl(
   employerRouteWithBase,
-  "job/foolow"
+  "job/follow"
 );
 
 /**
@@ -162,7 +165,7 @@ export const employerUpdateProfileUrl = constructUrl(
  */
 export const employerDeleteQuestionFromJobUrl = constructUrl(
   employerRouteWithBase,
-  "question/delete"
+  "private/question"
 );
 
 /**
@@ -188,4 +191,92 @@ export const employerUpdateJobQuestionUrl = constructUrl(
 export const employerAddQuestionInQuestionBank = constructUrl(
   employerRouteWithBase,
   "question/update"
+);
+
+/**
+ * Name: delete employer account
+ */
+export const employerDeleteAccountUrl = constructUrl(
+  employerRouteWithBase,
+  "account/delete"
+);
+/**
+ * Name: delete employer account
+ */
+export const employerFetchCandidatesByJobId = constructUrl(
+  employerRouteWithBase,
+  "job/candidate/fetch"
+);
+
+/**
+ * Name: get email template
+ */
+export const employeGetEmailTemplate = constructUrl(
+  employerRouteWithBase,
+  "fetch/templates/email"
+);
+
+
+/**
+ * Name: add email template
+ */
+export const employeAddEmailTemplate = constructUrl(
+  employerRouteWithBase,
+  "templates/email"
+);
+
+
+/**
+ * Name: update email template
+ */
+export const employeUpdateEmailTemplate = constructUrl(
+  employerRouteWithBase,
+  "templates/email"
+);
+
+/**
+ * Name: get create question
+ */
+export const employeCreateQuestion = constructUrl(
+  employerRouteWithBase,
+  "question/create"
+);
+/**
+ * Name: get create question
+ */
+export const employerUpdateQuestion = constructUrl(
+  employerRouteWithBase,
+  "question/update"
+);
+/**
+ * Name: send mail to candidate
+ */
+export const employeCandidateSendEmail = constructUrl(
+  employerRouteWithBase,
+  "job/candidate/sendmail"
+);
+/**
+ * Name: Fetch organization locations
+ */
+export const employeFecthOrgLocations = constructUrl(
+  employerRouteWithBase,
+  "organization/locations"
+);
+/**
+ * Name: Fetch job preview details
+ */
+export const employeFecthJobPreviewDetails = constructUrl(
+  employerRouteWithBase,
+  "job/preview"
+);
+
+
+export const orgNameUrl = constructUrl(
+  employerRouteWithBase,
+  "organization"
+);
+
+export const profileDownloadUrl = constructUrl(
+  employerRouteWithBase,
+  "profile/download"
 );

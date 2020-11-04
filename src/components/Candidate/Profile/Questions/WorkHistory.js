@@ -1,5 +1,6 @@
 import React from "react";
 import DatePicker from "react-datepicker";
+import CustomDatePicker from "../../../_Elements/CustomDatePicker";
 import InputRange from "react-input-range";
 
 function WorkHistory(props) {
@@ -46,7 +47,7 @@ function WorkHistory(props) {
 							<li className="general-question border">
 								<h2 className="question">When did you start your first job?</h2>
 								<div className="options">
-									<DatePicker
+									<CustomDatePicker
 										selected={appliedDate}
 										onChange={(date) => setAppliedDate(date)}
 										placeholderText="Select Date"

@@ -1,26 +1,36 @@
 import React, { useEffect } from "react";
 import { Route } from "react-router-dom";
 import { useSelector } from "react-redux";
+import Cookies from "js-cookie";
 
 import "./index.scss";
 import Login from "./Login";
 import Signup from "./Signup";
 import ThankYou from "./ThankYou";
-
+import ForgotPassword from "./ForgotPassword";
+import TermsAndConditions from "./TermsAndConditions";
+import PrivacyAndPolicy from "./PrivacyAndPolicy";
 import ImgLogo from "../../assets/logo.png";
 
 function LoginSignupPage(props) {
 	const auth = useSelector((state) => state.authReducer);
+	const [show_tnc, setShow_tnc] = React.useState(false);
+	const [show_pnp, setShow_pnp] = React.useState(false);
+	const token = Cookies.get("JWT");
 
 	/* redirect user to User Profile page if phone otp is verified */
 	useEffect(() => {
-		if (auth.isVerified.phoneOtp) {
+		if (auth.isVerified.phoneOtp && token === undefined) {
 			props.history.push("/thank-you");
 		}
 	}, [auth.isVerified.phoneOtp, props.history]);
 
 	return (
-		<div className="auth-page flex">
+		<div
+			className={`auth-page flex ${
+				props.match.path === "/signup" ? "sign_up" : ""
+			}`}
+		>
 			<div className="left flex">
 				<a href="/" className="logo">
 					<img src={ImgLogo} alt="Cred Ready" />
@@ -38,9 +48,22 @@ function LoginSignupPage(props) {
 				</div>
 			</div>
 			<div className="right flex">
+				{show_tnc && <TermsAndConditions show_tnc={setShow_tnc} />}
+				{show_pnp && <PrivacyAndPolicy show_pnp={setShow_pnp} />}
 				<Route path="/login" exact component={Login} />
-				<Route path="/signup" exact render={(props) => <Signup {...props} />} />
+				<Route
+					path="/signup"
+					exact
+					render={(props) => (
+						<Signup
+							show_tnc={(val) => setShow_tnc(val)}
+							show_pnp={(val) => setShow_pnp(val)}
+							{...props}
+						/>
+					)}
+				/>
 				<Route path="/thank-you" exact component={ThankYou} />
+				<Route path="/forgot-password" exact component={ForgotPassword} />
 			</div>
 		</div>
 	);

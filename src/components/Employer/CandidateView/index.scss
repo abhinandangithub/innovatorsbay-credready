@@ -9,9 +9,15 @@
 		.top {
 			margin-bottom: 30px;
 			.left {
-				width: 200px;
+				width: 250px;
+				height: 250px;
+				overflow: hidden;
+				border-radius: 50%;
+				border: 1px solid #dcdcdc3d;
 				img {
 					width: 100%;
+					display: block;
+					height: auto;
 				}
 			}
 			.right {
@@ -23,6 +29,7 @@
 				}
 				h2 {
 					margin: 0;
+					margin-bottom: 20px;
 					color: $secondary-color;
 				}
 				h3 {
@@ -71,11 +78,12 @@
 		justify-content: space-between;
 		margin-bottom: 40px;
 		.widget {
-			width: calc(50% - 20px);
+			width: calc(50% - 10px);
+			margin-right: 0;
 			box-shadow: 0 2px 30px 1px rgba(176, 192, 237, 0.45);
 			background-color: #ffffff;
 			.heading {
-				border-bottom: 1px solid grey;
+				border-bottom: 1px solid #e4e4e4;
 				margin: 0;
 				padding: 20px;
 				font-size: 22px;
@@ -98,15 +106,24 @@
 		flex-wrap: wrap;
 		padding: 0 60px 20px 20px;
 		li {
-			width: 50%;
+			width: 33.33%;
 			display: block;
-			margin-bottom: 20px;
+			// margin-bottom: 20px;
 			font-weight: 500;
+			&.phone {
+				padding-left: 20px;
+				width: 66.67%;
+			}
 			span {
 				font-weight: normal;
 				color: #6b6c6f;
+				&:first-child {
+					color: black;
+					font-weight: 500;
+				}
 			}
 			&.full {
+				margin-bottom: 20px;
 				width: 100%;
 			}
 			&:last-child {
@@ -120,13 +137,47 @@
 		}
 		&.for-click {
 			cursor: pointer;
-			padding-top: 20px;
+			padding-bottom: 0px;
+			background: #f7f6f66b;
+			margin-bottom: 10px;
 			li {
-				width: auto;
+				width: 33.33%;
 				margin-bottom: 0;
+				padding: 0 20px;
+				display: flex;
+				align-items: center;
+				min-height: 60px;
+				text-align: left;
+				flex-direction: row;
+				&:nth-child(1) {
+					padding-left: 0;
+					span {
+						&:first-child {
+							// width: 85px;
+							// min-width: 85px;
+						}
+					}
+				}
+				&:nth-child(2) {
+					span {
+						&:first-child {
+							// width: 85px;
+							// min-width: 85px;
+						}
+					}
+				}
+				&:nth-child(3) {
+					padding-right: 0;
+					span {
+						&:first-child {
+							// width: 85px;
+							// min-width: 85px;
+						}
+					}
+				}
 			}
 			&:hover {
-				background: #f7f6f66b;
+				background: #f7f6f696;
 			}
 		}
 	}

@@ -1,21 +1,30 @@
 import React, { useState } from "react";
 import DatePicker from "react-datepicker";
-import { useDispatch } from "react-redux";
-import { connect } from "react-redux";
-
+import CustomDatePicker from "../../_Elements/CustomDatePicker";
+import { useDispatch, useSelector } from "react-redux";
 
 import "./AddExpEduWorkCert.scss";
 import Input from "../../_Elements/Input";
 import Dropdown from "../../_Elements/Dropdown";
+import InputDropdown from "../../_Elements/InputDropdown";
 import Textarea from "../../_Elements/Textarea";
 import {
 	toggleOverlay,
 	togglePopup,
 } from "../../../store/actions/popup_overlay";
-import { addOtherWorkExperience } from "../../../modals/candidateProfile/thunk";
+import { addOtherWorkExperience, fetchCandidateExperienceType } from "../../../modals/candidateProfile/thunk";
+import { findIndexOfObjInArr } from "../../../assets/js/Utility";
 
-function AddOtherExperience({ addOtherWorkExperience }) {
+
+function AddOtherExperience() {
+	const experiences = useSelector(
+		(state) => state.setCandidateExperienceTypeReducer.data ? state.setCandidateExperienceTypeReducer.data : "")
 	const dispatch = useDispatch();
+
+	const info = useSelector((state) => state.popupOverlayReducer.popup.info);
+	const dataArr = useSelector(
+		(state) => state.candidateSetDataReducer.data.additional_experiences
+	);
 	const [startDate, setStartDate] = useState();
 	const [endDate, setEndDate] = useState();
 
@@ -33,20 +42,18 @@ function AddOtherExperience({ addOtherWorkExperience }) {
 
 		formValid: false,
 	});
+
 	function formatDate(date) {
 		var d = new Date(date),
-			month = '' + (d.getMonth() + 1),
-			day = '' + d.getDate(),
+			month = "" + (d.getMonth() + 1),
+			day = "" + d.getDate(),
 			year = d.getFullYear();
 
-		if (month.length < 2)
-			month = '0' + month;
-		if (day.length < 2)
-			day = '0' + day;
+		if (month.length < 2) month = "0" + month;
+		if (day.length < 2) day = "0" + day;
 
-		return [year, month, day].join('-');
+		return [year, month, day].join("-");
 	}
-
 
 	const handleSubmit = () => {
 		let oldFormData = { ...formData };
@@ -61,38 +68,41 @@ function AddOtherExperience({ addOtherWorkExperience }) {
 					oldFormData[field][0] === null)
 			) {
 				oldFormData[field][0] = "";
-				oldFormData[field].push("Required");
 				oldFormData.formValid = false;
+				if (oldFormData[field][1] !== "Required") {
+					oldFormData[field].push("Required");
+				}
 			}
 		}
-
 		if (oldFormData.formValid) {
-			console.log("submitting form...");
-			/* send data to api */
-			var obj = [
-				{
-					"career_path": "work",
-					"experience_type": formData ? formData.experienceType[0] : "",
-					"organization_name": formData ? formData.organizationName[0] : "",
-					"title": formData ? formData.title[0] : "",
-					"location": formData ? formData.location[0] : "",
-					"employed_from": formData && formData.startDate[0] ? formatDate(formData.startDate[0]) : "",
-					"employed_till": formData && formData.endDate[0] ? formatDate(formData.endDate[0]) : "",
-					"description": formData ? formData.description[0] : "",
-					"strengths": []
-				}
-			]
-			addOtherWorkExperience(obj)
+
+			var obj = {
+				// experienceType: formData.experienceType[0],
+				experienceType: formData.experienceType[0],
+				organizationName: formData.organizationName[0],
+				title: formData.title[0],
+				from: formatDate(formData.startDate[0]),
+				to: formatDate(formData.endDate[0]),
+				location: formData.location[0],
+				description: formData.description[0],
+				// skills: [],
+				careerPath: "work",
+			};
+
+			if (info) {
+				obj.id = info.id;
+			}
+
+			dispatch(addOtherWorkExperience(obj));
 			dispatch(toggleOverlay(false));
 			dispatch(togglePopup([false, ""]));
 		}
-		console.log("addOtherExperieces", formData);
+
 		setFormData(oldFormData);
 	};
 
 	const handleFieldChange = (field, value) => {
 		let msg = value === "" || value === null ? "Required" : "";
-
 		let arr = [];
 		arr[0] = value;
 		arr[1] = msg;
@@ -103,14 +113,34 @@ function AddOtherExperience({ addOtherWorkExperience }) {
 		});
 	};
 
-	const experienceType = {
-		heading: "Select Experience Type",
-		content: ["Music", "Teaching", "Software", "Consultant"],
-	};
+	React.useEffect(() => {
+		dispatch(fetchCandidateExperienceType())
+		if (info) {
+			let i = findIndexOfObjInArr(dataArr, "id", info.id);
+			let arr = dataArr[i];
+
+			setFormData({
+				...formData,
+				experienceType: [arr.experience_type],
+				organizationName: [arr.organization_name],
+				title: [arr.title],
+				startDate: [arr.employed_from],
+				endDate: [arr.employed_till],
+				location: [arr.location],
+				description: [arr.description],
+			});
+			setStartDate(new Date(arr.employed_from));
+			setEndDate(new Date(arr.employed_till));
+		}
+	}, []);
 
 	return (
 		<div className="add-ex-ed-cert">
-			<h1>Add Other Experience</h1>
+			{info && info.purpose === "edit" ? (
+				<h1>Edit Other Experience</h1>
+			) : (
+					<h1>Add Other Experience</h1>
+				)}
 			<ul className="listing">
 				<li>
 					<label htmlFor="experienceType">
@@ -124,15 +154,26 @@ function AddOtherExperience({ addOtherWorkExperience }) {
 					</label>
 					<Dropdown
 						id="experienceType"
-						placeholder={experienceType.heading}
-						content={experienceType.content}
-						defaultValue={formData.experienceType[0]}
+						placeholder="Select Experience Type"
+						content={experiences.length > 0 && experiences.map((val) => ({
+							val: val.experience_type,
+							id: val.id,
+						}))}
+						selected={
+							experiences &&
+							experiences[
+							findIndexOfObjInArr(experiences, "id", formData.experienceType[0])
+							] &&
+							experiences[
+								findIndexOfObjInArr(experiences, "id", formData.experienceType[0])
+							].experience_type
+						}
 						onchange={(value) => handleFieldChange("experienceType", value)}
 					/>
 				</li>
 				<li>
 					<label htmlFor="organisationName">
-						Organisation Name <span>*</span>
+						Organization Name <span>*</span>
 						<span
 							className={`error-text ${!formData.organizationName[1] && "hidden"
 								}`}
@@ -173,7 +214,7 @@ function AddOtherExperience({ addOtherWorkExperience }) {
 					</label>
 					<div className="date-outer">
 						<div className="date">
-							<DatePicker
+							<CustomDatePicker
 								selected={startDate}
 								placeholderText="Start Date"
 								id="startDate"
@@ -185,8 +226,9 @@ function AddOtherExperience({ addOtherWorkExperience }) {
 						</div>
 						<span>to</span>
 						<div className="date">
-							<DatePicker
+							<CustomDatePicker
 								selected={endDate}
+								minDate={startDate}
 								placeholderText="End Date"
 								id="endDate"
 								onChange={(date) => {
@@ -210,10 +252,6 @@ function AddOtherExperience({ addOtherWorkExperience }) {
 						defaultValue={formData.location[0]}
 						onChange={(e) => handleFieldChange(e.target.id, e.target.value)}
 					/>
-				</li>
-				<li>
-					<label htmlFor="strengths">Strengths</label>
-					<Input id="strengths" type="text" />
 				</li>
 				<li>
 					<label htmlFor="description">
@@ -240,9 +278,4 @@ function AddOtherExperience({ addOtherWorkExperience }) {
 	);
 }
 
-
-const mapDispatchToProps = {
-	addOtherWorkExperience: addOtherWorkExperience
-};
-
-export default connect(null, mapDispatchToProps)(AddOtherExperience);
+export default AddOtherExperience;

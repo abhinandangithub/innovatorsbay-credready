@@ -1,26 +1,83 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector, connect } from "react-redux";
 import { togglePopup, toggleOverlay } from "../../store/actions/popup_overlay";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
-
+import { getVerificationCode } from "../../store/thunks/auth";
+import { getOrgNames } from "../../store/thunks/employer";
 import { updateLoggedIn, updateSignupDetails } from "../../store/actions/auth";
+import { updateTermsAndConditions } from "../../store/actions/auth";
+import InputDropdown from "../_Elements/InputDropdown";
 
 function Signup(props) {
 	const dispatch = useDispatch();
+	const auth = useSelector((state) => state.authReducer);
 	const { register, handleSubmit, errors } = useForm();
 
 	const [signupType, setSignupType] = useState("candidate");
 	const [passwordShown, setPasswordShown] = useState(false);
+	const [functions, setFunctions] = useState(props.functionData);
+	const [orgId, setOrgId] = useState();
+
+	useEffect(() => {
+		dispatch(getOrgNames());
+	}, [dispatch]);
+
+	useEffect(() => {
+		setFunctions(props.functionData);
+	}, [props.functionData]);
+
+	const handleFunctionSearch = (value) => {
+		if (typeof value === "number") return;
+		const filteredData = props.functionData.filter((val) => {
+			if (val.org_name.toLowerCase().includes(value.toLowerCase())) {
+				return {
+					id: val.orgId,
+					val: val.org_name,
+				};
+			}
+		});
+		setFunctions([...filteredData]);
+	};
+
+	const handleChangeFunction = (id) => {
+		setOrgId(id);
+	};
 
 	const onSubmit = (data) => {
+		if (
+			document.querySelector("#function input") &&
+			signupType === "employer" &&
+			document.querySelector("#function input").value === ""
+		)
+			return null;
+
 		console.log(data);
-		dispatch(toggleOverlay(true));
-		dispatch(togglePopup([true, "termsAndConditions"]));
-		dispatch(updateLoggedIn([false, signupType]));
-		dispatch(updateSignupDetails(data));
+		data.user_type = signupType === "candidate" ? "jobseeker" : signupType;
+
+		if (signupType === "employer") {
+			if (typeof orgId !== "number") {
+				data.organisation = orgId;
+			} else {
+				data.orgId = orgId;
+			}
+		}
+
+		// data.phone = "+"+ data.phone;
+		dispatch(getVerificationCode(data));
+		// dispatch(toggleOverlay(true));
+		// //dispatch(togglePopup([true, "termsAndConditions"]));
+		// dispatch(togglePopup([true, "phoneOtp"]));
+		// dispatch(updateLoggedIn([false, signupType]));
+		// dispatch(updateSignupDetails(data));
+
+		let boolValue = data.termsandconditions && data.allowContact;
+
+		boolValue = data.termsandconditions;
+
+		dispatch(updateTermsAndConditions(boolValue));
 	};
 
 	const togglePasswordVisiblity = () => {
@@ -31,16 +88,14 @@ function Signup(props) {
 		setSignupType(id);
 	};
 
-	useEffect(() => {
-		console.log("Signup as a " + signupType);
-		return () => {
-			// cleanup
-		};
-	}, [signupType]);
-
-	const showErrorMessage = () => {
-		if (errors.name) {
-			return <p className="error">Name is required.</p>;
+	const showErrorMessage = (obj) => {
+		if (
+			document.querySelector("#function input") &&
+			signupType === "employer" &&
+			document.querySelector("#function input").value === ""
+		) {
+			document.querySelector("#function input").focus();
+			return <p className="error">Organization Name is required.</p>;
 		} else if (errors.email) {
 			return <p className="error">Enter an valid email-id</p>;
 		} else if (errors.phone) {
@@ -52,11 +107,13 @@ function Signup(props) {
 					case, one lowercase, 1 number and 1 special character.
 				</p>
 			);
+		} else if (errors.agree) {
+			return <p className="error">Accept Terms And Conditions.</p>;
 		}
 	};
 
 	return (
-		<form onSubmit={handleSubmit(onSubmit)} className="content">
+		<form onSubmit={handleSubmit(onSubmit)} className="content sign_up">
 			<h3>Create your account</h3>
 
 			{showErrorMessage()}
@@ -88,19 +145,27 @@ function Signup(props) {
 
 				{signupType === "employer" ? (
 					<li>
-						<label htmlFor="name">
-							Employer Name <span>*</span>
+						<label htmlFor="organisation">
+							Organization Name <span>*</span>
 						</label>
-						<input
-							id="name"
-							name="name"
-							type="text"
-							autoComplete="nothing"
-							placeholder="Enter employer name"
-							autoFocus
-							ref={register({
-								required: "Required",
-							})}
+						<InputDropdown
+							placeholder="Enter Organization Name"
+							content={
+								functions &&
+								functions.map((val) => ({
+									val: val.org_name,
+									id: val.orgId,
+								}))
+							}
+							allow_random
+							search_term
+							intellisense
+							id="function"
+							// selected="company"
+							onchange={(value) => {
+								handleChangeFunction(value);
+								// handleFunctionSearch(value);
+							}}
 						/>
 					</li>
 				) : null}
@@ -114,6 +179,7 @@ function Signup(props) {
 						type="emai"
 						autoComplete="off"
 						placeholder="Enter your active Email ID"
+						// defaultValue="a@gmail.com"
 						ref={register({
 							required: "Required",
 							pattern: {
@@ -136,7 +202,7 @@ function Signup(props) {
 						ref={register({
 							required: "required",
 							pattern: {
-								value: /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/,
+								value: /^(\+\d{1,2}\s?)?1?\-?\.?\s?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$/,
 							},
 						})}
 					/>
@@ -156,7 +222,7 @@ function Signup(props) {
 							ref={register({
 								required: "required",
 								pattern: {
-									value: /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{8,15}$/,
+									value: /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{8,100}$/,
 								},
 							})}
 						/>
@@ -174,16 +240,39 @@ function Signup(props) {
 					<div className="agree">
 						<input
 							className="fancy-toggle checkbox blue"
-							id="agree"
+							id="termsandconditions"
 							name="agree"
 							type="checkbox"
+							// defaultChecked
+							ref={register({
+								required: "Required",
+							})}
 						/>
-						<label htmlFor="agree">
+						<label htmlFor="termsandconditions">
 							<span className="input"></span>I agree to the &nbsp;
-							<Link to="#"> Terms and Conditions</Link>&nbsp; and &nbsp;
-							<Link to="#"> Privacy Policy</Link>
+							<Link to="#" onClick={() => props.show_tnc(true)}>
+								Terms and Conditions
+							</Link>
+							&nbsp; and &nbsp;
+							<Link to="#" onClick={() => props.show_pnp(true)}>
+								Privacy Policy
+							</Link>
 						</label>
 					</div>
+					{signupType === "candidate" && (
+						<div className="agree allow">
+							<input
+								className="fancy-toggle checkbox blue"
+								id="allowContact"
+								name="allowContact"
+								type="checkbox"
+							/>
+							<label htmlFor="allowContact">
+								<span className="input"></span>Allow recruiters to contact you
+								for more details
+							</label>
+						</div>
+					)}
 				</li>
 			</ul>
 
@@ -199,4 +288,11 @@ function Signup(props) {
 	);
 }
 
-export default Signup;
+function mapStateToProps(state) {
+	return {
+		functionType: state.employerReducer.orgType.data,
+		functionData: state.employerReducer.orgKeys,
+	};
+}
+
+export default connect(mapStateToProps)(Signup);

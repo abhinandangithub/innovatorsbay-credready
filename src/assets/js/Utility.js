@@ -1,19 +1,29 @@
-export const formatDate = (date) => {
-	let months = [
-		"January",
-		"February",
-		"March",
-		"April",
-		"May",
-		"June",
-		"July",
-		"August",
-		"September",
-		"October",
-		"November",
-		"December",
-	];
+export const months = [
+	"January",
+	"February",
+	"March",
+	"April",
+	"May",
+	"June",
+	"July",
+	"August",
+	"September",
+	"October",
+	"November",
+	"December",
+];
 
+export const findIndexOfObjInArr = (arr, key, value) => {
+	let index = -1;
+	arr.forEach((item, i) => {
+		if (item[key] === value) {
+			index = i;
+		}
+	});
+	return index;
+};
+
+export const formatDate = (date) => {
 	let m = "" + date.getMonth(),
 		d = "" + date.getDate(),
 		y = date.getFullYear();

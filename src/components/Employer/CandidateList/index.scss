@@ -34,6 +34,14 @@
 					margin-right: 20px;
 					min-width: 350px;
 				}
+				.primary-btn.filter_btn {
+					width: 51px;
+					height: 51px;
+					min-width: auto;
+					display: flex;
+					align-items: center;
+					justify-content: center;
+				}
 				.options {
 					background-color: white;
 					position: absolute;
@@ -136,7 +144,7 @@
 				list-style: none;
 				& > ul {
 					height: 60px;
-					border: solid 1px #bdd1e4;
+					border: solid 1px #e3e5e6;
 					border-top: 0;
 					display: flex;
 					align-items: center;
@@ -168,12 +176,15 @@
 								// opacity: 0;
 								// pointer-events: none;
 								img {
-									width: 25px;
+									width: 20px;
 									display: block;
 								}
 							}
 							.mail {
 								margin-right: 10px;
+								img {
+									width: 21px;
+								}
 							}
 						}
 						a {
@@ -201,7 +212,7 @@
 						}
 					}
 					&.head {
-						border: 1px solid #bdd1e4;
+						border: 1px solid #d8dee0;
 						background-color: #eaf1f6;
 						li {
 							color: black;

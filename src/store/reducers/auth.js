@@ -4,12 +4,13 @@ import { updateObject } from "../utility";
 const initialState = {
 	isVerified: {
 		termsAndConditions: false,
-		emailOtp: false,
-		phoneOtp: false,
+		emailOtp: null,
+		phoneOtp: null,
 	},
 	loggedIn: {
-		value: true,
-		as: "employer",
+		value: false,
+		as: "",
+		// as: "candidate",
 	},
 	singUp: {
 		email: null,
@@ -18,6 +19,8 @@ const initialState = {
 	},
 	JWT: null,
 };
+
+const stateCopy = JSON.parse(JSON.stringify(initialState));
 
 const reducer = (state = initialState, action) => {
 	switch (action.type) {
@@ -57,18 +60,32 @@ const reducer = (state = initialState, action) => {
 			});
 
 		case actionTypes.UPDATE_SINGUP_DETAILS:
+			let data = {
+				email: action.details.email,
+				password: action.details.password,
+				phone: action.details.phone,
+				user_type: action.details.user_type,
+			};
+			if (action.details.user_type === "employer") {
+				if (action.details.organisation) {
+					data.organisation = action.details.organisation;
+				} else {
+					data.orgId = action.details.orgId;
+				}
+			}
 			return updateObject(state, {
-				signUp: {
-					email: action.details.email,
-					password: action.details.password,
-					phone: action.details.phone,
-				},
+				signUp: data,
 			});
 
 		case actionTypes.UPDATE_JWT_TOKEN:
+		console.log('JWT ', action.JWT);
 			return updateObject(state, {
 				JWT: action.JWT,
 			});
+
+		case actionTypes.CLEAR_AUTH_STATE:
+			return stateCopy
+
 		default:
 			return state;
 	}

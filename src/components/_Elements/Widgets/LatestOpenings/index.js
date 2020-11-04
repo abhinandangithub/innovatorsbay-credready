@@ -10,11 +10,11 @@ function LatestOpenings(props) {
 		<div className="widget widget-latest-opening" to="/">
 			<div className="top">
 				<div className="logo">
-					<img src={ImgWidgetLogo} alt={props.job.logo} />
+					<img src={ImgWidgetLogo} alt={"sdf"} />
 				</div>
 				<div className="info">
-					<h3>{props.job.heading}</h3>
-					<p>{props.job.subHeading}</p>
+					<h3>{props.job.jobTitle}</h3>
+					<p>{props.job.orgName}</p>
 				</div>
 				<button className="menu">
 					<img src={ImgWidgetMenu} alt="Widget Menu" />
@@ -23,14 +23,24 @@ function LatestOpenings(props) {
 			<div className="bottom">
 				<div className="content">
 					<div className="info flex">
-						<span className="experience">1-3 Yrs</span>
-						<span className="locatoin">Warren, NJ</span>
+						{/* <span className="experience">1-3 Yrs</span> */}
+						<span className="experience">
+							{props.job.minExp + "-" + props.job.maxExp + " Yrs"}
+						</span>
+						{/* <span className="locatoin">Warren, NJ</span> */}
+						<span className="locatoin">{props.job.location}</span>
 					</div>
-					<p>{props.job.description}</p>
+					{/* <p>{props.job.jobDescription}</p> */}
+					<p
+						className="text"
+						dangerouslySetInnerHTML={{
+							__html: props.job.jobDescription && props.job.jobDescription,
+						}}
+					></p>
 				</div>
 			</div>
 			<div className="cta flex">
-				<Link to={`/jobs/view/${props.job.id}`} className="primary-btn">
+				<Link to={`/jobs/view/${props.job.jobId}`} className="primary-btn blue">
 					View
 				</Link>
 			</div>

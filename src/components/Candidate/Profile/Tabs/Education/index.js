@@ -1,85 +1,120 @@
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPen, faTrash } from "@fortawesome/free-solid-svg-icons";
-import { useDispatch } from "react-redux";
+import { useDispatch, connect, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
 import "./index.scss";
 import Accordion from "../../../../_Elements/Accordion";
 import userData from "../../../../_data/userData.json";
 import {
+	fetchCandidateDetails,
+	fetchAllCertificateTitles,
+	fetchCandidateInstituteType,
+	fetchCandidateDegreeTitles,
+} from "../../../../../modals/candidateProfile/thunk";
+import {
 	toggleOverlay,
 	togglePopup,
 } from "../../../../../store/actions/popup_overlay";
+import { fetchCandidateInstituteTypeUrl } from "../../../../../modals/candidateProfile/api";
+import Spinner from "../../../../_Elements/Spinner";
 
-function Education() {
+function Education(props) {
 	const dispatch = useDispatch();
+
+	const certificateTitles = useSelector(
+		(state) => state.setCandidateCertificateTitlesReducer.data
+	);
+	const degreeTitles = useSelector(
+		(state) => state.setCandidateDegreeTitlesReducer.data
+	);
+	const allInstitutes = useSelector(
+		(state) => state.setCandidateInstitutionTypeReducer.data
+	);
 
 	const showCertificate = (certificate) => {
 		dispatch(toggleOverlay(true));
 		dispatch(togglePopup([true, "certificate", { certificate }]));
 	};
 
-	const handleEdit = () => {
-		// console.log("editing");
+	const handleEdit = (id, type) => {
 		dispatch(toggleOverlay(true));
-		dispatch(togglePopup([true, "addWorkExperience"]));
-	};
-	const handleDelete = (type) => {
-		// console.log("deleting");
-		dispatch(toggleOverlay(true));
-		dispatch(togglePopup([true, "delete", { what: type }]));
+		dispatch(togglePopup([true, type, { id, purpose: "edit" }]));
 	};
 
-	const renderEducation = userData.profile.education.map((data, i) => {
+	const handleDelete = (id, type) => {
+		dispatch(toggleOverlay(true));
+		dispatch(togglePopup([true, "delete", { what: type, id: id }]));
+	};
+
+	// const renderEducation = userData.profile.education.map((data, i) => {
+	const renderEducation = props.eduExpData.map((data, i) => {
 		return (
 			<div className="content" key={i}>
-				<h2>{data.title}</h2>
+				<h2>
+					{degreeTitles &&
+						degreeTitles.map((entity) => {
+							if (entity.id === parseInt(data.title)) return entity.title;
+						})}
+				</h2>
+				<p>{data.education_description}</p>
 				<p>
-					{data.profile} - {data.institute}
+					<span className="heading">Institute: </span>
+					<span className="text">
+						{allInstitutes &&
+							allInstitutes.map((entity) => {
+								if (entity.id === data.institution)
+									return entity.institute_name;
+							})}
+					</span>
 				</p>
 				<p>
-					{data.date.from} to {data.date.to}
+					{data.attended_from} to {data.attended_till}
 				</p>
 				<p>
 					<span className="heading">Major:</span>
-					{data.major}
+					{data.education_major.map((entity) => entity.name)}
 				</p>
 				<p>
 					<span className="heading">Minor: </span>
-					<span className="text">{data.minor}</span>
+					<span className="text">
+						{data.education_minor.map((entity) => entity.name)}
+					</span>
 				</p>
-				<p>
+				{/* <p>
 					<span className="heading">Strenghts: </span>
 					<span className="text">{data.strengths}</span>
-				</p>
+				</p> */}
 
 				<FontAwesomeIcon
 					className="action-btn edit"
 					icon={faPen}
 					id={"educationEdit_" + i}
-					onClick={handleEdit}
+					onClick={() => handleEdit(data.id, "addEducation")}
 				/>
 				<FontAwesomeIcon
 					className="action-btn delete"
 					icon={faTrash}
 					id={"educationDelete_" + i}
-					onClick={() => handleDelete("education")}
+					onClick={() => handleDelete(data.id, "education")}
 				/>
 			</div>
 		);
 	});
 
-	const renderOtherExperiences = userData.profile.workExperiences.map(
-		(data, i) => {
+	// const renderOtherExperiences = userData.profile.workExperiences.map(
+	const renderOtherExperiences = props.otherExpData.map((data, i) => {
+		if (data.career_path === "EDUCATION") {
 			return (
 				<div className="content" key={i}>
 					<h2>{data.title}</h2>
 					<h3>
-						{data.company} - <span>{data.location}</span>
+						{data.organization_name} - <span>{data.location}</span>
 					</h3>
 					<h4>
-						<span>{data.date.from}</span> - <span>{data.date.to}</span>
+						<span>{data.employed_from}</span> -{" "}
+						<span>{data.employed_till}</span>
 					</h4>
 					<p className="description">
 						<span className="heading">Description: </span>
@@ -89,41 +124,47 @@ function Education() {
 						className="action-btn edit"
 						icon={faPen}
 						id={"otherExperienceEdit_" + i}
-						onClick={handleEdit}
+						onClick={() => handleEdit(data.id, "addEduOtherExperience")}
 					/>
 					<FontAwesomeIcon
 						className="action-btn delete"
 						icon={faTrash}
 						id={"otherExperienceDelete_" + i}
-						onClick={() => handleDelete("otherExperience")}
+						onClick={() => handleDelete(data.id, "otherExperience")}
 					/>
 				</div>
 			);
 		}
-	);
+		return "";
+	});
 
-	const renderCertifications = userData.profile.certifications.map(
-		(data, i) => {
-			return (
-				<div className="content" key={i}>
-					<h2>{data.title}</h2>
-					<p>
-						<span className="heading">Issuer: </span>
-						{data.issuer}
-					</p>
-					<p>
-						<span className="heading">Issued Date: </span>
-						{data.issudeDate}
-					</p>
-					<p>
-						<span className="heading">Certificate Link: </span>
-						{data.certificateLink}
-					</p>
-					<p>
-						<span className="heading">Description: </span>
-						<span className="text">{data.description}</span>
-					</p>
-					<p className="docs">
+	// const renderCertifications = userData.profile.certifications.map(
+	const renderCertifications = props.certificateData.map((data, i) => {
+		return (
+			<div className="content" key={i}>
+				<h2>
+					{certificateTitles &&
+						certificateTitles.map((entity) => {
+							if (entity.id === data.title_id) return entity.title_name;
+						})}
+				</h2>
+				<p>
+					<span className="heading">Issuer: </span>
+					{data.issuer}
+				</p>
+				<p>
+					<span className="heading">Issued Date: </span>
+					{data.issued_date}
+				</p>
+				<p>
+					<span className="heading">Certificate Link: </span>
+					{data.certificate_link}
+				</p>
+				<p>
+					<span className="heading">Description: </span>
+					<span className="text">{data.description}</span>
+				</p>
+				{/* <p className="docs">
 						<span className="heading">Certificate image: </span>
 						<span
 							className="doc"
@@ -133,24 +174,28 @@ function Education() {
 						>
 							<img src={data.doc} alt={data.doc} />
 						</span>
-					</p>
+					</p> */}
 
-					<FontAwesomeIcon
-						className="action-btn edit"
-						icon={faPen}
-						id={"certificateEdit_" + i}
-						onClick={handleEdit}
-					/>
-					<FontAwesomeIcon
-						className="action-btn delete"
-						icon={faTrash}
-						id={"certificateDelete_" + i}
-						onClick={() => handleDelete("certificate")}
-					/>
-				</div>
-			);
-		}
-	);
+				<FontAwesomeIcon
+					className="action-btn edit"
+					icon={faPen}
+					id={"certificateEdit_" + i}
+					onClick={() => handleEdit(data.id, "addCertificate")}
+				/>
+				<FontAwesomeIcon
+					className="action-btn delete"
+					icon={faTrash}
+					id={"certificateDelete_" + i}
+					onClick={() => handleDelete(data.id, "certificate")}
+				/>
+			</div>
+		);
+	});
+	React.useEffect(() => {
+		dispatch(fetchAllCertificateTitles());
+		dispatch(fetchCandidateDegreeTitles());
+		dispatch(fetchCandidateInstituteType());
+	}, []);
 
 	return (
 		<div className="education">
@@ -159,15 +204,16 @@ function Education() {
 				type="addEducation"
 				id="addEducation"
 				addButton="Add Education"
+				// active
 			>
 				{renderEducation}
+				{/* {props.eduExpData.length > 0 ? renderEducation : <Spinner />} */}
 			</Accordion>
 			<Accordion
 				title="Certification"
 				type="addCertificate"
 				id="addCertificate"
 				addButton="Add Certificate"
-				active
 			>
 				{renderCertifications}
 			</Accordion>
@@ -183,12 +229,12 @@ function Education() {
 			<div className="cta">
 				<Link
 					to="/profile/work-experience"
-					className="primary-btn outline"
+					className="primary-btn blue outline"
 					id="previousLink"
 				>
 					Previous
 				</Link>
-				<Link to="/profile/strengths" className="primary-btn" id="nextLink">
+				<Link to="/profile/preview" className="primary-btn blue" id="nextLink">
 					Next
 				</Link>
 			</div>
@@ -196,4 +242,22 @@ function Education() {
 	);
 }
 
-export default Education;
+function mapStateToProps(state) {
+	return {
+		eduExpData: state.candidateSetDataReducer.data
+			? state.candidateSetDataReducer.data.education_experience
+			: [],
+		otherExpData: state.candidateSetDataReducer.data
+			? state.candidateSetDataReducer.data.additional_experiences
+			: [],
+		certificateData: state.candidateSetDataReducer.data
+			? state.candidateSetDataReducer.data.certificate
+			: [],
+	};
+}
+
+const mapDispatchToProps = {
+	fetchCandidateDetails: fetchCandidateDetails,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Education);

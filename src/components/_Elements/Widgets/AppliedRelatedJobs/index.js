@@ -7,35 +7,44 @@ import ImgWidgetMenu from "../../../../assets/widget-menu.jpg";
 
 function AppliedRelatedJobs(props) {
 	const type = props.applied ? props.applied : props.related;
-	const link = `/jobs/view/${type.id}`;
+	const link = props.applied
+		? `/jobs/preview/${type.jobId}`
+		: `/jobs/view/${type.jobId}`;
 
+	const onClickHandler = () => {
+		localStorage.clear();
+	};
 	const content = (
 		<>
 			<div className="top">
-				<div className="logo">
+				{/* <div className="logo">
 					<img src={ImgWidgetLogo} alt={type.logo} />
-				</div>
+				</div> */}
 				<div className="info">
-					<h3>{type.heading}</h3>
-					<p>{type.subHeading}</p>
+					<h3>{type.jobTitle}</h3>
+					{/* <p><span dangerouslySetInnerHTML={{ __html: type.jobDescription }}></span></p> */}
 				</div>
-				<button className="menu">
+				{/* <button className="menu">
 					<img src={ImgWidgetMenu} alt="Widget Menu" />
-				</button>
+				</button> */}
 			</div>
 			<div className="bottom">
 				<div className="content">
 					<div className="info flex">
-						<span className="experience">1-3 Yrs</span>
-						<span className="locatoin">Warren, NJ</span>
+						<span className="experience">
+							{type.minExp}-{type.maxExp} Yrs
+						</span>
+						<span className="locatoin">{type.location}</span>
 					</div>
-					<p className="skills">
+					{/* <p className="skills">
 						<b>Skills: </b>
 						{type.skills}
-					</p>
+					</p> */}
 					<p>
 						<b>Description: </b>
-						{type.description}
+						<span
+							dangerouslySetInnerHTML={{ __html: type.jobDescription }}
+						></span>
 					</p>
 				</div>
 			</div>
@@ -55,7 +64,11 @@ function AppliedRelatedJobs(props) {
 				<div className="widget widget-applied-related-jobs">
 					{content}
 					<div className="cta related">
-						<Link to={link} className="primary-btn blue">
+						<Link
+							to={link}
+							className="primary-btn blue"
+							onClick={onClickHandler}
+						>
 							View
 						</Link>
 					</div>

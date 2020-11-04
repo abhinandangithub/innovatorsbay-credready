@@ -1,4 +1,5 @@
 .create-email-template {
+	// border: 1px solid black;
 	.content {
 		padding: 30px 30px 30px;
 		ul {
@@ -9,6 +10,9 @@
 					display: block;
 					text-align: left;
 					margin-bottom: 10px;
+					span {
+						color: red;
+					}
 				}
 				input {
 					width: 100%;
@@ -30,6 +34,27 @@
 						}
 					}
 				}
+				.rich_text_editor {
+					min-height: 128px;
+					padding: 6px;
+					& > div {
+						&:first-child {
+							display: none;
+						}
+						&:last-child {
+							padding-bottom: 0;
+						}
+					}
+					[data-block="true"] {
+						margin: 6px 0;
+						&:first-child {
+							margin-top: 0;
+						}
+						&:last-child {
+							margin-bottom: 0;
+						}
+					}
+				}
 				textarea {
 					border: 1px solid #bcd1e4;
 					width: 100%;
@@ -43,6 +68,32 @@
 		.cta {
 			display: flex;
 			justify-content: flex-end;
+			.outline {
+				margin-right: 20px;
+			}
 		}
+	}
+	.my_editor,
+	.rich_text_editor {
+		min-height: 100px;
+		border: 1px solid #bcd1e4;
+		text-align: left;
+		padding: 20px;
+		color: #526677;
+		p,
+		div {
+			margin: 4px 0;
+			&:first-child {
+				margin-top: 0;
+			}
+			&:last-child {
+				margin-bottom: 0;
+			}
+		}
+	}
+	.error-text.body {
+		display: block;
+		text-align: left;
+		margin-bottom: 10px;
 	}
 }

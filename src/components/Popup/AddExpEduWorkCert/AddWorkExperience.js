@@ -1,7 +1,5 @@
 import React, { useState } from "react";
-import DatePicker from "react-datepicker";
-import { useDispatch } from "react-redux";
-import { connect } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import "./AddExpEduWorkCert.scss";
 import Input from "../../_Elements/Input";
@@ -11,15 +9,21 @@ import {
 	togglePopup,
 } from "../../../store/actions/popup_overlay";
 import { addWorkExperience } from "../../../modals/candidateProfile/thunk";
+import { findIndexOfObjInArr } from "../../../assets/js/Utility";
+import CustomDatePicker from "../../_Elements/CustomDatePicker";
 
-function AddWorkExperience({
-	addWorkExperience
-}) {
+function AddWorkExperience() {
 	const dispatch = useDispatch();
+
+	const info = useSelector((state) => state.popupOverlayReducer.popup.info);
+	const dataArr = useSelector(
+		(state) => state.candidateSetDataReducer.data.work_experience
+	);
 
 	const [startDate, setStartDate] = useState();
 	const [endDate, setEndDate] = useState();
 	const [activeTab, setActiveTab] = useState("add");
+	const [allowContact, setAllowContact] = useState(true);
 
 	const handleTabChange = (id) => {
 		setActiveTab(id);
@@ -43,11 +47,13 @@ function AddWorkExperience({
 		startDate: [],
 		endDate: [],
 		description: [],
+		employerWebsite: [],
 
 		supervisorName: [],
 		supervisorTitle: [],
 		phoneNumber: [],
 		email: [],
+		isContactable: [],
 
 		formValid: {
 			add: false,
@@ -57,18 +63,15 @@ function AddWorkExperience({
 
 	function formatDate(date) {
 		var d = new Date(date),
-			month = '' + (d.getMonth() + 1),
-			day = '' + d.getDate(),
+			month = "" + (d.getMonth() + 1),
+			day = "" + d.getDate(),
 			year = d.getFullYear();
 
-		if (month.length < 2)
-			month = '0' + month;
-		if (day.length < 2)
-			day = '0' + day;
+		if (month.length < 2) month = "0" + month;
+		if (day.length < 2) day = "0" + day;
 
-		return [year, month, day].join('-');
+		return [year, month, day].join("-");
 	}
-
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
@@ -81,12 +84,16 @@ function AddWorkExperience({
 			if (
 				oldFormData.hasOwnProperty(field) &&
 				field !== "formValid" &&
+				field !== "employerWebsite" &&
+				field !== "isContactable" &&
 				(oldFormData[field][0] === "" ||
 					oldFormData[field][0] === undefined ||
 					oldFormData[field][0] === null)
 			) {
 				oldFormData[field][0] = "";
-				oldFormData[field].push("Required");
+				if (oldFormData[field][1] !== "Required") {
+					oldFormData[field].push("Required");
+				}
 				if (
 					field === "supervisorName" ||
 					field === "supervisorTitle" ||
@@ -95,34 +102,45 @@ function AddWorkExperience({
 				) {
 					oldFormData.formValid.verify = false;
 				} else {
+					console.log(field);
 					oldFormData.formValid.add = false;
 				}
 			}
 		}
+		console.log(activeTab, oldFormData, oldFormData.formValid.add);
 
 		if (activeTab === "add" && oldFormData.formValid.add) {
 			setActiveTab("verify");
 			return;
 		}
-
 		if (oldFormData.formValid.add && oldFormData.formValid.verify) {
-			console.log("Adding work experience to database...");
+			let obj = {
+				title: formData.title[0],
+				company: formData.company[0],
+				location: formData.location[0],
+				isCurrentlyEmployed: formData.currentCompany[0],
+				employmentFrom: formatDate(formData.startDate[0]),
+				employmentTo: formatDate(formData.endDate[0]),
+				jobDescription: formData.description[0],
+				employerWebsite: formData.employerWebsite[0],
+				workexVerification: {
+					supervisorName: formData.supervisorName[0],
+					title: formData.supervisorTitle[0],
+					phone: formData.phoneNumber[0],
+					email: formData.email[0],
+					isContactable: formData.isContactable[0],
+				},
+			};
+
+			if (info) {
+				obj.id = info.id;
+			}
+
+			dispatch(addWorkExperience(obj));
 			dispatch(toggleOverlay(false));
 			dispatch(togglePopup([false, ""]));
-			console.log("formData", formData);
-			let obj = [{
-				"candidate_id": "",
-				"title": formData ? formData.title[0] : "",
-				"company": formData ? formData.company[0] : "",
-				"location": formData ? formData.location[0] : "",
-				"is_currently_employed": formData && (formData.location[0] === "on") ? true : false,
-				"employment_from": formData && formData.startDate[0] ? formatDate(formData.startDate[0]) : "",
-				"employment_to": formData && formData.endDate[0] ? formatDate(formData.endDate[0]) : "",
-				"job_description": formData ? formData.description[0] : "",
-				"employer_website": ""
-			}]
-			addWorkExperience(obj);
 		}
+
 		setFormData(oldFormData);
 	};
 
@@ -143,16 +161,52 @@ function AddWorkExperience({
 		});
 	};
 
-	// React.useEffect(() => {
-	// 	// console.log(formData.formValid);
-	// 	return () => {
-	// 		// cleanup
-	// 	};
-	// }, [formData]);
+	React.useEffect(() => {
+		console.log("................");
+		console.log(formData);
+	}, [formData]);
+
+	React.useEffect(() => {
+		if (info) {
+			let i = findIndexOfObjInArr(dataArr, "work_ex_id", info.id);
+			let arr = dataArr[i];
+
+			setFormData({
+				...formData,
+				title: [arr.title],
+				company: [arr.company],
+				location: [arr.location],
+				currentCompany: [arr.is_currently_employed],
+				startDate: [arr.employment_from],
+				endDate: [arr.employment_to],
+				description: [arr.job_description],
+				employerWebsite: [arr.employer_website],
+
+				supervisorName: [arr.workex_verification.supervisorName],
+				supervisorTitle: [arr.workex_verification.title],
+				phoneNumber: [arr.workex_verification.phone],
+				email: [arr.workex_verification.email],
+				isContactable: [arr.workex_verification.isContactable],
+
+				formValid: {
+					add: false,
+					verify: false,
+				},
+			});
+
+			setStartDate(new Date(arr.employment_from));
+			setEndDate(new Date(arr.employment_to));
+		}
+	}, []);
 
 	return (
 		<div className="add-ex-ed-cert">
-			<h1>Add Work Experience</h1>
+			{info && info.purpose === "edit" ? (
+				<h1>Edit Work Experience</h1>
+			) : (
+				<h1>Add Work Experience</h1>
+			)}
+
 			<form onSubmit={(e) => handleSubmit(e)}>
 				<div className="popup-tabs flex">
 					<div
@@ -221,10 +275,11 @@ function AddWorkExperience({
 					<li className="industry">
 						<label htmlFor="currentCompany">
 							Is this your current company?
-							<span>*</span>
+							<span> * </span>
 							<span
-								className={`error-text ${!formData.currentCompany[1] && "hidden"
-									}`}
+								className={`error-text ${
+									!formData.currentCompany[1] && "hidden"
+								}`}
 							>
 								Required
 							</span>
@@ -236,9 +291,8 @@ function AddWorkExperience({
 								name="currentCompany"
 								type="radio"
 								// defaultChecked
-								onChange={(e) =>
-									handleFieldChange("currentCompany", e.target.value)
-								}
+								checked={formData.currentCompany[0] === true}
+								onChange={(e) => handleFieldChange("currentCompany", true)}
 							/>
 							<label htmlFor="currentCompanyYes">
 								<span className="input"></span>Yes
@@ -248,10 +302,9 @@ function AddWorkExperience({
 								id="currentCompanyNo"
 								name="currentCompany"
 								type="radio"
+								checked={formData.currentCompany[0] === false}
 								// defaultChecked
-								onChange={(e) =>
-									handleFieldChange("currentCompany", e.target.value)
-								}
+								onChange={(e) => handleFieldChange("currentCompany", false)}
 							/>
 							<label htmlFor="currentCompanyNo">
 								<span className="input"></span>No
@@ -262,15 +315,16 @@ function AddWorkExperience({
 						<label>
 							Employment <span>*</span>
 							<span
-								className={`error-text ${!formData.startDate[1] && !formData.endDate[1] && "hidden"
-									}`}
+								className={`error-text ${
+									!formData.startDate[1] && !formData.endDate[1] && "hidden"
+								}`}
 							>
 								Required
 							</span>
 						</label>
 						<div className="date-outer">
 							<div className="date">
-								<DatePicker
+								<CustomDatePicker
 									id="startDate"
 									selected={startDate}
 									placeholderText="Start Date"
@@ -282,10 +336,11 @@ function AddWorkExperience({
 							</div>
 							<span>to</span>
 							<div className="date">
-								<DatePicker
+								<CustomDatePicker
 									id="endDate"
 									selected={endDate}
 									placeholderText="End Date"
+									minDate={startDate}
 									onChange={(date) => {
 										setEndDate(date);
 										handleFieldChange("endDate", date);
@@ -295,12 +350,13 @@ function AddWorkExperience({
 						</div>
 					</li>
 					<li>
-						<label htmlFor="strengths">Strengths</label>
-						<Input id="strengths" type="text" />
-					</li>
-					<li>
 						<label htmlFor="employerWebsite">Employer website</label>
-						<Input id="employerWebsite" type="text" />
+						<Input
+							id="employerWebsite"
+							defaultValue={formData.employerWebsite[0]}
+							type="text"
+							onChange={(e) => handleFieldChange(e.target.id, e.target.value)}
+						/>
 					</li>
 					<li>
 						<label htmlFor="description">
@@ -326,8 +382,9 @@ function AddWorkExperience({
 						<label htmlFor="supervisorName">
 							Supervisor Name <span>*</span>
 							<span
-								className={`error-text ${!formData.supervisorName[1] && "hidden"
-									}`}
+								className={`error-text ${
+									!formData.supervisorName[1] && "hidden"
+								}`}
 							>
 								Required
 							</span>
@@ -343,8 +400,9 @@ function AddWorkExperience({
 						<label htmlFor="supervisorTitle">
 							Title <span>*</span>
 							<span
-								className={`error-text ${!formData.supervisorTitle[1] && "hidden"
-									}`}
+								className={`error-text ${
+									!formData.supervisorTitle[1] && "hidden"
+								}`}
 							>
 								Required
 							</span>
@@ -366,7 +424,7 @@ function AddWorkExperience({
 							</span>
 						</label>
 						<Input
-							type="text"
+							type="number"
 							id="phoneNumber"
 							defaultValue={formData.phoneNumber[0]}
 							onChange={(e) => handleFieldChange(e.target.id, e.target.value)}
@@ -380,7 +438,7 @@ function AddWorkExperience({
 							</span>
 						</label>
 						<Input
-							type="text"
+							type="email"
 							id="email"
 							defaultValue={formData.email[0]}
 							onChange={(e) => handleFieldChange(e.target.id, e.target.value)}
@@ -390,10 +448,12 @@ function AddWorkExperience({
 						<input
 							className="fancy-toggle checkbox"
 							type="checkbox"
-							name="termsandconditions"
-							id="degreeGranted"
+							name="isContactable"
+							id="isContactable"
+							checked={formData.isContactable[0] === true}
+							onChange={(e) => handleFieldChange(e.target.id, e.target.checked)}
 						/>
-						<label htmlFor="degreeGranted">
+						<label htmlFor="isContactable">
 							<span className="input"></span>Allow recruiters to contact your
 							Supervisor
 						</label>
@@ -410,9 +470,9 @@ function AddWorkExperience({
 					>
 						{activeTab === "verify" &&
 							!formData.formValid.add &&
-							"Add Employment tab is not filled correctly."}
+							"Please fill required fields"}
 					</span>
-					<button className="primary-btn" id="submitBtn" type="submit">
+					<button className="primary-btn blue" id="submitBtn" type="submit">
 						{activeTab === "add" ? "Next" : "Submit"}
 					</button>
 				</div>
@@ -421,8 +481,4 @@ function AddWorkExperience({
 	);
 }
 
-const mapDispatchToProps = {
-	addWorkExperience: addWorkExperience
-};
-
-export default connect(null, mapDispatchToProps)(AddWorkExperience);
+export default AddWorkExperience;

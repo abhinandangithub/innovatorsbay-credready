@@ -6,7 +6,7 @@ import "./index.scss";
 
 function AddButton(props) {
 	return (
-		<button className="add-btn" onClick={props.onclick} id={props.id}>
+		<button className="add-btn" onClick={props.onclick} id={props.id} disabled={props.disable}>
 			<span className="icon">
 				<FontAwesomeIcon icon={faPlus} />
 			</span>

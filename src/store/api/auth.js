@@ -14,10 +14,18 @@ export const logoutUrl = constructUrl(authBaseRoute, "logout");
 
 export const signUpUrl = constructUrl(authBaseRoute, "signup");
 
+export const verifyUserUrl = constructUrl(authBaseRoute, "verify");
+
 export const authVcodeRequestPostUrl = constructUrl(
   authVcodeBaseRoute,
   "request"
 );
+
+export const authResendVcodeRequestPostUrl = constructUrl(
+  authVcodeBaseRoute,
+  "resend"
+);
+
 
 export const authVcodeResendPostUrl = constructUrl(
   authVcodeBaseRoute,

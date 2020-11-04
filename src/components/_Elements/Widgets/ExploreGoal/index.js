@@ -13,16 +13,16 @@ function ExploreGoal(props) {
 	return (
 		<div className="widget widget-explore-goals">
 			<div className="top">
-				<div className="logo">
+				{/* <div className="logo">
 					<img src={ImgWidgetLogo} alt={type.logo} />
-				</div>
+				</div> */}
 				<div className="info">
 					<h3>{type.heading}</h3>
 					<p>{type.subHeading}</p>
 				</div>
-				<button className="menu">
+				{/* <button className="menu">
 					<img src={ImgWidgetMenu} alt="Widget Menu" />
-				</button>
+				</button> */}
 			</div>
 			<div className="bottom">
 				<div className="index">

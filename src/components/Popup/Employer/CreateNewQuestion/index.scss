@@ -23,9 +23,9 @@
 					font-size: 16px;
 				}
 				ul {
-					border: 1px solid #bcd1e4;
+					// border: 1px solid #bcd1e4;
 					font-size: 16px;
-					padding: 20px;
+					// padding: 20px;
 					counter-reset: answer;
 					li {
 						margin-bottom: 15px;
@@ -52,6 +52,7 @@
 							background-repeat: no-repeat;
 							background-position: center;
 							background-color: transparent;
+							user-select: none;
 						}
 					}
 				}
@@ -65,6 +66,7 @@
 				}
 				.answer-block {
 					display: flex;
+					margin-bottom: 10px;
 					align-items: center;
 					justify-content: space-between;
 					.answer-type {
@@ -74,15 +76,17 @@
 							display: none;
 						}
 						label {
-							margin-left: 50px;
+							margin-left: 20px;
+							margin-right: 0;
 							margin-bottom: 0;
+							display: flex;
 						}
 					}
 				}
 				.add {
 					position: absolute;
-					right: 20px;
-					top: 70px;
+					right: -3px;
+					top: 60px;
 					color: #0092d0;
 					background: transparent;
 					border: none;

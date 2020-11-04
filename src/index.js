@@ -3,17 +3,55 @@ import ReactDOM from "react-dom";
 import { createStore, combineReducers, applyMiddleware, compose } from "redux";
 import { Provider } from "react-redux";
 import thunk from "redux-thunk";
+import { ToastProvider } from "react-toast-notifications";
 
 import "./index.scss";
 import App from "./App";
 import authReducer from "./store/reducers/auth";
+import commonReducer from "./store/reducers/common";
 import popupOverlayReducer from "./store/reducers/popup_overlay";
-import candidateSetDataReducer from "./modals/candidateProfile/index";
+import employerReducer from "./store/reducers/employer";
+import candidateReducer from "./store/reducers/candidate";
+import toastReducer from "./store/reducers/toast";
+
+import {
+	candidateSetDataReducer,
+	setAllFunctionsReducer,
+	setAllIndustriesReducer,
+	setCandidateCertificateTitlesReducer,
+	setCandidateAllAnswersReducer,
+	candidateCurrentStatusReducer,
+	setCandidateJobsReducer,
+	setCandidateAppliedJobsDataReducer,
+	setCandidateExperienceTypeReducer,
+	setCandidateDegreeTitlesReducer,
+	setCandidateInstitutionTypeReducer,
+	setCandidateJobViewDataReducer,
+	setJobDescriptionReducer,
+	setAllMajorMinorReducer
+} from "./modals/candidateProfile/index";
 
 const rootReducer = combineReducers({
 	authReducer,
 	popupOverlayReducer,
 	candidateSetDataReducer,
+	candidateCurrentStatusReducer,
+	setCandidateAppliedJobsDataReducer,
+	setCandidateExperienceTypeReducer,
+	setCandidateDegreeTitlesReducer,
+	setCandidateInstitutionTypeReducer,
+	setCandidateAllAnswersReducer,
+	setCandidateJobViewDataReducer,
+	setCandidateJobsReducer,
+	employerReducer,
+	setCandidateCertificateTitlesReducer,
+	setAllFunctionsReducer,
+	setAllIndustriesReducer,
+	commonReducer,
+	candidateReducer,
+	setJobDescriptionReducer,
+	toastReducer,
+	setAllMajorMinorReducer
 });
 
 /* Middleware */
@@ -42,7 +80,9 @@ store.subscribe(() => {
 ReactDOM.render(
 	<Provider store={store}>
 		<StrictMode>
-			<App />
+			<ToastProvider>
+				<App />
+			</ToastProvider>
 		</StrictMode>
 	</Provider>,
 	document.getElementById("root")

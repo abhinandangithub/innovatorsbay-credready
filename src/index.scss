@@ -19,6 +19,11 @@
 	justify-content: center;
 }
 
+.flex-end {
+	display: flex;
+	justify-content: space-between;
+}
+
 .error-text {
 	display: block;
 	font-size: 14px;
@@ -109,7 +114,7 @@ input[type="number"] {
 	}
 	&.disabled {
 		background-color: #d8d8d8;
-		color: black;
+		color: white;
 		pointer-events: none;
 	}
 }
@@ -141,6 +146,42 @@ input[type="number"] {
 		background-image: url("./assets/download-resume.jpg");
 		background-repeat: no-repeat;
 		background-position: 10px center;
+	}
+}
+.common-heading-btn {
+	box-shadow: 0 2px 30px 1px rgba(176, 192, 237, 0.45);
+	background-color: #0092d0;
+	border: none;
+	color: white;
+	font-size: 18px;
+	font-weight: 100;
+	display: flex;
+	padding: 10px 20px;
+	span {
+		position: relative;
+		width: 20px;
+		height: 20px;
+		border-radius: 40px;
+		border: 2px solid white;
+		display: block;
+		margin-right: 10px;
+		&:before,
+		&:after {
+			content: "";
+			position: absolute;
+			background: white;
+			left: 50%;
+			top: 50%;
+			transform: translate(-50%, -50%);
+		}
+		&:before {
+			width: 2px;
+			height: 8px;
+		}
+		&:after {
+			width: 8px;
+			height: 2px;
+		}
 	}
 }
 .common-skills-list {
@@ -202,6 +243,7 @@ input[type="number"] {
 		position: relative;
 		display: flex;
 		align-items: center;
+		margin-right: 20px;
 		.input {
 			display: block;
 			height: 18px;
@@ -270,6 +312,12 @@ input[type="number"] {
 			}
 		}
 	}
+	&[disabled] {
+		& + label {
+			opacity: 0.7;
+			cursor: default;
+		}
+	}
 
 	&.blue {
 		& + label {
@@ -311,6 +359,12 @@ input[type="number"] {
 	&:checked + label {
 		background-color: $primary-color;
 		color: white;
+	}
+	&[disabled] {
+		& + label {
+			opacity: 0.7;
+			cursor: default;
+		}
 	}
 
 	&.blue {
@@ -471,6 +525,12 @@ input[type="number"] {
 	}
 	.input-range__track--active {
 		background: $secondary-color;
+	}
+	&.input-range--disabled {
+		opacity: 0.7;
+		* {
+			cursor: default;
+		}
 	}
 }
 
@@ -636,14 +696,16 @@ input[type="number"] {
 /* **************** */
 .widgets {
 	display: flex;
-	justify-content: space-between;
+	// justify-content: space-between;
 	flex-wrap: wrap;
 	.widget {
 		border: 1px solid #bcd1e4;
-		width: calc(33.33% - 20px);
+		width: calc(33.33% - 30px);
 		display: block;
 		color: #6b6c6f;
 		background: white;
+		margin-right: 30px;
+		margin-bottom: 30px;
 		.top {
 			border-bottom: 1px solid #bcd1e4;
 			display: flex;
@@ -726,32 +788,6 @@ input[type="number"] {
 		&:hover {
 			box-shadow: 0 2px 30px 1px rgba(176, 192, 237, 0.45);
 			opacity: 1;
-		}
-	}
-
-	&.widgets-dashboard {
-		.widget {
-			width: calc(33.33% - 5px);
-			margin-bottom: 10px;
-			box-shadow: 0 2px 10px 1px rgba(176, 192, 237, 0.15);
-			border-color: rgba(226, 226, 226, 0.678);
-			&:hover {
-				box-shadow: 0 2px 10px 1px rgba(176, 192, 237, 0.45);
-			}
-		}
-		.heading {
-			padding: 15px;
-			height: 70px;
-			display: flex;
-			align-items: center;
-			color: black;
-			border-bottom: 1px solid rgba(211, 211, 211, 0.404);
-		}
-		.content {
-			padding: 15px;
-			img {
-				width: 100%;
-			}
 		}
 	}
 }
@@ -882,6 +918,16 @@ input[type="number"] {
 		.options {
 			display: flex;
 			margin-top: 10px;
+			.input_full {
+				width: 100%;
+				border: navajowhite;
+				border-bottom: 2px solid #d6e4f1;
+				padding: 10px 15px;
+				font-size: 16px;
+				&:focus {
+					border-color: $secondary-color;
+				}
+			}
 			input.yes + label {
 				margin-right: 20px;
 			}
@@ -901,6 +947,9 @@ input[type="number"] {
 			border-bottom: 0;
 		}
 	}
+}
+.brdr-none {
+	border: none !important;
 }
 
 // .react-datepicker-wrapper {

@@ -45,7 +45,7 @@ function Goals() {
 			</div>
 
 			<div className="cta">
-				<Link className="primary-btn" to="goals/explore-goals">
+				<Link className="primary-btn blue" to="goals/explore-goals">
 					Click here for Explore Career Options
 				</Link>
 			</div>

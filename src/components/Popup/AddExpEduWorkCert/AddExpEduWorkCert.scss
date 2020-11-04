@@ -1,6 +1,7 @@
 @import "../../../variables.scss";
 
 .add-ex-ed-cert {
+	// border: 1px solid black;
 	.popup-tabs {
 		background: #f1f5fa;
 		border-radius: 40px;
@@ -46,7 +47,13 @@
 			.common-textarea,
 			& > div {
 				flex: 1;
-				max-width: 500px;
+				.input {
+					display: flex;
+					margin-bottom: 15px;
+					&:last-child {
+						margin-bottom: 0;
+					}
+				}
 			}
 			.common-textarea {
 				height: 70px;
@@ -107,6 +114,9 @@
 				color: white;
 				font-size: 22px;
 				border: none;
+				svg {
+					pointer-events: none;
+				}
 			}
 			&:last-child {
 				margin-bottom: 0;
@@ -133,6 +143,7 @@
 					display: flex;
 					align-items: flex-end;
 					flex: none;
+					// background-color: orange;
 				}
 			}
 		}

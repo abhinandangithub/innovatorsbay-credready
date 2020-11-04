@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Route, Switch, Redirect, NavLink } from "react-router-dom";
 import { Scrollbars } from "react-custom-scrollbars";
 import { useSelector } from "react-redux";
@@ -21,8 +21,10 @@ import EmployerCreateJob from "../Employer/CreateJob";
 import EmployerCandidateList from "../Employer/CandidateList";
 import EmployerCandidateView from "../Employer/CandidateView";
 
-import JobView from "../Candidate/Jobs/JobView";
-import GeneralQuestions from "../Candidate/Jobs/GeneralQuestions";
+import JobApplied from "../Candidate/Jobs/JobApplied";
+import JobApplication from "../Candidate/Jobs/Application";
+import JobApply from "../Candidate/Jobs/JobApply";
+import Questions from "../Candidate/Jobs/Questions";
 import JobSpecificQuestions from "../Candidate/Jobs/JobSpecificQuestions";
 import Goals from "../Candidate/Goals";
 import GoalView from "../Candidate/Goals/GoalView";
@@ -38,8 +40,8 @@ let scrollBarStyle = {
 
 function Home(props) {
 	const auth = useSelector((state) => state.authReducer);
+	const profile = useSelector((state) => state.employerReducer.profile.data);
 	const [navOpen, setNavOpen] = useState(false);
-
 	if (navOpen) {
 		scrollBarStyle = {
 			...scrollBarStyle,
@@ -53,6 +55,10 @@ function Home(props) {
 			left: "85px",
 		};
 	}
+
+	useEffect(() => {
+		// console.log('profile ', profile.name);
+	});
 
 	return (
 		<div className={`home ${navOpen ? "open" : ""}`}>
@@ -78,7 +84,11 @@ function Home(props) {
 				<div className="scroll-wrapper">
 					<div className="content">
 						<Switch>
-							<Redirect exact from="/" to="/dashboard" />
+							{profile.name === "" || profile.name === undefined ? (
+								<Redirect exact from="/" to="/profile" />
+							) : (
+								<Redirect exact from="/" to="/dashboard" />
+							)}
 
 							{auth.loggedIn.as === "candidate" ? (
 								<>
@@ -89,11 +99,35 @@ function Home(props) {
 									/>
 									<Route path="/profile" component={CandidateProfile} />
 									<Route exact path="/jobs" component={CandidateJobs} />
-									<Route exact path="/jobs/view/:id" component={JobView} />
 									<Route
 										exact
-										path="/jobs/general-questions"
-										component={GeneralQuestions}
+										path="/jobs/preview/:id"
+										component={JobApplied}
+									/>
+									<Route exact path="/jobs/view/:id" component={JobApply} />
+									<Route
+										exact
+										path="/jobs/application"
+										component={JobApplication}
+									/>
+									<Route
+										exact
+										path="/jobs/application/:id"
+										component={JobApplication}
+									/>
+									<Route
+										path="/jobs/questions"
+										exact
+										render={(props) => (
+											<Questions showEmployerQuestions={true} {...props} />
+										)}
+									/>
+									<Route
+										path="/jobs/questions/:id"
+										exact
+										render={(props) => (
+											<Questions showEmployerQuestions={true} {...props} />
+										)}
 									/>
 									<Route
 										exact
@@ -123,12 +157,23 @@ function Home(props) {
 									/>
 									<Route
 										exact
-										path="/jobs/candidates-list"
-										component={EmployerCandidateList}
+										path="/jobs/create-job/:jobId"
+										component={EmployerCreateJob}
 									/>
 									<Route
 										exact
-										path="/jobs/candidate-view"
+										// path="/jobs/candidates-list"
+										path="/jobs/candidates-list/:jobId"
+										component={EmployerCandidateList}
+									/>
+									{/* <Route
+											exact
+											path="/jobs/candidate-view"
+											component={EmployerCandidateView}
+										/> */}
+									<Route
+										exact
+										path="/jobs/candidate-view/:jobId/:candidateId"
 										component={EmployerCandidateView}
 									/>
 									<Route path="/profile" component={EmployerProfile} />

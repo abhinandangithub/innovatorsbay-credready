@@ -7,6 +7,7 @@
 	background: white;
 	position: relative;
 	background-color: white;
+	margin-bottom: 20px;
 	.title {
 		color: $secondary-color;
 		cursor: pointer;
@@ -29,10 +30,12 @@
 		// background-color: rgb(202, 189, 189);
 		overflow: hidden;
 		// transition: max-height 0.3s ease;
-		margin-bottom: 20px;
 		box-shadow: 0 2px 30px 1px rgba(176, 192, 237, 0.45);
 		.add-btn {
 			margin: 20px 0 0 20px;
+			// & + .content {
+			// 	padding-top: 0;
+			// }
 		}
 		.content {
 			padding: 20px;
@@ -110,6 +113,7 @@
 			}
 			&:last-child {
 				border: none;
+				padding-bottom: 0;
 			}
 		}
 	}
@@ -132,6 +136,10 @@
 		}
 	}
 	&.active {
+		.contents {
+			overflow: visible;
+			padding-bottom: 20px;
+		}
 		.title {
 			color: #fff;
 			background-color: $secondary-color;

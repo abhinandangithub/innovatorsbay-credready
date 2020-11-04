@@ -2,7 +2,7 @@
 
 .widget {
 	border: 1px solid #bcd1e4;
-	width: calc(33.33% - 20px);
+	width: calc(33.33% - 30px);
 	display: block;
 	color: #6b6c6f;
 	background: white;
@@ -53,6 +53,8 @@
 			}
 		}
 		.content {
+			height: 300px;
+			overflow: hidden;
 			p {
 				margin: 0 0 10px 0;
 				font-size: 17px;
@@ -132,6 +134,13 @@
 			text-align: right;
 			border-top: 1px solid #bdd1e4;
 			margin-top: 10px;
+		}
+	}
+	&.widget-current-goal {
+		.bottom {
+			.content {
+				height: auto;
+			}
 		}
 	}
 }

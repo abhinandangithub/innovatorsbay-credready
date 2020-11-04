@@ -105,7 +105,7 @@ function ExploreGoals() {
 							return (
 								<li key={i}>
 									<div
-										className={`top${activeId === i ? " active" : ""}`}
+										className={`top_1${activeId === i ? " active" : ""}`}
 										onClick={() => handleMainClick(i)}
 									>
 										{career.title} <span>{activeId === i ? "-" : "+"}</span>
@@ -114,7 +114,7 @@ function ExploreGoals() {
 										{career.child.map((title, i) => {
 											return (
 												<li key={i}>
-													<div className="top">
+													<div className="top_2">
 														{title}
 														<span className="common-check-icon active"></span>
 													</div>

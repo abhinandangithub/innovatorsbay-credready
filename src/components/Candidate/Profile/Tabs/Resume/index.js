@@ -2,7 +2,9 @@ import React, { useState, useEffect, useRef } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUpload } from "@fortawesome/free-solid-svg-icons";
 import { Document, Page, pdfjs } from "react-pdf";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { Link } from "react-router-dom";
+import AutoSizer from "react-virtualized/dist/commonjs/AutoSizer";
 
 import "./index.scss";
 import {
@@ -14,19 +16,33 @@ import {
 	togglePopup,
 	toggleOverlay,
 } from "../../../../../store/actions/popup_overlay";
+import {
+	uploadCandidateResume,
+	fetchCandidateDetails,
+} from "../../../../../modals/candidateProfile/thunk";
+import { fetchAllCandidateDataUrl } from "../../../../../modals/candidateProfile/api";
+import Spinner from "../../../../_Elements/Spinner";
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
 function Resume(props) {
 	const dispatch = useDispatch();
+	const allData = useSelector((state) =>
+		state.candidateSetDataReducer.data ? state.candidateSetDataReducer.data : []
+	);
 	const [success, setSuccess] = useState(false);
 	const [errorMessage, setErrorMessage] = useState(null);
 	const [selectedFile, setSelectedFile] = useState(null);
 	const [isFormValid, setIsFormValid] = useState(null);
-	// const [resumeInfo, setResumeInfo] = useState({
-	// 	numPages: null,
-	// 	pageNumber: 1,
-	// });
+	const [numPages, setNumPages] = useState(null);
+	const [pageNumber, setPageNumber] = useState(1);
+	const [resume, setResume] = useState({
+		preview:
+			allData.resume_path && allData.resume_path !== ""
+				? allData.resume_path
+				: "",
+		raw: "",
+	});
 
 	const uploadBtnRef = useRef(null);
 	const reUploadBtnRef = useRef(null);
@@ -35,11 +51,29 @@ function Resume(props) {
 		if (errorMessage === "") {
 			setSuccess(true);
 		}
+		dispatch(fetchCandidateDetails());
+		setResume({
+			preview:
+				allData.resume_path && allData.resume_path !== ""
+					? allData.resume_path
+					: "",
+			raw: "",
+		});
 	}, [errorMessage]);
 
 	const handleChange = (e) => {
 		const file = e.target.files[0];
+		const formData = new FormData();
 		let msg = checkFileSize(file, 6);
+		if (e.target.files.length) {
+			setResume({
+				preview: URL.createObjectURL(e.target.files[0]),
+				raw: e.target.files[0],
+			});
+		}
+		formData.set("resume", e.target.files[0]);
+		console.log(formData);
+		dispatch(uploadCandidateResume(formData));
 		setIsFormValid(null);
 
 		if (msg !== true) {
@@ -55,9 +89,10 @@ function Resume(props) {
 		}
 	};
 
-	const onDocumentLoadSuccess = () => {
-		console.log("onDocumentLoadSuccess");
-	};
+	function onDocumentLoadSuccess({ numPages }) {
+		console.log("onDocumentLoadSuccess", numPages);
+		setNumPages(numPages);
+	}
 
 	const handleUpload = (e) => {
 		let btnId = e.target.id;
@@ -105,12 +140,13 @@ function Resume(props) {
 	};
 
 	const renderSuccess = () => {
-		if (selectedFile) {
+		if (selectedFile || (allData && allData.resume_path)) {
 			// let filePath = uploadBtnRef.current
 			// 	? uploadBtnRef.current.value
 			// 	: reUploadBtnRef.current.value;
 			const date = formatDate(new Date());
-			const name = selectedFile.name;
+			let name = selectedFile && selectedFile.name;
+			if (allData.resume_name) name = allData.resume_name;
 
 			return (
 				<div className="content">
@@ -146,14 +182,30 @@ function Resume(props) {
 					</div>
 
 					<div className="preview">
-						{/* <img src={ImgResume} alt="Resume Preview" /> */}
-						<Document
-							file="https://196034-584727-raikfcquaxqncofqfm.stackpathdns.com/wp-content/uploads/2018/01/Dwight-Kavanagh-Resume-IT-QA-Analyst-11.pdf"
-							onLoadSuccess={() => onDocumentLoadSuccess()}
-						>
-							{/* <Page pageNumber={resumeInfo.pageNumber} width={600} /> */}
-							<Page pageNumber={1} width={600} />
-						</Document>
+						<AutoSizer disableHeight>
+							{({ width }) => (
+								<Document
+									file={allData.resume_path ? allData.resume_path : ""}
+									onLoadSuccess={onDocumentLoadSuccess}
+									loading={
+										<div className="spinner_outer">
+											<Spinner />
+										</div>
+									}
+								>
+									{Array.from(new Array(numPages), (el, index) => (
+										<Page
+											// size="A4"
+											loading=""
+											key={`page_${index + 1}`}
+											pageNumber={index + 1}
+											// width={1000}
+											width={width}
+										/>
+									))}
+								</Document>
+							)}
+						</AutoSizer>
 					</div>
 				</div>
 			);
@@ -162,9 +214,9 @@ function Resume(props) {
 
 	const handleSubmit = () => {
 		console.log("form submitting...");
-		console.log(success);
+		console.log(success || (allData && allData.resume_path));
 
-		if (success) {
+		if (success || (allData && allData.resume_path)) {
 			dispatch(toggleOverlay(true));
 			dispatch(togglePopup([true, "populateInformation"]));
 			// props.history.push("/profile/personal-details");
@@ -172,25 +224,27 @@ function Resume(props) {
 			setIsFormValid(false);
 		}
 	};
-
+	console.log(allData);
 	return (
 		<div className="resume">
-			{success ? renderSuccess() : renderNormal()}
+			{success || (allData && allData.resume_path)
+				? renderSuccess()
+				: renderNormal()}
 			<div className="cta">
-				<input
-					className="primary-btn"
+				{/* <input
+					className="primary-btn blue"
 					type="submit"
 					value="Next"
 					id="nextLink"
 					onClick={handleSubmit}
-				/>
-				{/* <Link
-					className="primary-btn"
+				/> */}
+				<Link
+					className="primary-btn blue"
 					to="/profile/personal-details"
 					id="nextLink"
 				>
 					Next
-				</Link> */}
+				</Link>
 			</div>
 		</div>
 	);

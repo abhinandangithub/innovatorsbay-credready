@@ -1,20 +1,69 @@
-import React from "react";
+import React, { useState } from "react";
+import { connect, useDispatch } from "react-redux";
 import InputRange from "react-input-range";
+import { getSkills } from "../../../store/thunks/employer";
+import { Multiselect } from "multiselect-react-dropdown";
+import { setNewJob } from "../../../store/actions/employer";
+import { Link, useParams } from "react-router-dom";
 
 function CreateJob(props) {
+	let { jobId } = useParams();
+
+	const dispatch = useDispatch();
 	const [value, setValue] = React.useState({
 		min: 3,
 		max: 7,
 	});
 
-	// value.min
-	// value.max
+	const [certificates, setCertificates] = React.useState([]);
+
+	const [disableCtrl, setDisableCtrl] = useState(false);
+	const [certValidation, setCertValidation] = useState("");
 
 	const parent = React.useRef();
 
 	React.useEffect(() => {
 		props.calHeight(parent.current.clientHeight);
 	}, [props]);
+
+	React.useEffect(() => {
+		dispatch(getSkills());
+	}, [dispatch]);
+
+	React.useEffect(() => {
+		if (!!jobId && !!props.jobToUpdate) {
+			setValue({
+				min: props.jobToUpdate.min_experience,
+				max: props.jobToUpdate.max_experience,
+			});
+			setCertificates(props.jobToUpdate.certificates);
+			dispatch(setNewJob({ jobCertificateMap: props.jobToUpdate.certificates }));
+			dispatch(setNewJob({ minExp: props.jobToUpdate.min_experience, maxExp: props.jobToUpdate.max_experience }));
+		} else {
+			dispatch(setNewJob({ jobCertificateMap: [] }));
+			dispatch(setNewJob({ minExp: null, maxExp: null }));
+		}
+		if (props.jobToUpdate && props.jobToUpdate.count_of_applied_candidates && jobId)
+			setDisableCtrl(true)
+	}, [props.jobToUpdate]);
+
+	React.useEffect(() => {
+		dispatch(setNewJob({ minExp: value.min, maxExp: value.max }));
+	}, [value]);
+
+	const handleSelect = (selectedList, selectedItem) => {
+		console.log('selectedList ', selectedList);
+		let msg = selectedList.length === 0 ? "Required" : "";
+		setCertValidation(msg);
+		dispatch(setNewJob({ jobCertificateMap: selectedList }));
+	};
+
+	const handleRemove = (selectedList, selectedItem) => {
+		console.log('selectedList ', selectedList);
+		let msg = selectedList.length === 0 ? "Required" : "";
+		setCertValidation(msg);
+		dispatch(setNewJob({ jobCertificateMap: selectedList }));
+	};
 
 	return (
 		<div className="experience-certificates" ref={parent}>
@@ -26,16 +75,31 @@ function CreateJob(props) {
 			<div className="content">
 				<h2 className="sub-heading">
 					Certificates <span>*</span>
+					<span className={`error-text ${!certValidation && "hidden"}`}>
+						Required
+					</span>
 				</h2>
-				<ul className="added-items">
-					<li>
-						Nursing <span></span>{" "}
-					</li>
-					<li>
-						Take Care <span></span>{" "}
-					</li>
-					<li className="btn"></li>
-				</ul>
+
+				<Multiselect
+					style={{
+						multiselectContainer: {
+							width: "35%",
+							height: "50%",
+							marginBottom: "2%",
+						},
+					}}
+					options={props.skills} // Options to display in the dropdown
+					selectedValues={certificates} // Preselected value to persist in dropdown
+					onSelect={(selectedList, selectedItem) =>
+						handleSelect(selectedList, selectedItem)
+					} // Function will trigger on select event
+					onRemove={(selectedList, selectedItem) =>
+						handleRemove(selectedList, selectedItem)
+					} // Function will trigger on remove event
+					displayValue="title_name" // Property name to display in the dropdown options
+					disable={disableCtrl}
+				/>
+				{/* </div> */}
 				<h2 className="sub-heading">
 					Years of experience <span>*</span>
 				</h2>
@@ -47,10 +111,19 @@ function CreateJob(props) {
 					value={value}
 					// formatLabel={(value) => `${value} years`}
 					onChange={(value) => setValue(value)}
+				//	disabled={disableCtrl}
 				/>
 			</div>
 		</div>
 	);
 }
 
-export default CreateJob;
+function mapStateToProps(state) {
+	return {
+		skills: state.employerReducer.skills.data,
+		jobToUpdate: state.employerReducer.jobToUpdate
+	};
+}
+
+// export default CreateJob;
+export default connect(mapStateToProps)(CreateJob);
